@@ -194,6 +194,10 @@
   --tracking-wide: calc(var(--tracking-normal) + 0.025em);
   --tracking-wider: calc(var(--tracking-normal) + 0.05em);
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+
+  --background-image-registration-bg: linear-gradient(143.335deg, #90D3A6 0%, #71AD84 32%, #234E2F 100%);
+  --background-image-sidebar-bg: linear-gradient(-160.309deg, #90D3A6 0%, #234E2F 100%);
+  --background-image-course-card-base-bg: linear-gradient(154.388deg, #387E4A 0%, #5E9D6F 46%, #BCE8C8 100%);
 }
 
 body {
