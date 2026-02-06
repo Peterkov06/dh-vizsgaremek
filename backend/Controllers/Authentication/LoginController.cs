@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.Data;
+using backend.Models;
 using backend.Services.JwtServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +13,17 @@ namespace backend.Controllers.Login
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtGenerator _jwtGenerator;
+        private readonly UserDbContext _context;
         
         public LoginController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            JwtGenerator jwtGenerator)
+            JwtGenerator jwtGenerator,
+            UserDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtGenerator = jwtGenerator;
+            _context = context;
         }
 
 
@@ -78,7 +82,19 @@ namespace backend.Controllers.Login
 
             var token = _jwtGenerator.GenerateToken(user, roles);
 
-            return Ok(new { access_token = token });
+            var refreshToken = new RefreshToken
+            {
+                Token = _jwtGenerator.GenerateRefreshToken(),
+                UserId = user.Id,
+                ExpiresAt = DateTime.UtcNow.AddDays(14),
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.RefreshTokens.Add(refreshToken);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { access_token = token, refresh_token = refreshToken.Token });
         }
     }
 }
