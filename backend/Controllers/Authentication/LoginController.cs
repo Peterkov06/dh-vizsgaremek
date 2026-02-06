@@ -31,10 +31,11 @@ namespace backend.Controllers.Login
 
             var newUser = new ApplicationUser()
             {
+                UserName = register.Email,
                 Email = register.Email,
                 FullName = register.Full_name,
                 Address = register.Address,
-                DateOfBirth = register.Date_of_birth
+                DateOfBirth = DateTime.SpecifyKind(register.Date_of_birth, DateTimeKind.Utc),
             };
 
             if (!string.IsNullOrEmpty(register.Nickname)) {
@@ -51,7 +52,7 @@ namespace backend.Controllers.Login
                 await _userManager.AddToRoleAsync(newUser, register.Role);
             }
 
-            return Ok(new { message= "User successfully created!"});
+            return Ok(new { message= "User is successfully created!"});
         }
         
 
@@ -63,21 +64,21 @@ namespace backend.Controllers.Login
             var user = await _userManager.FindByEmailAsync(login.Email);
 
             if (user == null) {
-                return Unauthorized();
+                return Unauthorized(new { error = "email"});
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
 
             if (!result.Succeeded)
             {
-                return Unauthorized();
+                return Unauthorized(new { error = "password" });
             }
 
             var roles = await _userManager.GetRolesAsync(user);
 
             var token = _jwtGenerator.GenerateToken(user, roles);
 
-            return Ok(new { token });
+            return Ok(new { access_token = token });
         }
     }
 }
