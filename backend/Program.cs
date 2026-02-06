@@ -1,6 +1,7 @@
 
 using backend.Data;
 using backend.Models;
+using backend.Services.JwtServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,7 @@ namespace backend
                 .AddEntityFrameworkStores<UserDbContext>().AddDefaultTokenProviders();
 
             var jwtSettings = builder.Configuration.GetSection("Jwt");
-            var key = Encoding.UTF8.GetBytes(jwtSettings["key"]);
+            var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
             builder.Services.AddAuthentication(option =>
             {
@@ -43,8 +44,16 @@ namespace backend
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
+
+            builder.Services.AddAuthorization();
+
+            builder.Services.AddScoped<JwtGenerator>();
 
             var app = builder.Build();
 
@@ -74,6 +83,8 @@ namespace backend
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

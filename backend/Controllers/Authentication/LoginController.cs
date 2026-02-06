@@ -1,4 +1,5 @@
 ﻿using backend.Models;
+using backend.Services.JwtServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,12 +9,19 @@ namespace backend.Controllers.Login
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private UserManager<ApplicationUser> _userManager;
-
-        public LoginController(UserManager<ApplicationUser> userManager)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly JwtGenerator _jwtGenerator;
+        
+        public LoginController(UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            JwtGenerator jwtGenerator)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
+            _jwtGenerator = jwtGenerator;
         }
+
 
 
         public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address, DateTime Date_of_birth, string? Nickname);
@@ -44,6 +52,32 @@ namespace backend.Controllers.Login
             }
 
             return Ok(new { message= "User successfully created!"});
+        }
+        
+
+        public record LoginDto(string Email, string Password);
+
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUser([FromBody]LoginDto login) {
+
+            var user = await _userManager.FindByEmailAsync(login.Email);
+
+            if (user == null) {
+                return Unauthorized();
+            }
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
+
+            if (!result.Succeeded)
+            {
+                return Unauthorized();
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var token = _jwtGenerator.GenerateToken(user, roles);
+
+            return Ok(new { token });
         }
     }
 }
