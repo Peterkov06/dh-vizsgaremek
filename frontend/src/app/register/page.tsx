@@ -22,16 +22,16 @@ const page = () => {
       .string()
       .min(8, { error: "A jelszónak legalább 8 karakternek kell lennie" })
       .max(24, { error: "A jelszó maximum 24 karakter lehet" })
-      .regex(/[A-ZÖÜÓŐÚÉÁŰ]/, {
+      .regex(/[\p{Lu}]/u, {
         error: "A jelszónak tartalmaznia kell legalább egy nagybetűt",
       })
-      .regex(/[a-zöüóőúéáű]/, {
+      .regex(/[\p{Ll}]/u, {
         error: "A jelszónak tartalmaznia kell legalább egy kisbetűt",
       })
       .regex(/[0-9]/, {
         error: "A jelszónak tartalmaznia kell legalább egy számot",
       })
-      .regex(/[^A-Za-z0-9]/, {
+      .regex(/[^\p{L}\p{N}]/u, {
         error:
           "A jelszónak tartalmazinia kell legalább egy speciális karaktert",
       }),
@@ -69,19 +69,19 @@ const page = () => {
               >
                 <ToggleGroupItem
                   value="a"
-                  className="flex-1 rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background"
+                  className="flex-1 md:text-md rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
                 >
                   Tanuló
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="b"
-                  className="flex-1 rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background"
+                  className="flex-1 md:text-md rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
                 >
                   Tanár
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="c"
-                  className="flex-1 rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background"
+                  className="flex-1 md:text-md rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
                 >
                   Szülő
                 </ToggleGroupItem>
