@@ -2,14 +2,17 @@
 import { Button } from "@/components/ui/button";
 import {
   Field,
+  FieldContent,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
   FieldSet,
+  FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -53,13 +56,39 @@ const page = () => {
         <form action="" id="registration" className="w-full h-full">
           <FieldGroup className="w-full h-full flex flex-col justify-between">
             <div className="flex flex-col items-start">
-              <h1 className="text-2xl md:text-3xl font-bold text-primary">
+              <h1 className="text-3xl md:text-4xl font-bold text-primary mb-1">
                 Regisztráció
               </h1>
-              <p className="indent-4 text-xs md:text-sm">
+              <p className="pl-6 text-xs md:text-sm">
                 Kérjük adja meg regisztrációs adatait!
               </p>
             </div>
+            <RadioGroup className="flex w-full bg-primary">
+              <FieldLabel htmlFor="a" className="justify-center w-full flex bg-primary p-[0.35rem] text-primary-foreground rounded-2xl">
+                <Field orientation="responsive">
+                  <FieldContent>
+                    <FieldTitle>Tanuló</FieldTitle>
+                  </FieldContent>
+                  <RadioGroupItem value="a" id="a" className="peer sr-only" />
+                </Field>
+              </FieldLabel>
+              <FieldLabel htmlFor="b" className="justify-center w-full flex bg-primary p-[0.35rem] text-primary-foreground rounded-2xl">
+                <Field orientation="responsive">
+                  <FieldContent>
+                    <FieldTitle>Tanár</FieldTitle>
+                  </FieldContent>
+                  <RadioGroupItem value="b" id="b" className="peer sr-only" />
+                </Field>
+              </FieldLabel>
+              <FieldLabel htmlFor="c" className="justify-center w-full flex bg-primary p-[0.35rem] text-primary-foreground rounded-2xl">
+                <Field orientation="responsive">
+                  <FieldContent>
+                    <FieldTitle>Szülő</FieldTitle>
+                  </FieldContent>
+                  <RadioGroupItem value="c" id="c" className="peer sr-only" />
+                </Field>
+              </FieldLabel>
+            </RadioGroup>
             <Field className="w-full">
               <ToggleGroup
                 type="single"
@@ -69,19 +98,19 @@ const page = () => {
               >
                 <ToggleGroupItem
                   value="a"
-                  className="flex-1 md:text-md rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
+                  className="flex-1 rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
                 >
                   Tanuló
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="b"
-                  className="flex-1 md:text-md rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
+                  className="flex-1 rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
                 >
                   Tanár
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="c"
-                  className="flex-1 md:text-md rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
+                  className="flex-1 rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
                 >
                   Szülő
                 </ToggleGroupItem>
