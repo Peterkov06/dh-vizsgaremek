@@ -63,27 +63,27 @@ const page = () => {
                 Kérjük adja meg regisztrációs adatait!
               </p>
             </div>
-            <RadioGroup className="flex w-full bg-primary">
-              <FieldLabel htmlFor="a" className="justify-center w-full flex bg-primary p-[0.35rem] text-primary-foreground rounded-2xl">
-                <Field orientation="responsive">
-                  <FieldContent>
+            <RadioGroup className="justify-center w-full flex bg-primary p-[0.35rem] text-primary-foreground rounded-2xl gap-0" defaultValue="a">
+              <FieldLabel htmlFor="a" className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none">
+                <Field orientation="horizontal" className="w-full">
+                  <FieldContent  className="w-full flex flex-row justify-center">
                     <FieldTitle>Tanuló</FieldTitle>
                   </FieldContent>
                   <RadioGroupItem value="a" id="a" className="peer sr-only" />
                 </Field>
               </FieldLabel>
-              <FieldLabel htmlFor="b" className="justify-center w-full flex bg-primary p-[0.35rem] text-primary-foreground rounded-2xl">
-                <Field orientation="responsive">
-                  <FieldContent>
+              <FieldLabel htmlFor="b" className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none">
+                <Field orientation="horizontal" className="w-full">
+                  <FieldContent className="w-full flex flex-row justify-center">
                     <FieldTitle>Tanár</FieldTitle>
                   </FieldContent>
                   <RadioGroupItem value="b" id="b" className="peer sr-only" />
                 </Field>
               </FieldLabel>
-              <FieldLabel htmlFor="c" className="justify-center w-full flex bg-primary p-[0.35rem] text-primary-foreground rounded-2xl">
-                <Field orientation="responsive">
-                  <FieldContent>
-                    <FieldTitle>Szülő</FieldTitle>
+              <FieldLabel htmlFor="c" className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none">
+                <Field orientation="horizontal" className="w-full">
+                  <FieldContent className="w-full flex flex-row justify-center">
+                    <FieldTitle className="w-fit">Szülő</FieldTitle>
                   </FieldContent>
                   <RadioGroupItem value="c" id="c" className="peer sr-only" />
                 </Field>
@@ -98,19 +98,19 @@ const page = () => {
               >
                 <ToggleGroupItem
                   value="a"
-                  className="flex-1 rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
+                  className="flex-1 rounded-[0.65rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
                 >
                   Tanuló
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="b"
-                  className="flex-1 rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
+                  className="flex-1 rounded-[0.65rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
                 >
                   Tanár
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="c"
-                  className="flex-1 rounded-[0.8rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
+                  className="flex-1 rounded-[0.65rem] data-[state=on]:text-primary data-[state=on]:bg-background data-[state=on]:font-bold"
                 >
                   Szülő
                 </ToggleGroupItem>
