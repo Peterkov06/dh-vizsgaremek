@@ -50,8 +50,6 @@ const PersonalDataComponent = () => {
       mode: "onTouched",
     });
   
-    const [accceptedTerms, setAccceptedTerms] = useState<boolean>(false);
-  
     return (
       <section className="flex flex-row w-full">
         <div className="lg:w-7/12"></div>
@@ -76,7 +74,7 @@ const PersonalDataComponent = () => {
                         {...field}
                         aria-invalid={fieldState.invalid}
                         type="text"
-                        placeholder="Email cím"
+                        placeholder="Teljes név"
                         className="border-2 border-border rounded-2xl py-5 text-sm"
                       />
                       {fieldState.invalid && (
@@ -86,15 +84,33 @@ const PersonalDataComponent = () => {
                   )}
                 />
                 <Controller
-                  name="password"
+                  name="email"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field className="w-full" data-invalid={fieldState.invalid}>
                       <Input
                         {...field}
-                        type="password"
-                        placeholder="Jelszó"
                         aria-invalid={fieldState.invalid}
+                        type="text"
+                        placeholder="Becenév (opcionális)"
+                        className="border-2 border-border rounded-2xl py-5 text-sm"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field className="w-full" data-invalid={fieldState.invalid}>
+                      <Input
+                        {...field}
+                        aria-invalid={fieldState.invalid}
+                        type="text"
+                        placeholder="Lakcím (opcionális)"
                         className="border-2 border-border rounded-2xl py-5 text-sm"
                       />
                       {fieldState.invalid && (
@@ -104,44 +120,14 @@ const PersonalDataComponent = () => {
                   )}
                 />
               </FieldSet>
-              <FieldGroup>
-                <Field orientation={"horizontal"} className="">
-                  <Checkbox
-                    id="terms-and-conditions"
-                    className="border-2 border-border"
-                    checked={accceptedTerms}
-                    onCheckedChange={() => setAccceptedTerms((prev) => !prev)}
-                  />
-                  <FieldLabel
-                    htmlFor="terms-and-conditions"
-                    className="font-normal"
-                  >
-                    Elolvastam és elfogadom a felhasználási feltételeket
-                  </FieldLabel>
-                </Field>
-              </FieldGroup>
               <Button
                 variant={"default"}
-                type="submit"
                 form="registration"
                 className="w-full rounded-2xl py-6  md:text-lg"
-                disabled={!accceptedTerms || !form.formState.isValid}
+                disabled={!form.formState.isValid}
               >
-                Regisztráció
+                Tovább
               </Button>
-  
-              <div className="flex flex-row justify-center items-center">
-                <FieldSeparator className="w-full"></FieldSeparator>
-                <p className="mx-3 text-sidebar-border text-[0.7rem] whitespace-nowrap">
-                  Vagy regisztrálj más fiókkal
-                </p>
-                <FieldSeparator className="w-full"></FieldSeparator>
-              </div>
-              <FieldSet className="flex-row justify-center">
-                <Button>A</Button>
-                <Button>B</Button>
-                <Button>C</Button>
-              </FieldSet>
             </FieldGroup>
           </form>
         </aside>
