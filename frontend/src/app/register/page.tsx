@@ -16,7 +16,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { Checkbox } from "@/components/ui/checkbox";
 import * as z from "zod";
+import { useState } from "react";
 
 const page = () => {
   const formSchema = z.object({
@@ -49,12 +51,14 @@ const page = () => {
     mode: "onTouched",
   });
 
+  const [accceptedTerms, setAccceptedTerms] = useState<boolean>(false);
+
   return (
     <section className="flex flex-row h-screen min-h-screen w-full bg-registration-bg justify-center items-center px-10">
       <div className="lg:w-7/12"></div>
-      <aside className="w-full lg:w-5/12 h-10/12 bg-background rounded-[1.2rem] p-10">
+      <aside className="w-full lg:w-5/12  min-h-fit bg-background rounded-[1.2rem] p-10">
         <form action="" id="registration" className="w-full h-full">
-          <FieldGroup className="w-full h-full flex flex-col justify-between">
+          <FieldGroup className="w-full h-full flex flex-col">
             <div className="flex flex-col items-start">
               <h1 className="text-3xl md:text-4xl font-bold text-primary mb-1">
                 Regisztráció
@@ -139,11 +143,28 @@ const page = () => {
                 )}
               />
             </FieldSet>
+            <FieldGroup>
+              <Field orientation={"horizontal"} className="">
+                <Checkbox
+                  id="terms-and-conditions"
+                  className="border-2 border-border"
+                  checked={accceptedTerms}
+                  onCheckedChange={() => setAccceptedTerms((prev) => !prev)}
+                />
+                <FieldLabel
+                  htmlFor="terms-and-conditions"
+                  className="font-normal"
+                >
+                  Elolvastam és elfogadom a felhasználási feltételeket
+                </FieldLabel>
+              </Field>
+            </FieldGroup>
             <Button
               variant={"default"}
               type="submit"
               form="registration"
               className="w-full rounded-2xl py-6  md:text-lg"
+              disabled={!accceptedTerms || !form.formState.isValid}
             >
               Regisztráció
             </Button>
