@@ -4,6 +4,7 @@ using backend.Services.JwtServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace backend.Controllers.Login
@@ -117,11 +118,54 @@ namespace backend.Controllers.Login
             return Ok();
         }
 
+        [HttpGet("refresh")]
+        public async Task<IActionResult> RefreshToken()
+        {
+
+            var refreshToken = Request.Cookies["refresh_token"];
+
+            var storedToken = _context.RefreshTokens.Include(rt => rt.User)
+                .FirstOrDefault(rt => rt.Token == refreshToken && !rt.IsRevoked && rt.ExpiresAt > DateTime.UtcNow);
+
+            if (storedToken == null)
+                return Unauthorized();
+
+            var roles = await _userManager.GetRolesAsync(storedToken.User);
+
+            var token = _jwtGenerator.GenerateToken(storedToken.User, roles);
+            Response.Cookies.Append("access_token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax,
+                //SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddMinutes(15)
+            });
+
+            return Ok();
+        }
+
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout() {
+
+            try
+            {
+                Response.Cookies.Delete("access_token");
+                Response.Cookies.Delete("refresh_token");
+
+                return Ok();
+            }
+            catch(Exception ex) {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         [Authorize(Roles = "Teacher")]
         [HttpGet("proba")]
         public async Task<IActionResult> Proba() {
 
             return Ok();
         }
+
     }
 }
