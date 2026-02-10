@@ -18,121 +18,248 @@ import { Controller, useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as z from "zod";
 import { useState } from "react";
+import {
+  InputGroup,
+  InputGroupInput,
+  InputGroupAddon,
+  InputGroupButton,
+} from "@/components/ui/input-group";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 
 const PersonalDataComponent = () => {
   const formSchema = z.object({
-      email: z.email({ error: "Érvénytelen email cím" }),
-      password: z
-        .string()
-        .min(8, { error: "A jelszónak legalább 8 karakternek kell lennie" })
-        .max(24, { error: "A jelszó maximum 24 karakter lehet" })
-        .regex(/[\p{Lu}]/u, {
-          error: "A jelszónak tartalmaznia kell legalább egy nagybetűt",
-        })
-        .regex(/[\p{Ll}]/u, {
-          error: "A jelszónak tartalmaznia kell legalább egy kisbetűt",
-        })
-        .regex(/[0-9]/, {
-          error: "A jelszónak tartalmaznia kell legalább egy számot",
-        })
-        .regex(/[^\p{L}\p{N}]/u, {
-          error:
-            "A jelszónak tartalmazinia kell legalább egy speciális karaktert",
-        }),
-    });
-  
-    const form = useForm<z.infer<typeof formSchema>>({
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-        email: "",
-        password: "",
-      },
-      mode: "onTouched",
-    });
-  
-    return (
-      <section className="flex flex-row w-full">
-        <div className="lg:w-7/12"></div>
-        <aside className="w-full lg:w-5/12 min-h-fit bg-background rounded-[1.2rem] p-10">
-          <form action="" id="registration" className="w-full h-full">
-            <FieldGroup className="w-full h-full flex flex-col justify-between">
-              <div className="flex flex-col items-start">
-                <h1 className="text-3xl md:text-4xl font-bold text-primary mb-1">
-                  Személyes adatok
-                </h1>
-                <p className="pl-6 text-xs md:text-sm">
-                  Kérjük töltse ki a regisztrációhoz szükséges személyes adatait!
-                </p>
-              </div>
-              <FieldSet>
-                <Controller
-                  name="email"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field className="w-full" data-invalid={fieldState.invalid}>
-                      <Input
-                        {...field}
-                        aria-invalid={fieldState.invalid}
-                        type="text"
-                        placeholder="Teljes név"
-                        className="border-2 border-border rounded-2xl py-5 text-sm"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="email"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field className="w-full" data-invalid={fieldState.invalid}>
-                      <Input
-                        {...field}
-                        aria-invalid={fieldState.invalid}
-                        type="text"
-                        placeholder="Becenév (opcionális)"
-                        className="border-2 border-border rounded-2xl py-5 text-sm"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="email"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field className="w-full" data-invalid={fieldState.invalid}>
-                      <Input
-                        {...field}
-                        aria-invalid={fieldState.invalid}
-                        type="text"
-                        placeholder="Lakcím (opcionális)"
-                        className="border-2 border-border rounded-2xl py-5 text-sm"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </FieldSet>
-              <Button
-                variant={"default"}
-                form="registration"
-                className="w-full rounded-2xl py-6  md:text-lg"
-                disabled={!form.formState.isValid}
-              >
-                Tovább
-              </Button>
-            </FieldGroup>
-          </form>
-        </aside>
-      </section>
-    )
-}
+    fullname: z.string().nonempty({ error: "Név megadása kötelező" }),
+    nickname: z.string().nonempty({ error: "Becenév megadása kötelező" }),
+    dateOfBirthString: z
+      .string()
+      .nonempty({ error: "Születési dátum megadása kötelező" }),
+    dateOfBirth: z
+      .date({ error: "Születési dátum megadása kötelező" })
+      .min(new Date(1900, 0, 1), {
+        error: "Adjon meg érvényes születési dátumot!",
+      })
+      .max(new Date(), { error: "Adjon meg érvényes születési dátumot!" }),
+    postalCode: z
+      .string()
+      .nonempty({ error: "Irányítószám megadása kötelező" })
+      .regex(/^[0-9]{4}$/, { error: "Érvénytelen irányítószám" }),
+    cityName: z.string().nonempty({ error: "Városnév megadása kötelező" }),
+    homeAddress: z.string().nonempty({ error: "Cím megadása kötelező" }),
+  });
 
-export default PersonalDataComponent
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      fullname: "",
+      nickname: "",
+      dateOfBirthString: "",
+      dateOfBirth: new Date(2026, 0, 1),
+      postalCode: "",
+      cityName: "",
+      homeAddress: "",
+    },
+    mode: "onTouched",
+  });
+
+  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date(2026, 0, 1));
+  const [birthMonth, setBirthMonth] = useState<Date>(new Date(2026, 0, 1));
+  const [birthDay, setBirthDay] = useState<Date>(new Date(2026, 0, 1));
+  const [value, setValue] = useState(format(dateOfBirth, "yyyy. MM. dd."));
+
+  return (
+    <section className="flex flex-row w-full">
+      <div className="lg:w-7/12"></div>
+      <aside className="w-full lg:w-5/12 min-h-fit bg-background rounded-[1.2rem] p-10">
+        <form action="" id="registration" className="w-full h-full">
+          <FieldGroup className="w-full h-full flex flex-col justify-between">
+            <div className="flex flex-col items-start">
+              <h1 className="text-3xl md:text-4xl font-bold text-primary mb-1">
+                Személyes adatok
+              </h1>
+              <p className="pl-6 text-xs md:text-sm">
+                Kérjük töltse ki a regisztrációhoz szükséges személyes adatait!
+              </p>
+            </div>
+            <FieldSet>
+              <Controller
+                name="fullname"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="w-full" data-invalid={fieldState.invalid}>
+                    <Input
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      type="text"
+                      placeholder="Teljes név"
+                      className="border-2 border-border rounded-2xl py-5 text-sm"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="nickname"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="w-full" data-invalid={fieldState.invalid}>
+                    <Input
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      type="text"
+                      placeholder="Becenév (opcionális)"
+                      className="border-2 border-border rounded-2xl py-5 text-sm"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldSet>
+            <FieldSet className="flex flex-col md:flex-row justify-between md:justify-center md:items-center md:gap-2 wfull">
+              <Field className="">
+                <FieldLabel htmlFor="date-required">Születési dátum</FieldLabel>
+                <InputGroup className="border-2 border-border rounded-2xl py-5 text-sm">
+                  <InputGroupInput
+                    id="date-required"
+                    value={value}
+                    placeholder="2050.01.01."
+                    onChange={(e) => {
+                      const date = new Date(e.target.value);
+                      setValue(e.target.value);
+                      setDateOfBirth(date);
+                    }}
+                    /*onKeyDown={(e) => {
+              
+                    }}*/
+                  />
+                  <InputGroupAddon align="inline-end">
+                    <Popover
+                      open={openDatePicker}
+                      onOpenChange={setOpenDatePicker}
+                    >
+                      <PopoverTrigger asChild>
+                        <InputGroupButton
+                          id="date-picker"
+                          variant="ghost"
+                          size="icon-xs"
+                          aria-label="Select date"
+                        >
+                          <CalendarIcon />
+                          <span className="sr-only">Select date</span>
+                        </InputGroupButton>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto overflow-hidden p-0"
+                        align="end"
+                        alignOffset={-8}
+                        sideOffset={10}
+                      >
+                        <Calendar
+                          mode="single"
+                          captionLayout="dropdown"
+                          selected={dateOfBirth}
+                          month={birthMonth}
+                          onMonthChange={setBirthMonth}
+                          onSelect={(date) => {
+                            date && setDateOfBirth(date);
+                            date && setValue(date.toLocaleDateString());
+                            setOpenDatePicker(false);
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </InputGroupAddon>
+                </InputGroup>
+              </Field>
+              <Controller
+                name="postalCode"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="w-full" data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="postal-code">Irányítószám</FieldLabel>
+                    <Input
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      id="postal-code"
+                      type="text"
+                      placeholder="Irányítószám"
+                      className="border-2 border-border rounded-2xl py-5 text-sm"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldSet>
+            <FieldSet className="flex flex-col md:flex-row justify-between md:justify-center md:items-center md:gap-2 wfull">
+              <Combobox items={["Derecske", "Debrecen", "Mándok"]}>
+                <ComboboxInput
+                  placeholder="Város"
+                  className="border-2 border-border rounded-2xl py-5 text-sm w-full"
+                />
+                <ComboboxContent>
+                  <ComboboxEmpty>Nem találtunk ilyen várost.</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item) => (
+                      <ComboboxItem key={item} value={item}>
+                        {item}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+              <Controller
+                name="homeAddress"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="w-full" data-invalid={fieldState.invalid}>
+                    <Input
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      type="text"
+                      placeholder="Lakcím (utca, házszám)"
+                      className="border-2 border-border rounded-2xl py-5 text-sm"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldSet>
+            <Button
+              variant={"default"}
+              form="registration"
+              className="w-full rounded-2xl py-6  md:text-lg"
+              disabled={!form.formState.isValid}
+            >
+              Tovább
+            </Button>
+          </FieldGroup>
+        </form>
+      </aside>
+    </section>
+  );
+};
+
+export default PersonalDataComponent;

@@ -1,4 +1,4 @@
-import MainRegisterComponent from "./MainRegisterComponent"
+import MainRegisterComponent from "./MainRegisterComponent";
 import PersonalDataComponent from "./PersonalDataComponent";
 
 const page = () => {
