@@ -49,5 +49,17 @@ namespace backend.Controllers.Cities
 
             return Ok(cities);
         }
+
+        [HttpGet("search/city/postal")]
+        public async Task<IActionResult> SearchPostalFromCity([FromQuery]string city)
+        {
+
+            if (string.IsNullOrEmpty(city))
+                return BadRequest();
+
+            var cities = _context.Cities.Where(c => c.CityName.ToLower().StartsWith(city.ToLower())).Select(c => c.PostalCode).Distinct().ToList();
+
+            return Ok(cities);
+        }
     }
 }
