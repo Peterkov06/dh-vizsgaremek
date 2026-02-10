@@ -30,7 +30,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { format, isValid, parse } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import {
   Combobox,
@@ -53,7 +53,9 @@ const PersonalDataComponent = () => {
       .min(new Date(1900, 0, 1), {
         error: "Adjon meg érvényes születési dátumot!",
       })
-      .max(new Date(), { error: "Adjon meg érvényes születési dátumot!" }),
+      .max(new Date(new Date().getFullYear() - 12), {
+        error: "Adjon meg érvényes születési dátumot!",
+      }),
     postalCode: z
       .string()
       .nonempty({ error: "Irányítószám megadása kötelező" })
@@ -68,7 +70,7 @@ const PersonalDataComponent = () => {
       fullname: "",
       nickname: "",
       dateOfBirthString: "",
-      dateOfBirth: new Date(2026, 0, 1),
+      dateOfBirth: new Date(),
       postalCode: "",
       cityName: "",
       homeAddress: "",
@@ -77,10 +79,10 @@ const PersonalDataComponent = () => {
   });
 
   const [openDatePicker, setOpenDatePicker] = useState(false);
-  const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date(2026, 0, 1));
-  const [birthMonth, setBirthMonth] = useState<Date>(new Date(2026, 0, 1));
-  const [birthDay, setBirthDay] = useState<Date>(new Date(2026, 0, 1));
-  const [value, setValue] = useState(format(dateOfBirth, "yyyy. MM. dd."));
+  const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
+  const [birthMonth, setBirthMonth] = useState<Date>(new Date());
+  const [birthDay, setBirthDay] = useState<Date>(new Date());
+  const [value, setValue] = useState(format(dateOfBirth, "yyyy.MM.dd."));
 
   return (
     <section className="flex flex-row w-full">
@@ -135,61 +137,80 @@ const PersonalDataComponent = () => {
               />
             </FieldSet>
             <FieldSet className="flex flex-col md:flex-row justify-between md:justify-center md:items-center md:gap-2 wfull">
-              <Field className="">
-                <FieldLabel htmlFor="date-required">Születési dátum</FieldLabel>
-                <InputGroup className="border-2 border-border rounded-2xl py-5 text-sm">
-                  <InputGroupInput
-                    id="date-required"
-                    value={value}
-                    placeholder="2050.01.01."
-                    onChange={(e) => {
-                      const date = new Date(e.target.value);
-                      setValue(e.target.value);
-                      setDateOfBirth(date);
-                    }}
-                    /*onKeyDown={(e) => {
+              <Controller
+                name="dateOfBirth"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="" data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="date-required">
+                      Születési dátum
+                    </FieldLabel>
+                    <InputGroup className="border-2 border-border rounded-2xl py-5 text-sm">
+                      <InputGroupInput
+                        id="date-required"
+                        value={value}
+                        placeholder="Születési dátum"
+                        onChange={(e) => {
+                          const vale = e.target.value;
+                          setValue(vale);
+                          const date = parse(vale, "yyyy.MM.dd.", new Date());
+                          if (isValid(date)) {
+                            //setDateOfBirth(date);
+                            form.setValue("dateOfBirth", date);
+                            setBirthMonth(date);
+                          }
+                        }}
+                        /*onKeyDown={(e) => {
               
                     }}*/
-                  />
-                  <InputGroupAddon align="inline-end">
-                    <Popover
-                      open={openDatePicker}
-                      onOpenChange={setOpenDatePicker}
-                    >
-                      <PopoverTrigger asChild>
-                        <InputGroupButton
-                          id="date-picker"
-                          variant="ghost"
-                          size="icon-xs"
-                          aria-label="Select date"
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <Popover
+                          open={openDatePicker}
+                          onOpenChange={setOpenDatePicker}
                         >
-                          <CalendarIcon />
-                          <span className="sr-only">Select date</span>
-                        </InputGroupButton>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto overflow-hidden p-0"
-                        align="end"
-                        alignOffset={-8}
-                        sideOffset={10}
-                      >
-                        <Calendar
-                          mode="single"
-                          captionLayout="dropdown"
-                          selected={dateOfBirth}
-                          month={birthMonth}
-                          onMonthChange={setBirthMonth}
-                          onSelect={(date) => {
-                            date && setDateOfBirth(date);
-                            date && setValue(date.toLocaleDateString());
-                            setOpenDatePicker(false);
-                          }}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </InputGroupAddon>
-                </InputGroup>
-              </Field>
+                          <PopoverTrigger asChild>
+                            <InputGroupButton
+                              id="date-picker"
+                              variant="ghost"
+                              size="icon-xs"
+                              aria-label="Select date"
+                            >
+                              <CalendarIcon />
+                              <span className="sr-only">Select date</span>
+                            </InputGroupButton>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="w-auto overflow-hidden p-0"
+                            alignOffset={-8}
+                            sideOffset={10}
+                            onFocusOutside={(e) => e.preventDefault()}
+                          >
+                            <Calendar
+                              mode="single"
+                              captionLayout="dropdown"
+                              weekStartsOn={1}
+                              month={birthMonth}
+                              onMonthChange={setBirthMonth}
+                              selected={field.value}
+                              onSelect={(date) => {
+                                //date && setDateOfBirth(date);
+                                date && setValue(format(date, "yyyy.MM.dd."));
+                                date && form.setValue("dateOfBirth", date);
+                                setOpenDatePicker(false);
+                              }}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
               <Controller
                 name="postalCode"
                 control={form.control}
