@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.IdentityModel.JsonWebTokens;
+using System.Security.Claims;
 
 namespace backend.Controllers.Login
 {
@@ -31,7 +33,7 @@ namespace backend.Controllers.Login
 
 
 
-        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address, DateTime Date_of_birth, string? Nickname);
+        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address, DateTime Date_of_birth, string? Nickname, string? Introduction);
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody]RegisterDTO register) {
@@ -47,6 +49,10 @@ namespace backend.Controllers.Login
 
             if (!string.IsNullOrEmpty(register.Nickname)) {
                 newUser.Nickname = register.Nickname;
+            }
+            if (!string.IsNullOrEmpty(register.Introduction))
+            {
+                newUser.Nickname = register.Introduction;
             }
 
             var result = await _userManager.CreateAsync(newUser, register.Password);
