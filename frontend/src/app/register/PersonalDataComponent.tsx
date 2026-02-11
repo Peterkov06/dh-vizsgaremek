@@ -12,10 +12,8 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { Checkbox } from "@/components/ui/checkbox";
 import * as z from "zod";
 import { useState } from "react";
 import {
@@ -50,11 +48,11 @@ const PersonalDataComponent = () => {
       .nonempty({ error: "Születési dátum megadása kötelező" }),
     dateOfBirth: z
       .date({ error: "Születési dátum megadása kötelező" })
-      .min(new Date(1900, 0, 1), {
+      .min(new Date(1900, 1, 1), {
         error: "Adjon meg érvényes születési dátumot!",
       })
-      .max(new Date(new Date().getFullYear() - 12), {
-        error: "Adjon meg érvényes születési dátumot!",
+      .max(new Date((new Date().getFullYear() - 12).toString()), {
+        error: "12 évesnél idősebbnek kell lennie!",
       }),
     postalCode: z
       .string()
@@ -147,6 +145,8 @@ const PersonalDataComponent = () => {
                     </FieldLabel>
                     <InputGroup className="border-2 border-border rounded-2xl py-5 text-sm">
                       <InputGroupInput
+                        {...field}
+                        aria-invalid={fieldState.invalid}
                         id="date-required"
                         value={value}
                         placeholder="Születési dátum"
@@ -155,9 +155,11 @@ const PersonalDataComponent = () => {
                           setValue(vale);
                           const date = parse(vale, "yyyy.MM.dd.", new Date());
                           if (isValid(date)) {
-                            //setDateOfBirth(date);
+                            field.onChange(date);
                             form.setValue("dateOfBirth", date);
                             setBirthMonth(date);
+                          } else {
+                            field.onChange(null);
                           }
                         }}
                         /*onKeyDown={(e) => {
@@ -194,10 +196,13 @@ const PersonalDataComponent = () => {
                               onMonthChange={setBirthMonth}
                               selected={field.value}
                               onSelect={(date) => {
-                                //date && setDateOfBirth(date);
-                                date && setValue(format(date, "yyyy.MM.dd."));
-                                date && form.setValue("dateOfBirth", date);
-                                setOpenDatePicker(false);
+                                if (date) {
+                                  field.onChange(date);
+                                  form.setValue("dateOfBirth", date);
+                                  form.setFocus("dateOfBirth");
+                                  setValue(format(date, "yyyy.MM.dd."));
+                                  setOpenDatePicker(false);
+                                }
                               }}
                             />
                           </PopoverContent>
@@ -233,22 +238,43 @@ const PersonalDataComponent = () => {
               />
             </FieldSet>
             <FieldSet className="flex flex-col md:flex-row justify-between md:justify-center md:items-center md:gap-2 wfull">
-              <Combobox items={["Derecske", "Debrecen", "Mándok"]}>
-                <ComboboxInput
-                  placeholder="Város"
-                  className="border-2 border-border rounded-2xl py-5 text-sm w-full"
-                />
-                <ComboboxContent>
-                  <ComboboxEmpty>Nem találtunk ilyen várost.</ComboboxEmpty>
-                  <ComboboxList>
-                    {(item) => (
-                      <ComboboxItem key={item} value={item}>
-                        {item}
-                      </ComboboxItem>
-                    )}
-                  </ComboboxList>
-                </ComboboxContent>
-              </Combobox>
+              <Controller
+                name="cityName"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field
+                    {...field}
+                    className="w-full"
+                    data-invalid={fieldState.invalid}
+                  >
+                    <Combobox
+                      items={["Derecske", "Debrecen", "Mándok"]}
+                      onValueChange={field.onChange}
+                    >
+                      <ComboboxInput
+                        placeholder="Város"
+                        className="border-2 border-border rounded-2xl py-5 text-sm w-full"
+                        value={field.value}
+                      />
+                      <ComboboxContent>
+                        <ComboboxEmpty>
+                          Nem találtunk ilyen várost.
+                        </ComboboxEmpty>
+                        <ComboboxList>
+                          {(item) => (
+                            <ComboboxItem key={item} value={item}>
+                              {item}
+                            </ComboboxItem>
+                          )}
+                        </ComboboxList>
+                      </ComboboxContent>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Combobox>
+                  </Field>
+                )}
+              />
               <Controller
                 name="homeAddress"
                 control={form.control}
