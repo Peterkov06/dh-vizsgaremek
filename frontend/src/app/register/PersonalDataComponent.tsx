@@ -77,10 +77,8 @@ const PersonalDataComponent = () => {
   });
 
   const [openDatePicker, setOpenDatePicker] = useState(false);
-  const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
   const [birthMonth, setBirthMonth] = useState<Date>(new Date());
-  const [birthDay, setBirthDay] = useState<Date>(new Date());
-  const [value, setValue] = useState(format(dateOfBirth, "yyyy.MM.dd."));
+  const [value, setValue] = useState(format(new Date(), "yyyy.MM.dd."));
 
   return (
     <section className="flex flex-row w-full">
