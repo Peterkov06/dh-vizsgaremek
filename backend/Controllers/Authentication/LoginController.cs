@@ -65,7 +65,7 @@ namespace backend.Controllers.Login
                 await _userManager.AddToRoleAsync(newUser, register.Role);
             }
 
-            return Ok();
+            return Created();
         }
         
 
