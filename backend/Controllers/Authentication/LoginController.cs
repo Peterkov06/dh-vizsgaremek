@@ -166,6 +166,35 @@ namespace backend.Controllers.Login
             }
         }
 
+        [Authorize]
+        [HttpDelete("account/delete")]
+        public async Task<IActionResult> DeleteAccount() {
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return NotFound();
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            Response.Cookies.Delete("access_token");
+            Response.Cookies.Delete("refresh_token");
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPut("account/modify")]
+        public async Task<IActionResult> ModifyUser() {
+
+            var user = await _userManager.GetUserAsync(User);
+
+            return Ok(user.Id);
+        }
+
         [Authorize(Roles = "Teacher")]
         [HttpGet("proba")]
         public async Task<IActionResult> Proba() {
