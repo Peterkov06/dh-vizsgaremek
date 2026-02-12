@@ -1,12 +1,15 @@
 ﻿using backend.Data;
 using backend.Models;
 using backend.Services.JwtServices;
+using backend.Services.SendEmail;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.IdentityModel.JsonWebTokens;
+using MimeKit;
 using System.Security.Claims;
 
 namespace backend.Controllers.Login
@@ -18,16 +21,19 @@ namespace backend.Controllers.Login
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtGenerator _jwtGenerator;
+        //private readonly EmailSender _emailSender;
         private readonly UserDbContext _context;
         
         public LoginController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             JwtGenerator jwtGenerator,
+            //EmailSender emailSender,
             UserDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtGenerator = jwtGenerator;
+            //_emailSender = emailSender;
             _context = context;
         }
 
@@ -151,6 +157,7 @@ namespace backend.Controllers.Login
             return NoContent();
         }
 
+        [Authorize]
         [HttpGet("logout")]
         public async Task<IActionResult> Logout() {
 
@@ -158,6 +165,14 @@ namespace backend.Controllers.Login
             {
                 Response.Cookies.Delete("access_token");
                 Response.Cookies.Delete("refresh_token");
+
+                var user = await _userManager.GetUserAsync(User);
+
+                if (user == null)
+                    return NotFound();
+
+                _context.RefreshTokens.RemoveRange(_context.RefreshTokens.Where(x => x.UserId == user.Id));
+                await _context.SaveChangesAsync();
 
                 return NoContent();
             }
@@ -182,6 +197,8 @@ namespace backend.Controllers.Login
 
             Response.Cookies.Delete("access_token");
             Response.Cookies.Delete("refresh_token");
+            _context.RefreshTokens.RemoveRange(_context.RefreshTokens.Where(x => x.UserId == user.Id));
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -239,10 +256,34 @@ namespace backend.Controllers.Login
             if (resetLink == null)
                 return BadRequest();
 
-            Console.WriteLine(token);
+            await SendEmail(fpass.Email, resetLink);
 
 
             return Ok(token);
+        }
+
+
+        public async Task SendEmail(string toEmail, string resetLink)
+        {
+            try
+            {
+                string _smtpHost = "localhost";
+                int _smtpPort = 1025;
+                var emailMessage = new MimeMessage();
+                emailMessage.From.Add(new MailboxAddress("MyApp", "uzlettiember@gmail.com"));
+                emailMessage.To.Add(MailboxAddress.Parse(toEmail));
+                emailMessage.Subject = "Reset Your Password";
+                emailMessage.Body = new TextPart("plain") { Text = $"Click here to reset your password: {resetLink}" };
+
+                using var client = new SmtpClient();
+                await client.ConnectAsync(_smtpHost, _smtpPort, MailKit.Security.SecureSocketOptions.None);
+
+                await client.SendAsync(emailMessage);
+                await client.DisconnectAsync(true);
+            }
+            catch (Exception ex){
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public record ResetPasswordDTO(string Email, string Token, string New_password);
@@ -259,11 +300,11 @@ namespace backend.Controllers.Login
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            
-            //_context.RefreshTokens.RemoveRange(_context.RefreshTokens.Where(x => x.UserId == user.Id));
-            //await _context.SaveChangesAsync();
 
-            return Ok("Password has been reset successfully.");
+            _context.RefreshTokens.RemoveRange(_context.RefreshTokens.Where(x => x.UserId == user.Id));
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
 
