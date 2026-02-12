@@ -1,5 +1,6 @@
 
 using backend.Data;
+using backend.Hubs;
 using backend.Models;
 using backend.Services.JwtServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,6 +23,20 @@ namespace backend
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            builder.Services.AddSignalR();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000", "http://127.0.0.1:5500") // Add your frontend URLs
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
             var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 
             builder.Services.AddDbContext<UserDbContext>(options =>
@@ -63,12 +78,18 @@ namespace backend
                         else
                         {
                             context.Token = context.Request.Cookies["access_token"];
+
+                            if (string.IsNullOrEmpty(context.Token))
+                            {
+                                context.Token = context.Request.Query["access_token"];
+                            }
                         }
 
                         return Task.CompletedTask;
                     }
                 };
             });
+
 
             builder.Services.AddAuthorization();
 
@@ -100,6 +121,7 @@ namespace backend
                     await roleManager.CreateAsync(new IdentityRole(Roles.Parent));
                 }
             }
+            app.UseCors("AllowFrontend");
 
             app.UseHttpsRedirection();
 
@@ -109,6 +131,8 @@ namespace backend
 
 
             app.MapControllers();
+
+            app.MapHub<Chathub>("/api/chathub");
 
             app.Run();
         }
