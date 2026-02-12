@@ -121,7 +121,7 @@ namespace backend.Controllers.Login
                 Expires = DateTimeOffset.UtcNow.AddDays(7)
             });
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpGet("refresh")]
@@ -148,7 +148,7 @@ namespace backend.Controllers.Login
                 Expires = DateTimeOffset.UtcNow.AddMinutes(15)
             });
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpGet("logout")]
@@ -159,7 +159,7 @@ namespace backend.Controllers.Login
                 Response.Cookies.Delete("access_token");
                 Response.Cookies.Delete("refresh_token");
 
-                return Ok();
+                return NoContent();
             }
             catch(Exception ex) {
                 return BadRequest(new { error = ex.Message });
@@ -183,17 +183,89 @@ namespace backend.Controllers.Login
             Response.Cookies.Delete("access_token");
             Response.Cookies.Delete("refresh_token");
 
-            return Ok();
+            return NoContent();
         }
+
+
+        public record ModifyDTO(string? Password,string? Full_name, string? Address,string? Nickname, string? Introduction);
 
         [Authorize]
         [HttpPut("account/modify")]
-        public async Task<IActionResult> ModifyUser() {
+        public async Task<IActionResult> ModifyUser([FromBody]ModifyDTO modify) {
 
             var user = await _userManager.GetUserAsync(User);
 
-            return Ok(user.Id);
+            if (user == null)
+                return NotFound();
+
+            if (!string.IsNullOrEmpty(modify.Full_name))
+                user.FullName = modify.Full_name;
+
+            if (!string.IsNullOrEmpty(modify.Address))
+                user.Address = modify.Address;
+
+            if (!string.IsNullOrEmpty(modify.Nickname))
+                user.Nickname = modify.Nickname;
+
+            if (!string.IsNullOrEmpty(modify.Introduction))
+                user.Introduction = modify.Introduction;
+
+            var updateResult = await _userManager.UpdateAsync(user);
+
+            if (!updateResult.Succeeded)
+                return BadRequest(updateResult.Errors);
+
+            return NoContent();
         }
+
+
+        public record ForgetPasswordDTO(string Email);
+
+        [HttpPost("forget-password")]
+        public async Task<IActionResult> ForgetPassword([FromBody]ForgetPasswordDTO fpass) {
+
+            if (string.IsNullOrEmpty(fpass.Email))
+                return BadRequest(fpass.Email);
+
+            var user = await _userManager.FindByEmailAsync(fpass.Email);
+
+            if (user == null)
+                return NotFound();
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var resetLink = Url.Action("ResetPassword", "Login", new { token, email = fpass.Email }, Request.Scheme);
+
+            if (resetLink == null)
+                return BadRequest();
+
+            Console.WriteLine(token);
+
+
+            return Ok(token);
+        }
+
+        public record ResetPasswordDTO(string Email, string Token, string New_password);
+
+        [AllowAnonymous]
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null)
+                return NotFound();
+
+            var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.New_password);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            
+            //_context.RefreshTokens.RemoveRange(_context.RefreshTokens.Where(x => x.UserId == user.Id));
+            //await _context.SaveChangesAsync();
+
+            return Ok("Password has been reset successfully.");
+        }
+
 
         [Authorize(Roles = "Teacher")]
         [HttpGet("proba")]
