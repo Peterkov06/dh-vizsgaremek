@@ -90,8 +90,8 @@ const IntroductionComponent = () => {
                   </Field>
                 )}
               />
-              <div className="w-full h-full flex flex-row justify-center items-center">
-                <Avatar className="w-1/4 h-1/4">
+              <div className="w-full min-h-48 md:h-full flex flex-row md:justify-center items-center">
+                <Avatar className="h-1/2 w-1/2 md:w-1/4 md:h-1/4">
                   <AvatarImage
                     className="aspect-square"
                     alt="avatar"
@@ -152,9 +152,9 @@ const IntroductionComponent = () => {
           </FieldGroup>
         </form>
       </aside>
-      <div className="absolute bg-background p-2 rounded-xl flex flex-col justify-center items-center rotate-10 top-7/12 left-7/12 -translate-x-1/2 -translate-y-1/2 shadow-[6px_6px_0px_0px_#2D5F3F]">
-        <h3 className="font-bold w-full">Tippek:</h3>
-        <ul className="list-inside list-disc text-xs">
+      <div className="absolute bg-background p-2 rounded-xl flex flex-col justify-center items-center rotate-10 top-7/12 left-7/12 md:top-7/12 md:left-8/12 lg:top-7/12 lg:left-7/12 -translate-y-4/12 -translate-x-2/12 md:-translate-y-5/12 lg:-translate-x-3/5 lg:-translate-y-2/3 shadow-[6px_6px_0px_0px_#2D5F3F] max-w-52 lg:max-w-fit border-2 border-border">
+        <h3 className="font-bold text-sm w-full md:text-lg">Tippek:</h3>
+        <ul className="list-inside list-disc text-[0.6rem] md:text-xs">
           <li>egyedül szerepelj a képen, mosolyogj</li>
           <li>az arcod szemből legyen</li>
           <li>kerüld a szemüvegek tükröződését, logókat, túl sötét képeket</li>
