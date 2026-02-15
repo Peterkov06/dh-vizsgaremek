@@ -144,10 +144,10 @@ const IntroductionComponent = () => {
               variant={"default"}
               type="submit"
               form="registration"
-              className="w-full rounded-2xl py-6  md:text-lg"
+              className="w-full rounded-2xl py-6 md:text-lg cursor-pointer"
               disabled={!form.formState.isValid}
             >
-              Regisztráció
+              Tovább
             </Button>
           </FieldGroup>
         </form>

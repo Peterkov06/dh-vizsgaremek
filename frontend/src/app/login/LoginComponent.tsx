@@ -19,8 +19,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import * as z from "zod";
 import { useState } from "react";
 
-const MainRegisterComponent = () => {
-    const formSchema = z.object({
+const LoginComponent = () => {
+  const formSchema = z.object({
     email: z.email({ error: "Érvénytelen email cím" }),
     password: z
       .string()
@@ -50,7 +50,7 @@ const MainRegisterComponent = () => {
     mode: "onTouched",
   });
 
-  const [accceptedTerms, setAccceptedTerms] = useState<boolean>(false);
+  const [stayLoggedIn, setstayLoggedIn] = useState<boolean>(false);
 
   return (
     <section className="flex flex-row w-full">
@@ -60,50 +60,12 @@ const MainRegisterComponent = () => {
           <FieldGroup className="w-full h-full flex flex-col justify-between">
             <div className="flex flex-col items-start">
               <h1 className="text-3xl md:text-4xl font-bold text-primary mb-1">
-                Regisztráció
+                Bejelentkezés
               </h1>
               <p className="pl-6 text-xs md:text-sm">
-                Kérjük adja meg regisztrációs adatait!
+                Kérjük adja meg bejelentkezési adatait!
               </p>
             </div>
-            <RadioGroup
-              className="justify-center w-full flex bg-primary p-[0.35rem] text-primary-foreground rounded-2xl gap-0"
-              defaultValue="a"
-            >
-              <FieldLabel
-                htmlFor="a"
-                className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none"
-              >
-                <Field orientation="horizontal" className="w-full p-2!">
-                  <FieldContent className="w-full flex flex-row justify-center">
-                    <FieldTitle>Tanuló</FieldTitle>
-                  </FieldContent>
-                  <RadioGroupItem value="a" id="a" className="peer sr-only" />
-                </Field>
-              </FieldLabel>
-              <FieldLabel
-                htmlFor="b"
-                className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none"
-              >
-                <Field orientation="horizontal" className="w-full p-2!">
-                  <FieldContent className="w-full flex flex-row justify-center">
-                    <FieldTitle>Tanár</FieldTitle>
-                  </FieldContent>
-                  <RadioGroupItem value="b" id="b" className="peer sr-only" />
-                </Field>
-              </FieldLabel>
-              <FieldLabel
-                htmlFor="c"
-                className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none"
-              >
-                <Field orientation="horizontal" className="w-full p-2!">
-                  <FieldContent className="w-full flex flex-row justify-center">
-                    <FieldTitle className="w-fit">Szülő</FieldTitle>
-                  </FieldContent>
-                  <RadioGroupItem value="c" id="c" className="peer sr-only" />
-                </Field>
-              </FieldLabel>
-            </RadioGroup>
             <FieldSet>
               <Controller
                 name="email"
@@ -142,20 +104,23 @@ const MainRegisterComponent = () => {
                 )}
               />
             </FieldSet>
-            <FieldGroup>
-              <Field orientation={"horizontal"} className="">
+            <FieldGroup className="flex flex-row justify-between">
+              <Field orientation={"horizontal"} className="w-full">
                 <Checkbox
-                  id="terms-and-conditions"
+                  id="stay-logged-in"
                   className="border-2 border-border"
-                  checked={accceptedTerms}
-                  onCheckedChange={() => setAccceptedTerms((prev) => !prev)}
+                  checked={stayLoggedIn}
+                  onCheckedChange={() => setstayLoggedIn((prev) => !prev)}
                 />
                 <FieldLabel
-                  htmlFor="terms-and-conditions"
+                  htmlFor="stay-logged-in"
                   className="font-normal"
                 >
-                  Elolvastam és elfogadom a felhasználási feltételeket
+                  Maradjon bejelentkezve
                 </FieldLabel>
+              </Field>
+              <Field className="w-fit">
+                <Button variant={"link"} className="cursor-pointer">Elfelejtett jelszó</Button>
               </Field>
             </FieldGroup>
             <Button
@@ -163,15 +128,15 @@ const MainRegisterComponent = () => {
               type="submit"
               form="registration"
               className="w-full rounded-2xl py-6 md:text-lg cursor-pointer"
-              disabled={!accceptedTerms || !form.formState.isValid}
+              disabled={!form.formState.isValid}
             >
-              Regisztráció
+              Bejelentkezés
             </Button>
 
             <div className="flex flex-row justify-center items-center">
               <FieldSeparator className="w-full"></FieldSeparator>
               <p className="mx-3 text-sidebar-border text-[0.7rem] whitespace-nowrap">
-                Vagy regisztrálj más fiókkal
+                Vagy lépj be más fiókkal
               </p>
               <FieldSeparator className="w-full"></FieldSeparator>
             </div>
@@ -180,6 +145,10 @@ const MainRegisterComponent = () => {
               <Button>B</Button>
               <Button>C</Button>
             </FieldSet>
+            <div className="flex flex-col justify-center items-center">
+                <p className="text-xs text-sidebar-border">Még nincs fiókod?</p>
+                <Button variant={"link"} className="cursor-pointer">Regisztrálj!</Button>
+            </div>
           </FieldGroup>
         </form>
       </aside>
@@ -187,4 +156,4 @@ const MainRegisterComponent = () => {
   )
 }
 
-export default MainRegisterComponent
+export default LoginComponent

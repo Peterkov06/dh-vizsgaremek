@@ -259,7 +259,7 @@ const PersonalDataComponent = () => {
                           Nem találtunk ilyen várost.
                         </ComboboxEmpty>
                         <ComboboxList>
-                          {(item) => (
+                          {(item: any) => (
                             <ComboboxItem key={item} value={item}>
                               {item}
                             </ComboboxItem>
@@ -295,7 +295,7 @@ const PersonalDataComponent = () => {
             <Button
               variant={"default"}
               form="registration"
-              className="w-full rounded-2xl py-6  md:text-lg"
+              className="w-full rounded-2xl py-6 md:text-lg cursor-pointer"
               disabled={!form.formState.isValid}
             >
               Tovább
