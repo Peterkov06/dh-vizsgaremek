@@ -98,23 +98,52 @@ namespace backend.Controllers.Preference
         [Authorize]
         [HttpPost("add/to_user")]
         public async Task<IActionResult> AddToUser([FromQuery]int preferenceId) {
-            
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)??User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+                if (userId == null)
+                    return Unauthorized();
+
+                var userPref = new UserPreference
+                {
+                    UserId = userId,
+                    PreferenceId = preferenceId
+                };
+
+                _context.UserPreferences.Add(userPref);
+
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("all/user")]
+        public async Task<IActionResult> GetAlluserPref() {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
             if (userId == null)
                 return Unauthorized();
 
-            var userPref = new UserPreference
-            {
-                UserId = userId,
-                PreferenceId =preferenceId
-            };
+            var userPrefs = _context.UserPreferences.Where(pref => pref.UserId == userId).Select(p=>p.PreferenceId).ToList();
 
-            _context.UserPreferences.Add(userPref);
+            if (userPrefs == null)
+                return NotFound();
 
-            await _context.SaveChangesAsync();
+            var prefs = _context.Preferences.Where(p => userPrefs.Contains(p.Id)).Select(p => new { p.Id, p.Name, p.PreferenceGroupId }).ToList();
 
-            return NoContent();
+            if (prefs == null)
+                return BadRequest();
+
+
+            return Ok(prefs);
         }
     }
 }
