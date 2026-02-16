@@ -308,7 +308,7 @@ namespace backend.Controllers.Login
         }
 
 
-        [Authorize(Roles = "Teacher")]
+        [Authorize]
         [HttpGet("proba")]
         public async Task<IActionResult> Proba() {
 
