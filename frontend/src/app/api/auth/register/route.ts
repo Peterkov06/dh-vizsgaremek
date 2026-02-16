@@ -1,0 +1,30 @@
+import { NextRequest, NextResponse } from "next/server";
+
+export const BASE_URL = "https://localhost:7261/api"
+
+export async function POST (request: NextRequest) {
+    try {
+        const body = await request.json()
+        const response = await fetch(`${BASE_URL}/auth/register`,
+            {
+                method: 'POST', 
+                headers:{
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+            credentials: 'include',
+        });
+        
+        const data = await response.json();
+        const setCookie = response.headers.get('set-cookie');
+        return NextResponse.json(data, {
+            status: response.status,
+            headers: setCookie ? {
+                'set-cookie': setCookie,
+            } : {},
+        })
+    } catch (error) {
+        console.error("Registration error: ", error);
+        return NextResponse.json({message:'A regisztráció során hiba történt'}, {status: 500})
+    }
+}

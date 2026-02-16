@@ -38,31 +38,36 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox";
+import { useRouter } from "next/navigation";
 
 const PersonalDataComponent = () => {
+  const router = useRouter();
+  
   const formSchema = z.object({
     fullname: z.string().nonempty({ error: "Név megadása kötelező" }),
     nickname: z.string().nonempty({ error: "Becenév megadása kötelező" }),
     dateOfBirthString: z
-      .string()
-      .nonempty({ error: "Születési dátum megadása kötelező" }),
+    .string()
+    .nonempty({ error: "Születési dátum megadása kötelező" }),
     dateOfBirth: z
-      .date({ error: "Születési dátum megadása kötelező" })
-      .min(new Date(1900, 1, 1), {
-        error: "Adjon meg érvényes születési dátumot!",
-      })
-      .max(new Date((new Date().getFullYear() - 12).toString()), {
-        error: "12 évesnél idősebbnek kell lennie!",
-      }),
+    .date({ error: "Születési dátum megadása kötelező" })
+    .min(new Date(1900, 1, 1), {
+      error: "Adjon meg érvényes születési dátumot!",
+    })
+    .max(new Date((new Date().getFullYear() - 12).toString()), {
+      error: "12 évesnél idősebbnek kell lennie!",
+    }),
     postalCode: z
-      .string()
-      .nonempty({ error: "Irányítószám megadása kötelező" })
-      .regex(/^[0-9]{4}$/, { error: "Érvénytelen irányítószám" }),
+    .string()
+    .nonempty({ error: "Irányítószám megadása kötelező" })
+    .regex(/^[0-9]{4}$/, { error: "Érvénytelen irányítószám" }),
     cityName: z.string().nonempty({ error: "Városnév megadása kötelező" }),
     homeAddress: z.string().nonempty({ error: "Cím megadása kötelező" }),
   });
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  type RegistrationFormData = z.infer<typeof formSchema>;
+  
+  const form = useForm<RegistrationFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullname: "",
@@ -75,11 +80,30 @@ const PersonalDataComponent = () => {
     },
     mode: "onTouched",
   });
-
+  
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [birthMonth, setBirthMonth] = useState<Date>(new Date());
   const [value, setValue] = useState(format(new Date(), "yyyy.MM.dd."));
+  const [isLoading, setIsLoading] = useState(false);
 
+  const handleSubmit = async (formData: RegistrationFormData) => {
+    setIsLoading(true);
+    const response = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([]),
+    });
+    const data = await response.json();
+    setIsLoading(false);
+    if (data.success) {
+      router.push('/login');
+    } else {
+      alert(data.message);
+    }
+  }
+  
   return (
     <section className="flex flex-row w-full">
       <div className="lg:w-7/12"></div>
