@@ -56,7 +56,7 @@ const LoginComponent = () => {
     <section className="flex flex-row w-full">
       <div className="lg:w-7/12"></div>
       <aside className="w-full lg:w-5/12 min-h-fit bg-background rounded-[1.2rem] p-10">
-        <form action="" id="registration" className="w-full h-full">
+        <form action="" id="login" className="w-full h-full">
           <FieldGroup className="w-full h-full flex flex-col justify-between">
             <div className="flex flex-col items-start">
               <h1 className="text-3xl md:text-4xl font-bold text-primary mb-1">
@@ -112,21 +112,20 @@ const LoginComponent = () => {
                   checked={stayLoggedIn}
                   onCheckedChange={() => setstayLoggedIn((prev) => !prev)}
                 />
-                <FieldLabel
-                  htmlFor="stay-logged-in"
-                  className="font-normal"
-                >
+                <FieldLabel htmlFor="stay-logged-in" className="font-normal">
                   Maradjon bejelentkezve
                 </FieldLabel>
               </Field>
               <Field className="w-fit">
-                <Button variant={"link"} className="cursor-pointer">Elfelejtett jelszó</Button>
+                <Button variant={"link"} className="cursor-pointer">
+                  Elfelejtett jelszó
+                </Button>
               </Field>
             </FieldGroup>
             <Button
               variant={"default"}
               type="submit"
-              form="registration"
+              form="login"
               className="w-full rounded-2xl py-6 md:text-lg cursor-pointer"
               disabled={!form.formState.isValid}
             >
@@ -146,14 +145,16 @@ const LoginComponent = () => {
               <Button>C</Button>
             </FieldSet>
             <div className="flex flex-col justify-center items-center">
-                <p className="text-xs text-sidebar-border">Még nincs fiókod?</p>
-                <Button variant={"link"} className="cursor-pointer">Regisztrálj!</Button>
+              <p className="text-xs text-sidebar-border">Még nincs fiókod?</p>
+              <Button variant={"link"} className="cursor-pointer">
+                Regisztrálj!
+              </Button>
             </div>
           </FieldGroup>
         </form>
       </aside>
     </section>
-  )
-}
+  );
+};
 
-export default LoginComponent
+export default LoginComponent;

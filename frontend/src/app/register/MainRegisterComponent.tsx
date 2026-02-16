@@ -20,7 +20,7 @@ import * as z from "zod";
 import { useState } from "react";
 
 const MainRegisterComponent = () => {
-    const formSchema = z.object({
+  const formSchema = z.object({
     email: z.email({ error: "Érvénytelen email cím" }),
     password: z
       .string()
@@ -184,7 +184,7 @@ const MainRegisterComponent = () => {
         </form>
       </aside>
     </section>
-  )
-}
+  );
+};
 
-export default MainRegisterComponent
+export default MainRegisterComponent;
