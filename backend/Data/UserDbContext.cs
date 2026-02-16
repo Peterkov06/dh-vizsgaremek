@@ -20,6 +20,8 @@ namespace backend.Data
 
         public DbSet<PreferenceGroup> PreferenceGroups { get; set; }
 
+        public DbSet<UserPreference> UserPreferences { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -2,6 +2,8 @@
 using backend.Models.Preferances;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
+using System.Security.Claims;
 
 namespace backend.Controllers.Preference
 {
@@ -76,7 +78,43 @@ namespace backend.Controllers.Preference
             return Ok(prefs);
         }
 
+        [HttpGet("all/by_group")]
+        public async Task<IActionResult> GetSpecPref([FromQuery]string group)
+        {
+            var TheGroup = _context.PreferenceGroups.FirstOrDefault(g => g.Name.ToLower() == group.ToLower());
+
+            if (TheGroup == null)
+                return NotFound();
+
+            var prefs = _context.Preferences.Where(p=>p.PreferenceGroupId == TheGroup.Id).Select(p => new { p.Id, p.Name, p.PreferenceGroupId }).ToList();
+
+            if (prefs == null)
+                return BadRequest();
+
+            return Ok(prefs);
+        }
 
 
+        [Authorize]
+        [HttpPost("add/to_user")]
+        public async Task<IActionResult> AddToUser([FromQuery]int preferenceId) {
+            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)??User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+            if (userId == null)
+                return Unauthorized();
+
+            var userPref = new UserPreference
+            {
+                UserId = userId,
+                PreferenceId =preferenceId
+            };
+
+            _context.UserPreferences.Add(userPref);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

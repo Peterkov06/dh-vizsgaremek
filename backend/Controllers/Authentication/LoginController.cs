@@ -39,7 +39,7 @@ namespace backend.Controllers.Login
 
 
 
-        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address, DateTime Date_of_birth, string? Nickname, string? Introduction);
+        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address,string Url, DateTime Date_of_birth, string? Nickname, string? Introduction);
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody]RegisterDTO register) {
@@ -50,6 +50,7 @@ namespace backend.Controllers.Login
                 Email = register.Email,
                 FullName = register.Full_name,
                 Address = register.Address,
+                ProfilePicUrl = register.Url,
                 DateOfBirth = DateTime.SpecifyKind(register.Date_of_birth, DateTimeKind.Utc),
             };
 
