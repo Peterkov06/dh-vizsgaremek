@@ -18,6 +18,8 @@ import { Controller, useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as z from "zod";
 import { useState } from "react";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 const page = () => {
   const formSchema = z
@@ -61,6 +63,9 @@ const page = () => {
     mode: "onTouched",
   });
 
+    const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
+      const [showNewPasswordAgain, setShowNewPasswordAgain] = useState<boolean>(false);
+
   return (
     <div className="min-h-screen w-full bg-registration-bg flex flex-col justify-center items-center px-10">
       <section className="flex flex-row w-full">
@@ -78,41 +83,67 @@ const page = () => {
               </div>
               <FieldSet>
                 <Controller
-                  name="newPassword"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field className="w-full" data-invalid={fieldState.invalid}>
-                      <Input
+                name="newPassword"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="w-full" data-invalid={fieldState.invalid}>
+                    <InputGroup className="border-2 border-border rounded-2xl py-5 text-sm">
+                      <InputGroupInput
                         {...field}
-                        aria-invalid={fieldState.invalid}
-                        type="text"
+                        type={showNewPassword ? "text" : "password"}
                         placeholder="Új jelszó"
-                        className="border-2 border-border rounded-2xl py-5 text-sm"
+                        aria-invalid={fieldState.invalid}
+                        onChange={field.onChange}
+                        
                       />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="newPasswordAgain"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field className="w-full" data-invalid={fieldState.invalid}>
-                      <Input
+                      <InputGroupAddon align={"inline-end"}>
+                        <InputGroupButton variant={"ghost"} size={"icon-sm"} type="button" onClick={() => setShowNewPassword(prev => !prev)}>
+                          <EyeIcon
+                            className={showNewPassword ? "" : "hidden"}
+                          />
+                          <EyeOffIcon
+                            className={showNewPassword ? "hidden" : ""}
+                          />
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="newPasswordAgain"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="w-full" data-invalid={fieldState.invalid}>
+                    <InputGroup className="border-2 border-border rounded-2xl py-5 text-sm">
+                      <InputGroupInput
                         {...field}
-                        type="password"
+                        type={showNewPasswordAgain ? "text" : "password"}
                         placeholder="Új jelszó újra"
                         aria-invalid={fieldState.invalid}
-                        className="border-2 border-border rounded-2xl py-5 text-sm"
+                        onChange={field.onChange}
+                        
                       />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
+                      <InputGroupAddon align={"inline-end"}>
+                        <InputGroupButton variant={"ghost"} size={"icon-sm"} type="button" onClick={() => setShowNewPasswordAgain(prev => !prev)}>
+                          <EyeIcon
+                            className={showNewPasswordAgain ? "" : "hidden"}
+                          />
+                          <EyeOffIcon
+                            className={showNewPasswordAgain ? "hidden" : ""}
+                          />
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
               </FieldSet>
               <Button
                 variant={"default"}

@@ -18,6 +18,8 @@ import { Controller, useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as z from "zod";
 import { useState } from "react";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 const LoginComponent = () => {
   const formSchema = z.object({
@@ -51,6 +53,7 @@ const LoginComponent = () => {
   });
 
   const [stayLoggedIn, setstayLoggedIn] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
     <section className="flex flex-row w-full">
@@ -90,13 +93,26 @@ const LoginComponent = () => {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field className="w-full" data-invalid={fieldState.invalid}>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder="Jelszó"
-                      aria-invalid={fieldState.invalid}
-                      className="border-2 border-border rounded-2xl py-5 text-sm"
-                    />
+                    <InputGroup className="border-2 border-border rounded-2xl py-5 text-sm">
+                      <InputGroupInput
+                        {...field}
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Jelszó"
+                        aria-invalid={fieldState.invalid}
+                        onChange={field.onChange}
+                        
+                      />
+                      <InputGroupAddon align={"inline-end"}>
+                        <InputGroupButton variant={"ghost"} size={"icon-sm"} type="button" onClick={() => setShowPassword(prev => !prev)}>
+                          <EyeIcon
+                            className={showPassword ? "" : "hidden"}
+                          />
+                          <EyeOffIcon
+                            className={showPassword ? "hidden" : ""}
+                          />
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}

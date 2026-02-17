@@ -169,9 +169,6 @@ const PersonalDataComponent = () => {
                             field.onChange(null);
                           }
                         }}
-                        /*onKeyDown={(e) => {
-              
-                    }}*/
                       />
                       <InputGroupAddon align="inline-end">
                         <Popover
