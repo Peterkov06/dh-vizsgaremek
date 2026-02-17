@@ -18,9 +18,12 @@ export async function POST(request: NextRequest) {
       credentials: "include",
     });
 
-    const data = await response.json();
+    const contentType = response.headers.get("content-type");
+    const data = contentType?.includes("application/json")
+      ? await response.json()
+      : null;
     const setCookie = response.headers.get("set-cookie");
-    return NextResponse.json(data, {
+    return NextResponse.json(data ?? {}, {
       status: response.status,
       headers: setCookie
         ? {

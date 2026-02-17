@@ -68,7 +68,9 @@ type RegistrationContextType = {
   updateData: (data: PatrialRegistrationData) => void;
   currentStep: number;
   setCurrentStep: (step: number) => void;
-  submitRegistration: () => Promise<{ success: boolean; error?: string }>;
+  submitRegistration: (
+    finalStepData: PatrialRegistrationData,
+  ) => Promise<{ success: boolean; error?: string }>;
 };
 
 export const RegistrationContext = createContext<
@@ -84,9 +86,10 @@ const RegistrationContextManager = (props: { children: ReactNode }) => {
     setData((prev) => ({ ...prev, ...data }));
   };
 
-  const submitRegistration = async () => {
+  const submitRegistration = async (finalStepData: PatrialRegistrationData) => {
     try {
-      const validatedData = await fullRegistrationData.parseAsync(data);
+      const mergedData = { ...data, ...finalStepData };
+      const validatedData = await fullRegistrationData.parseAsync(mergedData);
       const backendData = convertToBackendData(validatedData);
       console.log(backendData);
       const response = await fetch("/api/auth/register", {
@@ -96,9 +99,13 @@ const RegistrationContextManager = (props: { children: ReactNode }) => {
         },
         body: JSON.stringify(backendData),
       });
-      const result = await response.json();
+      const result = response.headers
+        .get("content-type")
+        ?.includes("application/json")
+        ? await response.json()
+        : null;
 
-      if (!response.ok) {
+      if (response.status !== 201) {
         return {
           success: false,
           error: result.error || "Sikertelen regisztráció",

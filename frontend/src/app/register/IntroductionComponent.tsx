@@ -66,8 +66,7 @@ const IntroductionComponent = () => {
   }, [profilePicture]);
 
   const onSubmit = async (data: IntroductionType) => {
-    updateData(data);
-    const res = await submitRegistration();
+    const res = await submitRegistration(data);
 
     if (res.success) {
       router.push("/login");
@@ -82,7 +81,7 @@ const IntroductionComponent = () => {
       <aside className="w-full lg:w-5/12 min-h-fit bg-background rounded-[1.2rem] p-10">
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          id="registration"
+          id="introductionForm"
           className="w-full h-full"
         >
           <FieldGroup className="w-full h-full flex flex-col justify-between">
@@ -166,7 +165,7 @@ const IntroductionComponent = () => {
             <Button
               variant={"default"}
               type="submit"
-              form="registration"
+              form="introductionForm"
               className="w-full rounded-2xl py-6 md:text-lg cursor-pointer"
               disabled={!form.formState.isValid}
             >
