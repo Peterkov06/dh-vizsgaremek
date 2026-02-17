@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import {
   InputGroup,
   InputGroupInput,
@@ -38,41 +38,35 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox";
-import { useRouter } from "next/navigation";
+import { useRegistrationContext } from "./RegistrationContextManager";
 
 const PersonalDataComponent = () => {
-  const router = useRouter();
-  
   const formSchema = z.object({
     fullname: z.string().nonempty({ error: "Név megadása kötelező" }),
     nickname: z.string().nonempty({ error: "Becenév megadása kötelező" }),
-    dateOfBirthString: z
-    .string()
-    .nonempty({ error: "Születési dátum megadása kötelező" }),
     dateOfBirth: z
-    .date({ error: "Születési dátum megadása kötelező" })
-    .min(new Date(1900, 1, 1), {
-      error: "Adjon meg érvényes születési dátumot!",
-    })
-    .max(new Date((new Date().getFullYear() - 12).toString()), {
-      error: "12 évesnél idősebbnek kell lennie!",
-    }),
+      .date({ error: "Születési dátum megadása kötelező" })
+      .min(new Date(1900, 1, 1), {
+        error: "Adjon meg érvényes születési dátumot!",
+      })
+      .max(new Date((new Date().getFullYear() - 12).toString()), {
+        error: "12 évesnél idősebbnek kell lennie!",
+      }),
     postalCode: z
-    .string()
-    .nonempty({ error: "Irányítószám megadása kötelező" })
-    .regex(/^[0-9]{4}$/, { error: "Érvénytelen irányítószám" }),
+      .string()
+      .nonempty({ error: "Irányítószám megadása kötelező" })
+      .regex(/^[0-9]{4}$/, { error: "Érvénytelen irányítószám" }),
     cityName: z.string().nonempty({ error: "Városnév megadása kötelező" }),
     homeAddress: z.string().nonempty({ error: "Cím megadása kötelező" }),
   });
 
-  type RegistrationFormData = z.infer<typeof formSchema>;
-  
-  const form = useForm<RegistrationFormData>({
+  type PersonalFormData = z.infer<typeof formSchema>;
+
+  const form = useForm<PersonalFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullname: "",
       nickname: "",
-      dateOfBirthString: "",
       dateOfBirth: new Date(),
       postalCode: "",
       cityName: "",
@@ -80,35 +74,26 @@ const PersonalDataComponent = () => {
     },
     mode: "onTouched",
   });
-  
+
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [birthMonth, setBirthMonth] = useState<Date>(new Date());
   const [value, setValue] = useState(format(new Date(), "yyyy.MM.dd."));
-  const [isLoading, setIsLoading] = useState(false);
+  const { updateData, setCurrentStep, currentStep } = useRegistrationContext();
 
-  const handleSubmit = async (formData: RegistrationFormData) => {
-    setIsLoading(true);
-    const response = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify([]),
-    });
-    const data = await response.json();
-    setIsLoading(false);
-    if (data.success) {
-      router.push('/login');
-    } else {
-      alert(data.message);
-    }
-  }
-  
+  const onSubmit = async (data: PersonalFormData) => {
+    updateData(data);
+    setCurrentStep(currentStep + 1);
+  };
+
   return (
     <section className="flex flex-row w-full">
       <div className="lg:w-7/12"></div>
       <aside className="w-full lg:w-5/12 min-h-fit bg-background rounded-[1.2rem] p-10">
-        <form action="" id="registration" className="w-full h-full">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          id="personalData"
+          className="w-full h-full"
+        >
           <FieldGroup className="w-full h-full flex flex-col justify-between">
             <div className="flex flex-col items-start">
               <h1 className="text-3xl md:text-4xl font-bold text-primary mb-1">
@@ -318,7 +303,7 @@ const PersonalDataComponent = () => {
             </FieldSet>
             <Button
               variant={"default"}
-              form="registration"
+              form="personalData"
               className="w-full rounded-2xl py-6 md:text-lg cursor-pointer"
               disabled={!form.formState.isValid}
             >

@@ -18,6 +18,8 @@ import { Controller, useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as z from "zod";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useRegistrationContext } from "./RegistrationContextManager";
 
 const MainRegisterComponent = () => {
   const formSchema = z.object({
@@ -39,24 +41,38 @@ const MainRegisterComponent = () => {
         error:
           "A jelszónak tartalmazinia kell legalább egy speciális karaktert",
       }),
+    role: z.enum(["student", "teacher", "parent"]),
   });
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  type MainFormData = z.infer<typeof formSchema>;
+
+  const form = useForm<MainFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",
+      role: "student",
     },
     mode: "onTouched",
   });
 
   const [accceptedTerms, setAccceptedTerms] = useState<boolean>(false);
+  const { updateData, setCurrentStep, currentStep } = useRegistrationContext();
+
+  const onSubmit = async (data: MainFormData) => {
+    updateData(data);
+    setCurrentStep(currentStep + 1);
+  };
 
   return (
     <section className="flex flex-row w-full">
       <div className="lg:w-7/12"></div>
       <aside className="w-full lg:w-5/12 min-h-fit bg-background rounded-[1.2rem] p-10">
-        <form action="" id="registration" className="w-full h-full">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          id="registration"
+          className="w-full h-full"
+        >
           <FieldGroup className="w-full h-full flex flex-col justify-between">
             <div className="flex flex-col items-start">
               <h1 className="text-3xl md:text-4xl font-bold text-primary mb-1">
@@ -66,44 +82,63 @@ const MainRegisterComponent = () => {
                 Kérjük adja meg regisztrációs adatait!
               </p>
             </div>
-            <RadioGroup
-              className="justify-center w-full flex bg-primary p-[0.35rem] text-primary-foreground rounded-2xl gap-0"
-              defaultValue="a"
-            >
-              <FieldLabel
-                htmlFor="a"
-                className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none"
-              >
-                <Field orientation="horizontal" className="w-full p-2!">
-                  <FieldContent className="w-full flex flex-row justify-center">
-                    <FieldTitle>Tanuló</FieldTitle>
-                  </FieldContent>
-                  <RadioGroupItem value="a" id="a" className="peer sr-only" />
-                </Field>
-              </FieldLabel>
-              <FieldLabel
-                htmlFor="b"
-                className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none"
-              >
-                <Field orientation="horizontal" className="w-full p-2!">
-                  <FieldContent className="w-full flex flex-row justify-center">
-                    <FieldTitle>Tanár</FieldTitle>
-                  </FieldContent>
-                  <RadioGroupItem value="b" id="b" className="peer sr-only" />
-                </Field>
-              </FieldLabel>
-              <FieldLabel
-                htmlFor="c"
-                className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none"
-              >
-                <Field orientation="horizontal" className="w-full p-2!">
-                  <FieldContent className="w-full flex flex-row justify-center">
-                    <FieldTitle className="w-fit">Szülő</FieldTitle>
-                  </FieldContent>
-                  <RadioGroupItem value="c" id="c" className="peer sr-only" />
-                </Field>
-              </FieldLabel>
-            </RadioGroup>
+            <Controller
+              control={form.control}
+              name="role"
+              render={({ field, fieldState }) => (
+                <RadioGroup
+                  className="justify-center w-full flex bg-primary p-[0.35rem] text-primary-foreground rounded-2xl gap-0"
+                  defaultValue={field.value}
+                  onChange={field.onChange}
+                >
+                  <FieldLabel
+                    htmlFor="student"
+                    className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none"
+                  >
+                    <Field orientation="horizontal" className="w-full p-2!">
+                      <FieldContent className="w-full flex flex-row justify-center">
+                        <FieldTitle>Tanuló</FieldTitle>
+                      </FieldContent>
+                      <RadioGroupItem
+                        value="student"
+                        id="student"
+                        className="peer sr-only"
+                      />
+                    </Field>
+                  </FieldLabel>
+                  <FieldLabel
+                    htmlFor="teacher"
+                    className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none"
+                  >
+                    <Field orientation="horizontal" className="w-full p-2!">
+                      <FieldContent className="w-full flex flex-row justify-center">
+                        <FieldTitle>Tanár</FieldTitle>
+                      </FieldContent>
+                      <RadioGroupItem
+                        value="teacher"
+                        id="teacher"
+                        className="peer sr-only"
+                      />
+                    </Field>
+                  </FieldLabel>
+                  <FieldLabel
+                    htmlFor="parent"
+                    className="flex-1 rounded-[0.65rem]! transition-all cursor-pointer has-data-[state=checked]:text-primary has-data-[state=checked]:bg-background has-data-[state=checked]:font-bold border-none"
+                  >
+                    <Field orientation="horizontal" className="w-full p-2!">
+                      <FieldContent className="w-full flex flex-row justify-center">
+                        <FieldTitle className="w-fit">Szülő</FieldTitle>
+                      </FieldContent>
+                      <RadioGroupItem
+                        value="parent"
+                        id="parent"
+                        className="peer sr-only"
+                      />
+                    </Field>
+                  </FieldLabel>
+                </RadioGroup>
+              )}
+            />
             <FieldSet>
               <Controller
                 name="email"

@@ -20,6 +20,9 @@ import * as z from "zod";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { useRegistrationContext } from "./RegistrationContextManager";
+import { sub } from "date-fns";
+import { useRouter } from "next/navigation";
 
 const IntroductionComponent = () => {
   const formSchema = z.object({
@@ -38,7 +41,9 @@ const IntroductionComponent = () => {
       ),
   });
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  type IntroductionType = z.infer<typeof formSchema>;
+
+  const form = useForm<IntroductionType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       introduction: "",
@@ -51,17 +56,35 @@ const IntroductionComponent = () => {
     "https://i.redd.it/o9srxpsm8rm01.png",
   );
 
+  const { updateData, submitRegistration } = useRegistrationContext();
+  const router = useRouter();
+
   useEffect(() => {
     return () => {
       if (profilePicture) URL.revokeObjectURL(profilePicture);
     };
   }, [profilePicture]);
 
+  const onSubmit = async (data: IntroductionType) => {
+    updateData(data);
+    const res = await submitRegistration();
+
+    if (res.success) {
+      router.push("/login");
+    } else {
+      alert("Sikertelen regisztráció");
+    }
+  };
+
   return (
     <section className="flex flex-row w-full">
       <div className="lg:w-7/12"></div>
       <aside className="w-full lg:w-5/12 min-h-fit bg-background rounded-[1.2rem] p-10">
-        <form action="" id="registration" className="w-full h-full">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          id="registration"
+          className="w-full h-full"
+        >
           <FieldGroup className="w-full h-full flex flex-col justify-between">
             <div className="flex flex-col items-start">
               <h1 className="text-3xl md:text-4xl font-bold text-primary mb-1">
