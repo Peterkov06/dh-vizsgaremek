@@ -1,5 +1,6 @@
 ﻿using backend.Data;
 using backend.Models;
+using backend.Models.Cities;
 using backend.Services.JwtServices;
 using backend.Services.SendEmail;
 using MailKit.Net.Smtp;
@@ -39,7 +40,7 @@ namespace backend.Controllers.Login
 
 
 
-        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address,string Url, DateTime Date_of_birth, string? Nickname, string? Introduction);
+        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address,string City, string Postal_code,string Url, DateTime Date_of_birth, string? Nickname, string? Introduction);
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody]RegisterDTO register) {
@@ -50,6 +51,8 @@ namespace backend.Controllers.Login
                 Email = register.Email,
                 FullName = register.Full_name,
                 Address = register.Address,
+                City = register.City,
+                PostalCode = register.Postal_code,
                 ProfilePicUrl = register.Url,
                 DateOfBirth = DateTime.SpecifyKind(register.Date_of_birth, DateTimeKind.Utc),
             };
@@ -205,7 +208,7 @@ namespace backend.Controllers.Login
         }
 
 
-        public record ModifyDTO(string? Password,string? Full_name, string? Address,string? Nickname, string? Introduction);
+        public record ModifyDTO(string? Password,string? Full_name, string? Address,string? City, string? Postal_code, string? Url,string? Nickname, string? Introduction);
 
         [Authorize]
         [HttpPut("account/modify")]
@@ -221,6 +224,15 @@ namespace backend.Controllers.Login
 
             if (!string.IsNullOrEmpty(modify.Address))
                 user.Address = modify.Address;
+           
+            if (!string.IsNullOrEmpty(modify.City))
+                user.City = modify.City;
+
+            if (!string.IsNullOrEmpty(modify.Postal_code))
+                user.PostalCode = modify.Postal_code;
+
+            if (!string.IsNullOrEmpty(modify.Url))
+                user.ProfilePicUrl = modify.Url;
 
             if (!string.IsNullOrEmpty(modify.Nickname))
                 user.Nickname = modify.Nickname;
@@ -306,14 +318,6 @@ namespace backend.Controllers.Login
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-
-        [Authorize]
-        [HttpGet("proba")]
-        public async Task<IActionResult> Proba() {
-
-            return Ok();
         }
 
     }
