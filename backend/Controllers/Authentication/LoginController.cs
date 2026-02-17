@@ -40,7 +40,7 @@ namespace backend.Controllers.Login
 
 
 
-        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address,string City, string Postal_code,string Url, DateTime Date_of_birth, string? Nickname, string? Introduction);
+        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address,string City, string Postal_code,string? Url, DateTime Date_of_birth, string? Nickname, string? Introduction);
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody]RegisterDTO register) {
@@ -118,7 +118,7 @@ namespace backend.Controllers.Login
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = SameSiteMode.None,
                 //SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddMinutes(15)
             });
@@ -126,7 +126,7 @@ namespace backend.Controllers.Login
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = SameSiteMode.None,
                 //SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddDays(7)
             });
@@ -153,7 +153,7 @@ namespace backend.Controllers.Login
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = SameSiteMode.None,
                 //SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddMinutes(15)
             });

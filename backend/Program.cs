@@ -104,7 +104,6 @@ namespace backend
                 app.MapOpenApi();
                 app.MapScalarApiReference();
 
-                // Automatically redirect to Scalar documentation
                 app.MapGet("/", () => Results.Redirect("/scalar"));
 
                 var scope = app.Services.CreateScope();
