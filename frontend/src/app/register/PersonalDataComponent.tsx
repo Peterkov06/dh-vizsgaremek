@@ -39,6 +39,8 @@ import {
   ComboboxList,
 } from "@/components/ui/combobox";
 import { useRegistrationContext } from "./RegistrationContextManager";
+import { se } from "date-fns/locale";
+import { BASE_URL } from "../api/auth/register/route";
 
 const PersonalDataComponent = () => {
   const formSchema = z.object({
@@ -78,12 +80,41 @@ const PersonalDataComponent = () => {
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [birthMonth, setBirthMonth] = useState<Date>(new Date());
   const [value, setValue] = useState(format(new Date(), "yyyy.MM.dd."));
+  const [cities, setCities] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { updateData, setCurrentStep, currentStep } = useRegistrationContext();
 
   const onSubmit = async (data: PersonalFormData) => {
     updateData(data);
     setCurrentStep(currentStep + 1);
   };
+  
+  useEffect(() => {
+    const searchQuery = form.getValues('cityName');
+    if (searchQuery.length < 1) {
+      setCities([]);
+      return;
+    }
+
+    const delayDebounceFunction = setTimeout(async() => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(BASE_URL + '/cities/search?city=' + searchQuery, 
+        {headers: {
+          Accept: '*/*'
+        }});
+        const data = await response.json();
+        setCities(data);
+
+      } catch (error) {
+        console.error("Error fetching cities: ", error);
+      }
+      finally {
+        setIsLoading(false);
+      }}, 300)
+    
+    return () => clearTimeout(delayDebounceFunction);
+}, [form.watch('cityName')])
 
   return (
     <section className="flex flex-row w-full">
@@ -252,7 +283,7 @@ const PersonalDataComponent = () => {
                     data-invalid={fieldState.invalid}
                   >
                     <Combobox
-                      items={["Derecske", "Debrecen", "Mándok"]}
+                      items={cities}
                       onValueChange={field.onChange}
                     >
                       <ComboboxInput
