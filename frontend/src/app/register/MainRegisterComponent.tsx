@@ -44,6 +44,10 @@ const MainRegisterComponent = () => {
           "A jelszónak tartalmazinia kell legalább egy speciális karaktert",
       }),
     role: z.enum(["student", "teacher", "parent"]),
+    accceptedTerms: z.boolean().refine(
+      (val) => val,
+      "Kérjük, elfogadja a felhasználási feltételeket!",
+    ),
   });
 
   type MainFormData = z.infer<typeof formSchema>;
@@ -54,11 +58,11 @@ const MainRegisterComponent = () => {
       email: "",
       password: "",
       role: "student",
+      accceptedTerms: false,
     },
     mode: "onTouched",
   });
 
-  const [accceptedTerms, setAccceptedTerms] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const { updateData, setCurrentStep, currentStep } = useRegistrationContext();
 
@@ -195,12 +199,13 @@ const MainRegisterComponent = () => {
               />
             </FieldSet>
             <FieldGroup>
-              <Field orientation={"horizontal"} className="">
+              <Controller control={form.control} name="accceptedTerms" render={({field, fieldState}) => (
+                <Field orientation={"horizontal"} className="">
                 <Checkbox
                   id="terms-and-conditions"
                   className="border-2 border-border"
-                  checked={accceptedTerms}
-                  onCheckedChange={() => setAccceptedTerms((prev) => !prev)}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
                 />
                 <FieldLabel
                   htmlFor="terms-and-conditions"
@@ -208,14 +213,18 @@ const MainRegisterComponent = () => {
                 >
                   Elolvastam és elfogadom a felhasználási feltételeket
                 </FieldLabel>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
               </Field>
+              )} />
             </FieldGroup>
             <Button
               variant={"default"}
               type="submit"
               form="registration"
               className="w-full rounded-2xl py-6 md:text-lg cursor-pointer"
-              disabled={!accceptedTerms || !form.formState.isValid}
+              disabled={!form.formState.isValid}
             >
               Regisztráció
             </Button>

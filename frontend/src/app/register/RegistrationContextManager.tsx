@@ -58,6 +58,7 @@ export const fullRegistrationData = z.object({
     .regex(/^[0-9]{4}$/, { error: "Érvénytelen irányítószám" }),
   cityName: z.string().nonempty({ error: "Városnév megadása kötelező" }),
   homeAddress: z.string().nonempty({ error: "Cím megadása kötelező" }),
+  accceptedTerms: z.boolean(),
 });
 
 export type RegistrationData = z.infer<typeof fullRegistrationData>;
