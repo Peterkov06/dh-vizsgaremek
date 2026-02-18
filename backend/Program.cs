@@ -89,6 +89,14 @@ namespace backend
                         return Task.CompletedTask;
                     }
                 };
+            }).AddCookie("ExternalCookie")
+            .AddGoogle(options =>
+            {
+                options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                options.SignInScheme = "ExternalCookie";
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
             });
 
 

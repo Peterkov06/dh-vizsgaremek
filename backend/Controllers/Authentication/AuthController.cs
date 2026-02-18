@@ -17,7 +17,7 @@ namespace backend.Controllers.Login
 {
     [Route("api/auth")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -25,7 +25,7 @@ namespace backend.Controllers.Login
         //private readonly EmailSender _emailSender;
         private readonly UserDbContext _context;
         
-        public LoginController(UserManager<ApplicationUser> userManager,
+        public AuthController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             JwtGenerator jwtGenerator,
             //EmailSender emailSender,
@@ -248,6 +248,18 @@ namespace backend.Controllers.Login
             return NoContent();
         }
 
+        [HttpGet("validate/email")]
+        public async Task<IActionResult> ValidateEmail([FromQuery]string email) {
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null) {
+                return Ok(true);
+            }
+
+            return Ok(false);
+        }
+
 
         public record ForgetPasswordDTO(string Email);
 
@@ -318,6 +330,15 @@ namespace backend.Controllers.Login
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+
+        [HttpGet("google-login")]
+        public async Task<IActionResult> GoogleLogin() {
+
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Goodle", "api/auth/google-callback");
+
+            return Challenge(properties, "Google");
         }
 
     }
