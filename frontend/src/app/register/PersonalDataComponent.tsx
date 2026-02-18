@@ -41,6 +41,7 @@ import {
 import { useRegistrationContext } from "./RegistrationContextManager";
 import { se } from "date-fns/locale";
 import { BASE_URL } from "../api/auth/register/route";
+import { is } from "zod/locales";
 
 const PersonalDataComponent = () => {
   const formSchema = z.object({
@@ -81,40 +82,135 @@ const PersonalDataComponent = () => {
   const [birthMonth, setBirthMonth] = useState<Date>(new Date());
   const [value, setValue] = useState(format(new Date(), "yyyy.MM.dd."));
   const [cities, setCities] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [postalCodes, setPostalCodes] = useState<string[]>([]);
+  const [isLoadingCities, setisLoadingCities] = useState<boolean>(false);
+  const [isLoadingPostalCodes, setisLoadingPostalCodes] =
+    useState<boolean>(false);
   const { updateData, setCurrentStep, currentStep } = useRegistrationContext();
+  const postalCodeValid = form.watch("postalCode");
+  const cityNameValid = form.watch("cityName");
 
   const onSubmit = async (data: PersonalFormData) => {
     updateData(data);
     setCurrentStep(currentStep + 1);
   };
-  
+
   useEffect(() => {
-    const searchQuery = form.getValues('cityName');
+    const searchQuery = form.getValues("cityName");
     if (searchQuery.length < 1) {
       setCities([]);
       return;
     }
 
-    const delayDebounceFunction = setTimeout(async() => {
-      setIsLoading(true);
+    const delayDebounceFunction = setTimeout(async () => {
+      setisLoadingCities(true);
       try {
-        const response = await fetch(BASE_URL + '/cities/search?city=' + searchQuery, 
-        {headers: {
-          Accept: '*/*'
-        }});
+        const response = await fetch(
+          BASE_URL + "/cities/search?city=" + searchQuery,
+          {
+            headers: {
+              Accept: "*/*",
+            },
+          },
+        );
         const data = await response.json();
         setCities(data);
+      } catch (error) {
+        console.error("Error fetching cities: ", error);
+      } finally {
+        setisLoadingCities(false);
+      }
+    }, 300);
 
+    return () => clearTimeout(delayDebounceFunction);
+  }, [cityNameValid]);
+
+  useEffect(() => {
+    const searchQuery = form.getValues("postalCode");
+    if (searchQuery.length < 1) {
+      setCities([]);
+      return;
+    }
+
+    const delayDebounceFunction = setTimeout(async () => {
+      setisLoadingPostalCodes(true);
+      try {
+        const response = await fetch(
+          BASE_URL + "/cities/postal/search?postal=" + searchQuery,
+          {
+            headers: {
+              Accept: "*/*",
+            },
+          },
+        );
+        const data = await response.json();
+        setPostalCodes(data);
+      } catch (error) {
+        console.error("Error fetching postal codes: ", error);
+      } finally {
+        setisLoadingPostalCodes(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFunction);
+  }, [postalCodeValid]);
+
+  useEffect(() => {
+    const isValid =
+      postalCodeValid.length === 4 &&
+      form.formState.errors.postalCode === undefined;
+    if (!isValid) {
+      return;
+    }
+
+    const setCity = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          BASE_URL + "/cities/search/city_by_postal?postal=" + postalCodeValid,
+          {
+            headers: {
+              Accept: "*/*",
+            },
+          },
+        );
+        const data = await response.json();
+        if (data.length === 1) {
+          form.setValue("cityName", data[0], { shouldValidate: true });
+        }
       } catch (error) {
         console.error("Error fetching cities: ", error);
       }
-      finally {
-        setIsLoading(false);
-      }}, 300)
-    
-    return () => clearTimeout(delayDebounceFunction);
-}, [form.watch('cityName')])
+    }, 300);
+    return () => clearTimeout(setCity);
+  }, [postalCodeValid, form.formState.errors.postalCode, form]);
+
+  useEffect(() => {
+    const isValid =
+      cityNameValid.length > 0 && form.formState.errors.cityName === undefined;
+    if (!isValid) {
+      return;
+    }
+
+    const setPostal = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          BASE_URL + "/cities/search/postal_by_city?city=" + cityNameValid,
+          {
+            headers: {
+              Accept: "*/*",
+            },
+          },
+        );
+        const data = await response.json();
+        if (data.length === 1) {
+          form.setValue("postalCode", data[0], { shouldValidate: true });
+        }
+      } catch (error) {
+        console.error("Error fetching postal codes: ", error);
+      }
+    }, 300);
+    return () => clearTimeout(setPostal);
+  }, [cityNameValid, form.formState.errors.cityName, form]);
 
   return (
     <section className="flex flex-row w-full">
@@ -255,19 +351,39 @@ const PersonalDataComponent = () => {
                 name="postalCode"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field className="w-full" data-invalid={fieldState.invalid}>
+                  <Field
+                    {...field}
+                    className="w-full"
+                    data-invalid={fieldState.invalid}
+                  >
                     <FieldLabel htmlFor="postal-code">Irányítószám</FieldLabel>
-                    <Input
-                      {...field}
-                      aria-invalid={fieldState.invalid}
+                    <Combobox
+                      items={postalCodes}
+                      onValueChange={field.onChange}
                       id="postal-code"
-                      type="text"
-                      placeholder="Irányítószám"
-                      className="border-2 border-border rounded-2xl py-5 text-sm"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
+                    >
+                      <ComboboxInput
+                        placeholder="Irányítószám"
+                        className="border-2 border-border rounded-2xl py-5 text-sm w-full"
+                        type="number"
+                        value={field.value}
+                      />
+                      <ComboboxContent>
+                        <ComboboxEmpty>
+                          Nem találtunk ilyen irányítószámot.
+                        </ComboboxEmpty>
+                        <ComboboxList>
+                          {(item: any) => (
+                            <ComboboxItem key={item} value={item}>
+                              {item}
+                            </ComboboxItem>
+                          )}
+                        </ComboboxList>
+                      </ComboboxContent>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Combobox>
                   </Field>
                 )}
               />
@@ -282,10 +398,7 @@ const PersonalDataComponent = () => {
                     className="w-full"
                     data-invalid={fieldState.invalid}
                   >
-                    <Combobox
-                      items={cities}
-                      onValueChange={field.onChange}
-                    >
+                    <Combobox items={cities} onValueChange={field.onChange}>
                       <ComboboxInput
                         placeholder="Város"
                         className="border-2 border-border rounded-2xl py-5 text-sm w-full"
