@@ -76,7 +76,7 @@ const LoginComponent = () => {
         ? await response.json()
         : null;
 
-      if (response.status !== 200) {
+      if (response.status !== 204) {
         return {
           success: false,
           error: result.error || "Sikertelen bejelentkezés",

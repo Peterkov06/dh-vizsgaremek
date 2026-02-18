@@ -18,14 +18,18 @@ export async function POST(request: NextRequest) {
     });
 
     const setCookie = response.headers.get("set-cookie");
-    return NextResponse.json({
-      status: response.status,
-      headers: setCookie
-        ? {
-            "set-cookie": setCookie,
-          }
-        : {},
-    });
+
+    if (response.status === 204)
+    {
+      return new NextResponse(null, {
+        status: response.status,
+        headers: setCookie
+          ? {
+              "Set-Cookie": setCookie,
+            }
+          : {},
+      });
+    }
   } catch (error) {
     console.error("Login error: ", error);
     return NextResponse.json(
