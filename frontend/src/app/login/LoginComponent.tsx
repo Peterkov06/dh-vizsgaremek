@@ -18,10 +18,17 @@ import { Controller, useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as z from "zod";
 import { useState } from "react";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const LoginComponent = () => {
+  const router = useRouter();
   const formSchema = z.object({
     email: z.email({ error: "Érvénytelen email cím" }),
     password: z
@@ -43,7 +50,9 @@ const LoginComponent = () => {
       }),
   });
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  type LoginData = z.infer<typeof formSchema>;
+
+  const form = useForm<LoginData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
@@ -52,6 +61,49 @@ const LoginComponent = () => {
     mode: "onTouched",
   });
 
+  const submitLogin = async (data: LoginData) => {
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = response.headers
+        .get("content-type")
+        ?.includes("application/json")
+        ? await response.json()
+        : null;
+
+      if (response.status !== 200) {
+        return {
+          success: false,
+          error: result.error || "Sikertelen bejelentkezés",
+        };
+      }
+      return { success: true };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return {
+          success: false,
+          error: "Hibás adatok! Kérjük ellenőrizze a bevitt adatokat!",
+        };
+      }
+      return { success: false, error: "Ismeretlen hiba történt!" };
+    }
+  };
+
+  const onSubmit = async (data: LoginData) => {
+    const res = await submitLogin(data);
+
+    if (res.success) {
+      router.push("/dashboard");
+    } else {
+      alert("Sikertelen bejelentkezés");
+    }
+  };
+
   const [stayLoggedIn, setstayLoggedIn] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -59,7 +111,11 @@ const LoginComponent = () => {
     <section className="flex flex-row w-full">
       <div className="lg:w-7/12"></div>
       <aside className="w-full lg:w-5/12 min-h-fit bg-background rounded-[1.2rem] p-10">
-        <form action="" id="login" className="w-full h-full">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          id="login"
+          className="w-full h-full"
+        >
           <FieldGroup className="w-full h-full flex flex-col justify-between">
             <div className="flex flex-col items-start">
               <h1 className="text-3xl md:text-4xl font-bold text-primary mb-1">
@@ -100,13 +156,15 @@ const LoginComponent = () => {
                         placeholder="Jelszó"
                         aria-invalid={fieldState.invalid}
                         onChange={field.onChange}
-                        
                       />
                       <InputGroupAddon align={"inline-end"}>
-                        <InputGroupButton variant={"ghost"} size={"icon-sm"} type="button" onClick={() => setShowPassword(prev => !prev)}>
-                          <EyeIcon
-                            className={showPassword ? "" : "hidden"}
-                          />
+                        <InputGroupButton
+                          variant={"ghost"}
+                          size={"icon-sm"}
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                        >
+                          <EyeIcon className={showPassword ? "" : "hidden"} />
                           <EyeOffIcon
                             className={showPassword ? "hidden" : ""}
                           />
@@ -162,7 +220,12 @@ const LoginComponent = () => {
             </FieldSet>
             <div className="flex flex-col justify-center items-center">
               <p className="text-xs text-sidebar-border">Még nincs fiókod?</p>
-              <Button variant={"link"} className="cursor-pointer">
+              <Button
+                variant={"link"}
+                className="cursor-pointer"
+                type="button"
+                onClick={() => router.push("/register")}
+              >
                 Regisztrálj!
               </Button>
             </div>

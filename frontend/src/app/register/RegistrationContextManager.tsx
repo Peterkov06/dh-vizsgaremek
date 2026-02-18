@@ -92,7 +92,6 @@ const RegistrationContextManager = (props: { children: ReactNode }) => {
       const mergedData = { ...data, ...finalStepData };
       const validatedData = await fullRegistrationData.parseAsync(mergedData);
       const backendData = convertToBackendData(validatedData);
-      console.log(backendData);
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
