@@ -40,6 +40,18 @@ namespace backend.Controllers.Cities
         }
 
         [HttpGet("postal/search")]
+        public async Task<IActionResult> SearchInPostal([FromQuery] string postal)
+        {
+
+            if (string.IsNullOrEmpty(postal))
+                return BadRequest();
+
+            var postals = _context.Cities.Where(c => c.PostalCode.ToLower().StartsWith(postal.ToLower())).Select(c => c.PostalCode).Distinct().ToList();
+
+            return Ok(postals);
+        }
+
+        [HttpGet("search/city_by_postal")]
         public async Task<IActionResult> SearchPostal([FromQuery]string postal)
         {
             if (string.IsNullOrEmpty(postal))
@@ -50,7 +62,7 @@ namespace backend.Controllers.Cities
             return Ok(cities);
         }
 
-        [HttpGet("search/city/postal")]
+        [HttpGet("search/postal_by_city")]
         public async Task<IActionResult> SearchPostalFromCity([FromQuery]string city)
         {
 
