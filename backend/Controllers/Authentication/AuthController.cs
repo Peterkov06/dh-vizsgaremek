@@ -38,8 +38,6 @@ namespace backend.Controllers.Login
             _context = context;
         }
 
-
-
         public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address,string City, string Postal_code,string? Url, DateTime Date_of_birth, string? Nickname, string? Introduction);
 
         [HttpPost("register")]
@@ -332,14 +330,34 @@ namespace backend.Controllers.Login
             return NoContent();
         }
 
-
         [HttpGet("google-login")]
         public async Task<IActionResult> GoogleLogin() {
 
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Goodle", "api/auth/google-callback");
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", "/api/auth/google-callback");
 
             return Challenge(properties, "Google");
         }
 
+        [HttpGet("google-callback")]
+        public async Task<IActionResult> GoogleCallback() {
+
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null) {
+
+                Console.WriteLine("No");
+                return Redirect($"https://localhost:3000/login");
+                    }
+
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+            Console.WriteLine(email);
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null) {
+                return Redirect($"https://localhost:3000/login?error=failed");
+            }
+            return Redirect($"https://localhost:3000/dashboard");
+        }
     }
 }
