@@ -37,6 +37,13 @@
 
         if (res.ok) {
           alert("Logged in! Cookie stored automatically.");
+
+          const res = await fetch(`${API}/api/auth/me`, {
+            method: "GET",
+            credentials: "include",
+          });
+
+          console.log(res);
         } else {
           alert("Login failed");
         }

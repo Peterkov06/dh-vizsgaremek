@@ -54,9 +54,9 @@ namespace backend.Data
                 .HasForeignKey(cp=>cp.ConversationId);
 
             builder.Entity<ConversationParticipant>()
-                .HasOne(cp => cp.Sender)
+                .HasOne(cp => cp.User)
                 .WithMany()
-                .HasForeignKey(cp => cp.SenderId);
+                .HasForeignKey(cp => cp.UserId);
 
             builder.Entity<Message>()
                 .HasOne(m => m.Conversation)
