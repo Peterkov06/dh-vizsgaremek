@@ -6,12 +6,10 @@ namespace backend.Models.Chat
     {
         [Key]
         public Guid Id { get; set; }
-        required public string Name { get; set; }
-        required public string Type { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
 
-        public Conversation()
-        {
-            Id = Guid.NewGuid();
-        }
+        public ICollection<ConversationParticipant> ConversationParticipants { get; set; }
+        public ICollection<Message> Messages { get; set; }
     }
 }

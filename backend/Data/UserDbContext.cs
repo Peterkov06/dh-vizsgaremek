@@ -1,4 +1,5 @@
 ﻿using backend.Models;
+using backend.Models.Chat;
 using backend.Models.Cities;
 using backend.Models.Preferances;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -14,13 +15,16 @@ namespace backend.Data
         }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+
         public DbSet<City> Cities { get; set; }
 
         public DbSet<Preference> Preferences { get; set; }
-
         public DbSet<PreferenceGroup> PreferenceGroups { get; set; }
-
         public DbSet<UserPreference> UserPreferences { get; set; }
+
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,6 +33,7 @@ namespace backend.Data
             builder.Entity<Preference>()
                 .HasOne(p => p.PreferenceGroup).WithMany(g => g.Preferences).HasForeignKey(p=>p.PreferenceGroupId);
 
+            
             builder.Entity<UserPreference>()
                 .HasKey(up => new { up.UserId, up.PreferenceId });
 
@@ -41,6 +46,28 @@ namespace backend.Data
                 .HasOne(up => up.Preference)
                 .WithMany()
                 .HasForeignKey(up => up.PreferenceId);
+
+
+            builder.Entity<ConversationParticipant>()
+                .HasOne(cp => cp.Conversation)
+                .WithMany(c => c.ConversationParticipants)
+                .HasForeignKey(cp=>cp.ConversationId);
+
+            builder.Entity<ConversationParticipant>()
+                .HasOne(cp => cp.Sender)
+                .WithMany()
+                .HasForeignKey(cp => cp.SenderId);
+
+            builder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId);
+
+            builder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId);
+
 
             builder.Entity<RefreshToken>().HasIndex(rt => rt.Token).IsUnique();
 

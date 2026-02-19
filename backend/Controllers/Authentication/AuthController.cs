@@ -138,6 +138,9 @@ namespace backend.Controllers.Login
 
             var refreshToken = Request.Cookies["refresh_token"];
 
+            if (refreshToken == null)
+                return BadRequest();
+
             var storedToken = _context.RefreshTokens.Include(rt => rt.User)
                 .FirstOrDefault(rt => rt.Token == refreshToken && !rt.IsRevoked && rt.ExpiresAt > DateTime.UtcNow);
 
@@ -272,6 +275,9 @@ namespace backend.Controllers.Login
             if (user == null)
                 return BadRequest();
             var roleList = await _userManager.GetRolesAsync(user);
+            if (roleList.Count() < 1) {
+                return BadRequest();
+            }
             var role = roleList[0];
 
             return Ok(new { user.Email, role,user.FullName, user.ProfilePicUrl, user.Nickname});
