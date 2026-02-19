@@ -258,6 +258,25 @@ namespace backend.Controllers.Login
             return Ok(false);
         }
 
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> UserProfile() {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+            if (userId == null)
+                return Unauthorized();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                return BadRequest();
+            var roleList = await _userManager.GetRolesAsync(user);
+            var role = roleList[0];
+
+            return Ok(new { user.Email, role,user.FullName, user.ProfilePicUrl, user.Nickname});
+        }
+
 
         public record ForgetPasswordDTO(string Email);
 
