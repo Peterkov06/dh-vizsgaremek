@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/combobox";
 import { useRegistrationContext } from "./RegistrationContextManager";
 import { se } from "date-fns/locale";
-import { BASE_URL } from "../api/auth/register/route";
+import { BASE_URL } from "../../api/auth/register/route";
 import { is } from "zod/locales";
 
 const PersonalDataComponent = () => {
