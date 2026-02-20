@@ -7,27 +7,25 @@ export default async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   if (path.startsWith("/login") || path.startsWith("/register")) {
+    if (accessToken || refreshToken) {
+      return NextResponse.redirect(new URL("/home", request.url));
+    }
     return NextResponse.next();
   }
 
-  if (
-    path.startsWith("/student") ||
-    path.startsWith("/teacher") ||
-    path.startsWith("/shared")
-  ) {
+  if (path.startsWith("/home")) {
     if (!refreshToken && !accessToken) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
     if (accessToken) {
       try {
-        const response = await fetch(`${BASE_URL}/auth/me`, {
+        const response = await fetch(`${BASE_URL}/auth/validate`, {
           method: "GET",
           headers: {
             Cookie: `access_token=${accessToken.value}`,
           },
           cache: "no-store",
-          credentials: "include",
         });
         if (response.ok) {
           return NextResponse.next();
@@ -44,7 +42,6 @@ export default async function proxy(request: NextRequest) {
           headers: {
             Cookie: `refresh_token=${refreshToken.value}`,
           },
-          credentials: "include",
         });
 
         if (refreshResponse.ok) {
@@ -57,20 +54,18 @@ export default async function proxy(request: NextRequest) {
           return response;
         }
       } catch (error) {
-        console.error("Login error: ", error);
+        console.error("Bejelentkezés hiba: ", error);
       }
     }
-    return NextResponse.redirect(new URL("/login", request.url));
+    const response = NextResponse.redirect(new URL("/login", request.url));
+
+    response.cookies.delete("access_token");
+    response.cookies.delete("refresh_token");
+    return response;
   }
-  return await NextResponse.next();
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    "/student/:path*",
-    "/teacher/:path*",
-    "/shared/:path*",
-    "/login",
-    "/register",
-  ],
+  matcher: ["/home/:path*", "/home", "/login", "/register"],
 };

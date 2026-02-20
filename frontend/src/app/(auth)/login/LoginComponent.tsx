@@ -98,7 +98,7 @@ const LoginComponent = () => {
     const res = await submitLogin(data);
 
     if (res.success) {
-      router.push("/student");
+      router.push("/home");
     } else {
       alert("Sikertelen bejelentkezés");
     }
