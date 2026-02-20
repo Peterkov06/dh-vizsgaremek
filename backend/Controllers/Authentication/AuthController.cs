@@ -283,7 +283,11 @@ namespace backend.Controllers.Login
             return Ok(new { user.Email, role,user.FullName, user.ProfilePicUrl, user.Nickname});
         }
 
-
+        [Authorize]
+        [HttpGet("validate")]
+        public async Task<IActionResult> ValidateUser() {
+            return NoContent();
+        }
         public record ForgetPasswordDTO(string Email);
 
         [HttpPost("forget-password")]
