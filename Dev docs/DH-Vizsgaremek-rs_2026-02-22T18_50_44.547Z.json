@@ -1,0 +1,1155 @@
+{
+  "tables": [
+    {
+      "name": "AspNetRoleClaims",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "nqFyXgm1soOHdo0air0I6",
+          "name": "Id",
+          "type": "INTEGER",
+          "comment": "",
+          "unique": false,
+          "increment": true,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "27svdaUdNm8AwhRWpeNf3",
+          "name": "RoleId",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "JIyr3u2JVrpB0ojB8f0AS",
+          "name": "ClaimType",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "GjXCAfIshOSdmRa9q2Zqc",
+          "name": "ClaimValue",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "IX_AspNetRoleClaims_RoleId",
+          "unique": false,
+          "fields": [
+            "RoleId"
+          ],
+          "id": 0
+        }
+      ],
+      "id": "EZqtVEUdBskN3wXlX_SzP",
+      "x": -28.55889895722649,
+      "y": 4.7196752440234775
+    },
+    {
+      "name": "AspNetRoles",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "nepQKvqbPwi9S0FhhHwrz",
+          "name": "Id",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "jUln6OCmln4eNu50I1QLW",
+          "name": "Name",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "toX-aUjCAMCVpEUnlktLf",
+          "name": "NormalizedName",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "2aWwFx2wvzuoO4aD0CcjP",
+          "name": "ConcurrencyStamp",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        }
+      ],
+      "indices": [],
+      "id": "zb_Ww7C9l9lLB-aPrqIQV",
+      "x": -15.254138683983342,
+      "y": -227.58259257729736
+    },
+    {
+      "name": "AspNetUserClaims",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "IVRBFgno90seAjfykeO0N",
+          "name": "Id",
+          "type": "INTEGER",
+          "comment": "",
+          "unique": false,
+          "increment": true,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "BBjTfEFzV7oFFxMJ67XG-",
+          "name": "UserId",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "_WJriW_Korm7TKKOQc6pH",
+          "name": "ClaimType",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "1-WBJyDQV3IBttekv-5Fl",
+          "name": "ClaimValue",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "IX_AspNetUserClaims_UserId",
+          "unique": false,
+          "fields": [
+            "UserId"
+          ],
+          "id": 0
+        }
+      ],
+      "id": "apsNNa8DzHKSnA-o0C4d5",
+      "x": 253.8241841817453,
+      "y": -614.1176517323327
+    },
+    {
+      "name": "AspNetUserLogins",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "mM7K--EdP-1GcSnsk4Al4",
+          "name": "LoginProvider",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "uMUxjGhl85M8WUH7wVStc",
+          "name": "ProviderKey",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "NfDHnUgKCp7HxvWmAig0L",
+          "name": "ProviderDisplayName",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "3BVJoAJWoAyZcy9m6f4uv",
+          "name": "UserId",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "IX_AspNetUserLogins_UserId",
+          "unique": false,
+          "fields": [
+            "UserId"
+          ],
+          "id": 0
+        }
+      ],
+      "id": "36cM8HB6I2s3rzN9PyKam",
+      "x": 510.7044245762381,
+      "y": 167.5057991475712
+    },
+    {
+      "name": "AspNetUserRoles",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "cDdwNixL8FGUSD-qz4Ljf",
+          "name": "UserId",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "i2tXrNo66SZ1VZ_yivZvC",
+          "name": "RoleId",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 256,
+          "check": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "IX_AspNetUserRoles_RoleId",
+          "unique": false,
+          "fields": [
+            "RoleId"
+          ],
+          "id": 0
+        }
+      ],
+      "id": "7oeOrO1IPWBbY1mxZ61x6",
+      "x": 371.41188917739146,
+      "y": -39.01767834497383
+    },
+    {
+      "name": "AspNetUserTokens",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "-QeMQdptkMyEZ9nQ2O9Lb",
+          "name": "UserId",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "6_BGmzDwROgfkUMd63Le6",
+          "name": "LoginProvider",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "jRhDhCAZjD1KFOti2t13E",
+          "name": "Name",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "FPMrQTcBd5zCUcr27zuuQ",
+          "name": "Value",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        }
+      ],
+      "indices": [],
+      "id": "NDsi4wrdkfg_XdoqgiZhk",
+      "x": -8.525393908420426,
+      "y": -471.81905291630704
+    },
+    {
+      "name": "AspNetUsers",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "fm0OIDoaUXedKB5-IQ06U",
+          "name": "Id",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "xdKdAbZSwmpi4-wnaAXNn",
+          "name": "FullName",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "2ZaMzLR8jMX14dG2pi1rR",
+          "name": "DateOfBirth",
+          "type": "DATE",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "poP01Se6w8nUDxcLRTmlX",
+          "name": "Address",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "O50OOhASVhSsYkHbsf7-E",
+          "name": "UserName",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "RJmu8cEZNpGUo57BUNzT9",
+          "name": "NormalizedUserName",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "ab7cH9AETpfyxksXw2xj-",
+          "name": "Email",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "7b-EV6cZvICwnDSfeeI2Y",
+          "name": "NormalizedEmail",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "BONw0m9Pin8hy2W1yrx9A",
+          "name": "EmailConfirmed",
+          "type": "BOOLEAN",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "PG-ZMDvqZzGkinQy5J30u",
+          "name": "PasswordHash",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "hHMbdtY9bcrrg8Ptjl3O-",
+          "name": "SecurityStamp",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "JeECmHXUbX3dEXJAJ92tD",
+          "name": "ConcurrencyStamp",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "WB0XVLTB_TcR0_OtQon7j",
+          "name": "PhoneNumber",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "size": 50,
+          "check": ""
+        },
+        {
+          "id": "QGsrZ9JpmrAhQOFr7bU2O",
+          "name": "PhoneNumberConfirmed",
+          "type": "BOOLEAN",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "IrnPTsZkfxpn2pMIKJRic",
+          "name": "TwoFactorEnabled",
+          "type": "BOOLEAN",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "QvJDfmZaw04k7LUcNowwU",
+          "name": "LockoutEnd",
+          "type": "DATE",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "5FamYyiV3ydfNWUyImFjx",
+          "name": "LockoutEnabled",
+          "type": "BOOLEAN",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "sfQgvNEWpQtoBNVZuWAdz",
+          "name": "AccessFailedCount",
+          "type": "INTEGER",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "aRadQV99brIcYMgrPRsPS",
+          "name": "Nickname",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "FYxNdianpvAhMpXlxKnpI",
+          "name": "Introduction",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "_FR_ZiT6QvbzlAx16htZn",
+          "name": "ProfilePicUrl",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": false,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "J7nJQNY7cBJEnnHHRScYq",
+          "name": "City",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "cWjLi-YCdc126KLHwFmDI",
+          "name": "PostalCode",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 20,
+          "check": ""
+        }
+      ],
+      "indices": [],
+      "id": "N4CKQMkC9OR98oQYtHbYd",
+      "x": 1188.299177253198,
+      "y": -91.09751179961535
+    },
+    {
+      "name": "Cities",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "v7V-IuT3Y9PA4BbuxozYm",
+          "name": "Id",
+          "type": "INTEGER",
+          "comment": "",
+          "unique": false,
+          "increment": true,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "OwRhiO5j1Vz8p8AuLA6wx",
+          "name": "CityName",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "7WVRFj5569M7sExkbpZwp",
+          "name": "PostalCode",
+          "type": "CHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 4,
+          "check": ""
+        }
+      ],
+      "indices": [],
+      "id": "0OKofyXXTlz1RtOleVhd2",
+      "x": 1762.1996124231694,
+      "y": -744.7218440689419
+    },
+    {
+      "name": "PreferenceGroups",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "E0qmwyAEqNmVe_c562gXL",
+          "name": "Id",
+          "type": "INTEGER",
+          "comment": "",
+          "unique": false,
+          "increment": true,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "cw-5KEXTP0lLW9CK710uS",
+          "name": "Name",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        }
+      ],
+      "indices": [],
+      "id": "QqpSMWfKEVf_nRjOA9dVd",
+      "x": 651.3723770874519,
+      "y": -724.9255657174616
+    },
+    {
+      "name": "Preferences",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "wCg6O47WNyg4KPUzWEKTa",
+          "name": "Id",
+          "type": "INTEGER",
+          "comment": "",
+          "unique": false,
+          "increment": true,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "g4CGo_0d0Cpkm7gheiFJ2",
+          "name": "Name",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "Km2eI4TfZLCngI9CNxF6c",
+          "name": "PreferenceGroupId",
+          "type": "INTEGER",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "IX_Preferences_PreferenceGroupId",
+          "unique": false,
+          "fields": [
+            "PreferenceGroupId"
+          ],
+          "id": 0
+        }
+      ],
+      "id": "jhj6LzkSUQ_xsOWWl6ytP",
+      "x": 974.6678046243231,
+      "y": -702.37341082045,
+      "locked": false
+    },
+    {
+      "name": "RefreshTokens",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "jNNWygIpe34D8bP-6OaP-",
+          "name": "Id",
+          "type": "INTEGER",
+          "comment": "",
+          "unique": false,
+          "increment": true,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "zfB3dPG_2gmjQ9Cn-8Gww",
+          "name": "Token",
+          "type": "TEXT",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "uJ6Vvm68ZG9Dfq3pGV5bD",
+          "name": "UserId",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "PT3ZkCMO-JIsBvio5yxhO",
+          "name": "ExpiresAt",
+          "type": "BLOB",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "LE71XAx6ICcBG0BL8zJpL",
+          "name": "IsRevoked",
+          "type": "BOOLEAN",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "afcI9fGeHVpkG9claij0a",
+          "name": "CreatedAt",
+          "type": "BLOB",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "IX_RefreshTokens_UserId",
+          "unique": false,
+          "fields": [
+            "UserId"
+          ],
+          "id": 0
+        }
+      ],
+      "id": "Kpuu6vI_qYCFBzXUh9Yn5",
+      "x": 513.5118791974024,
+      "y": 399.3052573030291
+    },
+    {
+      "name": "UserPreferences",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "KkQdJCiYwc4LtkfEuOOHt",
+          "name": "UserId",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 256,
+          "check": ""
+        },
+        {
+          "id": "km0Djweq6OsQ4oWKIM58l",
+          "name": "PreferenceId",
+          "type": "INTEGER",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "check": ""
+        },
+        {
+          "id": "MwFEx47Il0cJpdu8qzqsB",
+          "name": "Id",
+          "type": "INTEGER",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "check": ""
+        }
+      ],
+      "indices": [
+        {
+          "name": "IX_UserPreferences_PreferenceId",
+          "unique": false,
+          "fields": [
+            "PreferenceId"
+          ],
+          "id": 0
+        }
+      ],
+      "id": "gMFUG4OwnFoJ2aeJwEjnr",
+      "x": 988.8640178049711,
+      "y": -388.1640885570786,
+      "locked": true
+    },
+    {
+      "name": "__EFMigrationsHistory",
+      "comment": "",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "aQcBz2CcQiwkndvst7FOq",
+          "name": "MigrationId",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": true,
+          "default": "",
+          "size": 150,
+          "check": ""
+        },
+        {
+          "id": "u5YxTgV_UFOI5LNah9ThK",
+          "name": "ProductVersion",
+          "type": "VARCHAR",
+          "comment": "",
+          "unique": false,
+          "increment": false,
+          "notNull": true,
+          "primary": false,
+          "default": "",
+          "size": 32,
+          "check": ""
+        }
+      ],
+      "indices": [],
+      "id": "l7Eu6dBpn2GEudZnDqF2g",
+      "x": -25.017678344973746,
+      "y": 214.33205572274971
+    }
+  ],
+  "relationships": [
+    {
+      "name": "fk_AspNetRoleClaims_RoleId_AspNetRoles",
+      "startTableId": "EZqtVEUdBskN3wXlX_SzP",
+      "startFieldId": "27svdaUdNm8AwhRWpeNf3",
+      "endTableId": "zb_Ww7C9l9lLB-aPrqIQV",
+      "endFieldId": "nepQKvqbPwi9S0FhhHwrz",
+      "updateConstraint": "No action",
+      "deleteConstraint": "Cascade",
+      "cardinality": "many_to_one",
+      "id": "2ukifcv89SVdZXrcLoSE6"
+    },
+    {
+      "name": "fk_AspNetUserClaims_UserId_AspNetUsers",
+      "startTableId": "apsNNa8DzHKSnA-o0C4d5",
+      "startFieldId": "BBjTfEFzV7oFFxMJ67XG-",
+      "endTableId": "N4CKQMkC9OR98oQYtHbYd",
+      "endFieldId": "fm0OIDoaUXedKB5-IQ06U",
+      "updateConstraint": "No action",
+      "deleteConstraint": "Cascade",
+      "cardinality": "many_to_one",
+      "id": "fHWiAAGcVysLWn8wde0o3"
+    },
+    {
+      "name": "fk_AspNetUserLogins_UserId_AspNetUsers",
+      "startTableId": "36cM8HB6I2s3rzN9PyKam",
+      "startFieldId": "3BVJoAJWoAyZcy9m6f4uv",
+      "endTableId": "N4CKQMkC9OR98oQYtHbYd",
+      "endFieldId": "fm0OIDoaUXedKB5-IQ06U",
+      "updateConstraint": "No action",
+      "deleteConstraint": "Cascade",
+      "cardinality": "many_to_one",
+      "id": "7BFhemnUAbFxP5YpkZPeB"
+    },
+    {
+      "name": "fk_AspNetUserRoles_RoleId_AspNetRoles",
+      "startTableId": "7oeOrO1IPWBbY1mxZ61x6",
+      "startFieldId": "i2tXrNo66SZ1VZ_yivZvC",
+      "endTableId": "zb_Ww7C9l9lLB-aPrqIQV",
+      "endFieldId": "nepQKvqbPwi9S0FhhHwrz",
+      "updateConstraint": "No action",
+      "deleteConstraint": "Cascade",
+      "cardinality": "many_to_one",
+      "id": "Lkt0x6QKwcJKKtLZkO2dY"
+    },
+    {
+      "name": "fk_AspNetUserRoles_UserId_AspNetUsers",
+      "startTableId": "7oeOrO1IPWBbY1mxZ61x6",
+      "startFieldId": "cDdwNixL8FGUSD-qz4Ljf",
+      "endTableId": "N4CKQMkC9OR98oQYtHbYd",
+      "endFieldId": "fm0OIDoaUXedKB5-IQ06U",
+      "updateConstraint": "No action",
+      "deleteConstraint": "Cascade",
+      "cardinality": "many_to_one",
+      "id": "kfe1T0b6KAAklkW-8hd6u"
+    },
+    {
+      "name": "fk_AspNetUserTokens_UserId_AspNetUsers",
+      "startTableId": "NDsi4wrdkfg_XdoqgiZhk",
+      "startFieldId": "-QeMQdptkMyEZ9nQ2O9Lb",
+      "endTableId": "N4CKQMkC9OR98oQYtHbYd",
+      "endFieldId": "fm0OIDoaUXedKB5-IQ06U",
+      "updateConstraint": "No action",
+      "deleteConstraint": "Cascade",
+      "cardinality": "many_to_one",
+      "id": "dBvRTOoRYMI5Jamco9oOY"
+    },
+    {
+      "name": "fk_Preferences_PreferenceGroupId_PreferenceGroups",
+      "startTableId": "jhj6LzkSUQ_xsOWWl6ytP",
+      "startFieldId": "Km2eI4TfZLCngI9CNxF6c",
+      "endTableId": "QqpSMWfKEVf_nRjOA9dVd",
+      "endFieldId": "E0qmwyAEqNmVe_c562gXL",
+      "updateConstraint": "No action",
+      "deleteConstraint": "Cascade",
+      "cardinality": "many_to_one",
+      "id": "5BFW9kuRlbVQz18E0hRVl"
+    },
+    {
+      "name": "fk_RefreshTokens_UserId_AspNetUsers",
+      "startTableId": "Kpuu6vI_qYCFBzXUh9Yn5",
+      "startFieldId": "uJ6Vvm68ZG9Dfq3pGV5bD",
+      "endTableId": "N4CKQMkC9OR98oQYtHbYd",
+      "endFieldId": "fm0OIDoaUXedKB5-IQ06U",
+      "updateConstraint": "No action",
+      "deleteConstraint": "Cascade",
+      "cardinality": "many_to_one",
+      "id": "IJHnHyNomFnRiUGphyr4b"
+    },
+    {
+      "name": "fk_UserPreferences_UserId_AspNetUsers",
+      "startTableId": "gMFUG4OwnFoJ2aeJwEjnr",
+      "startFieldId": "KkQdJCiYwc4LtkfEuOOHt",
+      "endTableId": "N4CKQMkC9OR98oQYtHbYd",
+      "endFieldId": "fm0OIDoaUXedKB5-IQ06U",
+      "updateConstraint": "No action",
+      "deleteConstraint": "Cascade",
+      "cardinality": "many_to_one",
+      "id": "RsS2Q5mj4jxAzpVY8N843"
+    },
+    {
+      "name": "fk_UserPreferences_PreferenceId_Preferences",
+      "startTableId": "gMFUG4OwnFoJ2aeJwEjnr",
+      "startFieldId": "km0Djweq6OsQ4oWKIM58l",
+      "endTableId": "jhj6LzkSUQ_xsOWWl6ytP",
+      "endFieldId": "wCg6O47WNyg4KPUzWEKTa",
+      "updateConstraint": "No action",
+      "deleteConstraint": "Cascade",
+      "cardinality": "many_to_one",
+      "id": "W0UbCk1koX4B2LgArnIk-"
+    }
+  ],
+  "notes": [],
+  "subjectAreas": [
+    {
+      "id": 0,
+      "name": "Idenity Module",
+      "x": -242.84558914800152,
+      "y": -759.1811990893317,
+      "width": 1729.2812212088647,
+      "height": 1812.3095847712075,
+      "color": "#175e7a",
+      "locked": false
+    },
+    {
+      "id": 1,
+      "name": "Cities Module",
+      "x": 1650.3853358982983,
+      "y": -787.2009281736664,
+      "width": 387.16610067782426,
+      "height": 235.11428498358816,
+      "color": "#175e7a",
+      "locked": false
+    }
+  ],
+  "database": "postgresql",
+  "types": [],
+  "enums": [],
+  "title": "DH-Vizsgaremek-rs"
+}
