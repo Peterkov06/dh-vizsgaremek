@@ -321,7 +321,7 @@ const PersonalDataComponent = () => {
                           >
                             <Calendar
                               mode="single"
-                              captionLayout="dropdown"
+                              captionLayout="label"
                               weekStartsOn={1}
                               month={birthMonth}
                               onMonthChange={setBirthMonth}
