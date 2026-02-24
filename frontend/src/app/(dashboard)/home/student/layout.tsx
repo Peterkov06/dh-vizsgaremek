@@ -1,8 +1,8 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ReactNode } from "react";
-import StudentSideBar from "./student/StudentSideBar";
+import StudentSideBar from "./StudentSideBar";
 
-const DashboardLayout = async ({ children }: { children: ReactNode }) => {
+const StudentHomeLayout = async ({ children }: { children: ReactNode }) => {
   return (
     <SidebarProvider>
       <StudentSideBar></StudentSideBar>
@@ -14,4 +14,4 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default DashboardLayout;
+export default StudentHomeLayout;
