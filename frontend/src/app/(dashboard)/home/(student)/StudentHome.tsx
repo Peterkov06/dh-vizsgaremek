@@ -3,9 +3,10 @@ import React from "react";
 
 const StudentHome = (props: { user: User }) => {
   return (
-    <div>
-      <h1>Diák oldal</h1>
-      <p>Helló {props.user.nickname}</p>
+    <div className="h-full bg-amber-200">
+      <h1 className="text-4xl font-bold text-primary">
+        Üdv {props.user.nickname}!
+      </h1>
     </div>
   );
 };
