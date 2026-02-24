@@ -293,6 +293,7 @@ namespace backend.Controllers.Login
         [HttpPost("forget-password")]
         public async Task<IActionResult> ForgetPassword([FromBody]ForgetPasswordDTO fpass) {
 
+
             if (string.IsNullOrEmpty(fpass.Email))
                 return BadRequest(fpass.Email);
 
@@ -303,11 +304,12 @@ namespace backend.Controllers.Login
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var resetLink = Url.Action("ResetPassword", "Login", new { token, email = fpass.Email }, Request.Scheme);
+            var resetLink = $"http://localhost:3000/password-recovery?token={token}&email={fpass.Email}";
 
             if (resetLink == null)
                 return BadRequest();
 
+            Console.WriteLine("vami");
             await SendEmail(fpass.Email, resetLink);
 
 
@@ -344,13 +346,16 @@ namespace backend.Controllers.Login
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO dto)
         {
+            Console.WriteLine(dto.Email);
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
                 return NotFound();
+            Console.WriteLine(dto.Token);
 
             var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.New_password);
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
+            Console.WriteLine("3");
 
 
             _context.RefreshTokens.RemoveRange(_context.RefreshTokens.Where(x => x.UserId == user.Id));

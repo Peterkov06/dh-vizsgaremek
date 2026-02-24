@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/input-group";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const LoginComponent = () => {
   const router = useRouter();
@@ -191,9 +192,11 @@ const LoginComponent = () => {
                 </FieldLabel>
               </Field>
               <Field className="w-fit">
-                <Button variant={"link"} className="cursor-pointer">
-                  Elfelejtett jelszó
-                </Button>
+                <Link href={"forgot-password"}>
+                  <Button variant={"link"} className="cursor-pointer">
+                    Elfelejtett jelszó
+                  </Button>
+                </Link>
               </Field>
             </FieldGroup>
             <Button
