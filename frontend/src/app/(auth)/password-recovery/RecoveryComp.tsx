@@ -25,7 +25,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type RecoveryType = {
   email: string;
@@ -37,6 +37,7 @@ type RecoveryDTOType = {
 };
 
 const RecoveryComp = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const token = searchParams.get("token");
@@ -104,12 +105,26 @@ const RecoveryComp = () => {
       },
       body: JSON.stringify(sendBody),
     });
-    return response.ok;
+    if (response && response.ok) {
+      setIsSent(true);
+      setTimeout(() => {
+        router.push("/login");
+      }, 5000);
+    } else {
+      // Handle the error!
+      console.error("Recovery failed");
+      alert("Hiba történt. Ellenőrizze az adatokat.");
+    }
   };
 
   const onSubmit = async (data: RecoveryDTOType) => {
     let res = await sendRecoveryPassword(data);
-    if (res) setIsSent(true);
+    // if (res) {
+    //   setIsSent(true);
+    //   setTimeout(() => {
+    //     router.push("/login");
+    //   }, 5000);
+    // }
   };
 
   const [isSent, setIsSent] = useState<boolean>(false);
