@@ -1,11 +1,18 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ReactNode } from "react";
 import StudentSideBar from "./(student)/StudentSideBar";
+import getCurrentUser from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 const DashboardLayout = async ({ children }: { children: ReactNode }) => {
+  const user = await getCurrentUser();
+  if (!user) {
+    redirect("/login");
+  }
+
   return (
     <SidebarProvider>
-      <StudentSideBar></StudentSideBar>
+      <StudentSideBar user={user}></StudentSideBar>
       <main className="w-full h-screen">
         <SidebarTrigger className="absolute"></SidebarTrigger>
         <div className="pr-10 pl-10 pt-8 pb-5 h-screen">{children}</div>

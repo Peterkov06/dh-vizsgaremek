@@ -4,8 +4,9 @@ import { NextResponse } from "next/server";
 
 export type User = {
   nickname: string;
-  fullname: string;
+  fullName: string;
   email: string;
+  profilePicUrl: string;
   role: "Student" | "Teacher" | "Parent";
 };
 

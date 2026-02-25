@@ -166,6 +166,7 @@ namespace backend.Controllers.Login
         [HttpGet("logout")]
         public async Task<IActionResult> Logout() {
 
+            Console.WriteLine("Itt jártam");
             try
             {
                 Response.Cookies.Delete("access_token");

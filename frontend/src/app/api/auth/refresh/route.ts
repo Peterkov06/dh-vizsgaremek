@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BASE_URL } from "../register/route";
 
-export default async function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const refreshToken = request.cookies.get("refresh_token");
 
   if (!refreshToken) {
