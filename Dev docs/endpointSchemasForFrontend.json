@@ -1,0 +1,66 @@
+{
+    "attendedCourses": {
+        "active":[
+            {
+                "id":"uuid",
+                "courseName": "string",
+                "imageUrl": "string",
+                "teacherName": "string",
+                "courseType": "tutoring | learningPath" ,
+                "progress": 0,
+                "upcomingEvents":[
+                    {
+                        "title": "string",
+                        "startDate": "2000-01-01T00:00:00.000",
+                        "endDate": "2000-01-01T00:00:00.000",
+                        "courseName": "string",
+                        "teacherName": "string",
+                        "eventType": "lesson | deadline",
+                        "description": "string"
+                    }
+            ]
+            }
+        ],
+        "inactive":[
+             {
+                "id":"uuid",
+                "courseName": "string",
+                "imageUrl": "string",
+                "teacherName": "string",
+                "courseType": "tutoring | learningPath",
+                "progress": 0
+            }
+        ]
+    },
+    "upcomingEvents": [
+        {
+            "id":"uuid",
+            "title": "string",
+            "startDate": "2000-01-01T00:00:00.000",
+            "endDate": "2000-01-01T00:00:00.000",
+            "courseName": "string",
+            "teacherName": "string",
+            "eventType": "lesson | deadline",
+            "description": "string"
+        }
+    ],
+    "popularCourses": [
+        {
+            "id":"uuid",
+            "title": "",
+            "imageUrl": "",
+            "teacherName": "",
+            "lessonPrice": "",
+            "description": "",
+            "courseType": "tutoring | learningPath"
+        }
+    ],
+    "notifications": {
+        "unreadNotificationNumber": 0,
+        "lastUnread": {
+            "id":"uuid",
+            "courseName": "",
+            "text": ""
+        }
+    }
+}
