@@ -1,4 +1,5 @@
 "use client";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -34,19 +35,26 @@ const StudentSideBar = (props: { user: User }) => {
   };
 
   return (
-    <Sidebar className="bg-primary text-white" collapsible="icon">
+    <Sidebar className="text-white" collapsible="icon">
       <SidebarHeader>
         <span className="truncate font-bold group-data-[collapsible=icon]:hidden">
           Vizsga Remek
         </span>
-        <p className="group-data-[collapsible=icon]:hidden">
-          {props.user.fullName}
-        </p>
+        <div className="flex items-center gap-2 text-2xl m-auto mt-5">
+          <Avatar className="size-10 group-data-[collapsible=icon]:size-6">
+            <AvatarImage
+              src={props.user.profilePicUrl || "/defaults/default_avatar.jpg"}
+            ></AvatarImage>
+          </Avatar>
+          <p className="turncate group-data-[collapsible=icon]:hidden transition-all duration-500">
+            {props.user.fullName}
+          </p>
+        </div>
       </SidebarHeader>
       <SidebarContent className="h-full flex justify-center group-data-[collapsible=icon]:justify-start! transition-all duration-500">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-2">
+            <SidebarMenu className="gap-4">
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton
@@ -57,6 +65,8 @@ const StudentSideBar = (props: { user: User }) => {
                       data-[active=true]:bg-white
                       data-[active=true]:font-bold
                       data-[active=true]:text-sidebar-primary
+                      hover:text-sidebar-primary
+                      
                     "
                   >
                     <Link

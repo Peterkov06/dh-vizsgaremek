@@ -1,0 +1,127 @@
+{
+  "attendedCourses": {
+    "active": [
+      {
+        "courseId": "uuid",
+        "instanceId": "uuid",
+        "courseName": "Calculus",
+        "imageUrl": "",
+        "teacherName": "Dr. John Doe",
+        "courseType": "tutoring",
+        "progress": 15,
+        "upcomingEvents": [
+          {
+            "eventId": "uuid",
+            "eventUrl": "#",
+            "title": "Calculus hand-in",
+            "startDate": "01-12",
+            "startTime": "12:00",
+            "eventType": "deadline",
+            "description": "Hand-in deadline"
+          }
+        ]
+      },
+      {
+        "courseId": "uuid1",
+        "instanceId": "uuid",
+        "courseName": "Calculus",
+        "imageUrl": "",
+        "teacherName": "Dr. John Doe",
+        "courseType": "tutoring",
+        "progress": 15,
+        "upcomingEvents": [
+          {
+            "eventId": "uuid",
+            "eventUrl": "#",
+            "title": "Calculus hand-in",
+            "startDate": "01-12",
+            "startTime": "12:00",
+            "eventType": "deadline",
+            "description": "Hand-in deadline"
+          }
+        ]
+      },
+      {
+        "courseId": "uuid2",
+        "instanceId": "uuid",
+        "courseName": "Calculus",
+        "imageUrl": "",
+        "teacherName": "Dr. John Doe",
+        "courseType": "tutoring",
+        "progress": 15,
+        "upcomingEvents": [
+          {
+            "eventId": "uuid",
+            "eventUrl": "#",
+            "title": "Calculus hand-in",
+            "startDate": "01-12",
+            "startTime": "12:00",
+            "eventType": "deadline",
+            "description": "Hand-in deadline"
+          }
+        ]
+      }
+    ],
+    "inactive": [
+      {
+        "courseId": "uuid",
+        "instanceId": "uuid",
+        "courseName": "HTML5 Baics",
+        "imageUrl": "",
+        "teacherName": "Mr. John Smith",
+        "courseType": "learningPath",
+        "progress": 100
+      }
+    ]
+  },
+  "upcomingEvents": [
+    {
+      "eventId": "uuid",
+      "eventUrl": "#",
+      "title": "Calculus lesson",
+      "startDate": "01-12",
+      "startTime": "12:00",
+      "courseName": "Calculus",
+      "teacherName": "Dr. John Doe",
+      "eventType": "lesson",
+      "description": "The next lesson of Calculus"
+    }
+  ],
+  "popularCourses": [
+    {
+      "courseId": "uuid",
+      "instanceId": "uuid",
+      "courseName": "Unity Engine basics",
+      "imageUrl": "",
+      "teacherName": "Huan Antonio",
+      "lessonPrice": {
+        "amount": 0,
+        "currency": "HUF"
+      },
+      "description": "Learn the basics of the Unity Engine",
+      "courseType": "learningPath"
+    },
+    {
+      "courseId": "uuid",
+      "instanceId": "uuid",
+      "courseName": "B2 english",
+      "imageUrl": "",
+      "teacherName": "El-Jahari",
+      "lessonPrice": {
+        "amount": 0,
+        "currency": "HUF"
+      },
+      "description": "You will learn the basics of English, to be able to pass the B2 exam",
+      "courseType": "tutoring"
+    }
+  ],
+  "notifications": {
+    "unreadNotificationNumber": 5,
+    "lastUnread": {
+      "notificationId": "uuid",
+      "eventUrl": "#",
+      "courseName": "Calculus",
+      "text": "Submission graded"
+    }
+  }
+}
