@@ -1,73 +1,108 @@
 {
-  "attendedCourses": {
-    "active": [
+  "studentHomePage": {
+    "attendedCourses": {
+      "active": [
+        {
+          "courseId": "uuid",
+          "instanceId": "uuid",
+          "courseName": "Calculus",
+          "imageUrl": "",
+          "teacherName": "Dr. John Doe",
+          "courseType": "tutoring",
+          "progress": 15,
+          "upcomingEvents": [
+            {
+              "eventId": "uuid",
+              "eventUrl": "#",
+              "title": "Calculus hand-in",
+              "startDate": "01-12",
+              "startTime": "12:00",
+              "eventType": "deadline",
+              "description": "Hand-in deadline"
+            }
+          ]
+        }
+      ],
+      "inactive": [
+        {
+          "courseId": "uuid",
+          "instanceId": "uuid",
+          "courseName": "HTML5 Baics",
+          "imageUrl": "",
+          "teacherName": "Mr. John Smith",
+          "courseType": "learningPath",
+          "progress": 100
+        }
+      ]
+    },
+    "upcomingEvents": [
       {
-        "id": "uuid",
+        "eventId": "uuid",
+        "eventUrl": "#",
+        "title": "Calculus lesson",
+        "startDate": "01-12",
+        "startTime": "12:00",
         "courseName": "Calculus",
-        "imageUrl": "",
         "teacherName": "Dr. John Doe",
-        "courseType": "tutoring",
-        "progress": 15,
-        "upcomingEvents": [
-          {
-            "title": "Calculus hand-in",
-            "startDate": "2000-01-01T00:00:00.000",
-            "endDate": "2000-01-01T00:00:00.000",
-            "eventType": "deadline",
-            "description": "Hand-in deadline"
-          }
-        ]
+        "eventType": "lesson",
+        "description": "The next lesson of Calculus"
       }
     ],
-    "inactive": [
+    "popularCourses": [
       {
-        "id": "uuid",
-        "courseName": "HTML5 Baics",
+        "courseId": "uuid",
+        "instanceId": "uuid",
+        "courseName": "Unity Engine basics",
         "imageUrl": "",
-        "teacherName": "Mr. John Smith",
-        "courseType": "learningPath",
-        "progress": 100
+        "teacherName": "Huan Antonio",
+        "lessonPrice": { "amount": 0, "currency": "HUF" },
+        "description": "Learn the basics of the Unity Engine",
+        "courseType": "learningPath"
+      },
+      {
+        "courseId": "uuid",
+        "instanceId": "uuid",
+        "courseName": "B2 english",
+        "imageUrl": "",
+        "teacherName": "El-Jahari",
+        "lessonPrice": { "amount": 0, "currency": "HUF" },
+        "description": "You will learn the basics of English, to be able to pass the B2 exam",
+        "courseType": "tutoring"
       }
-    ]
+    ],
+    "notifications": {
+      "unreadNotificationNumber": 5,
+      "lastUnread": {
+        "notificationId": "uuid",
+        "eventUrl": "#",
+        "courseName": "Calculus",
+        "text": "Submission graded"
+      }
+    }
   },
-  "upcomingEvents": [
-    {
-      "id": "uuid",
-      "title": "Calculus lesson",
-      "startDate": "2000-01-01T00:00:00.000",
-      "endDate": "2000-01-01T00:00:00.000",
-      "courseName": "Calculus",
-      "teacherName": "Dr. John Doe",
-      "eventType": "lesson",
-      "description": "The next lesson of Calculus"
-    }
-  ],
-  "popularCourses": [
-    {
-      "id": "uuid",
-      "courseName": "Unity Engine basics",
-      "imageUrl": "",
-      "teacherName": "Huan Antonio",
-      "lessonPrice": 0,
-      "description": "Learn the basics of the Unity Engine",
-      "courseType": "learningPath"
+  "studentSettings": {
+    "profile": {
+      "userId": "uuid",
+      "fullName": "Szakács Máté",
+      "nickName": "Matthias",
+      "email": "szak@gmail.com",
+      "phoneNumber": "123456789",
+      "address": "Erzsébet utca 10.",
+      "city": "Budapest",
+      "country": "Hungary",
+      "postalCode": "1024",
+      "profilePictureUrl": "",
+      "introduction": "I am a student at the University of Budapest. I am studying Computer Science. I like to play video games and I also like to read books.",
+      "coursePreferences": ["Visual Learning", "No homework", "Flashcards"],
+      "spokenLanguages": ["English", "Hungarian"]
     },
-    {
-      "id": "uuid",
-      "courseName": "B2 english",
-      "imageUrl": "",
-      "teacherName": "El-Jahari",
-      "lessonPrice": 0,
-      "description": "You will learn the basics of English, to be able to pass the B2 exam",
-      "courseType": "tutoring"
-    }
-  ],
-  "notifications": {
-    "unreadNotificationNumber": 5,
-    "lastUnread": {
-      "id": "uuid",
-      "courseName": "Calculus",
-      "text": "Submission graded"
+    "appSettings": {
+      "notifications": {
+        "notificationsEnabled": true
+      },
+      "appLanguage": "en",
+      "darkMode": false,
+      "linkedToGoogleCalendar": false
     }
   }
 }
