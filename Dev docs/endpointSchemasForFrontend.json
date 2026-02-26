@@ -1,66 +1,73 @@
 {
-    "attendedCourses": {
-        "active":[
-            {
-                "id":"uuid",
-                "courseName": "string",
-                "imageUrl": "string",
-                "teacherName": "string",
-                "courseType": "tutoring | learningPath" ,
-                "progress": 0,
-                "upcomingEvents":[
-                    {
-                        "title": "string",
-                        "startDate": "2000-01-01T00:00:00.000",
-                        "endDate": "2000-01-01T00:00:00.000",
-                        "courseName": "string",
-                        "teacherName": "string",
-                        "eventType": "lesson | deadline",
-                        "description": "string"
-                    }
-            ]
-            }
-        ],
-        "inactive":[
-             {
-                "id":"uuid",
-                "courseName": "string",
-                "imageUrl": "string",
-                "teacherName": "string",
-                "courseType": "tutoring | learningPath",
-                "progress": 0
-            }
-        ]
-    },
-    "upcomingEvents": [
-        {
-            "id":"uuid",
-            "title": "string",
+  "attendedCourses": {
+    "active": [
+      {
+        "id": "uuid",
+        "courseName": "Calculus",
+        "imageUrl": "",
+        "teacherName": "Dr. John Doe",
+        "courseType": "tutoring",
+        "progress": 15,
+        "upcomingEvents": [
+          {
+            "title": "Calculus hand-in",
             "startDate": "2000-01-01T00:00:00.000",
             "endDate": "2000-01-01T00:00:00.000",
-            "courseName": "string",
-            "teacherName": "string",
-            "eventType": "lesson | deadline",
-            "description": "string"
-        }
+            "eventType": "deadline",
+            "description": "Hand-in deadline"
+          }
+        ]
+      }
     ],
-    "popularCourses": [
-        {
-            "id":"uuid",
-            "title": "",
-            "imageUrl": "",
-            "teacherName": "",
-            "lessonPrice": "",
-            "description": "",
-            "courseType": "tutoring | learningPath"
-        }
-    ],
-    "notifications": {
-        "unreadNotificationNumber": 0,
-        "lastUnread": {
-            "id":"uuid",
-            "courseName": "",
-            "text": ""
-        }
+    "inactive": [
+      {
+        "id": "uuid",
+        "courseName": "HTML5 Baics",
+        "imageUrl": "",
+        "teacherName": "Mr. John Smith",
+        "courseType": "learningPath",
+        "progress": 100
+      }
+    ]
+  },
+  "upcomingEvents": [
+    {
+      "id": "uuid",
+      "title": "Calculus lesson",
+      "startDate": "2000-01-01T00:00:00.000",
+      "endDate": "2000-01-01T00:00:00.000",
+      "courseName": "Calculus",
+      "teacherName": "Dr. John Doe",
+      "eventType": "lesson",
+      "description": "The next lesson of Calculus"
     }
+  ],
+  "popularCourses": [
+    {
+      "id": "uuid",
+      "courseName": "Unity Engine basics",
+      "imageUrl": "",
+      "teacherName": "Huan Antonio",
+      "lessonPrice": 0,
+      "description": "Learn the basics of the Unity Engine",
+      "courseType": "learningPath"
+    },
+    {
+      "id": "uuid",
+      "courseName": "B2 english",
+      "imageUrl": "",
+      "teacherName": "El-Jahari",
+      "lessonPrice": 0,
+      "description": "You will learn the basics of English, to be able to pass the B2 exam",
+      "courseType": "tutoring"
+    }
+  ],
+  "notifications": {
+    "unreadNotificationNumber": 5,
+    "lastUnread": {
+      "id": "uuid",
+      "courseName": "Calculus",
+      "text": "Submission graded"
+    }
+  }
 }
