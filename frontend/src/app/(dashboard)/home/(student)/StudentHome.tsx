@@ -39,7 +39,7 @@ const StudentHome = (props: { user: User }) => {
         <h1 className="text-4xl font-bold text-primary">
           Üdv {props.user.nickname}!
         </h1>
-        <div className="relative p-1 bg-linear-to-br from-primary to-secondary rounded-2xl">
+        <div className="relative p-1 bg-linear-to-br from-primary to-secondary rounded-2xl hidden lg:block">
           <div className="w-[21em] relative flex items-center justify-between gap-3 p-2 bg-background rounded-xl">
             <h2 className="absolute top-[-16] bg-background pr-1 pl-1 font-bold text-primary">
               Értesítések
@@ -58,14 +58,22 @@ const StudentHome = (props: { user: User }) => {
             </div>
           </div>
         </div>
+        <div className="text-primary relative block lg:hidden">
+          <Bell size={35}></Bell>
+          <div className="absolute top-[-5] right-[-5] flex justify-center items-center border-2 border-primary rounded-[100%] aspect-square">
+            <p className="flex justify-center items-center w-5 h-5 bg-background rounded-[100%] text-center text-[0.8em]">
+              {dashboard?.notifications.unreadNotificationNumber}
+            </p>
+          </div>
+        </div>
       </section>
-      <section className="flex justify-between gap-10">
-        <section className="w-full flex gap-2 flex-col">
+      <section className="flex justify-between gap-10 flex-col lg:flex-row">
+        <section className="w-fit lg:w-full flex gap-2 flex-col">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Felvett kurzusok</h1>
+            <h1 className="text-xl lg:text-2xl font-bold">Felvett kurzusok</h1>
             <div className="flex gap-3">
               <Button
-                className={`px-10 h-6 rounded-4xl border-2 hover:border-transparent!  hover:bg-foreground/80 hover:text-background border-foreground ${isActive ? "bg-background  text-foreground" : "bg-foreground"}`}
+                className={`px-4 lg:px-10 h-6 rounded-4xl border-2 hover:border-transparent!  hover:bg-foreground/80 hover:text-background border-foreground ${isActive ? "bg-background  text-foreground" : "bg-foreground"}`}
                 onClick={() => {
                   setIsActive((prev) => !prev);
                 }}
@@ -73,7 +81,7 @@ const StudentHome = (props: { user: User }) => {
                 Aktív
               </Button>
               <Button
-                className={`px-10 h-6 rounded-4xl border-2 hover:border-transparent! hover:bg-foreground/80 hover:text-background  border-foreground ${!isActive ? "bg-background  text-foreground" : "bg-foreground"}`}
+                className={`px-4 lg:px-10 h-6 rounded-4xl border-2 hover:border-transparent! hover:bg-foreground/80 hover:text-background  border-foreground ${!isActive ? "bg-background  text-foreground" : "bg-foreground"}`}
                 onClick={() => {
                   setIsActive((prev) => !prev);
                 }}
@@ -82,13 +90,30 @@ const StudentHome = (props: { user: User }) => {
               </Button>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="hidden lg:flex gap-2">
             {dashboard?.attendedCourses.active.map((c) => (
               <CourseCard course={c} key={c.courseId}></CourseCard>
             ))}
           </div>
+          <Carousel
+            className="block lg:hidden"
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+          >
+            <CarouselContent>
+              {dashboard?.attendedCourses.active.map((c) => (
+                <CarouselItem key={c.courseId} className="basis-1/2">
+                  <CourseCard course={c} key={c.courseId}></CourseCard>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious></CarouselPrevious>
+            <CarouselNext></CarouselNext>
+          </Carousel>
         </section>
-        <section className="w-[35em] flex flex-col gap-5">
+        <section className="w-full lg:w-[35em] flex flex-col gap-5">
           <h1 className="text-2xl font-bold">Közelgő események</h1>
           <div className="flex flex-col gap-3">
             {dashboard?.upcomingEvents.map((ue, i) => (
@@ -97,7 +122,7 @@ const StudentHome = (props: { user: User }) => {
           </div>
         </section>
       </section>
-      <section className="bg-[#E5E3E3] flex flex-col gap-2 items-center py-3 px-20 h-full rounded-2xl">
+      <section className="bg-[#E5E3E3] flex flex-col gap-2 items-center py-3 px-20 h-full rounded-2xl shadow-2xl">
         <div className="flex gap-2">
           <Button
             className={`px-5 h-6 rounded-lg border-2 hover:border-transparent!  hover:bg-foreground/80 hover:text-background border-foreground ${isActiveTeachers ? "bg-background  text-foreground" : "bg-foreground"}`}
@@ -125,7 +150,7 @@ const StudentHome = (props: { user: User }) => {
         >
           <CarouselContent>
             {dashboard?.popularCourses.map((pc, i) => (
-              <CarouselItem className="basis-1/4" key={i}>
+              <CarouselItem className="basis-1/1 lg:basis-1/4" key={i}>
                 <div className="relative flex justify-center">
                   <div className="relative rounded-2xl">
                     <img

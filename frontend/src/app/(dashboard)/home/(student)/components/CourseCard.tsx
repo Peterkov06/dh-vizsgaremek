@@ -6,7 +6,7 @@ const CourseCard = (props: { course: ActiveCourse }) => {
   return (
     <div className="rounded-lg w-fit text-background shadow-2xl shadow-primary">
       <img
-        className="rounded-t-lg w-[16em]"
+        className="rounded-t-lg w-[10em] lg:w-[16em]"
         src={
           props.course.imageUrl === ""
             ? "defaults/default_course.jpg"
@@ -62,7 +62,7 @@ const CourseCard = (props: { course: ActiveCourse }) => {
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-end">
+        <div className="w-full hidden lg:flex justify-end">
           <Button className="py-1 px-5 h-fit rounded-2xl">
             <p>A kurzusra</p>
             <ChevronRightCircle size={30}></ChevronRightCircle>
