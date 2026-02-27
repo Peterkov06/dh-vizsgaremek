@@ -85,6 +85,50 @@
       "teacherName": "Dr. John Doe",
       "eventType": "lesson",
       "description": "The next lesson of Calculus"
+    },
+    {
+      "eventId": "uuid",
+      "eventUrl": "#",
+      "title": "Calculus lesson",
+      "startDate": "01-12",
+      "startTime": "12:00",
+      "courseName": "Calculus",
+      "teacherName": "Dr. John Doe",
+      "eventType": "lesson",
+      "description": "The next lesson of Calculus"
+    },
+    {
+      "eventId": "uuid",
+      "eventUrl": "#",
+      "title": "Calculus lesson",
+      "startDate": "01-12",
+      "startTime": "12:00",
+      "courseName": "Calculus",
+      "teacherName": "Dr. John Doe",
+      "eventType": "lesson",
+      "description": "The next lesson of Calculus"
+    },
+    {
+      "eventId": "uuid",
+      "eventUrl": "#",
+      "title": "Calculus lesson",
+      "startDate": "01-12",
+      "startTime": "12:00",
+      "courseName": "Calculus",
+      "teacherName": "Dr. John Doe",
+      "eventType": "lesson",
+      "description": "The next lesson of Calculus"
+    },
+    {
+      "eventId": "uuid",
+      "eventUrl": "#",
+      "title": "Calculus lesson",
+      "startDate": "01-12",
+      "startTime": "12:00",
+      "courseName": "Calculus",
+      "teacherName": "Dr. John Doe",
+      "eventType": "lesson",
+      "description": "The next lesson of Calculus"
     }
   ],
   "popularCourses": [
@@ -100,6 +144,45 @@
       },
       "description": "Learn the basics of the Unity Engine",
       "courseType": "learningPath"
+    },
+    {
+      "courseId": "uuid",
+      "instanceId": "uuid",
+      "courseName": "Unity Engine basics",
+      "imageUrl": "",
+      "teacherName": "Huan Antonio",
+      "lessonPrice": {
+        "amount": 0,
+        "currency": "HUF"
+      },
+      "description": "Learn the basics of the Unity Engine",
+      "courseType": "learningPath"
+    },
+    {
+      "courseId": "uuid",
+      "instanceId": "uuid",
+      "courseName": "Unity Engine basics",
+      "imageUrl": "",
+      "teacherName": "Huan Antonio",
+      "lessonPrice": {
+        "amount": 0,
+        "currency": "HUF"
+      },
+      "description": "Learn the basics of the Unity Engine",
+      "courseType": "learningPath"
+    },
+    {
+      "courseId": "uuid",
+      "instanceId": "uuid",
+      "courseName": "B2 english",
+      "imageUrl": "",
+      "teacherName": "El-Jahari",
+      "lessonPrice": {
+        "amount": 0,
+        "currency": "HUF"
+      },
+      "description": "You will learn the basics of English, to be able to pass the B2 exam",
+      "courseType": "tutoring"
     },
     {
       "courseId": "uuid",

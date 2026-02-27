@@ -15,7 +15,7 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
       <StudentSideBar user={user}></StudentSideBar>
       <main className="w-full h-screen">
         <SidebarTrigger className="absolute"></SidebarTrigger>
-        <div className="pr-10 pl-10 pt-8 pb-5 h-screen">{children}</div>
+        <div className="px-16 pt-8 pb-5 h-screen">{children}</div>
       </main>
     </SidebarProvider>
   );
