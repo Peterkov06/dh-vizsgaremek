@@ -104,5 +104,254 @@
       "darkMode": false,
       "linkedToGoogleCalendar": false
     }
+  },
+  "teacherHomePage": {
+    "activeCourses": [
+      {
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "imageUrl": "",
+        "courseType": "tutoring",
+        "enrolledStudents": 15
+      }
+    ],
+    "upcomingEvents": [
+      {
+        "eventId": "uuid",
+        "eventUrl": "#",
+        "title": "Calculus lesson",
+        "startDate": "01-12",
+        "startTime": "12:00",
+        "courseName": "Calculus",
+        "studentName": "Dr. John Doe",
+        "eventType": "lesson",
+        "description": "The next lesson of Calculus"
+      },
+      {
+        "eventId": "uuid",
+        "eventUrl": "#",
+        "title": "Programming lesson",
+        "startDate": "01-13",
+        "startTime": "12:00",
+        "courseName": "Calculus",
+        "studentName": "Dr. John Smith",
+        "eventType": "lesson",
+        "description": "The next lesson of Calculus"
+      },
+      {
+        "eventId": "uuid",
+        "eventUrl": "#",
+        "title": "Calculus lesson",
+        "startDate": "01-14",
+        "startTime": "12:00",
+        "courseName": "Calculus",
+        "studentName": "Dr. John Doe",
+        "eventType": "lesson",
+        "description": "The next lesson of Calculus"
+      }
+    ],
+    "gradingQueue": [
+      {
+        "submissionId": "uuid",
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "handInTitle": "Logarithms",
+        "studentName": "Szakács Máté",
+        "submittedDate": "01.12"
+      },
+      {
+        "submissionId": "uuid",
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "handInTitle": "Logarithms",
+        "studentName": "Szakács István",
+        "submittedDate": "01.13"
+      },
+      {
+        "submissionId": "uuid",
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "handInTitle": "Logarithms",
+        "studentName": "Bökönyi Máté",
+        "submittedDate": "02.12"
+      },
+      {
+        "submissionId": "uuid",
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "handInTitle": "Logarithms",
+        "studentName": "Halász Máté",
+        "submittedDate": "04.12"
+      },
+      {
+        "submissionId": "uuid",
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "handInTitle": "Logarithms",
+        "studentName": "József Máté",
+        "submittedDate": "01.25"
+      }
+    ],
+    "pendingEnrollments": [
+      {
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "userId": "uuid",
+        "userName": "Szakács Máté",
+        "enrollmentDate": "01.12"
+      },
+      {
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "userId": "uuid",
+        "userName": "Szakács István",
+        "enrollmentDate": "01.13"
+      },
+      {
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "userId": "uuid",
+        "userName": "Bökönyi Máté",
+        "enrollmentDate": "02.12"
+      },
+      {
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "userId": "uuid",
+        "userName": "Halász Máté",
+        "enrollmentDate": "04.12"
+      },
+      {
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "userId": "uuid",
+        "userName": "József Máté",
+        "enrollmentDate": "01.25"
+      }
+    ],
+    "pendingPayments": [
+      {
+        "courseId": "uuid",
+        "instanceId": "uuid",
+        "courseName": "Calculus",
+        "userId": "uuid",
+        "userName": "Szakács Máté",
+        "paymentValue": 100,
+        "paymentCurrency": "HUF",
+        "tokenCount": 1,
+        "paymentDate": "01.12"
+      },
+      {
+        "courseId": "uuid",
+        "instanceId": "uuid",
+        "courseName": "Frontend Development",
+        "userId": "uuid",
+        "userName": "Szakács István",
+        "paymentValue": 500,
+        "paymentCurrency": "HUF",
+        "tokenCount": 5,
+        "paymentDate": "01.14"
+      },
+      {
+        "courseId": "uuid",
+        "instanceId": "uuid",
+        "courseName": "Frontend Development",
+        "userId": "uuid",
+        "userName": "Bökönyi Máté",
+        "paymentValue": 200,
+        "paymentCurrency": "HUF",
+        "tokenCount": 2,
+        "paymentDate": "02.12"
+      },
+      {
+        "courseId": "uuid",
+        "instanceId": "uuid",
+        "courseName": "Frontend Development",
+        "userId": "uuid",
+        "userName": "Halász Máté",
+        "paymentValue": 300,
+        "paymentCurrency": "HUF",
+        "tokenCount": 3,
+        "paymentDate": "04.12"
+      },
+      {
+        "courseId": "uuid",
+        "instanceId": "uuid",
+        "courseName": "Frontend Development",
+        "userId": "uuid",
+        "userName": "József Máté",
+        "paymentValue": 100,
+        "paymentCurrency": "HUF",
+        "tokenCount": 1,
+        "paymentDate": "01.25"
+      }
+    ],
+    "students": [
+      {
+        "userId": "uuid",
+        "fullName": "Szakács Máté",
+        "nickName": "Matthias",
+        "courseId": "uuid",
+        "courseName": "Calculus",
+        "chatUrl": "#"
+      },
+      {
+        "userId": "uuid",
+        "fullName": "Szakács István",
+        "nickName": "István",
+        "courseId": "uuid",
+        "courseName": "Frontend Development",
+        "chatUrl": "#"
+      },
+      {
+        "userId": "uuid",
+        "fullName": "Bökönyi Máté",
+        "nickName": "Máté",
+        "courseId": "uuid",
+        "courseName": "Frontend Development",
+        "chatUrl": "#"
+      },
+      {
+        "userId": "uuid",
+        "fullName": "Halász Máté",
+        "nickName": "Máté",
+        "courseId": "uuid",
+        "courseName": "Frontend Development",
+        "chatUrl": "#"
+      },
+      {
+        "userId": "uuid",
+        "fullName": "József Máté",
+        "nickName": "Máté",
+        "courseId": "uuid",
+        "courseName": "Frontend Development",
+        "chatUrl": "#"
+      }
+    ]
+  },
+  "teacherSettings": {
+    "profile": {
+      "userId": "uuid",
+      "fullName": "Szakács Máté",
+      "nickName": "Matthias",
+      "email": "szak@gmail.com",
+      "phoneNumber": "123456789",
+      "address": "Erzsébet utca 10.",
+      "city": "Budapest",
+      "country": "Hungary",
+      "postalCode": "1024",
+      "profilePictureUrl": "",
+      "introduction": "I am a student at the University of Budapest. I am studying Computer Science. I like to play video games and I also like to read books.",
+      "spokenLanguages": ["English", "Hungarian"],
+      "qualifications": ["Computer Science - Master", "Mathematics - Bachelor"]
+    },
+    "appSettings": {
+      "notifications": {
+        "notificationsEnabled": true
+      },
+      "appLanguage": "en",
+      "darkMode": false,
+      "linkedToGoogleCalendar": false
+    }
   }
 }
