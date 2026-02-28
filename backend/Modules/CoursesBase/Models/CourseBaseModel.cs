@@ -2,7 +2,7 @@
 
 namespace backend.Modules.CoursesBase.Models
 {
-    public class CourseBase: ModelBase
+    public class CourseBaseModel: ModelBase
     {
         public required string TeacherId { get; set; }
         public required string CourseName { get; set; }

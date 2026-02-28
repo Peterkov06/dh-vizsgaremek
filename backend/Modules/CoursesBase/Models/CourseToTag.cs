@@ -11,6 +11,6 @@ namespace backend.Modules.CoursesBase.Models
         public Guid CourseId { get; set; }
 
         public CourseTag? Tag { get; set; }
-        public CourseBase? Course { get; set; }
+        public CourseBaseModel? Course { get; set; }
     }
 }
