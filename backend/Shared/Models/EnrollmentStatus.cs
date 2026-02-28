@@ -1,4 +1,4 @@
-﻿namespace backend.Modules.Tutoring.Models
+﻿namespace backend.Shared.Models
 {
     public enum EnrollmentStatus
     {
