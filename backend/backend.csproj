@@ -42,7 +42,6 @@
     <Folder Include="Modules\CoursesBase\Services\" />
     <Folder Include="Modules\Resources\Controllers\" />
     <Folder Include="Modules\Resources\DTOs\" />
-    <Folder Include="Modules\Resources\Models\" />
     <Folder Include="Modules\Resources\Services\" />
     <Folder Include="Modules\Homepage\Controllers\" />
     <Folder Include="Modules\Homepage\DTOs\" />
