@@ -34,7 +34,7 @@ const StudentHome = (props: { user: User }) => {
   }, []);
 
   return (
-    <main className="h-full flex flex-col gap-5">
+    <main className="h-full flex flex-col gap-5 overflow-x-hidden lg:overflow-x-visible">
       <section className="flex justify-between items-center">
         <h1 className="text-4xl font-bold text-primary">
           Üdv {props.user.nickname}!
@@ -69,7 +69,7 @@ const StudentHome = (props: { user: User }) => {
       </section>
       <section className="flex justify-between gap-10 flex-col lg:flex-row">
         <section className="w-fit lg:w-full flex gap-2 flex-col">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center w-fit lg:w-full gap-5">
             <h1 className="text-xl lg:text-2xl font-bold">Felvett kurzusok</h1>
             <div className="flex gap-3">
               <Button
@@ -96,20 +96,20 @@ const StudentHome = (props: { user: User }) => {
             ))}
           </div>
           <Carousel
-            className="block lg:hidden"
+            className="block lg:hidden m-auto w-60"
             opts={{
               align: "start",
               loop: true,
             }}
           >
+            <CarouselPrevious></CarouselPrevious>
             <CarouselContent>
               {dashboard?.attendedCourses.active.map((c) => (
-                <CarouselItem key={c.courseId} className="basis-1/2">
+                <CarouselItem key={c.courseId} className="basis-1/1">
                   <CourseCard course={c} key={c.courseId}></CourseCard>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious></CarouselPrevious>
             <CarouselNext></CarouselNext>
           </Carousel>
         </section>
@@ -122,7 +122,10 @@ const StudentHome = (props: { user: User }) => {
           </div>
         </section>
       </section>
-      <section className="bg-[#E5E3E3] flex flex-col gap-2 items-center py-3 px-20 h-full rounded-2xl shadow-2xl">
+      <section className="bg-[#E5E3E3] relative flex flex-col gap-2 items-center py-3 px-20 h-full rounded-2xl shadow-2xl">
+        <h1 className="absolute bg-background px-5 py-2 text-xl right-10 top-[-20] font-bold rounded-2xl">
+          Népszerű kurzusok
+        </h1>
         <div className="flex gap-2">
           <Button
             className={`px-5 h-6 rounded-lg border-2 hover:border-transparent!  hover:bg-foreground/80 hover:text-background border-foreground ${isActiveTeachers ? "bg-background  text-foreground" : "bg-foreground"}`}
@@ -163,7 +166,7 @@ const StudentHome = (props: { user: User }) => {
                     ></img>
                     <div className="absolute rounded-2xl inset-0 bg-linear-to-b from-30% from-transparent to-[#E5E3E3] p-1" />
                   </div>
-                  <div className="absolute z-20 text-primary bottom-0 flex text-sm justify-between w-full px-3">
+                  <div className="absolute z-20 text-primary bottom-0  flex text-sm justify-between w-full px-3">
                     <p>{pc.courseName}</p>
                     <p>{pc.lessonPrice.amount} FT</p>
                   </div>

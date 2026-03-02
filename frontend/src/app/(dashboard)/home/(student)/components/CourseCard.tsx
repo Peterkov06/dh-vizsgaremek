@@ -4,9 +4,9 @@ import { ChevronRightCircle } from "lucide-react";
 
 const CourseCard = (props: { course: ActiveCourse }) => {
   return (
-    <div className="rounded-lg w-fit text-background shadow-2xl shadow-primary">
+    <div className="rounded-lg w-fit text-background shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
       <img
-        className="rounded-t-lg w-[10em] lg:w-[16em]"
+        className="rounded-t-lg w-[16em] lg:w-[16em]"
         src={
           props.course.imageUrl === ""
             ? "defaults/default_course.jpg"
@@ -26,17 +26,22 @@ const CourseCard = (props: { course: ActiveCourse }) => {
         </div>
         <div className="flex flex-col gap-0">
           <div className="flex flex-col gap-0! bg-background text-primary rounded-lg px-3 py-1 shadow-2xl">
-            <div className="flex justify-between items-end">
-              <h2 className="font-bold text-md">
-                {props.course.upcomingEvents[0].title}
+            <div className="flex justify-between items-end min-w-0">
+              <h2 className="font-bold text-md min-w-0  flex-1">
+                {props.course.upcomingEvents[0].title.length > 16
+                  ? props.course.upcomingEvents[0].title.slice(0, 13) + "..."
+                  : props.course.upcomingEvents[0].title}
               </h2>
-              <p className="text-xs">
+              <p className="text-xs shrink-0">
                 {props.course.upcomingEvents[0].startDate}
               </p>
             </div>
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between items-start ">
               <h2 className="text-[0.6em] ml-4">
-                {props.course.upcomingEvents[0].description}
+                {props.course.upcomingEvents[0].description.length > 28
+                  ? props.course.upcomingEvents[0].description.slice(0, 25) +
+                    "..."
+                  : props.course.upcomingEvents[0].description}
               </h2>
               <p className="text-sm font-bold">
                 {props.course.upcomingEvents[0].startTime}
@@ -46,7 +51,9 @@ const CourseCard = (props: { course: ActiveCourse }) => {
           <div className="flex flex-col gap-0! bg-background text-primary rounded-lg py-1 px-3 shadow-2xl scale-80">
             <div className="flex justify-between items-end">
               <h2 className="font-bold text-sm">
-                {props.course.upcomingEvents[0].title}
+                {props.course.upcomingEvents[0].title.length > 16
+                  ? props.course.upcomingEvents[0].title.slice(0, 13) + "..."
+                  : props.course.upcomingEvents[0].title}
               </h2>
               <p className="text-xs">
                 {props.course.upcomingEvents[0].startDate}
@@ -54,7 +61,10 @@ const CourseCard = (props: { course: ActiveCourse }) => {
             </div>
             <div className="flex justify-between items-start">
               <h2 className="text-[0.6em] ml-4">
-                {props.course.upcomingEvents[0].description}
+                {props.course.upcomingEvents[0].description.length > 28
+                  ? props.course.upcomingEvents[0].description.slice(0, 25) +
+                    "..."
+                  : props.course.upcomingEvents[0].description}
               </h2>
               <p className="text-xs font-bold">
                 {props.course.upcomingEvents[0].startTime}
