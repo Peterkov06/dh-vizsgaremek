@@ -63,7 +63,6 @@
     <Folder Include="Modules\Community\Services\" />
     <Folder Include="Modules\Payment\Controllers\" />
     <Folder Include="Modules\Payment\DTOs\" />
-    <Folder Include="Modules\Payment\Models\" />
     <Folder Include="Modules\Payment\Services\" />
     <Folder Include="Modules\Tutoring\Controllers\" />
     <Folder Include="Modules\Tutoring\DTOs\" />

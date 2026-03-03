@@ -1,0 +1,23 @@
+﻿using backend.Modules.Progression.Models;
+using backend.Modules.Tutoring.Models;
+using backend.Shared.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace backend.Modules.Payment.Models
+{
+    public class TokenTransaction: ModelBase
+    {
+        public int TokenCount { get; set; }
+        [ForeignKey(nameof(Wall))]
+        public Guid? WallId { get; set; } = null;
+        [ForeignKey(nameof(Enrollment))]
+        public Guid? EnrollmentId { get; set; } = null;
+        [ForeignKey(nameof(Invoice))]
+        public required Guid InvoiceId { get; set; }
+        public required TransactionType Type { get; set; }
+
+        public TutoringWall? Wall { get; set; }
+        public PathEnrollment? Enrollment { get; set; }
+        public Invoice? Invoice { get; set; }
+    }
+}
