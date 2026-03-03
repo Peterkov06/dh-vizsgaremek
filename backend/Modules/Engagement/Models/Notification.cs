@@ -1,13 +1,17 @@
-﻿using backend.Shared.Models;
+﻿using backend.Models;
+using backend.Shared.Models;
 
 namespace backend.Modules.Engagement.Models
 {
     public class Notification: ModelBase
     {
-        public string? SenderId { get; set; } = null;
+        public required string RecipientId { get; set; }
         public required string Title { get; set; }
         public string? Message { get; set; } = null;
-        public Guid Referenceid { get; set; }
+        public Guid ReferenceId { get; set; }
+        public required string UrlPath { get; set; }
         public bool IsRead { get; set; }
+
+        public ApplicationUser? User { get; set; }
     }
 }
