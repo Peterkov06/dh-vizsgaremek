@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ActiveCourse } from "@/lib/models/homeModel";
 import { ChevronRightCircle } from "lucide-react";
+import Link from "next/link";
 
 const CourseCard = (props: { course: ActiveCourse }) => {
   return (
@@ -73,10 +74,12 @@ const CourseCard = (props: { course: ActiveCourse }) => {
           </div>
         </div>
         <div className="w-full hidden lg:flex justify-end">
-          <Button className="py-1 px-5 h-fit rounded-2xl">
-            <p>A kurzusra</p>
-            <ChevronRightCircle size={30}></ChevronRightCircle>
-          </Button>
+          <Link href={`/home/course?id=${props.course.courseId}`}>
+            <Button className="py-1 px-5 h-fit rounded-2xl">
+              <p>A kurzusra</p>
+              <ChevronRightCircle size={30}></ChevronRightCircle>
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

@@ -34,7 +34,7 @@ const StudentHome = (props: { user: User }) => {
   }, []);
 
   return (
-    <main className="h-full flex flex-col gap-5 overflow-x-hidden lg:overflow-x-visible">
+    <main className="h-full flex flex-col gap-10 lg:gap-5  lg:overflow-x-visible">
       <section className="flex justify-between items-center">
         <h1 className="text-4xl font-bold text-primary">
           Üdv {props.user.nickname}!
@@ -123,12 +123,12 @@ const StudentHome = (props: { user: User }) => {
         </section>
       </section>
       <section className="bg-[#E5E3E3] relative flex flex-col gap-2 items-center py-3 px-20 h-full rounded-2xl shadow-2xl">
-        <h1 className="absolute bg-background px-5 py-2 text-xl right-10 top-[-20] font-bold rounded-2xl">
+        <h1 className="absolute bg-background px-2 lg:px-5 py-1 lg:py-2 text-md lg:text-xl right-3 lg:right-10 top-[-20] font-bold rounded-2xl">
           Népszerű kurzusok
         </h1>
         <div className="flex gap-2">
           <Button
-            className={`px-5 h-6 rounded-lg border-2 hover:border-transparent!  hover:bg-foreground/80 hover:text-background border-foreground ${isActiveTeachers ? "bg-background  text-foreground" : "bg-foreground"}`}
+            className={`h-2 lg:px-5 lg:h-6 rounded-lg border-2 hover:border-transparent!  hover:bg-foreground/80 hover:text-background border-foreground ${isActiveTeachers ? "bg-background  text-foreground" : "bg-foreground"}`}
             onClick={() => {
               setIsActiveTeachers((prev) => !prev);
             }}
@@ -136,7 +136,7 @@ const StudentHome = (props: { user: User }) => {
             Ösvények
           </Button>
           <Button
-            className={`px-5 h-6 rounded-lg border-2 hover:border-transparent! hover:bg-foreground/80 hover:text-background  border-foreground ${!isActiveTeachers ? "bg-background  text-foreground" : "bg-foreground"}`}
+            className={`h-2 lg:px-5 lg:h-6 rounded-lg border-2 hover:border-transparent! hover:bg-foreground/80 hover:text-background  border-foreground ${!isActiveTeachers ? "bg-background  text-foreground" : "bg-foreground"}`}
             onClick={() => {
               setIsActiveTeachers((prev) => !prev);
             }}
