@@ -5,7 +5,6 @@ namespace backend.Modules.Resources.Models
 {
     public class TestModule: ModelBase
     {
-        [ForeignKey(nameof(Test))]
         public required Guid TestId { get; set; }
         public required TestModuleType Type { get; set; }
         public required string Task { get; set; }

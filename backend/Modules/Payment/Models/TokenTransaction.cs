@@ -8,11 +8,8 @@ namespace backend.Modules.Payment.Models
     public class TokenTransaction: ModelBase
     {
         public int TokenCount { get; set; }
-        [ForeignKey(nameof(Wall))]
         public Guid? WallId { get; set; } = null;
-        [ForeignKey(nameof(Enrollment))]
         public Guid? EnrollmentId { get; set; } = null;
-        [ForeignKey(nameof(Invoice))]
         public required Guid InvoiceId { get; set; }
         public required TransactionType Type { get; set; }
 

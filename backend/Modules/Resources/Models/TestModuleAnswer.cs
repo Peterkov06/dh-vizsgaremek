@@ -5,7 +5,6 @@ namespace backend.Modules.Resources.Models
 {
     public class TestModuleAnswer: ModelBase
     {
-        [ForeignKey(nameof(Module))]
         public required Guid ModuleId { get; set; }
         public required string Text { get; set; }
         public required bool IsCorrect { get; set; } = false;

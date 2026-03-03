@@ -1,15 +1,23 @@
-﻿using backend.Shared.Models;
+﻿using backend.Modules.CoursesBase.Models;
+using backend.Modules.Progression.Models;
+using backend.Modules.Tutoring.Models;
+using backend.Shared.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Modules.Scheduling.Models
 {
     public class Event: ModelBase
     {
-        public required string Organiser { get; set; }
+        public required string OrganiserId { get; set; }
         public required EventType Type { get; set; }
         public required DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; } = null;
         public Guid? PathCourseId { get; set; } = null;
-        public Guid? TutoringCourseId { get; set; } = null;
+        public Guid? TutoringWallId { get; set; } = null;
         public Guid? PathEnrollmentId { get; set; } = null;
+
+        public CourseBaseModel? PathCourse { get; set; }
+        public TutoringWall? TutoringWall { get; set; }
+        public PathEnrollment? Enrollment { get; set; }
     }
 }

@@ -8,6 +8,12 @@
     <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Modules\Community\**" />
+    <Content Remove="Modules\Community\**" />
+    <EmbeddedResource Remove="Modules\Community\**" />
+    <None Remove="Modules\Community\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="4.14.1" />
     <PackageReference Include="Mailtrap" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.3" />
@@ -55,12 +61,7 @@
     <Folder Include="Modules\Progression\Services\" />
     <Folder Include="Modules\Engagement\Controllers\" />
     <Folder Include="Modules\Engagement\DTOs\" />
-    <Folder Include="Modules\Engagement\Models\" />
     <Folder Include="Modules\Engagement\Services\" />
-    <Folder Include="Modules\Community\Controllers\" />
-    <Folder Include="Modules\Community\DTOs\" />
-    <Folder Include="Modules\Community\Models\" />
-    <Folder Include="Modules\Community\Services\" />
     <Folder Include="Modules\Payment\Controllers\" />
     <Folder Include="Modules\Payment\DTOs\" />
     <Folder Include="Modules\Payment\Services\" />

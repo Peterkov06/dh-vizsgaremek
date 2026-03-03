@@ -7,9 +7,7 @@ namespace backend.Modules.Tutoring.Models
 {
     public class TutoringWall: ModelBase
     {
-        [ForeignKey(nameof(Student))]
         public required string StudentId { get; set; }
-        [ForeignKey(nameof(CoursesBase))]
         public required Guid CourseId { get; set; }
         public required EnrollmentStatus Status { get; set; }
 
