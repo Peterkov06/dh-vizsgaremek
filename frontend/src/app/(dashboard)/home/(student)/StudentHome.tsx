@@ -34,7 +34,7 @@ const StudentHome = (props: { user: User }) => {
   }, []);
 
   return (
-    <main className="h-full flex flex-col gap-10 lg:gap-5  lg:overflow-x-visible">
+    <main className="h-full flex flex-col gap-10 lg:gap-7  lg:overflow-x-visible">
       <section className="flex justify-between items-center">
         <h1 className="text-4xl font-bold text-primary">
           Üdv {props.user.nickname}!
@@ -67,7 +67,7 @@ const StudentHome = (props: { user: User }) => {
           </div>
         </div>
       </section>
-      <section className="flex justify-between gap-10 flex-col lg:flex-row">
+      <section className="flex justify-between gap-10 flex-col h-fit lg:flex-row">
         <section className="w-fit lg:w-full flex gap-2 flex-col">
           <div className="flex justify-between items-center w-fit lg:w-full gap-5">
             <h1 className="text-xl lg:text-2xl font-bold">Felvett kurzusok</h1>
@@ -90,10 +90,14 @@ const StudentHome = (props: { user: User }) => {
               </Button>
             </div>
           </div>
-          <div className="hidden lg:flex gap-2">
-            {dashboard?.attendedCourses.active.map((c) => (
-              <CourseCard course={c} key={c.courseId}></CourseCard>
-            ))}
+          <div className="hidden lg:flex gap-2 h-full">
+            {!isActive
+              ? dashboard?.attendedCourses.active.map((c) => (
+                  <CourseCard course={c} key={c.courseId}></CourseCard>
+                ))
+              : dashboard?.attendedCourses.inactive.map((c) => (
+                  <CourseCard course={c} key={c.courseId}></CourseCard>
+                ))}
           </div>
           <Carousel
             className="block lg:hidden m-auto w-60"

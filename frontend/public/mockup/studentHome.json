@@ -71,6 +71,24 @@
         "teacherName": "Mr. John Smith",
         "courseType": "learningPath",
         "progress": 100
+      },
+      {
+        "courseId": "uuid2",
+        "instanceId": "uuid",
+        "courseName": "HTML5 Baics",
+        "imageUrl": "",
+        "teacherName": "Mr. John Smith",
+        "courseType": "learningPath",
+        "progress": 100
+      },
+      {
+        "courseId": "uuid3",
+        "instanceId": "uuid",
+        "courseName": "HTML5 Baics",
+        "imageUrl": "",
+        "teacherName": "Mr. John Smith",
+        "courseType": "learningPath",
+        "progress": 100
       }
     ]
   },
