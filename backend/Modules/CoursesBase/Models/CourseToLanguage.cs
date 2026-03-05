@@ -6,9 +6,7 @@ namespace backend.Modules.CoursesBase.Models
 {
     public class CourseToLanguage
     {
-        [ForeignKey(nameof(Course))]
         public Guid CourseId { get; set; }
-        [ForeignKey(nameof(Language))]
         public Guid LanguageId { get; set; }
 
         public Language? Language { get; set; }

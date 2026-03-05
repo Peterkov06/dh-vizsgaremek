@@ -1,4 +1,5 @@
 ﻿using backend.Models;
+using backend.Modules.Identity.Models;
 using backend.Shared.Models;
 
 namespace backend.Modules.CoursesBase.Models
@@ -15,7 +16,7 @@ namespace backend.Modules.CoursesBase.Models
         public required bool FirstConsultationFree { get; set; }
         public Guid PriceCurrencyId { get; set; }
         public CourseStatus Status { get; set; }
-        public ApplicationUser? Teacher { get; set; }
+        public Teacher? Teacher { get; set; }
 
     }
 }
