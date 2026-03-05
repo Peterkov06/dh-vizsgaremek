@@ -1,7 +1,7 @@
 import getCurrentUser from "@/lib/auth";
 import { redirect } from "next/navigation";
 import StudentHome from "./(student)/StudentHome";
-import TeacherHome from "./teacher/TeacherHome";
+import TeacherHome from "./(teacher)/TeacherHome";
 
 const page = async () => {
   const user = await getCurrentUser();

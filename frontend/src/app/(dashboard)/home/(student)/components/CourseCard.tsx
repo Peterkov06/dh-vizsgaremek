@@ -34,7 +34,7 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
           <div className="flex flex-col gap-0">
             <div className="flex flex-col gap-0! bg-background text-primary rounded-lg px-3 py-1 shadow-2xl">
               <div className="flex justify-between items-end min-w-0">
-                <h2 className="font-bold text-md min-w-0  flex-1">
+                <h2 className="font-bold text-sm min-w-0  flex-1">
                   {props.course.upcomingEvents[0].title.length > 16
                     ? props.course.upcomingEvents[0].title.slice(0, 13) + "..."
                     : props.course.upcomingEvents[0].title}
@@ -73,7 +73,7 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
                       "..."
                     : props.course.upcomingEvents[0].description}
                 </h2>
-                <p className="text-xs font-bold">
+                <p className="text-sm font-bold">
                   {props.course.upcomingEvents[0].startTime}
                 </p>
               </div>
