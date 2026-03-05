@@ -34,7 +34,6 @@
   <ItemGroup>
     <Folder Include="Modules\Identity\Controllers\" />
     <Folder Include="Modules\Identity\DTOs\" />
-    <Folder Include="Modules\Identity\Models\" />
     <Folder Include="Modules\Identity\Services\" />
     <Folder Include="Modules\Scheduling\Controllers\" />
     <Folder Include="Modules\Scheduling\DTOs\" />
