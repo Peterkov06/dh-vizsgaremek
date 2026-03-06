@@ -10,13 +10,17 @@ namespace backend.Modules.CoursesBase.Models
         public required string CourseName { get; set; }
         public required string Description { get; set; }
         public required CourseType Type { get; set; }
-        public required int CourseDomain { get; set; }
-        public required int CourseLevelId { get; set; }
+        public required Guid CourseDomainId { get; set; }
+        public required Guid CourseLevelId { get; set; }
         public decimal Price { get; set; }
         public required bool FirstConsultationFree { get; set; }
         public Guid PriceCurrencyId { get; set; }
         public CourseStatus Status { get; set; }
         public Teacher? Teacher { get; set; }
+        public CourseDomain? CourseDomain { get; set; }
+        public CourseLevel? CourseLevel { get; set; }
+        public Currency? Currency { get; set; }
+        public ICollection<CourseToTag>? CourseToTags { get; set; }
 
     }
 }
