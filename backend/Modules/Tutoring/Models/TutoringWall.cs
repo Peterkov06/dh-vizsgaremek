@@ -1,5 +1,6 @@
 ﻿using backend.Models;
 using backend.Modules.CoursesBase.Models;
+using backend.Modules.Identity.Models;
 using backend.Shared.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,8 +13,8 @@ namespace backend.Modules.Tutoring.Models
         public required EnrollmentStatus Status { get; set; }
         public int TokenCount { get; set; }
 
-        public ApplicationUser? Student { get; set; }
+        public Student? Student { get; set; }
         public CourseBaseModel? CourseBase { get; set; } = null;
-        public ICollection<TutoringWallPost>? WallPosts { get; set; }
+        public ICollection<TutoringWallPost> WallPosts { get; set; } = [];
     }
 }

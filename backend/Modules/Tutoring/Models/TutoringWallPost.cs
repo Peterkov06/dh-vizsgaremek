@@ -1,4 +1,5 @@
-﻿using backend.Shared.Models;
+﻿using backend.Modules.Resources.Models;
+using backend.Shared.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Modules.Tutoring.Models
@@ -10,6 +11,7 @@ namespace backend.Modules.Tutoring.Models
         public Guid? HandInId { get; set; } = null;
 
         public TutoringWall? TutoringWall { get; set; }
+        public HandIn? HandIn { get; set; }
         public ICollection<WallPostAttachment>? Attachments { get; set; }
 
     }
