@@ -198,35 +198,45 @@
         "courseName": "Calculus",
         "userId": "uuid",
         "userName": "Szakács Máté",
-        "enrollmentDate": "01.12"
+        "enrollmentDate": "01.12",
+        "enrollmentId": "uuid",
+        "profilePictureUrl": "https://www.gravatar.com/avatar/0?d=identicon"
       },
       {
         "courseId": "uuid",
         "courseName": "Calculus",
         "userId": "uuid",
         "userName": "Szakács István",
-        "enrollmentDate": "01.13"
+        "enrollmentDate": "01.13",
+        "enrollmentId": "uuid",
+        "profilePictureUrl": "https://www.gravatar.com/avatar/0?d=identicon"
       },
       {
         "courseId": "uuid",
         "courseName": "Calculus",
         "userId": "uuid",
         "userName": "Bökönyi Máté",
-        "enrollmentDate": "02.12"
+        "enrollmentDate": "02.12",
+        "enrollmentId": "uuid",
+        "profilePictureUrl": "https://www.gravatar.com/avatar/0?d=identicon"
       },
       {
         "courseId": "uuid",
         "courseName": "Calculus",
         "userId": "uuid",
         "userName": "Halász Máté",
-        "enrollmentDate": "04.12"
+        "enrollmentDate": "04.12",
+        "enrollmentId": "uuid",
+        "profilePictureUrl": "https://www.gravatar.com/avatar/0?d=identicon"
       },
       {
         "courseId": "uuid",
         "courseName": "Calculus",
         "userId": "uuid",
         "userName": "József Máté",
-        "enrollmentDate": "01.25"
+        "enrollmentDate": "01.25",
+        "enrollmentId": "uuid",
+        "profilePictureUrl": "https://www.gravatar.com/avatar/0?d=identicon"
       }
     ],
     "pendingPayments": [
@@ -239,7 +249,8 @@
         "paymentValue": 100,
         "paymentCurrency": "HUF",
         "tokenCount": 1,
-        "paymentDate": "01.12"
+        "paymentDate": "01.12",
+        "invouceId": "uuid"
       },
       {
         "courseId": "uuid",
@@ -250,7 +261,8 @@
         "paymentValue": 500,
         "paymentCurrency": "HUF",
         "tokenCount": 5,
-        "paymentDate": "01.14"
+        "paymentDate": "01.14",
+        "invouceId": "uuid"
       },
       {
         "courseId": "uuid",
@@ -261,7 +273,8 @@
         "paymentValue": 200,
         "paymentCurrency": "HUF",
         "tokenCount": 2,
-        "paymentDate": "02.12"
+        "paymentDate": "02.12",
+        "invouceId": "uuid"
       },
       {
         "courseId": "uuid",
@@ -272,7 +285,8 @@
         "paymentValue": 300,
         "paymentCurrency": "HUF",
         "tokenCount": 3,
-        "paymentDate": "04.12"
+        "paymentDate": "04.12",
+        "invouceId": "uuid"
       },
       {
         "courseId": "uuid",
@@ -283,7 +297,8 @@
         "paymentValue": 100,
         "paymentCurrency": "HUF",
         "tokenCount": 1,
-        "paymentDate": "01.25"
+        "paymentDate": "01.25",
+        "invouceId": "uuid"
       }
     ],
     "students": [
@@ -293,7 +308,8 @@
         "nickName": "Matthias",
         "courseId": "uuid",
         "courseName": "Calculus",
-        "chatUrl": "#"
+        "chatUrl": "#",
+        "profilePictureUrl": "https://www.gravatar.com/avatar/0?d=identicon"
       },
       {
         "userId": "uuid",
@@ -301,7 +317,8 @@
         "nickName": "István",
         "courseId": "uuid",
         "courseName": "Frontend Development",
-        "chatUrl": "#"
+        "chatUrl": "#",
+        "profilePictureUrl": "https://www.gravatar.com/avatar/0?d=identicon"
       },
       {
         "userId": "uuid",
@@ -309,7 +326,8 @@
         "nickName": "Máté",
         "courseId": "uuid",
         "courseName": "Frontend Development",
-        "chatUrl": "#"
+        "chatUrl": "#",
+        "profilePictureUrl": "https://www.gravatar.com/avatar/0?d=identicon"
       },
       {
         "userId": "uuid",
@@ -317,7 +335,8 @@
         "nickName": "Máté",
         "courseId": "uuid",
         "courseName": "Frontend Development",
-        "chatUrl": "#"
+        "chatUrl": "#",
+        "profilePictureUrl": "https://www.gravatar.com/avatar/0?d=identicon"
       },
       {
         "userId": "uuid",
@@ -325,9 +344,19 @@
         "nickName": "Máté",
         "courseId": "uuid",
         "courseName": "Frontend Development",
-        "chatUrl": "#"
+        "chatUrl": "#",
+        "profilePictureUrl": "https://www.gravatar.com/avatar/0?d=identicon"
       }
-    ]
+    ],
+    "notifications": {
+      "unreadNotificationNumber": 25,
+      "lastUnread": {
+        "notificationId": "uuid",
+        "eventUrl": "#",
+        "courseName": "Calculus",
+        "text": "New enrollment"
+      }
+    }
   },
   "teacherSettings": {
     "profile": {
