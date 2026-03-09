@@ -14,14 +14,15 @@ namespace backend.Data.Configurations.CoursesBase
             builder.Property(x => x.CourseName).IsRequired();
             builder.Property(x => x.Description).IsRequired();
             builder.Property(x => x.Type).IsRequired();
-            builder.Property(x => x.CourseDomain).IsRequired();
+            builder.Property(x => x.CourseDomainId).IsRequired();
             builder.Property(x => x.CourseLevelId).IsRequired();
             builder.Property(x => x.Price).IsRequired().HasPrecision(18,2);
             builder.Property(x => x.FirstConsultationFree).IsRequired();
             builder.Property(x => x.PriceCurrencyId).IsRequired();
             builder.Property(builder => builder.Status).IsRequired();
 
-            builder.HasOne(x => x.Teacher).With Many().HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Teacher).WithMany(x => x.Courses).HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.CourseDomain).WithMany(x => x.Courses).HasForeignKey(x => x.CourseDomainId);
 
         }
     }

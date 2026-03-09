@@ -10,7 +10,7 @@
   <ItemGroup>
     <Compile Remove="Modules\Community\**" />
     <Content Remove="Modules\Community\**" />
-    <EmbeddedResource Remove="Modules\Community\**" />
+    <EmbeddedResource Remove="Modules\Community\**" /> 
     <None Remove="Modules\Community\**" />
   </ItemGroup>
   <ItemGroup>
