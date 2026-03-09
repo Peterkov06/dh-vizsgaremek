@@ -17,13 +17,15 @@ namespace backend.Modules.CoursesBase.Models
         public required bool FirstConsultationFree { get; set; }
         public Guid PriceCurrencyId { get; set; }
         public CourseStatus Status { get; set; }
+
         public Teacher? Teacher { get; set; }
         public CourseDomain? CourseDomain { get; set; }
         public CourseLevel? CourseLevel { get; set; }
-        public Currency? Currency { get; set; } 
-        public ICollection<CourseToTag>? CourseToTags { get; set; }
-        public ICollection<CourseToLanguage>? CourseToLanguages { get; set; }
-        public ICollection<CourseReview>? Reviews { get; set; }
+        public Currency? Currency { get; set; }
+
+        public ICollection<CourseToTag> CourseToTags { get; set; } = [];
+        public ICollection<CourseToLanguage> CourseToLanguages { get; set; } = [];
+        public ICollection<CourseReview> Reviews { get; set; } = [];
 
     }
 }
