@@ -12,10 +12,12 @@ import { User } from "@/lib/auth";
 import { DashboardModel } from "@/lib/models/homeModel";
 import { TeacherDashboardModel } from "@/lib/models/teacherHome";
 import {
+  BadgeCheck,
   Bell,
   Check,
   ChevronRight,
   Folder,
+  Plus,
   Search,
   Users,
   X,
@@ -26,6 +28,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const TeacherHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<TeacherDashboardModel>();
@@ -80,7 +83,7 @@ const TeacherHome = (props: { user: User }) => {
         </div>
       </section>
       <section className="grid grid-cols-4 gap-3 row-span-5">
-        <section className=" col-span-2">
+        <section className="col-span-2 max-w-[48em]">
           <div className="flex justify-between items-center w-fit lg:w-full gap-5">
             <h1 className="text-xl lg:text-2xl font-bold">Kurzusok</h1>
           </div>
@@ -102,7 +105,7 @@ const TeacherHome = (props: { user: User }) => {
             <CarouselNext className="absolute right-[-10] top-1/2 -translate-y-1/2 z-10" />
           </Carousel>
         </section>
-        <section className="col-start-3 border-4 border-[#EBEDEC] p-2 gap-2 rounded-2xl mt-7 grid grid-rows-5">
+        <section className="col-start-3 border-4 border-[#EBEDEC] p-2 gap-2 rounded-2xl mt-7 grid grid-rows-6">
           <RadioGroup
             className="grid grid-cols-2 gap-0"
             value={selectedTab}
@@ -139,9 +142,9 @@ const TeacherHome = (props: { user: User }) => {
               </Label>
             </div>
           </RadioGroup>
-          <div className="row-span-3 row-start-2">
+          <div className="row-span-4 row-start-2 flex flex-col justify-between">
             <h1 className="font-bold text-md">Függőben</h1>
-            <div className="overflow-hidden h-[7em]">
+            <div className="overflow-hidden h-[10em]">
               <div className="overflow-y-auto h-full flex flex-col gap-2">
                 {dashboard?.pendingEnrollments.map((stud, i) => (
                   <div
@@ -156,7 +159,7 @@ const TeacherHome = (props: { user: User }) => {
                         />
                       </Avatar>
                       <div>
-                        <h2 className="text-sm font-bold truncate max-w-32">
+                        <h2 className="text-sm font-bold truncate max-w-46">
                           {stud.userName}
                         </h2>
                         <h3 className="text-xs">{stud.courseName}</h3>
@@ -175,7 +178,7 @@ const TeacherHome = (props: { user: User }) => {
               </div>
             </div>
           </div>
-          <div className="row-start-5 flex justify-center">
+          <div className="row-start-6 flex justify-center items-center">
             <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
               <p>Összes Kérés</p>
               <ChevronRight className="size-5 m-0"></ChevronRight>
@@ -205,15 +208,10 @@ const TeacherHome = (props: { user: User }) => {
         </section>
       </section>
       <section className="grid grid-cols-12 gap-4 h-max row-span-5 mt-8">
-        <section className=" border-4 border-[#EBEDEC] rounded-2xl col-span-3 h-56 p-2">
-          <div className="flex items-center justify-between gap-2 py-1 px-3 rounded-lg bg-[#EBEDEC]">
-            <div className="flex items-center gap-2">
-              <Users className="text-primary"></Users>
-              <h1 className="text-xl font-bold">Tanulók</h1>
-            </div>
-            <Button className="h-6  w-5 bg-linear-to-tl from-foreground to-[#868686]">
-              <ChevronRight className="size-5 m-0"></ChevronRight>
-            </Button>
+        <section className=" border-4 border-[#EBEDEC] rounded-2xl col-span-3 p-2 flex flex-col gap-2">
+          <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-[#EBEDEC]">
+            <Users className="text-primary"></Users>
+            <h1 className="text-xl font-bold">Tanulók</h1>
           </div>
           <div className="flex items-center gap-1 bg-[#EBEDEC] p-1 rounded-lg">
             <Search size={20}></Search>
@@ -226,7 +224,7 @@ const TeacherHome = (props: { user: User }) => {
               placeholder="Tanuló keresése..."
             ></Input>
           </div>
-          <div className="overflow-hidden h-[8em]">
+          <div className="overflow-hidden h-[10em]">
             <div className="overflow-y-auto h-full flex flex-col gap-2">
               {dashboard?.students.map(
                 (stud, i) =>
@@ -245,10 +243,10 @@ const TeacherHome = (props: { user: User }) => {
                           />
                         </Avatar>
                         <div>
-                          <h2 className="text-sm font-bold truncate max-w-26">
+                          <h2 className="text-sm font-bold truncate max-w-46">
                             {stud.fullName}
                           </h2>
-                          <h3 className="text-xs truncate max-w-26">
+                          <h3 className="text-xs truncate max-w-40">
                             {stud.courseName}
                           </h3>
                         </div>
@@ -263,11 +261,45 @@ const TeacherHome = (props: { user: User }) => {
               )}
             </div>
           </div>
+          <div className="flex justify-center items-center mt-3">
+            <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
+              <p>Összes tanuló</p>
+              <ChevronRight className="size-5 m-0"></ChevronRight>
+            </Button>
+          </div>
         </section>
-        <section className=" border-4 border-black rounded-2xl col-span-5">
-          <div className="flex justify-center">
-            <Users></Users>
-            <h1>Tanulók</h1>
+        <section className=" border-4 border-[#EBEDEC] rounded-2xl col-span-5 p-2 flex flex-col gap-2">
+          <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-[#EBEDEC]">
+            <BadgeCheck className="text-primary"></BadgeCheck>
+            <h1 className="text-xl font-bold">Teendők</h1>
+          </div>
+          <div className="overflow-hidden h-[12em]">
+            <div className="overflow-y-auto h-full flex flex-col gap-2">
+              {dashboard?.gradingQueue.map((gq) => (
+                <div className="flex items-center justify-between px-5">
+                  <div className="flex items-center gap-3">
+                    <Checkbox className="border-2 border-gray-400"></Checkbox>
+                    <div>
+                      <p>
+                        {gq.studentName} - {gq.handInTitle}
+                      </p>
+                      <p className="text-xs">{gq.courseName}</p>
+                    </div>
+                  </div>
+                  <p>{gq.submittedDate}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center justify-evenly mt-3">
+            <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
+              <p>Összes teendő</p>
+              <ChevronRight className="size-5 m-0"></ChevronRight>
+            </Button>
+            <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-primary to-secondary">
+              <Plus className="size-5 m-0"></Plus>
+              <p>Új teendő</p>
+            </Button>
           </div>
         </section>
         <section className=" border-4 border-black rounded-2xl col-span-4">

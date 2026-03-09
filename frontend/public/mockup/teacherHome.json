@@ -240,6 +240,14 @@
             "courseId": "uuid",
             "courseName": "Frontend Development",
             "chatUrl": "#"
+        },
+        {
+            "userId": "uuid",
+            "fullName": "Hubert Blaine Wolfeschlegelsteinhausenbergerdorff Sr.",
+            "nickName": "Máté",
+            "courseId": "uuid",
+            "courseName": "Frontend Development",
+            "chatUrl": "#"
         }
     ],
     "notifications": {

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const CourseCard = (props: { course: ActiveCourse }) => {
   return (
-    <div className="rounded-lg w-[11em] h-[15em] bg-linear-to-br from-primary to-secondary flex flex-col  text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
+    <div className="rounded-lg w-[15em] h-[18em] bg-linear-to-br from-primary to-secondary flex flex-col  text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
       <img
         className="rounded-t-lg h-[50%]"
         src={
