@@ -7,5 +7,7 @@ namespace backend.Modules.Resources.Models
         public DateTime? DueDate { get; set; } = null;
         public required HandInType Type { get; set; }
         public int? MaxPoints { get; set; }
+
+        public ICollection<Submission>? Submissions { get; set; }
     }
 }

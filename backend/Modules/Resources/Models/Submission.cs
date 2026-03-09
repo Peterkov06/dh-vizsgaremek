@@ -1,6 +1,5 @@
-﻿using backend.Models;
+﻿using backend.Modules.Identity.Models;
 using backend.Shared.Models;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Modules.Resources.Models
 {
@@ -10,6 +9,8 @@ namespace backend.Modules.Resources.Models
         public required Guid HandInId { get; set; }
         public required string SubmitterId { get; set; }
         public HandIn? HandIn { get; set; }
-        public ApplicationUser? Submitter { get; set; }
+        public Student? Submitter { get; set; }
+        public ICollection<SubmissionAttachment>? Attachments { get; set; }
+        public HandInFeedback? Feedback { get; set; }
     }
 }

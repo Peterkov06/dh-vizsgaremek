@@ -12,6 +12,7 @@ namespace backend.Modules.LearningPathTemplate.Models
         public Guid HandInId { get; set; }
 
         public Unit? Unit { get; set; }
-        public HandIn? HandIn { get; set; } 
+        public HandIn? HandIn { get; set; }
+        public ICollection<LessonToContent>? Contents { get; set; }
     }
 }

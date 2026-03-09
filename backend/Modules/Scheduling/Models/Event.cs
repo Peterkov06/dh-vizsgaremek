@@ -1,4 +1,5 @@
 ﻿using backend.Modules.CoursesBase.Models;
+using backend.Modules.Identity.Models;
 using backend.Modules.Progression.Models;
 using backend.Modules.Tutoring.Models;
 using backend.Shared.Models;
@@ -16,6 +17,7 @@ namespace backend.Modules.Scheduling.Models
         public Guid? TutoringWallId { get; set; } = null;
         public Guid? PathEnrollmentId { get; set; } = null;
 
+        public Teacher? Organiser { get; set; }
         public CourseBaseModel? PathCourse { get; set; }
         public TutoringWall? TutoringWall { get; set; }
         public PathEnrollment? Enrollment { get; set; }

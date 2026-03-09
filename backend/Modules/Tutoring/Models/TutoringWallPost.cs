@@ -10,6 +10,7 @@ namespace backend.Modules.Tutoring.Models
         public Guid? HandInId { get; set; } = null;
 
         public TutoringWall? TutoringWall { get; set; }
+        public ICollection<WallPostAttachment>? Attachments { get; set; }
 
     }
 }

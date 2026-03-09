@@ -11,5 +11,8 @@ namespace backend.Modules.Resources.Models
         public Guid? FileId { get; set; } = null;
         public Guid? TestId { get; set; } = null;
 
+        public Folder? Folder { get; set; }
+        public Test? Test { get; set; }
+
     }
 }

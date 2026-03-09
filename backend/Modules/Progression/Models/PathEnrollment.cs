@@ -1,4 +1,5 @@
-﻿using backend.Shared.Models;
+﻿using backend.Modules.Identity.Models;
+using backend.Shared.Models;
 
 namespace backend.Modules.Progression.Models
 {
@@ -6,8 +7,10 @@ namespace backend.Modules.Progression.Models
     {
         public required Guid CourseId { get; set; }
         public required string AttendantId { get; set; }
-        public required Guid CurrentUnitId { get; set; }
         public required Guid? LastLessonId { get; set; } = null;
         public required EnrollmentStatus Status { get; set; }
+        public int TokenCount { get; set; }
+
+        public Student? Attendant { get; set; }
     }
 }

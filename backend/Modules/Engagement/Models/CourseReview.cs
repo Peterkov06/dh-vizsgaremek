@@ -1,5 +1,6 @@
 ﻿using backend.Models;
 using backend.Modules.CoursesBase.Models;
+using backend.Modules.Identity.Models;
 using backend.Modules.Progression.Models;
 using backend.Modules.Tutoring.Models;
 using backend.Shared.Models;
@@ -19,6 +20,6 @@ namespace backend.Modules.Engagement.Models
         public TutoringWall? Wall { get; set; }
         public PathEnrollment? Enrollment { get; set; }
         public CourseBaseModel? Course { get; set; }
-        public ApplicationUser? Reviewer { get; set; }
+        public Student? Reviewer { get; set; }
     }
 }
