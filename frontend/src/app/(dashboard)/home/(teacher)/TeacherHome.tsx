@@ -11,16 +11,27 @@ import {
 import { User } from "@/lib/auth";
 import { DashboardModel } from "@/lib/models/homeModel";
 import { TeacherDashboardModel } from "@/lib/models/teacherHome";
-import { Bell, Check, ChevronRight, X } from "lucide-react";
+import {
+  Bell,
+  Check,
+  ChevronRight,
+  Folder,
+  Search,
+  Users,
+  X,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import CourseCard from "./components/CourseCard";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
 
 const TeacherHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<TeacherDashboardModel>();
   const [selectedTab, setSelectedTab] = useState<string>("s");
+  const [files, setFiles] = useState<string[]>(["kutya", "meg a", "mája"]);
+  const [searchStudent, setSearchStudent] = useState<string>("");
 
   async function fetchDashboard() {
     const response = await fetch("mockup/teacherHome.json")
@@ -35,7 +46,7 @@ const TeacherHome = (props: { user: User }) => {
     fetchDashboard();
   }, []);
   return (
-    <main className="flex flex-col">
+    <main className="grid grid-rows-12 h-full">
       <section className="flex justify-between items-center">
         <h1 className="text-4xl font-bold text-primary">
           Üdv {props.user.nickname}!
@@ -68,7 +79,7 @@ const TeacherHome = (props: { user: User }) => {
           </div>
         </div>
       </section>
-      <section className="grid grid-cols-4 gap-3">
+      <section className="grid grid-cols-4 gap-3 row-span-5">
         <section className=" col-span-2">
           <div className="flex justify-between items-center w-fit lg:w-full gap-5">
             <h1 className="text-xl lg:text-2xl font-bold">Kurzusok</h1>
@@ -133,7 +144,10 @@ const TeacherHome = (props: { user: User }) => {
             <div className="overflow-hidden h-[7em]">
               <div className="overflow-y-auto h-full flex flex-col gap-2">
                 {dashboard?.pendingEnrollments.map((stud, i) => (
-                  <div className="flex bg-[#EBEDEC] p-2 rounded-xl items-center justify-between">
+                  <div
+                    className="flex bg-[#EBEDEC] p-2 rounded-xl items-center justify-between"
+                    key={i}
+                  >
                     <div className="flex items-center gap-1">
                       <Avatar key={i}>
                         <AvatarImage
@@ -142,7 +156,9 @@ const TeacherHome = (props: { user: User }) => {
                         />
                       </Avatar>
                       <div>
-                        <h2 className="text-sm font-bold">{stud.userName}</h2>
+                        <h2 className="text-sm font-bold truncate max-w-32">
+                          {stud.userName}
+                        </h2>
                         <h3 className="text-xs">{stud.courseName}</h3>
                       </div>
                     </div>
@@ -166,8 +182,102 @@ const TeacherHome = (props: { user: User }) => {
             </Button>
           </div>
         </section>
-        <section className="col-start-4 border-4 border-[#EBEDEC] rounded-2xl mt-7"></section>
+        <section className="col-start-4 grid grid-rows-5 p-2 border-4 border-[#EBEDEC] rounded-2xl mt-7">
+          <div className="flex bg-[#EBEDEC] items-center gap-3 px-4 py-2 rounded-xl">
+            <Folder className="size-7 text-primary"></Folder>
+            <h1 className="text-xl font-bold">Munkák</h1>
+          </div>
+          <div className="row-span-3 overflow-hidden">
+            <div className="overflow-y-auto">
+              {files.map((f, i) => (
+                <div key={i}>
+                  <p className="text-xl">{f}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-center row-start-5">
+            <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
+              <p>Összes Kérés</p>
+              <ChevronRight className="size-5 m-0"></ChevronRight>
+            </Button>
+          </div>
+        </section>
       </section>
+      <section className="grid grid-cols-12 gap-4 h-max row-span-5 mt-8">
+        <section className=" border-4 border-[#EBEDEC] rounded-2xl col-span-3 h-56 p-2">
+          <div className="flex items-center justify-between gap-2 py-1 px-3 rounded-lg bg-[#EBEDEC]">
+            <div className="flex items-center gap-2">
+              <Users className="text-primary"></Users>
+              <h1 className="text-xl font-bold">Tanulók</h1>
+            </div>
+            <Button className="h-6  w-5 bg-linear-to-tl from-foreground to-[#868686]">
+              <ChevronRight className="size-5 m-0"></ChevronRight>
+            </Button>
+          </div>
+          <div className="flex items-center gap-1 bg-[#EBEDEC] p-1 rounded-lg">
+            <Search size={20}></Search>
+            <Input
+              value={searchStudent}
+              onChange={(e) => {
+                setSearchStudent(e.target.value);
+              }}
+              className="border-none h-5 focus:border-none focus:ring"
+              placeholder="Tanuló keresése..."
+            ></Input>
+          </div>
+          <div className="overflow-hidden h-[8em]">
+            <div className="overflow-y-auto h-full flex flex-col gap-2">
+              {dashboard?.students.map(
+                (stud, i) =>
+                  stud.fullName
+                    .toLocaleLowerCase()
+                    .includes(searchStudent.toLowerCase()) && (
+                    <div
+                      className="flex bg-[#EBEDEC] p-2 rounded-xl gap-1 items-center justify-between"
+                      key={i}
+                    >
+                      <div className="flex items-center gap-1">
+                        <Avatar key={i}>
+                          <AvatarImage
+                            src="/defaults/default_avatar.jpg"
+                            alt=""
+                          />
+                        </Avatar>
+                        <div>
+                          <h2 className="text-sm font-bold truncate max-w-26">
+                            {stud.fullName}
+                          </h2>
+                          <h3 className="text-xs truncate max-w-26">
+                            {stud.courseName}
+                          </h3>
+                        </div>
+                      </div>
+                      <div className="flex gap-1">
+                        <Button className="bg-linear-to-tl from-primary to-[#7CB08C]">
+                          Üzenet
+                        </Button>
+                      </div>
+                    </div>
+                  ),
+              )}
+            </div>
+          </div>
+        </section>
+        <section className=" border-4 border-black rounded-2xl col-span-5">
+          <div className="flex justify-center">
+            <Users></Users>
+            <h1>Tanulók</h1>
+          </div>
+        </section>
+        <section className=" border-4 border-black rounded-2xl col-span-4">
+          <div className="flex justify-center">
+            <Users></Users>
+            <h1>Tanulók</h1>
+          </div>
+        </section>
+      </section>
+      <section className="w-full bg-linear-to-br from-secondary to-primary h-12 rounded-2xl"></section>
     </main>
   );
 };
