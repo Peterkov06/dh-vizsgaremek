@@ -1,4 +1,5 @@
-﻿using backend.Modules.Identity.Models;
+﻿using backend.Modules.CoursesBase.Models;
+using backend.Modules.Identity.Models;
 using backend.Shared.Models;
 
 namespace backend.Modules.Progression.Models
@@ -12,5 +13,6 @@ namespace backend.Modules.Progression.Models
         public int TokenCount { get; set; }
 
         public Student? Attendant { get; set; }
+        public CourseBaseModel? Course { get; set; }
     }
 }

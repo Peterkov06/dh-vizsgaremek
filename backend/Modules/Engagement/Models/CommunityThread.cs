@@ -8,6 +8,6 @@ namespace backend.Modules.Engagement.Models
         public Guid CourseId { get; set; }
 
         public CourseBaseModel? Course { get; set; }
-        public ICollection<CommunityMessage>? Messages { get; set; }
+        public ICollection<CommunityMessage> Messages { get; set; } = [];
     }
 }

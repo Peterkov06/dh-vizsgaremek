@@ -12,7 +12,7 @@ namespace backend.Modules.Resources.Models
         public int? MaxPoints { get; set; } = null;
 
         public Test? Test { get; set; }
-        public ICollection<TestModuleAnswer>? Answers { get; set; }
+        public ICollection<TestModuleAnswer> Answers { get; set; } = [];
 
     }
 }

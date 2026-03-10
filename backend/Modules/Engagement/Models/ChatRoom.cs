@@ -11,6 +11,6 @@ namespace backend.Modules.Engagement.Models
 
         public TutoringWall? Wall { get; set; }
         public PathEnrollment? Enrollment { get; set; }
-        public ICollection<ChatMessage>? Messages { get; set; }
+        public ICollection<ChatMessage> Messages { get; set; } = [];
     }
 }

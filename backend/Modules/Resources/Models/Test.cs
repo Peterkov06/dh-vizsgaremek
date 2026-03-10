@@ -6,6 +6,6 @@ namespace backend.Modules.Resources.Models
     {
         public TimeOnly? MaxTime { get; set; } = null;
 
-        public ICollection<TestModule>? TestModules { get; set; }
+        public ICollection<TestModule> TestModules { get; set; } = [];
     }
 }

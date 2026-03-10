@@ -10,7 +10,7 @@ namespace backend.Modules.Resources.Models
         public required string SubmitterId { get; set; }
         public HandIn? HandIn { get; set; }
         public Student? Submitter { get; set; }
-        public ICollection<SubmissionAttachment>? Attachments { get; set; }
+        public ICollection<SubmissionAttachment> Attachments { get; set; } = [];
         public HandInFeedback? Feedback { get; set; }
     }
 }

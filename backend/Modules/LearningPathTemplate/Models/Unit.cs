@@ -10,6 +10,6 @@ namespace backend.Modules.LearningPathTemplate.Models
         public required string Name { get; set; }
         public required string Description { get; set; }
         public CourseBaseModel? Course { get; set; }
-        public ICollection<UnitLesson>? Lessons { get; set; }
+        public ICollection<UnitLesson> Lessons { get; set; } = [];
     }
 }

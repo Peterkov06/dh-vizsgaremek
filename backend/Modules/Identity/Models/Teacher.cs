@@ -9,6 +9,6 @@ namespace backend.Modules.Identity.Models
 
         public ApplicationUser? User { get; set; }
 
-        public ICollection<CourseBaseModel>? Courses { get; set; }
+        public ICollection<CourseBaseModel> Courses { get; set; } = [];
     }
 }

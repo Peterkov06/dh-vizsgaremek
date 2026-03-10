@@ -10,7 +10,7 @@ namespace backend.Modules.Identity.Models
 
         public ApplicationUser? User { get; set; }
 
-        public ICollection<PathEnrollment>? LearningPathEnrollments { get; set; }
-        public ICollection<TutoringWall>? TutoringWalls { get; set; }
+        public ICollection<PathEnrollment> LearningPathEnrollments { get; set; } = [];
+        public ICollection<TutoringWall> TutoringWalls { get; set; } = [];
     }
 }

@@ -12,7 +12,7 @@ namespace backend.Modules.Tutoring.Models
 
         public TutoringWall? TutoringWall { get; set; }
         public HandIn? HandIn { get; set; }
-        public ICollection<WallPostAttachment>? Attachments { get; set; }
+        public ICollection<WallPostAttachment> Attachments { get; set; } = [];
 
     }
 }
