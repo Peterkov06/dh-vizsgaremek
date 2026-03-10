@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace backend.Data.Configurations.CoursesBase
 {
-    public class CourseDomainConfiguration : IEntityTypeConfiguration<CourseDomain>
+    public class CourseDomainConfiguration : ModelBaseConfiguration<CourseDomain>
     {
-        public void Configure(EntityTypeBuilder<CourseDomain> builder)
+        public override void Configure(EntityTypeBuilder<CourseDomain> builder)
         {
+            base.Configure(builder);
             builder.ToTable("course_domains");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);

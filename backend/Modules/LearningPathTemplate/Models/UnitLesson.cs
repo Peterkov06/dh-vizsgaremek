@@ -13,6 +13,6 @@ namespace backend.Modules.LearningPathTemplate.Models
 
         public Unit? Unit { get; set; }
         public HandIn? HandIn { get; set; }
-        public ICollection<LessonToContent>? Contents { get; set; }
+        public ICollection<LessonToContent> Contents { get; set; } = [];
     }
 }
