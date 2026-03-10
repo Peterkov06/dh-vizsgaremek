@@ -32,9 +32,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const TeacherHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<TeacherDashboardModel>();
-  const [selectedTab, setSelectedTab] = useState<string>("s");
+  const [selectedTabQueue, setSelectedTabQueue] = useState<string>("students");
+  const [selectedTabDate, setSelectedTabDate] = useState<string>("day");
   const [files, setFiles] = useState<string[]>(["kutya", "meg a", "mája"]);
   const [searchStudent, setSearchStudent] = useState<string>("");
+  const [formattedDate, setFormattedDate] = useState<string>("");
 
   async function fetchDashboard() {
     const response = await fetch("mockup/teacherHome.json")
@@ -47,6 +49,15 @@ const TeacherHome = (props: { user: User }) => {
 
   useEffect(() => {
     fetchDashboard();
+    const today = new Date();
+    const formatted = today.toLocaleDateString("hu-HU", {
+      month: "long",
+      day: "numeric",
+    });
+    const capitalized = formatted.replace(/[a-záéíóöőúüű]/i, (c) =>
+      c.toUpperCase(),
+    );
+    setFormattedDate(capitalized);
   }, []);
   return (
     <main className="grid grid-rows-12 h-full">
@@ -108,35 +119,35 @@ const TeacherHome = (props: { user: User }) => {
         <section className="col-start-3 border-4 border-[#EBEDEC] p-2 gap-2 rounded-2xl mt-7 grid grid-rows-6">
           <RadioGroup
             className="grid grid-cols-2 gap-0"
-            value={selectedTab}
-            onValueChange={setSelectedTab}
+            value={selectedTabQueue}
+            onValueChange={setSelectedTabQueue}
           >
             <div
-              className={`border-4 border-[#EBEDEC] rounded-l-xl ${selectedTab === "s" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-gray-600"}`}
+              className={`border-4 border-[#EBEDEC] rounded-l-xl ${selectedTabQueue === "students" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-text-[#898989]"}`}
             >
               <RadioGroupItem
-                value="s"
+                value="students"
                 className="hidden"
                 id="studs"
               ></RadioGroupItem>
               <Label
                 htmlFor="studs"
-                className="h-full w-full flex justify-center items-center"
+                className="h-full w-full flex justify-center items-center text-lg"
               >
                 Tanulók
               </Label>
             </div>
             <div
-              className={`flex justify-center items-center border-4 border-[#EBEDEC] rounded-r-xl ${selectedTab === "m" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-[#898989]"}`}
+              className={`border-4 border-[#EBEDEC] rounded-r-xl ${selectedTabQueue === "money" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-[#898989]"}`}
             >
               <RadioGroupItem
-                value="m"
+                value="money"
                 className="hidden"
                 id="money"
               ></RadioGroupItem>
               <Label
                 htmlFor="money"
-                className="h-full w-full flex justify-center items-center"
+                className="h-full w-full flex justify-center items-center text-lg"
               >
                 Pénzügyek
               </Label>
@@ -276,9 +287,12 @@ const TeacherHome = (props: { user: User }) => {
           <div className="overflow-hidden h-[12em]">
             <div className="overflow-y-auto h-full flex flex-col gap-2">
               {dashboard?.gradingQueue.map((gq) => (
-                <div className="flex items-center justify-between px-5">
+                <div
+                  className="flex items-center justify-between px-5"
+                  key={gq.courseId}
+                >
                   <div className="flex items-center gap-3">
-                    <Checkbox className="border-2 border-gray-400"></Checkbox>
+                    <Checkbox className="border-2 border-gray-400 size-5"></Checkbox>
                     <div>
                       <p>
                         {gq.studentName} - {gq.handInTitle}
@@ -302,14 +316,96 @@ const TeacherHome = (props: { user: User }) => {
             </Button>
           </div>
         </section>
-        <section className=" border-4 border-black rounded-2xl col-span-4">
-          <div className="flex justify-center">
-            <Users></Users>
-            <h1>Tanulók</h1>
+        <section className="border-4 border-[#EBEDEC] rounded-2xl p-2 col-span-4">
+          <RadioGroup
+            className="grid grid-cols-3 gap-0 "
+            value={selectedTabDate}
+            onValueChange={setSelectedTabDate}
+          >
+            <div
+              className={`border-4 border-[#EBEDEC] rounded-l-xl py-1  ${selectedTabDate === "calendar" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-[#898989]"}`}
+            >
+              <RadioGroupItem
+                value="calendar"
+                className="hidden"
+                id="calendar"
+              ></RadioGroupItem>
+              <Label
+                htmlFor="calendar"
+                className="h-full w-full flex justify-center items-center text-lg"
+              >
+                Naptár
+              </Label>
+            </div>
+            <div
+              className={`border-4 border-[#EBEDEC] rounded-l-xl ${selectedTabDate === "day" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-[#898989]"}`}
+            >
+              <RadioGroupItem
+                value="day"
+                className="hidden"
+                id="day"
+              ></RadioGroupItem>
+              <Label
+                htmlFor="day"
+                className="h-full w-full flex justify-center items-center text-lg"
+              >
+                Nap
+              </Label>
+            </div>
+            <div
+              className={`flex justify-center items-center border-4 border-[#EBEDEC] rounded-r-xl ${selectedTabDate === "list" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-[#898989]"}`}
+            >
+              <RadioGroupItem
+                value="list"
+                className="hidden"
+                id="list"
+              ></RadioGroupItem>
+              <Label
+                htmlFor="list"
+                className="h-full w-full flex justify-center items-center text-lg"
+              >
+                Lista
+              </Label>
+            </div>
+          </RadioGroup>
+          <div className="p-3 flex flex-col gap-3">
+            <h1 className="text-2xl font-bold">{formattedDate}</h1>
+            <div className="overflow-hidden">
+              <div className="overflow-auto">
+                {dashboard?.upcomingEvents.map(
+                  (ue) =>
+                    new Date()
+                      .toLocaleDateString("en-CA")
+                      .endsWith(ue.startDate.replace("-", "-")) && (
+                      <div key={ue.eventId} className="flex gap-5 items-center">
+                        <p>{ue.startTime}</p>
+                        <div className="flex justify-between py-2 px-3 w-full rounded-xl text-white bg-linear-to-tl from-secondary to-primary">
+                          <p className="text-xl">{ue.title}</p>
+                          <p>{ue.studentName}</p>
+                        </div>
+                      </div>
+                    ),
+                )}
+              </div>
+            </div>
           </div>
         </section>
       </section>
-      <section className="w-full bg-linear-to-br from-secondary to-primary h-12 rounded-2xl"></section>
+      <section className="w-full flex items-center bg-linear-to-br from-secondary to-primary h-12 rounded-2xl relative justify-between px-10">
+        <img
+          src="/imgs/megaphone.png"
+          alt="megaphone"
+          className="size-20 absolute left-10 top-[-15]"
+        />
+        <p className="text-2xl text-white ml-40">
+          Keresd meg a számodra megfelelő kurzusokat vagy hozd létre a
+          sajátodat!
+        </p>
+        <Button className="h-8 w-40 flex gap-1 bg-background text-primary">
+          <Plus className="size-5 m-0"></Plus>
+          <p className="text-xl">Új teendő</p>
+        </Button>
+      </section>
     </main>
   );
 };
