@@ -10,7 +10,6 @@ namespace backend.Data.Configurations.CoursesBase
         {
             base.Configure(builder);
             builder.ToTable("courses_base");
-            builder.HasKey(x => x.Id);
             builder.Property(x => x.TeacherId).IsRequired().HasMaxLength(450);
             builder.Property(x => x.CourseName).IsRequired().HasMaxLength(200);
             builder.Property(x => x.Description).IsRequired();

@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace backend.Data.Configurations.Scheduling
 {
-    public class EventConfiguration : IEntityTypeConfiguration<Event>
+    public class EventConfiguration : ModelBaseConfiguration<Event>
     {
-        public void Configure(EntityTypeBuilder<Event> builder)
+        public override void Configure(EntityTypeBuilder<Event> builder)
         {
+            base.Configure(builder);
             builder.ToTable("events");
-            builder.HasKey(x => x.Id);
             builder.Property(x => x.OrganiserId).HasMaxLength(450);
             builder.Property(x => x.Type).HasConversion<string>().HasMaxLength(50);
             builder.Property(x => x.Title).IsRequired().HasMaxLength(100);

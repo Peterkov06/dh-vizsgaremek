@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace backend.Data.Configurations.Tutoring
 {
-    public class TutoringWallConfiguration : IEntityTypeConfiguration<TutoringWall>
+    public class TutoringWallConfiguration : ModelBaseConfiguration<TutoringWall>
     {
-        public void Configure(EntityTypeBuilder<TutoringWall> builder)
+        public override void Configure(EntityTypeBuilder<TutoringWall> builder)
         {
+            base.Configure(builder);
             builder.ToTable("tutoring_walls");
-            builder.HasKey(x => x.Id);
             builder.Property(x => x.StudentId).IsRequired().HasMaxLength(450);
             builder.Property(x => x.CourseId).IsRequired();
             builder.Property(x => x.Status).IsRequired().HasConversion<string>().HasMaxLength(50);

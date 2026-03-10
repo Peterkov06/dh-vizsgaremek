@@ -10,7 +10,6 @@ namespace backend.Data.Configurations.LearningPathTemplate
         {
             base.Configure(builder);
             builder.ToTable("lessons");
-            builder.HasKey(x => x.Id);
             builder.Property(x => x.UnitId);
             builder.Property(x => x.Title).IsRequired().HasMaxLength(200);
             builder.Property(x => x.Description).IsRequired();
