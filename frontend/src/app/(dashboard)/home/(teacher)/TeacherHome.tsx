@@ -29,6 +29,9 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import TodayList from "./components/TodayList";
+import Example from "@/components/calendar-standard-7";
+import EventCalendar from "./components/EventCalendar";
 
 const TeacherHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<TeacherDashboardModel>();
@@ -218,7 +221,7 @@ const TeacherHome = (props: { user: User }) => {
           </div>
         </section>
       </section>
-      <section className="grid grid-cols-12 gap-4 h-max row-span-5 mt-8">
+      <section className="grid grid-cols-12 gap-4 h-max row-span-5 mt-2">
         <section className=" border-4 border-[#EBEDEC] rounded-2xl col-span-3 p-2 flex flex-col gap-2">
           <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-[#EBEDEC]">
             <Users className="text-primary"></Users>
@@ -368,27 +371,30 @@ const TeacherHome = (props: { user: User }) => {
               </Label>
             </div>
           </RadioGroup>
-          <div className="p-3 flex flex-col gap-3">
-            <h1 className="text-2xl font-bold">{formattedDate}</h1>
-            <div className="overflow-hidden">
-              <div className="overflow-auto">
-                {dashboard?.upcomingEvents.map(
-                  (ue) =>
-                    new Date()
-                      .toLocaleDateString("en-CA")
-                      .endsWith(ue.startDate.replace("-", "-")) && (
-                      <div key={ue.eventId} className="flex gap-5 items-center">
-                        <p>{ue.startTime}</p>
-                        <div className="flex justify-between py-2 px-3 w-full rounded-xl text-white bg-linear-to-tl from-secondary to-primary">
-                          <p className="text-xl">{ue.title}</p>
-                          <p>{ue.studentName}</p>
-                        </div>
-                      </div>
-                    ),
-                )}
+          <div className="flex flex-col gap-3">
+            {selectedTabDate === "calendar" ? (
+              <div className="flex justify-center mt-3">
+                <EventCalendar
+                  key={"fsjknjkfvnbjkfn"}
+                  upcomingEvents={dashboard?.upcomingEvents}
+                ></EventCalendar>
               </div>
-            </div>
+            ) : (
+              <TodayList
+                key={"fsjknjkfvnbjksdojsdnvuinjfn"}
+                date={formattedDate}
+                upcomingEvenets={dashboard?.upcomingEvents}
+              ></TodayList>
+            )}
           </div>
+          {selectedTabDate !== "calendar" && (
+            <div className="flex justify-center">
+              <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-primary to-secondary">
+                <Plus className="size-5 m-0"></Plus>
+                <p>Új esemény</p>
+              </Button>
+            </div>
+          )}
         </section>
       </section>
       <section className="w-full flex items-center bg-linear-to-br from-secondary to-primary h-12 rounded-2xl relative justify-between px-10">
