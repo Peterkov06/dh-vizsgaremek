@@ -9,6 +9,10 @@ namespace backend.Data.Configurations.Resources
         public override void Configure(EntityTypeBuilder<ContentItem> builder)
         {
             base.Configure(builder);
+            builder.ToTable("content_items", x =>
+            {
+                x.HasCheckConstraint("CK_ContentItem_SingleContext", @"((""FileId"" IS NOT NULL)::int + (""TestId"" IS NOT NULL)::int) = 1");
+            });
             builder.Property(x => x.DisplayedName).IsRequired().HasMaxLength(255);
             builder.Property(x => x.Type).IsRequired().HasConversion<string>().HasMaxLength(50);
             builder.Property(x => x.Description).IsRequired(false);

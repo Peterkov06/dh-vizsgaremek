@@ -11,8 +11,8 @@ namespace backend.Data.Configurations.CoursesBase
             builder.ToTable("courses_to_languages");
             builder.HasKey(x => new { x.CourseId, x.LanguageId });
 
-            builder.HasOne(x => x.Course).WithMany(x => x.CourseToLanguages).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(x => x.Language).WithMany().HasForeignKey(x => x.LanguageId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Course).WithMany(x => x.CourseToLanguages).HasForeignKey(x => x.CourseId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Language).WithMany().HasForeignKey(x => x.LanguageId).IsRequired().OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

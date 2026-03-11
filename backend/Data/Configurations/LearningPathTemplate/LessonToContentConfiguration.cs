@@ -11,8 +11,8 @@ namespace backend.Data.Configurations.LearningPathTemplate
             builder.ToTable("lessons_to_contents");
             builder.HasKey(x => new { x.LessonId, x.ContentId });
 
-            builder.HasOne(x => x.Lesson).WithMany(x => x.Contents).HasForeignKey(x => x.LessonId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(x => x.Content).WithMany().HasForeignKey(x => x.ContentId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Lesson).WithMany(x => x.Contents).HasForeignKey(x => x.LessonId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Content).WithMany().HasForeignKey(x => x.ContentId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -11,8 +11,8 @@ namespace backend.Data.Configurations.Resources
             base.Configure(builder);
             builder.ToTable("submission_attachments");
             
-            builder.HasOne(x => x.Submission).WithMany(x => x.Attachments).HasForeignKey(x => x.SubmissionId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(x => x.Content).WithMany().HasForeignKey(x => x.ContentId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Submission).WithMany(x => x.Attachments).HasForeignKey(x => x.SubmissionId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Content).WithMany().HasForeignKey(x => x.ContentId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

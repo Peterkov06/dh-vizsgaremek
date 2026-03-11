@@ -9,7 +9,10 @@ namespace backend.Data.Configurations.Payment
         public override void Configure(EntityTypeBuilder<Invoice> builder)
         {
             base.Configure(builder);
-            builder.ToTable("invoices");
+            builder.ToTable("invoices", x =>
+            {
+                x.HasCheckConstraint("CK_Invoices_SingleContext", @"((""WallId"" IS NOT NULL)::int + (""EnrollmentId"" IS NOT NULL)::int) = 1");
+            });
             builder.Property(x => x.TokenCount).IsRequired();
             builder.Property(x => x.WallId).IsRequired(false);
             builder.Property(x => x.EnrollmentId).IsRequired(false);
@@ -18,10 +21,10 @@ namespace backend.Data.Configurations.Payment
             builder.Property(x => x.CurrencyId).IsRequired();
             builder.Property(x => x.UserId).IsRequired();
 
-            builder.HasOne(x => x.Wall).WithMany().HasForeignKey(x => x.WallId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.Enrollment).WithMany().HasForeignKey(x => x.EnrollmentId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.Currency).WithMany().HasForeignKey(x => x.CurrencyId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Wall).WithMany().HasForeignKey(x => x.WallId).IsRequired(false).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Enrollment).WithMany().HasForeignKey(x => x.EnrollmentId).IsRequired(false).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Currency).WithMany().HasForeignKey(x => x.CurrencyId).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

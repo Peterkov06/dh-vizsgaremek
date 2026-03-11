@@ -13,7 +13,7 @@ namespace backend.Data.Configurations.Resources
             builder.Property(x => x.Text).IsRequired().HasMaxLength(255);
             builder.Property(x => x.IsCorrect).IsRequired();
 
-            builder.HasOne(x => x.Module).WithMany(x => x.Answers).HasForeignKey(x => x.ModuleId).IsRequired(false);
+            builder.HasOne(x => x.Module).WithMany(x => x.Answers).HasForeignKey(x => x.ModuleId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

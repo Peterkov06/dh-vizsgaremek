@@ -11,8 +11,8 @@ namespace backend.Data.Configurations.Tutoring
             builder.ToTable("tutoring_wall_post_attachments");
             builder.HasKey(x => new { x.WallPostId, x.ContentId });
 
-            builder.HasOne(x => x.WallPost).WithMany(x => x.Attachments).HasForeignKey(x => x.WallPostId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(x => x.Content).WithMany().HasForeignKey(x => x.ContentId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.WallPost).WithMany(x => x.Attachments).HasForeignKey(x => x.WallPostId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Content).WithMany().HasForeignKey(x => x.ContentId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

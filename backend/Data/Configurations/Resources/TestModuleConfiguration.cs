@@ -15,7 +15,7 @@ namespace backend.Data.Configurations.Resources
             builder.Property(x => x.Description).IsRequired().HasMaxLength(500);
             builder.Property(x => x.MaxPoints).IsRequired(false);
 
-            builder.HasOne(x => x.Test).WithMany(x => x.TestModules).HasForeignKey(x => x.TestId);
+            builder.HasOne(x => x.Test).WithMany(x => x.TestModules).HasForeignKey(x => x.TestId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

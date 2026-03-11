@@ -15,7 +15,7 @@ namespace backend.Data.Configurations.Resources
             builder.Property(x => x.Points).IsRequired(false);
             builder.Property(x => x.GraderId).IsRequired().HasMaxLength(450);
 
-            builder.HasOne(x => x.Submission).WithOne(x => x.Feedback).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Submission).WithOne(x => x.Feedback).HasForeignKey<HandInFeedback>(x => x.SubmissionId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

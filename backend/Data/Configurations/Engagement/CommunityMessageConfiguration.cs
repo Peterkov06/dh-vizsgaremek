@@ -13,7 +13,7 @@ namespace backend.Data.Configurations.Engagement
             builder.Property(x => x.SenderId).IsRequired().HasMaxLength(450);
             builder.Property(x => x.Text).IsRequired();
 
-            builder.HasOne(x => x.Thread).WithMany(x => x.Messages).HasForeignKey(x => x.ThreadId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Thread).WithMany(x => x.Messages).HasForeignKey(x => x.ThreadId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

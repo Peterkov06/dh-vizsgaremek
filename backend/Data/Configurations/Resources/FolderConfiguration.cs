@@ -9,10 +9,11 @@ namespace backend.Data.Configurations.Resources
         public override void Configure(EntityTypeBuilder<Folder> builder)
         {
             base.Configure(builder);
+            builder.ToTable("folders");
             builder.Property(x => x.Name).IsRequired().HasMaxLength(200);
             builder.Property(x => x.OwnerId).IsRequired().HasMaxLength(450);
             
-            builder.HasOne(x => x.ParentFolder).WithMany().HasForeignKey(x => x.ParentFolderId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.ParentFolder).WithMany().HasForeignKey(x => x.ParentFolderId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

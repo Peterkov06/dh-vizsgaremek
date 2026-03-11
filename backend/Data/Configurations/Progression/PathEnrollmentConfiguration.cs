@@ -16,8 +16,8 @@ namespace backend.Data.Configurations.Progression
             builder.Property(x => x.Status).IsRequired().HasConversion<string>().HasMaxLength(50);
             builder.Property(x => x.TokenCount).IsRequired();
 
-            builder.HasOne(x => x.Course).WithMany().HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.Attendant).WithMany(x => x.LearningPathEnrollments).HasForeignKey(x => x.AttendantId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Course).WithMany().HasForeignKey(x => x.CourseId).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Attendant).WithMany(x => x.LearningPathEnrollments).HasForeignKey(x => x.AttendantId).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

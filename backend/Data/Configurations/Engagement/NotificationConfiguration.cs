@@ -9,7 +9,7 @@ namespace backend.Data.Configurations.Engagement
         public override void Configure(EntityTypeBuilder<Notification> builder)
         {
             base.Configure(builder);
-            builder.ToTable("notification");
+            builder.ToTable("notifications");
             builder.Property(x => x.Type).IsRequired().HasConversion<string>().HasMaxLength(50);
             builder.Property(x => x.RecipientId).IsRequired().HasMaxLength(450);
             builder.Property(x => x.Title).IsRequired().HasMaxLength(100);

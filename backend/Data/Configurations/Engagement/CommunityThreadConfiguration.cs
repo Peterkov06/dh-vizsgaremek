@@ -11,7 +11,7 @@ namespace backend.Data.Configurations.Engagement
             base.Configure(builder);
             builder.ToTable("community_threads");
 
-            builder.HasOne(x => x.Course).WithOne().HasForeignKey<CommunityThread>(x => x.CourseId).IsRequired(false);
+            builder.HasOne(x => x.Course).WithOne().HasForeignKey<CommunityThread>(x => x.CourseId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

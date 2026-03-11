@@ -15,8 +15,8 @@ namespace backend.Data.Configurations.LearningPathTemplate
             builder.Property(x => x.Description).IsRequired();
             builder.Property(x => x.HandInId).IsRequired(false);
 
-            builder.HasOne(x => x.Unit).WithMany(x => x.Lessons).HasForeignKey(x => x.UnitId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(x => x.HandIn).WithMany().HasForeignKey(x => x.HandInId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Unit).WithMany(x => x.Lessons).HasForeignKey(x => x.UnitId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.HandIn).WithMany().HasForeignKey(x => x.HandInId).IsRequired(false).OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

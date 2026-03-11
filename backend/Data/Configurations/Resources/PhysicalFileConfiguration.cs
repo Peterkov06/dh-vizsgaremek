@@ -9,6 +9,7 @@ namespace backend.Data.Configurations.Resources
         public override void Configure(EntityTypeBuilder<PhysicalFile> builder)
         {
             base.Configure(builder);
+            builder.ToTable("physical_files");
             builder.Property(x => x.StoragePath).IsRequired();
             builder.Property(x => x.FileName).IsRequired();
             builder.Property(x => x.MimeType).IsRequired().HasMaxLength(100);
