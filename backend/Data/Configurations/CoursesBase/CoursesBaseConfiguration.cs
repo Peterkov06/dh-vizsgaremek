@@ -21,7 +21,7 @@ namespace backend.Data.Configurations.CoursesBase
             builder.Property(x => x.PriceCurrencyId).IsRequired();
             builder.Property(x => x.Status).IsRequired().HasConversion<string>().HasMaxLength(50);
 
-            builder.HasOne(x => x.Teacher).WithMany(x => x.Courses).HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Teacher).WithMany(x => x.Courses).HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(x => x.CourseDomain).WithMany().HasForeignKey(x => x.CourseDomainId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.CourseLevel).WithMany().HasForeignKey(x => x.CourseLevelId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.Currency).WithMany().HasForeignKey(x => x.PriceCurrencyId).OnDelete(DeleteBehavior.Restrict);

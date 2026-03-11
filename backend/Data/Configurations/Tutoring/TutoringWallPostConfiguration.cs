@@ -15,7 +15,7 @@ namespace backend.Data.Configurations.Tutoring
             builder.Property(x => x.HandInId).IsRequired(false);
 
             builder.HasOne(x => x.TutoringWall).WithMany(x => x.WallPosts).HasForeignKey(x => x.WallId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(x => x.HandIn).WithOne().HasForeignKey<TutoringWallPost>(x => x.HandInId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.HandIn).WithOne().HasForeignKey<TutoringWallPost>(x => x.HandInId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
