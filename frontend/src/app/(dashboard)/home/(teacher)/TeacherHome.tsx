@@ -32,6 +32,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import TodayList from "./components/TodayList";
 import Example from "@/components/calendar-standard-7";
 import EventCalendar from "./components/EventCalendar";
+import AllList from "./components/AllList";
 
 const TeacherHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<TeacherDashboardModel>();
@@ -119,14 +120,14 @@ const TeacherHome = (props: { user: User }) => {
             <CarouselNext className="absolute right-[-10] top-1/2 -translate-y-1/2 z-10" />
           </Carousel>
         </section>
-        <section className="col-start-3 border-4 border-[#EBEDEC] p-2 gap-2 rounded-2xl mt-7 grid grid-rows-6">
+        <section className="col-start-3 border-4 border-light-bg-gray p-2 gap-2 rounded-2xl mt-7 grid grid-rows-6">
           <RadioGroup
             className="grid grid-cols-2 gap-0"
             value={selectedTabQueue}
             onValueChange={setSelectedTabQueue}
           >
             <div
-              className={`border-4 border-[#EBEDEC] rounded-l-xl ${selectedTabQueue === "students" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-text-[#898989]"}`}
+              className={`border-4 border-light-bg-gray rounded-l-xl ${selectedTabQueue === "students" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
             >
               <RadioGroupItem
                 value="students"
@@ -141,7 +142,7 @@ const TeacherHome = (props: { user: User }) => {
               </Label>
             </div>
             <div
-              className={`border-4 border-[#EBEDEC] rounded-r-xl ${selectedTabQueue === "money" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-[#898989]"}`}
+              className={`border-4 border-light-bg-gray rounded-r-xl ${selectedTabQueue === "money" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
             >
               <RadioGroupItem
                 value="money"
@@ -162,7 +163,7 @@ const TeacherHome = (props: { user: User }) => {
               <div className="overflow-y-auto h-full flex flex-col gap-2">
                 {dashboard?.pendingEnrollments.map((stud, i) => (
                   <div
-                    className="flex bg-[#EBEDEC] p-2 rounded-xl items-center justify-between"
+                    className="flex bg-light-bg-gray p-2 rounded-xl items-center justify-between"
                     key={i}
                   >
                     <div className="flex items-center gap-1">
@@ -199,8 +200,8 @@ const TeacherHome = (props: { user: User }) => {
             </Button>
           </div>
         </section>
-        <section className="col-start-4 grid grid-rows-5 p-2 border-4 border-[#EBEDEC] rounded-2xl mt-7">
-          <div className="flex bg-[#EBEDEC] items-center gap-3 px-4 py-2 rounded-xl">
+        <section className="col-start-4 grid grid-rows-5 p-2 border-4 border-light-bg-gray rounded-2xl mt-7">
+          <div className="flex bg-light-bg-gray items-center gap-3 px-4 py-2 rounded-xl">
             <Folder className="size-7 text-primary"></Folder>
             <h1 className="text-xl font-bold">Munkák</h1>
           </div>
@@ -222,12 +223,12 @@ const TeacherHome = (props: { user: User }) => {
         </section>
       </section>
       <section className="grid grid-cols-12 gap-4 h-max row-span-5 mt-2">
-        <section className=" border-4 border-[#EBEDEC] rounded-2xl col-span-3 p-2 flex flex-col gap-2">
-          <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-[#EBEDEC]">
+        <section className=" border-4 border-light-bg-gray rounded-2xl col-span-3 p-2 flex flex-col gap-2">
+          <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-light-bg-gray">
             <Users className="text-primary"></Users>
             <h1 className="text-xl font-bold">Tanulók</h1>
           </div>
-          <div className="flex items-center gap-1 bg-[#EBEDEC] p-1 rounded-lg">
+          <div className="flex items-center gap-1 bg-light-bg-gray p-1 rounded-lg">
             <Search size={20}></Search>
             <Input
               value={searchStudent}
@@ -246,7 +247,7 @@ const TeacherHome = (props: { user: User }) => {
                     .toLocaleLowerCase()
                     .includes(searchStudent.toLowerCase()) && (
                     <div
-                      className="flex bg-[#EBEDEC] p-2 rounded-xl gap-1 items-center justify-between"
+                      className="flex bg-light-bg-gray p-2 rounded-xl gap-1 items-center justify-between"
                       key={i}
                     >
                       <div className="flex items-center gap-1">
@@ -282,8 +283,8 @@ const TeacherHome = (props: { user: User }) => {
             </Button>
           </div>
         </section>
-        <section className=" border-4 border-[#EBEDEC] rounded-2xl col-span-5 p-2 flex flex-col gap-2">
-          <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-[#EBEDEC]">
+        <section className=" border-4 border-light-bg-gray rounded-2xl col-span-5 p-2 flex flex-col gap-2">
+          <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-light-bg-gray">
             <BadgeCheck className="text-primary"></BadgeCheck>
             <h1 className="text-xl font-bold">Teendők</h1>
           </div>
@@ -319,14 +320,14 @@ const TeacherHome = (props: { user: User }) => {
             </Button>
           </div>
         </section>
-        <section className="border-4 border-[#EBEDEC] rounded-2xl p-2 col-span-4">
+        <section className="border-4 border-light-bg-gray rounded-2xl p-2 col-span-4">
           <RadioGroup
             className="grid grid-cols-3 gap-0 "
             value={selectedTabDate}
             onValueChange={setSelectedTabDate}
           >
             <div
-              className={`border-4 border-[#EBEDEC] rounded-l-xl py-1  ${selectedTabDate === "calendar" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-[#898989]"}`}
+              className={`border-4 border-light-bg-gray rounded-l-xl py-1  ${selectedTabDate === "calendar" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
             >
               <RadioGroupItem
                 value="calendar"
@@ -341,7 +342,7 @@ const TeacherHome = (props: { user: User }) => {
               </Label>
             </div>
             <div
-              className={`border-4 border-[#EBEDEC] rounded-l-xl ${selectedTabDate === "day" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-[#898989]"}`}
+              className={`border-4 border-light-bg-gray rounded-l-xl ${selectedTabDate === "day" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
             >
               <RadioGroupItem
                 value="day"
@@ -356,7 +357,7 @@ const TeacherHome = (props: { user: User }) => {
               </Label>
             </div>
             <div
-              className={`flex justify-center items-center border-4 border-[#EBEDEC] rounded-r-xl ${selectedTabDate === "list" ? "bg-background text-primary font-bold" : "bg-[#EBEDEC] text-[#898989]"}`}
+              className={`flex justify-center items-center border-4 border-light-bg-gray rounded-r-xl ${selectedTabDate === "list" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
             >
               <RadioGroupItem
                 value="list"
@@ -379,16 +380,18 @@ const TeacherHome = (props: { user: User }) => {
                   upcomingEvents={dashboard?.upcomingEvents}
                 ></EventCalendar>
               </div>
-            ) : (
+            ) : selectedTabDate === "day" ? (
               <TodayList
                 key={"fsjknjkfvnbjksdojsdnvuinjfn"}
                 date={formattedDate}
-                upcomingEvenets={dashboard?.upcomingEvents}
+                upcomingEvents={dashboard?.upcomingEvents}
               ></TodayList>
+            ) : (
+              <AllList upcomingEvents={dashboard?.upcomingEvents}></AllList>
             )}
           </div>
           {selectedTabDate !== "calendar" && (
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-2">
               <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-primary to-secondary">
                 <Plus className="size-5 m-0"></Plus>
                 <p>Új esemény</p>

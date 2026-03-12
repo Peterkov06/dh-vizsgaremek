@@ -22,6 +22,7 @@ const EventCalendar = (props: { upcomingEvents?: UpcomingEvent[] }) => {
         cell: "h-5 w-7",
         caption: "text-sm",
         nav_button: "h-6 w-6",
+        today: "",
       }}
     />
   );

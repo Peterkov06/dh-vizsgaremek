@@ -34,6 +34,7 @@
   --card: hsl(140 37.5000% 96.8627%);
   --card-foreground: hsl(0 0% 17.2549%);
   --popover: hsl(140 37.5000% 96.8627%);
+  --light-bg-gray: hsl(150, 5%, 93%);
   --popover-foreground: hsl(0 0% 17.2549%);
   --primary: hsl(135.4286 38.4615% 35.6863%);
   --primary-foreground: hsl(140 37.5000% 96.8627%);
@@ -141,6 +142,7 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  --color-light-bg-gray: var(--light-bg-gray);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
