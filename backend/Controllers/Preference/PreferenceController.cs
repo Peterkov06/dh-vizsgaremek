@@ -11,9 +11,9 @@ namespace backend.Controllers.Preference
     [ApiController]
     public class PreferenceController : ControllerBase
     {
-        private readonly UserDbContext _context;
+        private readonly AppDbContext _context;
 
-        public PreferenceController(UserDbContext context)
+        public PreferenceController(AppDbContext context)
         {
             _context = context;
         }

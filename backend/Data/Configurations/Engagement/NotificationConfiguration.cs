@@ -14,7 +14,7 @@ namespace backend.Data.Configurations.Engagement
             builder.Property(x => x.RecipientId).IsRequired().HasMaxLength(450);
             builder.Property(x => x.Title).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Message).IsRequired().HasMaxLength(500);
-            builder.Property(x => x.ReferenceId).IsRequired(false);
+            builder.Property(x => x.ReferenceId).IsRequired();
             builder.Property(x => x.IsRead).IsRequired();
 
             builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.RecipientId).IsRequired().OnDelete(DeleteBehavior.Cascade);

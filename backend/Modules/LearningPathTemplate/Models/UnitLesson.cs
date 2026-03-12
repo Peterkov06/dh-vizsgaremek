@@ -9,7 +9,7 @@ namespace backend.Modules.LearningPathTemplate.Models
         public required Guid UnitId { get; set; }
         public required string Title { get; set; }
         public required string Description { get; set; }
-        public Guid HandInId { get; set; }
+        public Guid? HandInId { get; set; }
 
         public Unit? Unit { get; set; }
         public HandIn? HandIn { get; set; }

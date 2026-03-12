@@ -1,6 +1,5 @@
 
 using backend.Data;
-using backend.Hubs;
 using backend.Models;
 using backend.Services.JwtServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,11 +39,11 @@ namespace backend
 
             var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 
-            builder.Services.AddDbContext<UserDbContext>(options =>
+            builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")+password));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<UserDbContext>().AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
@@ -143,8 +142,6 @@ namespace backend
 
 
             app.MapControllers();
-
-            app.MapHub<Chathub>("/api/chathub");
 
             app.Run();
         }

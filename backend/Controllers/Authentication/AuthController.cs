@@ -23,13 +23,13 @@ namespace backend.Controllers.Login
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtGenerator _jwtGenerator;
         //private readonly EmailSender _emailSender;
-        private readonly UserDbContext _context;
+        private readonly AppDbContext _context;
         
         public AuthController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             JwtGenerator jwtGenerator,
             //EmailSender emailSender,
-            UserDbContext context)
+            AppDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;

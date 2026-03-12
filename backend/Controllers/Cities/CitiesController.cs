@@ -9,9 +9,9 @@ namespace backend.Controllers.Cities
     public class CitiesController : ControllerBase
     {
 
-        private readonly UserDbContext _context;
+        private readonly AppDbContext _context;
 
-        public CitiesController(UserDbContext context)
+        public CitiesController(AppDbContext context)
         {
             _context = context;
         }

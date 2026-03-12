@@ -11,11 +11,11 @@ namespace backend.Data.Configurations.Engagement
             base.Configure(builder);
             builder.ToTable("course_feedbacks", x =>
             {
-                x.HasCheckConstraint("CK_CourseReviews_SingleContext", @"(""WallId"" IS NOT NULL)::int + (""EnrollmentId"" IS NOT NULL)::int) = 1");
+                x.HasCheckConstraint("CK_CourseReviews_SingleContext", @"((""WallId"" IS NOT NULL)::int + (""EnrollmentId"" IS NOT NULL)::int) = 1");
             });
             builder.Property(x => x.Recommended).IsRequired();
             builder.Property(x => x.Text).IsRequired();
-            builder.Property(x => x.ReviewScore).IsRequired(false);
+            builder.Property(x => x.ReviewScore).IsRequired();
 
             builder.HasOne(x => x.Course).WithMany(x => x.Reviews).HasForeignKey(x => x.CourseId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(x => x.Reviewer).WithMany().HasForeignKey(x => x.ReviewerId).OnDelete(DeleteBehavior.Cascade);
