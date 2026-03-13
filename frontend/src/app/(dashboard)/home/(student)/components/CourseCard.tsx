@@ -12,7 +12,7 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
   return (
     <div className="rounded-lg w-fit text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
       <img
-        className="rounded-t-lg w-[16em] lg:w-[16em]"
+        className="rounded-t-lg w-[16em] lg:w-[22em]"
         src={
           props.course.imageUrl === ""
             ? "defaults/default_course.jpg"
@@ -23,8 +23,8 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
       <div className="bg-linear-to-br from-primary to-secondary py-2 px-3 rounded-b-lg flex flex-col gap-2 h-full">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-xl">{props.course.courseName}</h1>
-            <h2 className="text-sm">{props.course.teacherName}</h2>
+            <h1 className="text-lg">{props.course.courseName}</h1>
+            <h2 className="text-xl">{props.course.teacherName}</h2>
           </div>
           <div className="bg-background text-primary px-3  py-1 text-lg rounded-2xl">
             {props.course.progress}%
@@ -34,23 +34,23 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
           <div className="flex flex-col gap-0">
             <div className="flex flex-col gap-0! bg-background text-primary rounded-lg px-3 py-1 shadow-2xl">
               <div className="flex justify-between items-end min-w-0">
-                <h2 className="font-bold text-sm min-w-0  flex-1">
+                <h2 className="font-bold text-md min-w-0  flex-1">
                   {props.course.upcomingEvents[0].title.length > 16
                     ? props.course.upcomingEvents[0].title.slice(0, 13) + "..."
                     : props.course.upcomingEvents[0].title}
                 </h2>
-                <p className="text-xs shrink-0">
+                <p className="text-sm shrink-0">
                   {props.course.upcomingEvents[0].startDate}
                 </p>
               </div>
               <div className="flex justify-between items-start ">
-                <h2 className="text-[0.6em] ml-4">
+                <h2 className="text-sm ml-4">
                   {props.course.upcomingEvents[0].description.length > 28
                     ? props.course.upcomingEvents[0].description.slice(0, 25) +
                       "..."
                     : props.course.upcomingEvents[0].description}
                 </h2>
-                <p className="text-sm font-bold">
+                <p className="text-md font-bold">
                   {props.course.upcomingEvents[0].startTime}
                 </p>
               </div>
@@ -81,10 +81,10 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
           </div>
         )}
         <div
-          className={`w-full hidden lg:flex justify-end ${!isActive(props.course) && "mt-[47.7%]"}`}
+          className={`w-full hidden lg:flex justify-end ${!isActive(props.course) && "mt-[33%]"}`}
         >
           <Link href={`/home/course?id=${props.course.courseId}`}>
-            <Button className="py-1 px-5 h-fit rounded-2xl">
+            <Button className="py-1 px-5 h-fit text-lg rounded-2xl">
               <p>A kurzusra</p>
               <ChevronRightCircle size={30}></ChevronRightCircle>
             </Button>

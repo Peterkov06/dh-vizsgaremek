@@ -34,7 +34,7 @@ const StudentHome = (props: { user: User }) => {
   }, []);
 
   return (
-    <main className="h-full flex flex-col gap-10 lg:gap-7  lg:overflow-x-visible">
+    <main className="h-full flex flex-col justify-between pb-10 gap-10 lg:gap-7  lg:overflow-x-visible">
       <section className="flex justify-between items-center">
         <h1 className="text-4xl font-bold text-primary">
           Üdv {props.user.nickname}!
@@ -90,7 +90,7 @@ const StudentHome = (props: { user: User }) => {
               </Button>
             </div>
           </div>
-          <div className="hidden lg:flex gap-2 h-full">
+          <div className="hidden lg:flex gap-5 h-full">
             {!isActive
               ? dashboard?.attendedCourses.active.map((c) => (
                   <CourseCard course={c} key={c.courseId}></CourseCard>
@@ -119,14 +119,14 @@ const StudentHome = (props: { user: User }) => {
         </section>
         <section className="w-full lg:w-[35em] flex flex-col gap-5">
           <h1 className="text-2xl font-bold">Közelgő események</h1>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-5">
             {dashboard?.upcomingEvents.map((ue, i) => (
               <UpcomingCard key={i} event={ue}></UpcomingCard>
             ))}
           </div>
         </section>
       </section>
-      <section className="bg-[#E5E3E3] relative flex flex-col gap-2 items-center py-3 px-20 h-full rounded-2xl shadow-2xl">
+      <section className="bg-[#E5E3E3] relative flex flex-col gap-2 items-center py-3 px-20 h-fit rounded-2xl shadow-2xl">
         <h1 className="absolute bg-background px-2 lg:px-5 py-1 lg:py-2 text-md lg:text-xl right-3 lg:right-10 top-[-20] font-bold rounded-2xl">
           Népszerű kurzusok
         </h1>

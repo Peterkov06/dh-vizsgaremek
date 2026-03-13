@@ -227,6 +227,16 @@ const Settings = () => {
           </Button>
         </div>
       </section>
+      <section className="mx-4 px-5 py-1 mt-4 row-start-8 col-span-5 row-span-1 border-4 border-light-bg-gray rounded-2xl flex items-center justify-between">
+        <h1 className="text-xl">Választott nyelvek: </h1>
+        <div className="mr-20">
+          <img
+            src="/imgs/flags/Hungary.png"
+            alt="hungary"
+            className="h-8 w-14"
+          />
+        </div>
+      </section>
     </main>
   );
 };
