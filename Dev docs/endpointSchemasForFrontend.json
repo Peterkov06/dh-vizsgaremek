@@ -157,7 +157,8 @@
         "courseName": "Calculus",
         "handInTitle": "Logarithms",
         "studentName": "Szakács Máté",
-        "submittedDate": "01.12"
+        "submittedDate": "01.12",
+        "completed": true
       },
       {
         "submissionId": "uuid",
@@ -165,7 +166,8 @@
         "courseName": "Calculus",
         "handInTitle": "Logarithms",
         "studentName": "Szakács István",
-        "submittedDate": "01.13"
+        "submittedDate": "01.13",
+        "completed": false
       },
       {
         "submissionId": "uuid",
@@ -173,7 +175,8 @@
         "courseName": "Calculus",
         "handInTitle": "Logarithms",
         "studentName": "Bökönyi Máté",
-        "submittedDate": "02.12"
+        "submittedDate": "02.12",
+        "completed": false
       },
       {
         "submissionId": "uuid",
@@ -181,7 +184,8 @@
         "courseName": "Calculus",
         "handInTitle": "Logarithms",
         "studentName": "Halász Máté",
-        "submittedDate": "04.12"
+        "submittedDate": "04.12",
+        "completed": true
       },
       {
         "submissionId": "uuid",
@@ -189,7 +193,8 @@
         "courseName": "Calculus",
         "handInTitle": "Logarithms",
         "studentName": "József Máté",
-        "submittedDate": "01.25"
+        "submittedDate": "01.25",
+        "completed": false
       }
     ],
     "pendingEnrollments": [
