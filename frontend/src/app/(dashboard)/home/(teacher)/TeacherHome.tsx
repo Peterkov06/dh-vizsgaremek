@@ -30,7 +30,6 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import TodayList from "./components/TodayList";
-import Example from "@/components/calendar-standard-7";
 import EventCalendar from "./components/EventCalendar";
 import AllList from "./components/AllList";
 

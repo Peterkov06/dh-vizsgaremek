@@ -1,12 +1,14 @@
 "use client";
 
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Pencil, Save, Trash } from "lucide-react";
+import { Lock, Pencil, Save, Trash, User } from "lucide-react";
 import { useState } from "react";
+import ResetPasswordDialog from "../../(teacher)/components/setting/ResetPasswordDialog";
 
 const Settings = () => {
   const [fullName, setFullName] = useState<string>("");
@@ -23,7 +25,7 @@ const Settings = () => {
       <div className="row-start-1">
         <h1 className="text-5xl font-bold text-primary">Beállítások</h1>
       </div>
-      <div className="row-start-2 col-span-3 row-span-7 border-4 border-light-bg-gray rounded-2xl flex flex-col px-2 py-3 items-center gap-6 mt-8 mx-3">
+      <section className="row-start-2 col-span-3 row-span-7 border-4 border-light-bg-gray rounded-2xl flex flex-col px-2 py-3 items-center gap-6 mt-8 mx-3">
         <h1 className="text-2xl font-bold">Személyes adatok</h1>
         <div className="flex flex-col w-full gap-4">
           <Input
@@ -71,8 +73,8 @@ const Settings = () => {
           <Save className="size-6"></Save>
           <p>Mentés</p>
         </Button>
-      </div>
-      <div className="mx-3 row-start-2 col-span-4 row-span-6 border-4 border-light-bg-gray rounded-2xl flex flex-col px-2 py-1 my-8 gap-3 items-stretch">
+      </section>
+      <section className="mx-3 row-start-2 col-span-4 row-span-6 border-4 border-light-bg-gray rounded-2xl flex flex-col px-2 py-1 my-8 gap-3 items-stretch">
         <RadioGroup
           className="grid grid-cols-2 gap-0"
           value={allTabs}
@@ -128,7 +130,39 @@ const Settings = () => {
             <Trash className="size-6"></Trash>
           </Button>
         </div>
-      </div>
+      </section>
+      <section className="mx-3 px-2 py-1 mt-8 row-start-2 col-span-3 row-span-6 border-4 border-light-bg-gray rounded-2xl flex flex-col justify-between">
+        <div className="flex gap-2 items-center bg-light-bg-gray rounded-xl py-2 px-5">
+          <User className="text-primary size-10"></User>
+          <h1 className="text-2xl font-bold">Profilkép</h1>
+        </div>
+        <div className="flex justify-center">
+          <Avatar className="size-50">
+            <AvatarImage src={"/defaults/default_avatar.jpg"}></AvatarImage>
+          </Avatar>
+        </div>
+        <div className="flex gap-3 items-center justify-center">
+          <Button className="h-10 w-50 text-lg bg-linear-to-tl from-primary to-[#7CB08C]">
+            <Pencil className="size-6"></Pencil>
+            Módosítás
+          </Button>
+          <Button className="h-10 w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
+            <Trash className="size-6"></Trash>
+          </Button>
+        </div>
+      </section>
+
+      <section className="mx-3 px-2 py-1 mt-4 row-start-9 col-span-3 row-span-3 border-4 border-light-bg-gray rounded-2xl flex flex-col items-center justify-between">
+        <div className="flex gap-3 items-center bg-light-bg-gray rounded-xl py-2 px-5 w-full">
+          <Lock className="text-primary size-8"></Lock>
+          <h1 className="text-2xl font-bold">Fiókom</h1>
+        </div>
+        <ResetPasswordDialog></ResetPasswordDialog>
+        <Button className="bg-linear-to-tl from-[#B02929] to-[#BD6060] text-xl w-fit h-12">
+          <Trash className="size-6"></Trash>
+          Törlés
+        </Button>
+      </section>
     </main>
   );
 };
