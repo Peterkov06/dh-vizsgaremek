@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Lock, Pencil, Save, Trash, User } from "lucide-react";
+import { Bell, Lock, Pencil, Save, Trash, User } from "lucide-react";
 import { useState } from "react";
 import ResetPasswordDialog from "../../(teacher)/components/setting/ResetPasswordDialog";
+import { Switch } from "@/components/ui/switch";
 
 const Settings = () => {
   const [fullName, setFullName] = useState<string>("");
@@ -19,6 +20,10 @@ const Settings = () => {
 
   const [allTabs, setAllTabs] = useState<string>("introduction");
   const [introduction, setIntroduction] = useState<string>("");
+
+  const [activitySwitch, setActivitySwitch] = useState<boolean>(false);
+  const [peddingSwitch, setPeddingSwitch] = useState<boolean>(false);
+  const [marketingSwitch, setMarketingSwitch] = useState<boolean>(false);
 
   return (
     <main className="grid grid-cols-10 grid-rows-12 h-full w-full">
@@ -131,7 +136,7 @@ const Settings = () => {
           </Button>
         </div>
       </section>
-      <section className="mx-3 px-2 py-1 mt-8 row-start-2 col-span-3 row-span-6 border-4 border-light-bg-gray rounded-2xl flex flex-col justify-between">
+      <section className="mx-3 px-1 py-1 mt-8 row-start-2 col-span-3 row-span-6 border-4 border-light-bg-gray rounded-2xl flex flex-col justify-between">
         <div className="flex gap-2 items-center bg-light-bg-gray rounded-xl py-2 px-5">
           <User className="text-primary size-10"></User>
           <h1 className="text-2xl font-bold">Profilkép</h1>
@@ -152,7 +157,7 @@ const Settings = () => {
         </div>
       </section>
 
-      <section className="mx-3 px-2 py-1 mt-4 row-start-9 col-span-3 row-span-3 border-4 border-light-bg-gray rounded-2xl flex flex-col items-center justify-between">
+      <section className="mx-3 px-1 py-1 mt-4 row-start-9 col-span-3 row-span-3 border-4 border-light-bg-gray rounded-2xl flex flex-col items-center justify-between">
         <div className="flex gap-3 items-center bg-light-bg-gray rounded-xl py-2 px-5 w-full">
           <Lock className="text-primary size-8"></Lock>
           <h1 className="text-2xl font-bold">Fiókom</h1>
@@ -162,6 +167,65 @@ const Settings = () => {
           <Trash className="size-6"></Trash>
           Törlés
         </Button>
+      </section>
+      <section className=" px-1 py-1 mt-4 row-start-8 col-span-3 row-span-4 border-4 border-light-bg-gray rounded-2xl flex flex-col">
+        <div className="flex gap-3 items-center bg-light-bg-gray rounded-xl py-2 px-5 w-full">
+          <Bell className="text-primary size-8"></Bell>
+          <h1 className="text-2xl font-bold">Értesítések</h1>
+        </div>
+        <div className="flex flex-col gap-2 px-4 py-3">
+          <div className="flex gap-4 items-center">
+            <Switch
+              size="lg"
+              name="activity"
+              checked={activitySwitch}
+              onClick={() => {
+                setActivitySwitch((prev) => !prev);
+              }}
+            ></Switch>
+            <Label htmlFor="activity" className="text-2xl">
+              Fióktevékenység
+            </Label>
+          </div>
+          <div className="flex gap-4 items-center">
+            <Switch
+              size="lg"
+              name="pedding"
+              checked={peddingSwitch}
+              onClick={() => {
+                setPeddingSwitch((prev) => !prev);
+              }}
+            ></Switch>
+            <Label htmlFor="pedding" className="text-2xl">
+              Magánóra Kérések
+            </Label>
+          </div>
+          <div className="flex gap-4 items-center">
+            <Switch
+              size="lg"
+              name="marketing"
+              checked={marketingSwitch}
+              onClick={() => {
+                setMarketingSwitch((prev) => !prev);
+              }}
+            ></Switch>
+            <Label htmlFor="marketing" className="text-2xl">
+              Ajánlatok
+            </Label>
+          </div>
+        </div>
+        <div className="flex justify-center h-full items-center">
+          <Button
+            className="bg-linear-to-tl from-[#B02929] to-[#BD6060] text-xl w-fit"
+            onClick={() => {
+              setActivitySwitch(false);
+              setPeddingSwitch(false);
+              setMarketingSwitch(false);
+            }}
+          >
+            Kikapcsolás
+          </Button>
+        </div>
       </section>
     </main>
   );

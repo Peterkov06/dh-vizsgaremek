@@ -62,6 +62,7 @@ const ResetPasswordDialog = () => {
 
   const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   return (
     <Dialog>
