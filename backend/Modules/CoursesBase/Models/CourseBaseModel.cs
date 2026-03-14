@@ -1,6 +1,7 @@
 ﻿using backend.Models;
 using backend.Modules.Engagement.Models;
 using backend.Modules.Identity.Models;
+using backend.Modules.Resources.Models;
 using backend.Shared.Models;
 
 namespace backend.Modules.CoursesBase.Models
@@ -17,11 +18,15 @@ namespace backend.Modules.CoursesBase.Models
         public required bool FirstConsultationFree { get; set; }
         public Guid PriceCurrencyId { get; set; }
         public CourseStatus Status { get; set; }
+        public Guid? IconImageId { get; set; }
+        public Guid? BannerImageId { get; set; }
 
         public Teacher? Teacher { get; set; }
         public CourseDomain? CourseDomain { get; set; }
         public CourseLevel? CourseLevel { get; set; }
         public Currency? Currency { get; set; }
+        public PhysicalFile? IconImage { get; set; }
+        public PhysicalFile? BannerImage { get; set; }
 
         public ICollection<CourseToTag> CourseToTags { get; set; } = [];
         public ICollection<CourseToLanguage> CourseToLanguages { get; set; } = [];

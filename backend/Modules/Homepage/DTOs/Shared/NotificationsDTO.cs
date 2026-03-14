@@ -3,7 +3,7 @@
     public class NotificationsDTO
     {
         public int UnreadNotificationNumber { get; set; }
-        public LastUnreadNotificationDTO LastUnread { get; set; } = new();
+        public LastUnreadNotificationDTO? LastUnread { get; set; } = null;
     }
 
     public class LastUnreadNotificationDTO

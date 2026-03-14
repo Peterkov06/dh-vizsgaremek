@@ -2,6 +2,7 @@
 using backend.Modules.CoursesBase.Models;
 using backend.Modules.Homepage.DTOs.Shared;
 using backend.Modules.Homepage.DTOs.Student;
+using backend.Modules.Progression.Models;
 using backend.Modules.Scheduling.Models;
 using backend.Shared.Results;
 using Microsoft.EntityFrameworkCore;
@@ -41,8 +42,117 @@ namespace backend.Modules.Homepage.Services
                 CourseType = "tutoring",
                 Progress = 5,
                 ImageUrl = "",
-                //UpcomingEvents = upcomingEvents.Where(y => y.TutoringWallId == x.Id).ToList()
+                UpcomingEvents = [.. upcomingEvents.Where(y => y.TutoringWallId == x.Id).Select(MapToCourseCardUpcomingEventDTO)]
+            }).ToList();
+            
+            var activePaths= paths.Where(x => x.Status == Shared.Models.EnrollmentStatus.Active).Select(x => new AttendedCourseDTO
+            {
+                CourseId = x.CourseId,
+                InstanceId = x.Id,
+                CourseName = x.Course?.CourseName ?? "",
+                TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
+                CourseType = "path",
+                Progress = CalculateCourseProgress(x),
+                ImageUrl = "",
+                UpcomingEvents = [.. upcomingEvents.Where(y => y.PathCourseId == x.CourseId).Select(MapToCourseCardUpcomingEventDTO)]
+            }).ToList();
+
+            var inactiveWalls = walls.Where(x => x.Status != Shared.Models.EnrollmentStatus.Inactive).Select(x => new AttendedCourseDTO
+            {
+                CourseId = x.CourseId,
+                InstanceId = x.Id,
+                CourseName = x.CourseBase?.CourseName ?? "",
+                TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
+                CourseType = "tutoring",
+                Progress = 5,
+                ImageUrl = "",
+                UpcomingEvents = null
+            }).ToList();
+
+            var inactivePaths= paths.Where(x => x.Status != Shared.Models.EnrollmentStatus.Inactive).Select(x => new AttendedCourseDTO
+            {
+                CourseId = x.CourseId,
+                InstanceId = x.Id,
+                CourseName = x.Course?.CourseName ?? "",
+                TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
+                CourseType = "path",
+                Progress = CalculateCourseProgress(x),
+                ImageUrl = "",
+                UpcomingEvents = null
+            }).ToList();
+
+            var lastNotification = notifications.FirstOrDefault();
+
+            return ServiceResult<StudentHomePageDTO>.Success(new StudentHomePageDTO
+            {
+                AttendedCourses = new()
+                {
+                    Active = [.. activeWalls, .. activePaths],
+                    Inactive = [.. inactiveWalls, .. inactivePaths]
+                },
+                Notifications = new()
+                {
+                    UnreadNotificationNumber = notifications.Count,
+                    LastUnread = null,
+                },
+                PopularCourses = popularCourses.Select(x => new PopularCourseDTO
+                {
+                    CourseId = x.Id,
+                    CourseName = x.CourseName,
+                    TeacherName = x.Teacher?.User?.FullName ?? "",
+                    ImageUrl = "",
+                    LessonPrice = new()
+                    {
+                        Amount = x.Price,
+                        Currency = x.Currency?.CurrencySymbol ?? "HUF"
+                    }
+                }).ToList(),
+                UpcomingEvents = upcomingEvents.Select(x => new UpcomingEventDTO
+                {
+                    EventId = x.Id,
+                    Title = x.Title,
+                    CourseName = x.PathCourse?.CourseName ?? x.TutoringWall?.CourseBase?.CourseName ?? "",
+                    TeacherName = x.PathCourse?.Teacher?.User?.FullName ?? x.TutoringWall?.CourseBase?.Teacher?.User?.FullName ?? "",
+                    StartTime = TimeOnly.FromDateTime(x.StartTime),
+                    StartDate = DateOnly.FromDateTime(x.StartTime),
+                    EventType = x.Type.ToString(),
+                    Description = x.Description ?? "",
+                    EventUrl = x.Type switch
+                    {
+                        EventType.Lesson => $"#",
+                        EventType.Deadline => $"#",
+                        _ => "#"
+                    }
+                }).ToList()
             });
         }
+        private static CourseCardUprocmingEventsDTO MapToCourseCardUpcomingEventDTO(Event e)
+        {
+            return new CourseCardUprocmingEventsDTO
+            {
+                EventId = e.Id,
+                Title = e.Title,
+                StartTime = TimeOnly.FromDateTime(e.StartTime),
+                StartDate = DateOnly.FromDateTime(e.StartTime),
+                EventType = e.Type.ToString(),
+                Description = e.Description ?? "",
+                EventUrl = e.Type switch
+                {
+                    EventType.Lesson => $"#",
+                    EventType.Deadline => $"#",
+                    _ => "#"
+                }
+            };
+        }
+
+        private int CalculateCourseProgress(PathEnrollment e)
+        {
+            if (e.Course == null) return 0;
+            var totalLessons = _db.LearningPathUnits.Where(x => x.CourseId == e.CourseId).Select(x => x.Lessons).Count();
+            if (totalLessons == 0) return 0;
+            var completedLessons = e.LastLessonId;
+            return 0;
+        }
+
     }
 }

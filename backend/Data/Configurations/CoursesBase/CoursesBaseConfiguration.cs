@@ -21,6 +21,8 @@ namespace backend.Data.Configurations.CoursesBase
             builder.HasOne(x => x.CourseDomain).WithMany().HasForeignKey(x => x.CourseDomainId).IsRequired().OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.CourseLevel).WithMany().HasForeignKey(x => x.CourseLevelId).IsRequired().OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.Currency).WithMany().HasForeignKey(x => x.PriceCurrencyId).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.IconImage).WithMany().HasForeignKey(x => x.IconImageId).IsRequired(false).OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(x => x.BannerImage).WithMany().HasForeignKey(x => x.BannerImageId).IsRequired(false).OnDelete(DeleteBehavior.SetNull);
 
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using backend.Modules.Resources.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace backend.Models
 {
@@ -9,8 +10,10 @@ namespace backend.Models
         public string Address { get; set; }
         public string City { get; set; }
         public string PostalCode { get; set; }
-        public string? ProfilePicUrl { get; set; }
+        public Guid? ProfilePictureId { get; set; }
         public string? Introduction { get; set; }
         public string? Nickname { get; set; }
+
+        public PhysicalFile? ProfilePicture { get; set; }
     }
 }
