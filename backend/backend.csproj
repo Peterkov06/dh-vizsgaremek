@@ -60,7 +60,6 @@
     <Folder Include="Modules\Progression\Services\" />
     <Folder Include="Modules\Engagement\Controllers\" />
     <Folder Include="Modules\Engagement\DTOs\" />
-    <Folder Include="Modules\Engagement\Services\" />
     <Folder Include="Modules\Payment\Controllers\" />
     <Folder Include="Modules\Payment\DTOs\" />
     <Folder Include="Modules\Payment\Services\" />
