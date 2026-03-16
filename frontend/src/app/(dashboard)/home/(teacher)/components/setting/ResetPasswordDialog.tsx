@@ -67,7 +67,7 @@ const ResetPasswordDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-linear-to-tl from-foreground to-[#868686] text-xl w-fit h-12">
+        <Button className="bg-linear-to-tl from-foreground to-[#868686] mt-3 lg:mt-0 text-lg lg:text-xl w-fit h-10 lg:h-12">
           Jelszó módosítása
         </Button>
       </DialogTrigger>

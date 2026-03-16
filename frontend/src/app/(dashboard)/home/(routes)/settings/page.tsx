@@ -26,9 +26,11 @@ const Settings = () => {
   const [marketingSwitch, setMarketingSwitch] = useState<boolean>(false);
 
   return (
-    <main className="grid grid-cols-10 grid-rows-12 h-full w-full">
+    <main className="flex flex-col lg:grid grid-cols-10 grid-rows-12 h-full w-full">
       <div className="row-start-1">
-        <h1 className="text-5xl font-bold text-primary">Beállítások</h1>
+        <h1 className="text-3xl lg:text-5xl font-bold text-primary">
+          Beállítások
+        </h1>
       </div>
       <section className="row-start-2 col-span-3 row-span-7 border-4 border-light-bg-gray rounded-2xl flex flex-col px-2 py-3 items-center gap-6 mt-8 mx-3">
         <h1 className="text-2xl font-bold">Személyes adatok</h1>
@@ -142,17 +144,17 @@ const Settings = () => {
           <h1 className="text-2xl font-bold">Profilkép</h1>
         </div>
         <div className="flex justify-center">
-          <Avatar className="size-50">
+          <Avatar className="size-40 lg:size-50">
             <AvatarImage src={"/defaults/default_avatar.jpg"}></AvatarImage>
           </Avatar>
         </div>
         <div className="flex gap-3 items-center justify-center">
-          <Button className="h-10 w-50 text-lg bg-linear-to-tl from-primary to-[#7CB08C]">
-            <Pencil className="size-6"></Pencil>
+          <Button className="h-8 lg:h-10 w-40 lg:w-50 text-lg bg-linear-to-tl from-primary to-[#7CB08C]">
+            <Pencil className="size-4 lg:size-6"></Pencil>
             Módosítás
           </Button>
-          <Button className="h-10 w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
-            <Trash className="size-6"></Trash>
+          <Button className="h-8 w-8 lg:h-10 lg:w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
+            <Trash className="size-5 lg:size-6"></Trash>
           </Button>
         </div>
       </section>
@@ -163,8 +165,8 @@ const Settings = () => {
           <h1 className="text-2xl font-bold">Fiókom</h1>
         </div>
         <ResetPasswordDialog></ResetPasswordDialog>
-        <Button className="bg-linear-to-tl from-[#B02929] to-[#BD6060] text-xl w-fit h-12">
-          <Trash className="size-6"></Trash>
+        <Button className="bg-linear-to-tl from-[#B02929] to-[#BD6060] text-xl w-fit h-10 mt-3 lg:mt-0 lg:h-12">
+          <Trash className="size-5 lg:size-6"></Trash>
           Törlés
         </Button>
       </section>
