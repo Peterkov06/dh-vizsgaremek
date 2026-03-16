@@ -20,11 +20,17 @@ const AllList = (props: { upcomingEvents?: UpcomingEvent[] }) => {
                 <div key={ue.eventId} className="flex gap-2 items-center">
                   <div className="flex flex-col items-center w-[5em]">
                     <p className="text-xs">{ue.startTime}</p>
-                    <p className="text-lg font-bold">{ue.startDate}</p>
+                    <p className="text-sm lg:text-lg font-bold">
+                      {ue.startDate}
+                    </p>
                   </div>
-                  <div className=" flex justify-between items-center py-2 px-3 w-full rounded-xl text-white bg-linear-to-tl from-secondary to-primary">
-                    <p className="text-xl max-w-[12em] truncate">{ue.title}</p>
-                    <p className="truncate max-w-[5em]">{ue.studentName}</p>
+                  <div className=" flex justify-between items-center py-1 lg:py-2 px-2 lg:px-3 w-full rounded-xl text-white bg-linear-to-tl from-secondary to-primary">
+                    <p className="max-w-[10em] text-sm lg:text-xl lg:max-w-[12em] truncate">
+                      {ue.title}
+                    </p>
+                    <p className="truncate max-w-[5em] text-sm lg:text-lg">
+                      {ue.studentName}
+                    </p>
                   </div>
                 </div>
               ))

@@ -63,9 +63,9 @@ const TeacherHome = (props: { user: User }) => {
     setFormattedDate(capitalized);
   }, []);
   return (
-    <main className="grid grid-rows-12 h-full">
+    <main className="flex flex-col lg:grid grid-rows-12 h-full">
       <section className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold text-primary">
+        <h1 className="text-2xl lg:text-4xl font-bold text-primary">
           Üdv {props.user.nickname}!
         </h1>
         <div className="relative p-1 bg-linear-to-br from-primary to-secondary rounded-2xl hidden lg:block">
@@ -96,7 +96,7 @@ const TeacherHome = (props: { user: User }) => {
           </div>
         </div>
       </section>
-      <section className="grid grid-cols-4 gap-3 row-span-5">
+      <section className="flex flex-col lg:grid grid-cols-4 gap-3 row-span-5">
         <section className="col-span-2 max-w-[48em]">
           <div className="flex justify-between items-center w-fit lg:w-full gap-5">
             <h1 className="text-xl lg:text-2xl font-bold">Kurzusok</h1>
@@ -110,7 +110,10 @@ const TeacherHome = (props: { user: User }) => {
           >
             <CarouselContent className="ml-1 py-1">
               {dashboard?.activeCourses.map((ac) => (
-                <CarouselItem key={ac.courseId} className="basis-1/3 p-1">
+                <CarouselItem
+                  key={ac.courseId}
+                  className="basis-1/2 lg:basis-1/3 p-1"
+                >
                   <CourseCard course={ac}></CourseCard>
                 </CarouselItem>
               ))}
@@ -221,7 +224,7 @@ const TeacherHome = (props: { user: User }) => {
           </div>
         </section>
       </section>
-      <section className="grid grid-cols-12 gap-4 h-max row-span-5 mt-2">
+      <section className="flex flex-col lg:grid grid-cols-12 gap-4 h-max row-span-5 mt-2">
         <section className=" border-4 border-light-bg-gray rounded-2xl col-span-3 p-2 flex flex-col gap-2">
           <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-light-bg-gray">
             <Users className="text-primary"></Users>
@@ -297,7 +300,7 @@ const TeacherHome = (props: { user: User }) => {
                   <div className="flex items-center gap-3">
                     <Checkbox className="border-2 border-gray-400 size-5"></Checkbox>
                     <div>
-                      <p>
+                      <p className="truncate max-w-[14em] text-sm lg:max-w-[24em] lg:text-lg">
                         {gq.studentName} - {gq.handInTitle}
                       </p>
                       <p className="text-xs">{gq.courseName}</p>
@@ -309,13 +312,13 @@ const TeacherHome = (props: { user: User }) => {
             </div>
           </div>
           <div className="flex items-center justify-evenly mt-3">
-            <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
-              <p>Összes teendő</p>
+            <Button className="h-8 w-32 lg:w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
+              <p className="text-xs lg:text-md">Összes teendő</p>
               <ChevronRight className="size-5 m-0"></ChevronRight>
             </Button>
-            <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-primary to-secondary">
+            <Button className="h-8 w-32 lg:w-40 flex gap-1 bg-linear-to-tl from-primary to-secondary">
               <Plus className="size-5 m-0"></Plus>
-              <p>Új teendő</p>
+              <p className="text-xs lg:text-md">Új teendő</p>
             </Button>
           </div>
         </section>
@@ -399,19 +402,19 @@ const TeacherHome = (props: { user: User }) => {
           )}
         </section>
       </section>
-      <section className="w-full flex items-center bg-linear-to-br from-secondary to-primary h-12 rounded-2xl relative justify-between px-10">
+      <section className="w-full px-2 py-2 lg:py-0 justify-end flex mt-5 lg:mt-0 items-center bg-linear-to-br from-secondary to-primary h-12 rounded-2xl relative lg:justify-between lg:px-10">
         <img
           src="/imgs/megaphone.png"
           alt="megaphone"
-          className="size-20 absolute left-10 top-[-15]"
+          className="size-16 lg:size-20 absolute left-5 top-[-10] lg:left-10 lg:top-[-15]"
         />
-        <p className="text-2xl text-white ml-40">
+        <p className="text-2xl text-white ml-40 hidden lg:block">
           Keresd meg a számodra megfelelő kurzusokat vagy hozd létre a
           sajátodat!
         </p>
-        <Button className="h-8 w-40 flex gap-1 bg-background text-primary">
+        <Button className="h-6 lg:h-8 w-26 lg:w-40 flex gap-1 bg-background text-primary">
           <Plus className="size-5 m-0"></Plus>
-          <p className="text-xl">Új teendő</p>
+          <p className="text-sm lg:text-xl">Új kurzus</p>
         </Button>
       </section>
     </main>
