@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Book, Funnel } from "lucide-react";
+import { Book, Funnel, Globe, MapPin } from "lucide-react";
 
 const CourseSearchPage = () => {
   const subjects = [
@@ -10,6 +10,14 @@ const CourseSearchPage = () => {
     "Kínai",
     "Magyar",
     "Történelem",
+  ];
+  const languages = [
+    "Angol",
+    "Magyar",
+    "Német",
+    "Francia",
+    "Spanyol",
+    "Lengyel",
   ];
 
   return (
@@ -25,7 +33,7 @@ const CourseSearchPage = () => {
             <h2 className="text-primary text-lg bg-light-bg-gray p-1 flex gap-1">
               <Book></Book>Tantárgy:
             </h2>
-            <div className="overflow-hidden h-42">
+            <div className="overflow-hidden h-32">
               <div className="overflow-auto h-full">
                 {subjects.map((s, i) => (
                   <div key={s + i} className="flex gap-2 items-center px-3">
@@ -34,6 +42,29 @@ const CourseSearchPage = () => {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+          <div className="border-4 border-light-bg-gray rounded-2xl">
+            <h2 className="text-primary text-lg bg-light-bg-gray p-1 flex gap-1">
+              <Globe></Globe>Nyelvek:
+            </h2>
+            <div className="overflow-hidden h-32">
+              <div className="overflow-auto h-full">
+                {languages.map((l, i) => (
+                  <div key={l + i} className="flex gap-2 items-center px-3">
+                    <Checkbox className="border-2 border-gray-400 size-5"></Checkbox>
+                    <p className="text-lg">{l}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="border-4 border-light-bg-gray rounded-2xl">
+            <h2 className="text-primary text-lg bg-light-bg-gray p-1 flex gap-1">
+              <MapPin></MapPin>Helyszín:
+            </h2>
+            <div className="overflow-hidden h-42">
+              <div className="overflow-auto h-full"></div>
             </div>
           </div>
         </section>
