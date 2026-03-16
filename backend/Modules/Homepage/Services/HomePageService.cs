@@ -41,7 +41,7 @@ namespace backend.Modules.Homepage.Services
                 TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
                 CourseType = "tutoring",
                 Progress = 5,
-                ImageUrl = "",
+                ImageUrl = x.CourseBase?.BannerImageId.ToString() ?? "",
                 UpcomingEvents = [.. upcomingEvents.Where(y => y.TutoringWallId == x.Id).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
             
@@ -53,7 +53,7 @@ namespace backend.Modules.Homepage.Services
                 TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
                 CourseType = "path",
                 Progress = CalculateCourseProgress(x),
-                ImageUrl = "",
+                ImageUrl = x.Course?.BannerImageId.ToString() ?? "",
                 UpcomingEvents = [.. upcomingEvents.Where(y => y.PathCourseId == x.CourseId).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
 
@@ -65,7 +65,7 @@ namespace backend.Modules.Homepage.Services
                 TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
                 CourseType = "tutoring",
                 Progress = 5,
-                ImageUrl = "",
+                ImageUrl = x.CourseBase?.BannerImageId.ToString() ?? "",
                 UpcomingEvents = null
             }).ToList();
 
@@ -77,7 +77,7 @@ namespace backend.Modules.Homepage.Services
                 TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
                 CourseType = "path",
                 Progress = CalculateCourseProgress(x),
-                ImageUrl = "",
+                ImageUrl = x.Course?.BannerImageId.ToString() ?? "",
                 UpcomingEvents = null
             }).ToList();
 

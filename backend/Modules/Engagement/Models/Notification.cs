@@ -10,8 +10,8 @@ namespace backend.Modules.Engagement.Models
         public string? Message { get; set; } = null;
         public NotificationType Type { get; set; }
         public Guid ReferenceId { get; set; }
-        public required string UrlPath { get; set; }
         public bool IsRead { get; set; }
+        public DateTime? ReadAt { get; set; }
 
         public ApplicationUser? User { get; set; }
     }

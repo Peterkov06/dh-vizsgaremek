@@ -2,12 +2,17 @@
 {
     public enum NotificationType
     {
-        Enrollment,
-        Invoice,
+        PendingEnrollment,
+        EnrollmentAcceptance,
+        EnrollmentRefusal,
+        PendingInvoice,
+        PaymentAcceptance,
+        PaymentRefusal,
         Message,
-        Grade,
+        SubmissionGraded,
         WallPost,
-        Submission,
+        PendingSubmission,
+        SubmissionRefusal,
         System,
     }
 }

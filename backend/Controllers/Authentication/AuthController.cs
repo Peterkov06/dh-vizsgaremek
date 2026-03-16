@@ -38,7 +38,7 @@ namespace backend.Controllers.Login
             _context = context;
         }
 
-        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address,string City, string Postal_code,string? Url, DateTime Date_of_birth, string? Nickname, string? Introduction);
+        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address,string City, string Postal_code, DateTime Date_of_birth, string? Nickname, string? Introduction);
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody]RegisterDTO register) {
@@ -51,7 +51,7 @@ namespace backend.Controllers.Login
                 Address = register.Address,
                 City = register.City,
                 PostalCode = register.Postal_code,
-                ProfilePicUrl = register.Url,
+                ProfilePictureId = null,
                 DateOfBirth = DateTime.SpecifyKind(register.Date_of_birth, DateTimeKind.Utc),
             };
 
@@ -209,7 +209,7 @@ namespace backend.Controllers.Login
         }
 
 
-        public record ModifyDTO(string? Password,string? Full_name, string? Address,string? City, string? Postal_code, string? Url,string? Nickname, string? Introduction);
+        public record ModifyDTO(string? Password,string? Full_name, string? Address,string? City, string? Postal_code, string? Nickname, string? Introduction);
 
         [Authorize]
         [HttpPut("account/modify")]
@@ -231,9 +231,6 @@ namespace backend.Controllers.Login
 
             if (!string.IsNullOrEmpty(modify.Postal_code))
                 user.PostalCode = modify.Postal_code;
-
-            if (!string.IsNullOrEmpty(modify.Url))
-                user.ProfilePicUrl = modify.Url;
 
             if (!string.IsNullOrEmpty(modify.Nickname))
                 user.Nickname = modify.Nickname;
@@ -280,7 +277,7 @@ namespace backend.Controllers.Login
             }
             var role = roleList[0];
 
-            return Ok(new { user.Email, role,user.FullName, user.ProfilePicUrl, user.Nickname});
+            return Ok(new { user.Email, role,user.FullName, user.ProfilePictureId, user.Nickname});
         }
 
         [Authorize]
