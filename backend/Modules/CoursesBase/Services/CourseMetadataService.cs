@@ -16,45 +16,46 @@ namespace backend.Modules.CoursesBase.Services
             _db = db;
         }
 
-        public async Task<ServiceResult> CreateDomain(LookUpDTO domain, CancellationToken ct = default)
+        public async Task<ServiceResult<LookUpDTO>> CreateDomainAsync(LookUpDTO domain, CancellationToken ct = default)
         {
-            var exists = await _db.CourseDomains.AnyAsync(x => x.Name == domain.Name);
+            var exists = await _db.CourseDomains.AnyAsync(x => x.Name == domain.Name, ct);
 
             if (exists)
             {
-                return ServiceResult.Failure("Domain already exists");
+                return ServiceResult<LookUpDTO>.Failure("Domain already exists");
             }
 
-            LookUp newDomain = new LookUp() { Name = domain.Name };
+            LookUp newDomain = new () { Name = domain.Name };
             _db.CourseDomains.Add(newDomain);
             await _db.SaveChangesAsync(ct);
-            return ServiceResult.Success();
+            return ServiceResult<LookUpDTO>.Success( new LookUpDTO() { Id = newDomain.Id, Name = newDomain.Name });
         }
 
-        public async Task<ServiceResult> CreateLevel(LookUpDTO level, CancellationToken ct = default)
+        public async Task<ServiceResult<LookUpDTO>> CreateLevelAsync(LookUpDTO level, CancellationToken ct = default)
         {
-            var exists = await _db.CourseLevels.AnyAsync(x => x.Name == level.Name);
+            var exists = await _db.CourseLevels.AnyAsync(x => x.Name == level.Name, ct);
 
             if (exists)
             {
-                return ServiceResult.Failure("Level already exists");
+                return ServiceResult<LookUpDTO>.Failure("Level already exists");
             }
 
-            LookUp newLevel = new LookUp() { Name = level.Name };
+            LookUp newLevel = new () { Name = level.Name };
             _db.CourseLevels.Add(newLevel);
             await _db.SaveChangesAsync(ct);
-            return ServiceResult.Success();
+            return ServiceResult<LookUpDTO>.Success(new LookUpDTO() { Id = newLevel.Id, Name = newLevel.Name });
         }
 
-        public async Task<ServiceResult> CreateMultipleTags(List<LookUpDTO> tags, CancellationToken ct = default)
+        // TODO: This method can be optimized by doing a bulk insert instead of adding each tag individually. Consider using a library like EFCore.BulkExtensions for better performance when inserting multiple records.
+        public async Task<ServiceResult<List<LookUpDTO>>> CreateMultipleTagsAsync(List<LookUpDTO> tags, CancellationToken ct = default)
         {
             var tagNames = tags.Select(x => x.Name).ToList();
 
-            var existingNames = await _db.CourseTags.Where(x => tagNames.Contains(x.Name)).Select(x => x.Name).ToListAsync();
+            var existingNames = await _db.CourseTags.Where(x => tagNames.Contains(x.Name)).Select(x => x.Name).ToListAsync(ct);
 
             if (existingNames.Count > 0)
             {
-                return ServiceResult.Failure($"These tags already exist: {string.Join(", ", existingNames)}");
+                return ServiceResult<List<LookUpDTO>>.Failure($"These tags already exist: {string.Join(", ", existingNames)}");
             }
 
             foreach (var tag in tags)
@@ -63,22 +64,22 @@ namespace backend.Modules.CoursesBase.Services
                 _db.CourseTags.Add(newTag);
             }
             await _db.SaveChangesAsync(ct);
-            return ServiceResult.Success();
+            return ServiceResult<List<LookUpDTO>>.Success([]);
         }
 
-        public async Task<ServiceResult> CreateTag(LookUpDTO tag, CancellationToken ct = default)
+        public async Task<ServiceResult<LookUpDTO>> CreateTagAsync(LookUpDTO tag, CancellationToken ct = default)
         {
-            var exists = await _db.CourseTags.AnyAsync(x => x.Name == tag.Name);
+            var exists = await _db.CourseTags.AnyAsync(x => x.Name == tag.Name, ct);
 
             if (exists)
             {
-                return ServiceResult.Failure("Tag already exists");
+                return ServiceResult<LookUpDTO>.Failure("Tag already exists");
             }
 
-            LookUp newTag = new LookUp() { Name = tag.Name };
+            LookUp newTag = new () { Name = tag.Name };
             _db.CourseTags.Add(newTag);
             await _db.SaveChangesAsync(ct);
-            return ServiceResult.Success();
+            return ServiceResult<LookUpDTO>.Success(new LookUpDTO() { Id = newTag.Id, Name = newTag.Name });
         }
 
         public async Task<ServiceResult> DeleteDomain(Guid id)
@@ -139,21 +140,21 @@ namespace backend.Modules.CoursesBase.Services
             return ServiceResult.Success();
         }
 
-        public async Task<ServiceResult<List<LookUpDTO>>> GetAllDomains()
+        public async Task<ServiceResult<List<LookUpDTO>>> GetAllDomainsAsync(CancellationToken ct = default)
         {
-            var domains = await _db.CourseDomains.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync();
+            var domains = await _db.CourseDomains.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
             return ServiceResult<List<LookUpDTO>>.Success(domains);
         }
 
-        public async Task<ServiceResult<List<LookUpDTO>>> GetAllLevels()
+        public async Task<ServiceResult<List<LookUpDTO>>> GetAllLevelsAsync(CancellationToken ct = default)
         {
-            var levels = await _db.CourseLevels.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync();
+            var levels = await _db.CourseLevels.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
             return ServiceResult<List<LookUpDTO>>.Success(levels);
         }
 
-        public async Task<ServiceResult<List<LookUpDTO>>> GetAllTags()
+        public async Task<ServiceResult<List<LookUpDTO>>> GetAllTagsAsync(CancellationToken ct = default)
         {
-            var tags = await _db.CourseTags.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync();
+            var tags = await _db.CourseTags.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
             return ServiceResult<List<LookUpDTO>>.Success(tags);
         }
     }

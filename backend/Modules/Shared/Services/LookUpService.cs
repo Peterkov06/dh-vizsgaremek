@@ -15,42 +15,42 @@ namespace backend.Modules.Shared.Services
             _db = db;
         }
 
-        public async Task<ServiceResult> AddCurrency(CurrencyDTO currency)
+        public async Task<ServiceResult<CurrencyDTO>> AddCurrencyAsync(CurrencyDTO currency, CancellationToken ct = default)
         {
             var exists = await _db.Currencies.AnyAsync(x => x.CurrencyCode == currency.CurrencyCode);
             if (exists) {
-                return ServiceResult.Failure("Currency already exists");
+                return ServiceResult<CurrencyDTO>.Failure("Currency already exists");
             }
 
-            Currency newCurrency = new Currency() { CurrencyCode = currency.CurrencyCode, CurrencySymbol = currency.CurrencySymbol, Name = currency.Name };
+            Currency newCurrency = new() { CurrencyCode = currency.CurrencyCode, CurrencySymbol = currency.CurrencySymbol, Name = currency.Name };
             _db.Currencies.Add(newCurrency);
-            await _db.SaveChangesAsync();
-            return ServiceResult.Success();
+            await _db.SaveChangesAsync(ct);
+            return ServiceResult<CurrencyDTO>.Success( new CurrencyDTO { Id = newCurrency.Id, Name = newCurrency.Name, CurrencyCode = newCurrency.CurrencyCode, CurrencySymbol = newCurrency.CurrencySymbol });
         }
 
-        public async Task<ServiceResult> AddLanguage(LookUpDTO language)
+        public async Task<ServiceResult<LookUpDTO>> AddLanguageAsync(LookUpDTO language, CancellationToken ct = default)
         {
-            var exists = await _db.Languages.AnyAsync(x => x.Name == language.Name);
+            var exists = await _db.Languages.AnyAsync(x => x.Name == language.Name, ct);
             if (exists)
             {
-                return ServiceResult.Failure("Language already exists");
+                return ServiceResult<LookUpDTO>.Failure("Language already exists");
             }
 
-            LookUp newLanguage = new LookUp() { Name = language.Name };
+            LookUp newLanguage = new () { Name = language.Name };
             _db.Languages.Add(newLanguage);
-            await _db.SaveChangesAsync();
-            return ServiceResult.Success();
+            await _db.SaveChangesAsync(ct);
+            return ServiceResult<LookUpDTO>.Success(new LookUpDTO { Id = newLanguage.Id, Name = newLanguage.Name });
         }
 
-        public async Task<ServiceResult<List<CurrencyDTO>>> GetCurrencies()
+        public async Task<ServiceResult<List<CurrencyDTO>>> GetCurrenciesAsync(CancellationToken ct = default)
         {
-            var currencies = await _db.Currencies.OrderBy(x => x.Name).Select(x => new CurrencyDTO { Name = x.Name, CurrencyCode = x.CurrencyCode, CurrencySymbol = x.CurrencySymbol }).ToListAsync();
+            var currencies = await _db.Currencies.OrderBy(x => x.Name).Select(x => new CurrencyDTO { Name = x.Name, CurrencyCode = x.CurrencyCode, CurrencySymbol = x.CurrencySymbol }).ToListAsync(ct);
             return ServiceResult<List<CurrencyDTO>>.Success(currencies);
         }
 
-        public async Task<ServiceResult<List<LookUpDTO>>> GetLanguages()
+        public async Task<ServiceResult<List<LookUpDTO>>> GetLanguagesAsync(CancellationToken ct = default)
         {
-            var languages = await _db.Languages.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync();
+            var languages = await _db.Languages.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
             return ServiceResult<List<LookUpDTO>>.Success(languages);
         }
     }

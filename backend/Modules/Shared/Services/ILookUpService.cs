@@ -5,10 +5,10 @@ namespace backend.Modules.Shared.Services
 {
     public interface ILookUpService
     {
-        Task<ServiceResult<List<LookUpDTO>>> GetLanguages();
-        Task<ServiceResult<List<CurrencyDTO>>> GetCurrencies();
+        Task<ServiceResult<List<LookUpDTO>>> GetLanguagesAsync(CancellationToken ct);
+        Task<ServiceResult<List<CurrencyDTO>>> GetCurrenciesAsync(CancellationToken ct);
 
-        Task<ServiceResult> AddLanguage(LookUpDTO language);
-        Task<ServiceResult> AddCurrency(CurrencyDTO currency);
+        Task<ServiceResult<LookUpDTO>> AddLanguageAsync(LookUpDTO language, CancellationToken ct);
+        Task<ServiceResult<CurrencyDTO>> AddCurrencyAsync(CurrencyDTO currency, CancellationToken ct);
     }
 }
