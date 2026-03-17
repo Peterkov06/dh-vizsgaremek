@@ -1,0 +1,92 @@
+[
+    {
+        "id": "c01-nextjs-mastery",
+        "bannerImg": "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
+        "avatarImg": "https://i.pravatar.cc/150?u=sarah_js",
+        "courseName": "Next.js 15 Deep Dive: App Router & Server Actions",
+        "teacherName": "Sarah Drasner",
+        "location": "Remote / Zoom",
+        "price": "$129.00"
+    },
+    {
+        "id": "c02-typescript-pro",
+        "bannerImg": "https://images.unsplash.com/photo-1516116216624-53e697fedbea",
+        "avatarImg": "https://i.pravatar.cc/150?u=dan_codes",
+        "courseName": "Advanced TypeScript Patterns for Enterprise",
+        "teacherName": "Dan Abramov",
+        "location": "Berlin, Germany",
+        "price": "€95.00"
+    },
+    {
+        "id": "c03-tailwind-design",
+        "bannerImg": "https://images.unsplash.com/photo-1587620962725-abab7fe55159",
+        "avatarImg": "https://i.pravatar.cc/150?u=adam_tailwind",
+        "courseName": "Mastering Utility-First CSS with Tailwind",
+        "teacherName": "Adam Wathan",
+        "location": "San Francisco, CA",
+        "price": "$49.99"
+    },
+    {
+        "id": "c04-react-native",
+        "bannerImg": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c",
+        "avatarImg": "https://i.pravatar.cc/150?u=mosh_m",
+        "courseName": "Cross-Platform Mobile with Expo",
+        "teacherName": "Mosh Hamedani",
+        "location": "London, UK",
+        "price": "£80.00"
+    },
+    {
+        "id": "c05-python-data",
+        "bannerImg": "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
+        "avatarImg": "https://i.pravatar.cc/150?u=angela_yu",
+        "courseName": "Data Science with Python & Pandas",
+        "teacherName": "Dr. Angela Yu",
+        "location": "Austin, TX",
+        "price": "$150.00"
+    },
+    {
+        "id": "c06-rust-backend",
+        "bannerImg": "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa",
+        "avatarImg": "https://i.pravatar.cc/150?u=jon_gj",
+        "courseName": "High-Performance Backends in Rust",
+        "teacherName": "Jon Gjengset",
+        "location": "Stockholm, SE",
+        "price": "€110.00"
+    },
+    {
+        "id": "c07-figma-ui",
+        "bannerImg": "https://images.unsplash.com/photo-1593720213428-28a5b9e94613",
+        "avatarImg": "https://i.pravatar.cc/150?u=gary_simon",
+        "courseName": "UI/UX Design Systems in Figma",
+        "teacherName": "Gary Simon",
+        "location": "Remote",
+        "price": "$0.00"
+    },
+    {
+        "id": "c08-aws-cloud",
+        "bannerImg": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
+        "avatarImg": "https://i.pravatar.cc/150?u=steph_m",
+        "courseName": "AWS Solutions Architect Bootcamp",
+        "teacherName": "Stephane Maarek",
+        "location": "Seattle, WA",
+        "price": "$299.00"
+    },
+    {
+        "id": "c09-go-microservices",
+        "bannerImg": "https://images.unsplash.com/photo-1593720213428-28a5b9e94613",
+        "avatarImg": "https://i.pravatar.cc/150?u=kent_cd",
+        "courseName": "Building Microservices with Go",
+        "teacherName": "Kent C. Dodds",
+        "location": "Tokyo, JP",
+        "price": "¥15,000"
+    },
+    {
+        "id": "c10-vue-composition",
+        "bannerImg": "https://images.unsplash.com/photo-1593720213428-28a5b9e94613",
+        "avatarImg": "https://i.pravatar.cc/150?u=evan_y",
+        "courseName": "Vue 3 & The Composition API",
+        "teacherName": "Evan You",
+        "location": "Paris, FR",
+        "price": "€65.00"
+    }
+]
