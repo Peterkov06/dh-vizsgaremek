@@ -1,5 +1,5 @@
 ﻿using backend.Models;
-using backend.Shared.Models;
+using backend.Modules.Shared.Models;
 
 namespace backend.Modules.Engagement.Models
 {

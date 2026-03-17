@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace backend.Shared.Models
+namespace backend.Modules.Shared.Models
 {
     public abstract class ModelBase
     {

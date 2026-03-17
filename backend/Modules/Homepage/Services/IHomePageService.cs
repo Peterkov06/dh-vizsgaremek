@@ -1,5 +1,5 @@
 ﻿using backend.Modules.Homepage.DTOs.Student;
-using backend.Shared.Results;
+using backend.Modules.Shared.Results;
 
 namespace backend.Modules.Homepage.Services
 {

@@ -1,8 +1,8 @@
 ﻿using backend.Modules.CoursesBase.Models;
 using backend.Modules.Identity.Models;
 using backend.Modules.Progression.Models;
+using backend.Modules.Shared.Models;
 using backend.Modules.Tutoring.Models;
-using backend.Shared.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Modules.Scheduling.Models

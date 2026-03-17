@@ -1,15 +1,13 @@
-﻿using backend.Shared.Models;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using backend.Modules.Shared.Models;
 
 namespace backend.Modules.CoursesBase.Models
 {
     public class CourseToLanguage
     {
         public Guid CourseId { get; set; }
-        public int LanguageId { get; set; }
+        public Guid LanguageId { get; set; }
 
-        public Language? Language { get; set; }
+        public LookUp? Language { get; set; }
         public CourseBaseModel? Course { get; set; }
     }
 }

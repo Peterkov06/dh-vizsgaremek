@@ -11,7 +11,7 @@ namespace backend.Data.Configurations.Payment
             base.Configure(builder);
             builder.ToTable("token_transactions", x =>
             {
-                x.HasCheckConstraint("CK_TokenTransaction_SingleContext", @"(""WallId"" IS NOT NULL)::int + (""EnrollmentId"" IS NOT NULL)::int) = 1");
+                x.HasCheckConstraint("CK_TokenTransaction_SingleContext", @"((""WallId"" IS NOT NULL)::int + (""EnrollmentId"" IS NOT NULL)::int) = 1");
             });
             builder.Property(x => x.TokenCount).IsRequired();
             builder.Property(x => x.Type).IsRequired().HasConversion<string>().HasMaxLength(50);

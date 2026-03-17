@@ -1,7 +1,7 @@
 ﻿using backend.Models;
 using backend.Modules.Progression.Models;
+using backend.Modules.Shared.Models;
 using backend.Modules.Tutoring.Models;
-using backend.Shared.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Modules.Payment.Models

@@ -4,7 +4,7 @@ using backend.Modules.Homepage.DTOs.Shared;
 using backend.Modules.Homepage.DTOs.Student;
 using backend.Modules.Progression.Models;
 using backend.Modules.Scheduling.Models;
-using backend.Shared.Results;
+using backend.Modules.Shared.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Modules.Homepage.Services

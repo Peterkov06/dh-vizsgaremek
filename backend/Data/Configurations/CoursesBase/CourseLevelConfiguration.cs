@@ -1,12 +1,13 @@
 ﻿using backend.Modules.CoursesBase.Models;
+using backend.Modules.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace backend.Data.Configurations.CoursesBase
 {
-    public class CourseLevelConfiguration : ModelBaseConfiguration<CourseLevel>
+    public class CourseLevelConfiguration : ModelBaseConfiguration<LookUp>
     {
-        public override void Configure(EntityTypeBuilder<CourseLevel> builder)
+        public override void Configure(EntityTypeBuilder<LookUp> builder)
         {
             base.Configure(builder);
             builder.ToTable("course_levels");

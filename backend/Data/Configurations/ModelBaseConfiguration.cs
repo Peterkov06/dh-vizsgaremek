@@ -1,4 +1,4 @@
-﻿using backend.Shared.Models;
+﻿using backend.Modules.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

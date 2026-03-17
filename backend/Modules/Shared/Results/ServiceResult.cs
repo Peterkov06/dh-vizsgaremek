@@ -1,4 +1,4 @@
-﻿namespace backend.Shared.Results
+﻿namespace backend.Modules.Shared.Results
 {
     public class ServiceResult
     {

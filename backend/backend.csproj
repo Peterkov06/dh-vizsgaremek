@@ -46,7 +46,6 @@
     <Folder Include="Modules\Cities\Services\" />
     <Folder Include="Modules\CoursesBase\Controllers\" />
     <Folder Include="Modules\CoursesBase\DTOs\" />
-    <Folder Include="Modules\CoursesBase\Services\" />
     <Folder Include="Modules\Resources\Controllers\" />
     <Folder Include="Modules\Resources\DTOs\" />
     <Folder Include="Modules\Resources\Services\" />

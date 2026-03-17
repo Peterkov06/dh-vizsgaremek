@@ -1,5 +1,5 @@
 ﻿using backend.Modules.CoursesBase.Models;
-using backend.Shared.Models;
+using backend.Modules.Shared.Models;
 
 namespace backend.Modules.Engagement.Models
 {
