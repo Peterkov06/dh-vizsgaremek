@@ -3,7 +3,6 @@ using System;
 using System.Numerics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Data;
@@ -13,15 +12,13 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260312175855_db_context_name_change")]
-    partial class db_context_name_change
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -225,8 +222,8 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ProfilePicUrl")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("ProfilePictureId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
@@ -246,6 +243,8 @@ namespace backend.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("ProfilePictureId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -444,6 +443,9 @@ namespace backend.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("BannerImageId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("CourseDomainId")
                         .HasColumnType("uuid");
 
@@ -464,6 +466,9 @@ namespace backend.Migrations
 
                     b.Property<bool>("FirstConsultationFree")
                         .HasColumnType("boolean");
+
+                    b.Property<Guid?>("IconImageId")
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
@@ -491,9 +496,13 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BannerImageId");
+
                     b.HasIndex("CourseDomainId");
 
                     b.HasIndex("CourseLevelId");
+
+                    b.HasIndex("IconImageId");
 
                     b.HasIndex("PriceCurrencyId");
 
@@ -579,8 +588,8 @@ namespace backend.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("LanguageId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("CourseId", "LanguageId");
 
@@ -782,6 +791,9 @@ namespace backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("RecipientId")
                         .IsRequired()
                         .HasMaxLength(450)
@@ -802,10 +814,6 @@ namespace backend.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UrlPath")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -1038,7 +1046,7 @@ namespace backend.Migrations
 
                     b.ToTable("token_transactions", null, t =>
                         {
-                            t.HasCheckConstraint("CK_TokenTransaction_SingleContext", "(\"WallId\" IS NOT NULL)::int + (\"EnrollmentId\" IS NOT NULL)::int) = 1");
+                            t.HasCheckConstraint("CK_TokenTransaction_SingleContext", "((\"WallId\" IS NOT NULL)::int + (\"EnrollmentId\" IS NOT NULL)::int) = 1");
                         });
                 });
 
@@ -1460,6 +1468,74 @@ namespace backend.Migrations
                         });
                 });
 
+            modelBuilder.Entity("backend.Modules.Shared.Models.Currency", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CurrencySymbol")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Currencies");
+                });
+
+            modelBuilder.Entity("backend.Modules.Shared.Models.Language", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("languages", (string)null);
+                });
+
+            modelBuilder.Entity("backend.Modules.Shared.Models.LookUp", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LookUp");
+                });
+
             modelBuilder.Entity("backend.Modules.Tutoring.Models.TutoringWall", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1541,38 +1617,6 @@ namespace backend.Migrations
                     b.ToTable("tutoring_wall_post_attachments", (string)null);
                 });
 
-            modelBuilder.Entity("backend.Shared.Models.Currency", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Currencies");
-                });
-
-            modelBuilder.Entity("backend.Shared.Models.Language", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Languages");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1622,6 +1666,15 @@ namespace backend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("backend.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("backend.Modules.Resources.Models.PhysicalFile", "ProfilePicture")
+                        .WithMany()
+                        .HasForeignKey("ProfilePictureId");
+
+                    b.Navigation("ProfilePicture");
                 });
 
             modelBuilder.Entity("backend.Models.Chat.ConversationParticipant", b =>
@@ -1705,19 +1758,29 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Modules.CoursesBase.Models.CourseBaseModel", b =>
                 {
-                    b.HasOne("backend.Modules.CoursesBase.Models.CourseDomain", "CourseDomain")
+                    b.HasOne("backend.Modules.Resources.Models.PhysicalFile", "BannerImage")
+                        .WithMany()
+                        .HasForeignKey("BannerImageId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("backend.Modules.Shared.Models.LookUp", "CourseDomain")
                         .WithMany()
                         .HasForeignKey("CourseDomainId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("backend.Modules.CoursesBase.Models.CourseLevel", "CourseLevel")
+                    b.HasOne("backend.Modules.Shared.Models.LookUp", "CourseLevel")
                         .WithMany()
                         .HasForeignKey("CourseLevelId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("backend.Shared.Models.Currency", "Currency")
+                    b.HasOne("backend.Modules.Resources.Models.PhysicalFile", "IconImage")
+                        .WithMany()
+                        .HasForeignKey("IconImageId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("backend.Modules.Shared.Models.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("PriceCurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1729,11 +1792,15 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("BannerImage");
+
                     b.Navigation("CourseDomain");
 
                     b.Navigation("CourseLevel");
 
                     b.Navigation("Currency");
+
+                    b.Navigation("IconImage");
 
                     b.Navigation("Teacher");
                 });
@@ -1746,7 +1813,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Shared.Models.Language", "Language")
+                    b.HasOne("backend.Modules.Shared.Models.LookUp", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -1765,7 +1832,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Modules.CoursesBase.Models.CourseTag", "Tag")
+                    b.HasOne("backend.Modules.Shared.Models.LookUp", "Tag")
                         .WithMany()
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1951,7 +2018,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Modules.Payment.Models.Invoice", b =>
                 {
-                    b.HasOne("backend.Shared.Models.Currency", "Currency")
+                    b.HasOne("backend.Modules.Shared.Models.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)

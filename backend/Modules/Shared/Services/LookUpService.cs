@@ -36,7 +36,7 @@ namespace backend.Modules.Shared.Services
                 return ServiceResult<LookUpDTO>.Failure("Language already exists");
             }
 
-            LookUp newLanguage = new () { Name = language.Name };
+            Language newLanguage = new () { Name = language.Name };
             _db.Languages.Add(newLanguage);
             await _db.SaveChangesAsync(ct);
             return ServiceResult<LookUpDTO>.Success(new LookUpDTO { Id = newLanguage.Id, Name = newLanguage.Name });
@@ -44,7 +44,7 @@ namespace backend.Modules.Shared.Services
 
         public async Task<ServiceResult<List<CurrencyDTO>>> GetCurrenciesAsync(CancellationToken ct = default)
         {
-            var currencies = await _db.Currencies.OrderBy(x => x.Name).Select(x => new CurrencyDTO { Name = x.Name, CurrencyCode = x.CurrencyCode, CurrencySymbol = x.CurrencySymbol }).ToListAsync(ct);
+            var currencies = await _db.Currencies.OrderBy(x => x.Name).Select(x => new CurrencyDTO { Name = x.Name, CurrencyCode = x.CurrencyCode, CurrencySymbol = x.CurrencySymbol, Id = x.Id }).ToListAsync(ct);
             return ServiceResult<List<CurrencyDTO>>.Success(currencies);
         }
 

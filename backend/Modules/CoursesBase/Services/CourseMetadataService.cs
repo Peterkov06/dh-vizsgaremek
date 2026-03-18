@@ -1,9 +1,9 @@
 ﻿using backend.Data;
+using backend.Modules.CoursesBase.Models;
 using backend.Modules.Shared.DTOs;
 using backend.Modules.Shared.Models;
 using backend.Modules.Shared.Results;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace backend.Modules.CoursesBase.Services
 {
@@ -25,7 +25,7 @@ namespace backend.Modules.CoursesBase.Services
                 return ServiceResult<LookUpDTO>.Failure("Domain already exists");
             }
 
-            LookUp newDomain = new () { Name = domain.Name };
+            CourseDomain newDomain = new () { Name = domain.Name };
             _db.CourseDomains.Add(newDomain);
             await _db.SaveChangesAsync(ct);
             return ServiceResult<LookUpDTO>.Success( new LookUpDTO() { Id = newDomain.Id, Name = newDomain.Name });
@@ -40,7 +40,7 @@ namespace backend.Modules.CoursesBase.Services
                 return ServiceResult<LookUpDTO>.Failure("Level already exists");
             }
 
-            LookUp newLevel = new () { Name = level.Name };
+            CourseLevel newLevel = new () { Name = level.Name };
             _db.CourseLevels.Add(newLevel);
             await _db.SaveChangesAsync(ct);
             return ServiceResult<LookUpDTO>.Success(new LookUpDTO() { Id = newLevel.Id, Name = newLevel.Name });
@@ -60,7 +60,7 @@ namespace backend.Modules.CoursesBase.Services
 
             foreach (var tag in tags)
             {
-                LookUp newTag = new LookUp() { Name = tag.Name };
+                CourseTag newTag = new () { Name = tag.Name };
                 _db.CourseTags.Add(newTag);
             }
             await _db.SaveChangesAsync(ct);
@@ -76,7 +76,7 @@ namespace backend.Modules.CoursesBase.Services
                 return ServiceResult<LookUpDTO>.Failure("Tag already exists");
             }
 
-            LookUp newTag = new () { Name = tag.Name };
+            CourseTag newTag = new () { Name = tag.Name };
             _db.CourseTags.Add(newTag);
             await _db.SaveChangesAsync(ct);
             return ServiceResult<LookUpDTO>.Success(new LookUpDTO() { Id = newTag.Id, Name = newTag.Name });

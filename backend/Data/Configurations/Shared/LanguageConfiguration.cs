@@ -1,15 +1,16 @@
 ﻿using backend.Modules.CoursesBase.Models;
+using backend.Modules.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace backend.Data.Configurations.CoursesBase
+namespace backend.Data.Configurations.Shared
 {
-    public class CourseDomainConfiguration : ModelBaseConfiguration<CourseDomain>
+    public class LanguageConfiguration: ModelBaseConfiguration<Language>
     {
-        public override void Configure(EntityTypeBuilder<CourseDomain> builder)
+        public override void Configure(EntityTypeBuilder<Language> builder)
         {
             base.Configure(builder);
-            builder.ToTable("course_domains");
+            builder.ToTable("languages");
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
             builder.HasIndex(x => x.Name).IsUnique();
         }

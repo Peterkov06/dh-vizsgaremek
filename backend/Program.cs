@@ -1,6 +1,8 @@
 
 using backend.Data;
 using backend.Models;
+using backend.Modules.CoursesBase;
+using backend.Modules.Shared;
 using backend.Services.JwtServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace backend
 {
@@ -101,6 +102,8 @@ namespace backend
             builder.Services.AddAuthorization();
 
             builder.Services.AddScoped<JwtGenerator>();
+            builder.Services.AddSharedServices();
+            builder.Services.AddCoursesServiceCollection();
 
             var app = builder.Build();
 

@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace backend.Data.Configurations.CoursesBase
 {
-    public class CourseLevelConfiguration : ModelBaseConfiguration<LookUp>
+    public class CourseLevelConfiguration : ModelBaseConfiguration<CourseLevel>
     {
-        public override void Configure(EntityTypeBuilder<LookUp> builder)
+        public override void Configure(EntityTypeBuilder<CourseLevel> builder)
         {
             base.Configure(builder);
             builder.ToTable("course_levels");

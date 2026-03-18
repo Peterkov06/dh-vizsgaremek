@@ -37,11 +37,11 @@ namespace backend.Data
         public DbSet<Qualification> Qualifications { get; set; }
         public DbSet<CourseBaseModel> CourseBases { get; set; }
         public DbSet<Currency> Currencies { get; set; }
-        public DbSet<LookUp> CourseLevels { get; set; }
-        public DbSet<LookUp> CourseDomains { get; set; }
-        public DbSet<LookUp> CourseTags { get; set; }
+        public DbSet<CourseLevel> CourseLevels { get; set; }
+        public DbSet<CourseDomain> CourseDomains { get; set; }
+        public DbSet<CourseTag> CourseTags { get; set; }
         public DbSet<CourseToTag> CoursesToTags { get; set; }
-        public DbSet<LookUp> Languages { get; set; }
+        public DbSet<Language> Languages { get; set; }
         public DbSet<CourseToLanguage> CoursesToLanguages { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Unit> LearningPathUnits { get; set; }

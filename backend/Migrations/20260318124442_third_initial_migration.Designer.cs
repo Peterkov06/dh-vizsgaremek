@@ -3,6 +3,7 @@ using System;
 using System.Numerics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Data;
@@ -12,13 +13,15 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260318124442_third_initial_migration")]
+    partial class third_initial_migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -588,8 +591,8 @@ namespace backend.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("LanguageId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("CourseId", "LanguageId");
 
@@ -1046,7 +1049,7 @@ namespace backend.Migrations
 
                     b.ToTable("token_transactions", null, t =>
                         {
-                            t.HasCheckConstraint("CK_TokenTransaction_SingleContext", "(\"WallId\" IS NOT NULL)::int + (\"EnrollmentId\" IS NOT NULL)::int) = 1");
+                            t.HasCheckConstraint("CK_TokenTransaction_SingleContext", "((\"WallId\" IS NOT NULL)::int + (\"EnrollmentId\" IS NOT NULL)::int) = 1");
                         });
                 });
 
@@ -1468,6 +1471,74 @@ namespace backend.Migrations
                         });
                 });
 
+            modelBuilder.Entity("backend.Modules.Shared.Models.Currency", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CurrencySymbol")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Currencies");
+                });
+
+            modelBuilder.Entity("backend.Modules.Shared.Models.Language", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("languages", (string)null);
+                });
+
+            modelBuilder.Entity("backend.Modules.Shared.Models.LookUp", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LookUp");
+                });
+
             modelBuilder.Entity("backend.Modules.Tutoring.Models.TutoringWall", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1547,46 +1618,6 @@ namespace backend.Migrations
                     b.HasIndex("ContentId");
 
                     b.ToTable("tutoring_wall_post_attachments", (string)null);
-                });
-
-            modelBuilder.Entity("backend.Shared.Models.Currency", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("CurrencyCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CurrencySymbol")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Currencies");
-                });
-
-            modelBuilder.Entity("backend.Shared.Models.Language", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1735,13 +1766,13 @@ namespace backend.Migrations
                         .HasForeignKey("BannerImageId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("backend.Modules.CoursesBase.Models.CourseDomain", "CourseDomain")
+                    b.HasOne("backend.Modules.Shared.Models.LookUp", "CourseDomain")
                         .WithMany()
                         .HasForeignKey("CourseDomainId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("backend.Modules.CoursesBase.Models.CourseLevel", "CourseLevel")
+                    b.HasOne("backend.Modules.Shared.Models.LookUp", "CourseLevel")
                         .WithMany()
                         .HasForeignKey("CourseLevelId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1752,7 +1783,7 @@ namespace backend.Migrations
                         .HasForeignKey("IconImageId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("backend.Shared.Models.Currency", "Currency")
+                    b.HasOne("backend.Modules.Shared.Models.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("PriceCurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1785,7 +1816,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Shared.Models.Language", "Language")
+                    b.HasOne("backend.Modules.Shared.Models.LookUp", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -1804,7 +1835,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Modules.CoursesBase.Models.CourseTag", "Tag")
+                    b.HasOne("backend.Modules.Shared.Models.LookUp", "Tag")
                         .WithMany()
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1990,7 +2021,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Modules.Payment.Models.Invoice", b =>
                 {
-                    b.HasOne("backend.Shared.Models.Currency", "Currency")
+                    b.HasOne("backend.Modules.Shared.Models.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)
