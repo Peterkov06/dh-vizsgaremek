@@ -39,6 +39,8 @@ namespace backend.Modules.CoursesBase.Services
             _db.CoursesToTags.AddRange(tags);
             _db.CoursesToLanguages.AddRange(languages);
 
+            newCourse.Id = course.Id;
+
             await _db.SaveChangesAsync(ct);
             return ServiceResult<CourseBaseCreationDTO>.Success(newCourse);
         }

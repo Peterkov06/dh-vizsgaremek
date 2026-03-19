@@ -7,7 +7,7 @@ namespace backend.Modules.CoursesBase.Models
         public Guid TagId { get; set; }
         public Guid CourseId { get; set; }
 
-        public LookUp? Tag { get; set; }
+        public CourseTag? Tag { get; set; }
         public CourseBaseModel? Course { get; set; }
     }
 }

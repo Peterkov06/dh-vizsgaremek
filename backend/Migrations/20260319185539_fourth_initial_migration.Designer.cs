@@ -13,8 +13,8 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260318124442_third_initial_migration")]
-    partial class third_initial_migration
+    [Migration("20260319185539_fourth_initial_migration")]
+    partial class fourth_initial_migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1518,27 +1518,6 @@ namespace backend.Migrations
                     b.ToTable("languages", (string)null);
                 });
 
-            modelBuilder.Entity("backend.Modules.Shared.Models.LookUp", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LookUp");
-                });
-
             modelBuilder.Entity("backend.Modules.Tutoring.Models.TutoringWall", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1766,13 +1745,13 @@ namespace backend.Migrations
                         .HasForeignKey("BannerImageId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("backend.Modules.Shared.Models.LookUp", "CourseDomain")
+                    b.HasOne("backend.Modules.CoursesBase.Models.CourseDomain", "CourseDomain")
                         .WithMany()
                         .HasForeignKey("CourseDomainId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("backend.Modules.Shared.Models.LookUp", "CourseLevel")
+                    b.HasOne("backend.Modules.CoursesBase.Models.CourseLevel", "CourseLevel")
                         .WithMany()
                         .HasForeignKey("CourseLevelId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1816,7 +1795,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Modules.Shared.Models.LookUp", "Language")
+                    b.HasOne("backend.Modules.Shared.Models.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -1835,7 +1814,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Modules.Shared.Models.LookUp", "Tag")
+                    b.HasOne("backend.Modules.CoursesBase.Models.CourseTag", "Tag")
                         .WithMany()
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)

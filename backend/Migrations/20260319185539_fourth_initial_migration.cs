@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class third_initial_migration : Migration
+    public partial class fourth_initial_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -160,20 +160,6 @@ namespace backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_languages", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LookUp",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LookUp", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -687,15 +673,15 @@ namespace backend.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_courses_base_LookUp_CourseDomainId",
+                        name: "FK_courses_base_course_domains_CourseDomainId",
                         column: x => x.CourseDomainId,
-                        principalTable: "LookUp",
+                        principalTable: "course_domains",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_courses_base_LookUp_CourseLevelId",
+                        name: "FK_courses_base_course_levels_CourseLevelId",
                         column: x => x.CourseLevelId,
-                        principalTable: "LookUp",
+                        principalTable: "course_levels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -829,17 +815,17 @@ namespace backend.Migrations
                 {
                     table.PrimaryKey("PK_courses_to_languages", x => new { x.CourseId, x.LanguageId });
                     table.ForeignKey(
-                        name: "FK_courses_to_languages_LookUp_LanguageId",
-                        column: x => x.LanguageId,
-                        principalTable: "LookUp",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
                         name: "FK_courses_to_languages_courses_base_CourseId",
                         column: x => x.CourseId,
                         principalTable: "courses_base",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_courses_to_languages_languages_LanguageId",
+                        column: x => x.LanguageId,
+                        principalTable: "languages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -853,9 +839,9 @@ namespace backend.Migrations
                 {
                     table.PrimaryKey("PK_courses_to_tags", x => new { x.CourseId, x.TagId });
                     table.ForeignKey(
-                        name: "FK_courses_to_tags_LookUp_TagId",
+                        name: "FK_courses_to_tags_course_tags_TagId",
                         column: x => x.TagId,
-                        principalTable: "LookUp",
+                        principalTable: "course_tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -1714,16 +1700,7 @@ namespace backend.Migrations
                 name: "ConversationParticipant");
 
             migrationBuilder.DropTable(
-                name: "course_domains");
-
-            migrationBuilder.DropTable(
                 name: "course_feedbacks");
-
-            migrationBuilder.DropTable(
-                name: "course_levels");
-
-            migrationBuilder.DropTable(
-                name: "course_tags");
 
             migrationBuilder.DropTable(
                 name: "courses_to_languages");
@@ -1736,9 +1713,6 @@ namespace backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "hand_in_feedbacks");
-
-            migrationBuilder.DropTable(
-                name: "languages");
 
             migrationBuilder.DropTable(
                 name: "lessons_to_contents");
@@ -1778,6 +1752,12 @@ namespace backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "community_threads");
+
+            migrationBuilder.DropTable(
+                name: "languages");
+
+            migrationBuilder.DropTable(
+                name: "course_tags");
 
             migrationBuilder.DropTable(
                 name: "lessons");
@@ -1834,7 +1814,10 @@ namespace backend.Migrations
                 name: "Currencies");
 
             migrationBuilder.DropTable(
-                name: "LookUp");
+                name: "course_domains");
+
+            migrationBuilder.DropTable(
+                name: "course_levels");
 
             migrationBuilder.DropTable(
                 name: "teachers");

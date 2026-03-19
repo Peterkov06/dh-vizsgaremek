@@ -1,6 +1,7 @@
 ﻿using backend.Data;
 using backend.Models;
 using backend.Models.Cities;
+using backend.Modules.Identity.Models;
 using backend.Services.JwtServices;
 using backend.Services.SendEmail;
 using MailKit.Net.Smtp;
@@ -60,7 +61,7 @@ namespace backend.Controllers.Login
             }
             if (!string.IsNullOrEmpty(register.Introduction))
             {
-                newUser.Nickname = register.Introduction;
+                newUser.Introduction = register.Introduction;
             }
 
             var result = await _userManager.CreateAsync(newUser, register.Password);
@@ -71,6 +72,18 @@ namespace backend.Controllers.Login
 
             if (!string.IsNullOrEmpty(register.Role)) {
                 await _userManager.AddToRoleAsync(newUser, register.Role);
+                switch (register.Role)
+                {
+                    case "Teacher":
+                        _context.Teachers.Add(new Teacher {TeacherId = newUser.Id });
+                        break;
+                    case "Student":
+                        _context.Students.Add(new Student { UserId = newUser.Id });
+                        break;
+                    default:
+                        break;
+                }
+                await _context.SaveChangesAsync();
             }
 
             return Created();

@@ -22,8 +22,8 @@ namespace backend.Modules.CoursesBase.Models
         public Guid? BannerImageId { get; set; }
 
         public Teacher? Teacher { get; set; }
-        public LookUp? CourseDomain { get; set; }
-        public LookUp? CourseLevel { get; set; }
+        public CourseDomain? CourseDomain { get; set; }
+        public CourseLevel? CourseLevel { get; set; }
         public Currency? Currency { get; set; }
         public PhysicalFile? IconImage { get; set; }
         public PhysicalFile? BannerImage { get; set; }

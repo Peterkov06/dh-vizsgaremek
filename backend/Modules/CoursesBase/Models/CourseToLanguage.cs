@@ -7,7 +7,7 @@ namespace backend.Modules.CoursesBase.Models
         public Guid CourseId { get; set; }
         public Guid LanguageId { get; set; }
 
-        public LookUp? Language { get; set; }
+        public Language? Language { get; set; }
         public CourseBaseModel? Course { get; set; }
     }
 }
