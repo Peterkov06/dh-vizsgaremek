@@ -6,9 +6,6 @@ const StudentCourse = (props: { user: User }) => {
   return (
     <main>
       <h1 className="text-4xl font-bold text-primary">Kurzusaim</h1>
-      <Link href={"course/search"}>
-        <Button>Keresés</Button>
-      </Link>
     </main>
   );
 };

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import fetchWithAuth from "@/lib/api-client";
 import { User } from "@/lib/auth";
-import { Book, Cog, House, LogOut, MessageCircle } from "lucide-react";
+import { Book, Cog, House, LogOut, MessageCircle, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -24,6 +24,7 @@ const navItems = [
   { title: "Főoldal", url: "/home", icon: House },
   { title: "Kurzusaim", url: "/home/course", icon: Book },
   { title: "Üzenetek", url: "/home/message", icon: MessageCircle },
+  { title: "Kereső", url: "/home/search", icon: Search },
 ];
 
 const StudentSideBar = (props: { user: User }) => {
