@@ -44,7 +44,6 @@
     <Folder Include="Modules\Cities\DTOs\" />
     <Folder Include="Modules\Cities\Models\" />
     <Folder Include="Modules\Cities\Services\" />
-    <Folder Include="Modules\CoursesBase\DTOs\" />
     <Folder Include="Modules\Resources\Controllers\" />
     <Folder Include="Modules\Resources\DTOs\" />
     <Folder Include="Modules\Resources\Services\" />
@@ -57,7 +56,6 @@
     <Folder Include="Modules\Progression\DTOs\" />
     <Folder Include="Modules\Progression\Services\" />
     <Folder Include="Modules\Engagement\Controllers\" />
-    <Folder Include="Modules\Engagement\DTOs\" />
     <Folder Include="Modules\Payment\Controllers\" />
     <Folder Include="Modules\Payment\DTOs\" />
     <Folder Include="Modules\Payment\Services\" />

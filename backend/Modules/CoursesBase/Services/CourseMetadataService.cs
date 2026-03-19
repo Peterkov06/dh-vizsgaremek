@@ -157,5 +157,11 @@ namespace backend.Modules.CoursesBase.Services
             var tags = await _db.CourseTags.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
             return ServiceResult<List<LookUpDTO>>.Success(tags);
         }
+
+        public async Task<ServiceResult<List<LookUpDTO>>> GetCourseTags(Guid courseId, CancellationToken ct)
+        {
+            var tags = await _db.CoursesToTags.Where(x => x.CourseId == courseId).Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name}).ToListAsync(ct);
+            return ServiceResult<List<LookUpDTO>>.Success(tags);
+        }
     }
 }
