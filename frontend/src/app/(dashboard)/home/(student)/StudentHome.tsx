@@ -126,7 +126,7 @@ const StudentHome = (props: { user: User }) => {
           </div>
         </section>
       </section>
-      <section className="bg-[#E5E3E3] relative flex flex-col gap-2 items-center py-3 px-20 h-fit rounded-2xl shadow-2xl">
+      <section className="bg-light-bg-gray relative flex flex-col gap-2 items-center py-3 px-20 h-fit rounded-2xl shadow-2xl">
         <h1 className="absolute bg-background px-2 lg:px-5 py-1 lg:py-2 text-md lg:text-xl right-3 lg:right-10 top-[-20] font-bold rounded-2xl">
           Népszerű kurzusok
         </h1>

@@ -214,7 +214,7 @@ const CourseSearchPage = () => {
                     return (
                       <div
                         key={s + i}
-                        className={`flex gap-2 items-center px-3 ${isChecked && "bg-light-bg-gray"}`}
+                        className={`flex gap-2 cursor-pointer items-center px-3 ${isChecked && "bg-light-bg-gray"}`}
                         onClick={() => {
                           toggleSubject(s);
                         }}
@@ -245,7 +245,7 @@ const CourseSearchPage = () => {
                     return (
                       <div
                         key={l + i}
-                        className={`flex gap-2 items-center px-3 ${isChecked && "bg-light-bg-gray"}`}
+                        className={`flex gap-2 cursor-pointer items-center px-3 ${isChecked && "bg-light-bg-gray"}`}
                         onClick={() => {
                           toggleLanguage(l);
                         }}

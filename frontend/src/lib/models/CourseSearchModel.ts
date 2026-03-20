@@ -20,4 +20,5 @@ export interface SingleCourseType {
   teacherIntroduction: string;
   courseDescription: string;
   tags: string[];
+  languages: string[];
 }
