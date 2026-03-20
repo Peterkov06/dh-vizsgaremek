@@ -3,6 +3,7 @@ using backend.Data;
 using backend.Models;
 using backend.Modules.CoursesBase;
 using backend.Modules.Shared;
+using backend.Modules.Tutoring;
 using backend.Services.JwtServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -104,6 +105,7 @@ namespace backend
             builder.Services.AddScoped<JwtGenerator>();
             builder.Services.AddSharedServices();
             builder.Services.AddCoursesServiceCollection();
+            builder.Services.AddTutoringServices();
 
             var app = builder.Build();
 

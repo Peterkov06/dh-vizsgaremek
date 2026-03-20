@@ -3,6 +3,7 @@ using backend.Modules.CoursesBase.DTOs;
 using backend.Modules.CoursesBase.Models;
 using backend.Modules.Engagement.DTOs;
 using backend.Modules.Engagement.Models;
+using backend.Modules.Identity.Models;
 using backend.Modules.Shared.DTOs;
 using backend.Modules.Shared.Results;
 using Microsoft.EntityFrameworkCore;
@@ -52,19 +53,25 @@ namespace backend.Modules.CoursesBase.Services
             return ServiceResult<List<CourseBaseDTO>>.Success(courses);
         }
 
-        public Task<ServiceResult<List<CourseBaseDTO>>> GetTeacherCourses(CancellationToken ct)
+        public async Task<ServiceResult<List<CourseBaseDTO>>> GetTeacherCourses(string TeacherId, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var courses = _db.CourseBases.Where(x => x.TeacherId == TeacherId).Include(x => x.CourseToTags).ThenInclude(x => x.Tag).Include(x => x.Teacher).Include(x => x.Currency).Include(x => x.CourseToLanguages).ThenInclude(x => x.Language).Include(x => x.Teacher).ThenInclude(x => x.User).Include(x => x.Reviews).ThenInclude(x => x.Reviewer).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Select(ToDto).ToList();
+
+            return ServiceResult<List<CourseBaseDTO>>.Success(courses);
         }
 
-        public Task<ServiceResult<List<CourseBaseDTO>>> GetCoursesPage(int perPage, int pageNum, CancellationToken ct)
+        public async Task<ServiceResult<List<CourseBaseDTO>>> GetCoursesPage(int perPage, int pageNum, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var courses = _db.CourseBases.Include(x => x.CourseToTags).ThenInclude(x => x.Tag).Include(x => x.Teacher).Include(x => x.Currency).Include(x => x.CourseToLanguages).ThenInclude(x => x.Language).Include(x => x.Teacher).ThenInclude(x => x.User).Include(x => x.Reviews).ThenInclude(x => x.Reviewer).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Take(pageNum * perPage).TakeLast(perPage).Select(ToDto).ToList();
+
+            return ServiceResult<List<CourseBaseDTO>>.Success(courses);
         }
 
-        public Task<ServiceResult<List<CourseBaseDTO>>> GetTeacherCoursesPage(int perPage, int pageNum, CancellationToken ct)
+        public async Task<ServiceResult<List<CourseBaseDTO>>> GetTeacherCoursesPage(string teacherId, int perPage, int pageNum, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var courses = _db.CourseBases.Where(x => x.TeacherId == teacherId).Include(x => x.CourseToTags).ThenInclude(x => x.Tag).Include(x => x.Teacher).Include(x => x.Currency).Include(x => x.CourseToLanguages).ThenInclude(x => x.Language).Include(x => x.Teacher).ThenInclude(x => x.User).Include(x => x.Reviews).ThenInclude(x => x.Reviewer).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Take(pageNum * perPage).TakeLast(perPage).Select(ToDto).ToList();
+
+            return ServiceResult<List<CourseBaseDTO>>.Success(courses);
         }
 
         public Task<ServiceResult<CourseBaseCreationDTO>> UpdateCourseBaseAsync(CancellationToken ct)

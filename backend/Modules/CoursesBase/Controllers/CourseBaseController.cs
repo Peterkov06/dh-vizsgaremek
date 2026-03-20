@@ -15,14 +15,14 @@ namespace backend.Modules.CoursesBase.Controllers
             _courseBaseService = courseBaseService;
         }
 
-        [HttpPost("/add")]
+        [HttpPost("add")]
         public async Task<IActionResult> CreateCourse(CourseBaseCreationDTO newCourse, CancellationToken ct)
         {
             var res = await _courseBaseService.CreateCourseBaseAsync(newCourse, ct);
             return res.Succeded ? CreatedAtAction(nameof(GetAllCourses),res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
-        [HttpGet("/all")]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAllCourses(CancellationToken ct)
         {
             var res = await _courseBaseService.GetAllCourses(ct);
