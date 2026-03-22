@@ -33,7 +33,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Modules\Homepage\DTOs\Teacher\" />
     <Folder Include="Modules\Identity\Controllers\" />
     <Folder Include="Modules\Identity\DTOs\" />
     <Folder Include="Modules\Identity\Services\" />
@@ -47,8 +46,6 @@
     <Folder Include="Modules\Resources\Controllers\" />
     <Folder Include="Modules\Resources\DTOs\" />
     <Folder Include="Modules\Resources\Services\" />
-    <Folder Include="Modules\Homepage\Controllers\" />
-    <Folder Include="Modules\Homepage\Models\" />
     <Folder Include="Modules\LearningPathTemplate\Controllers\" />
     <Folder Include="Modules\LearningPathTemplate\DTOs\" />
     <Folder Include="Modules\LearningPathTemplate\Services\" />

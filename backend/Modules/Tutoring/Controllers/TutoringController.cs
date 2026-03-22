@@ -6,13 +6,15 @@ namespace backend.Modules.Tutoring.Controllers
 {
     [ApiController]
     [Route("api/tutoring")]
-    public class TutoringController:ControllerBase
+    public class TutoringController : ControllerBase
     {
         private readonly ITutoringManagementService _tutoringManagementService;
+        private readonly ITutoringWallService _wallService;
 
-        public TutoringController(ITutoringManagementService tutoringManagementService)
+        public TutoringController(ITutoringManagementService tutoringManagementService, ITutoringWallService wallService)
         {
             _tutoringManagementService = tutoringManagementService;
+            _wallService = wallService;
         }
 
         [HttpPost("enrollment")]
@@ -36,5 +38,19 @@ namespace backend.Modules.Tutoring.Controllers
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
+        [HttpGet("wall/posts")]
+        public async Task<IActionResult> GetWallPosts([FromQuery] Guid wallId, CancellationToken ct)
+        {
+            var res = await _wallService.GetWallPosts(wallId, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+
+        }
+
+        [HttpPost("wall/post")]
+        public async Task<IActionResult> PostOnWall([FromBody] NewWallPostDTO postDTO, [FromQuery] string posterId, CancellationToken ct)
+        {
+            var res = await _wallService.PostOnWall(postDTO, posterId, ct);
+            return res.Succeded ? CreatedAtAction("PostOnWall", res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
     }
 }
