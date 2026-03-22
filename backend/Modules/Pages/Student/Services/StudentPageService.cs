@@ -7,32 +7,26 @@ using backend.Modules.Shared.Results;
 using backend.Modules.Shared.Models;
 using backend.Modules.Pages.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
+using backend.Modules.Pages.Student.DTOs.Student;
 
 namespace backend.Modules.Pages.Student.Services
 {
-    public class HomePageService : IHomePageService
+    public class StudentPageService : IStudentPageService
     {
         private readonly AppDbContext _db;
-        public HomePageService(AppDbContext db)
+        public StudentPageService(AppDbContext db)
         {
             _db = db;
         }
 
-        public async Task<ServiceResult<StudentHomePageDTO>> GetStudentHomePageAsync(string userId)
+        public async Task<ServiceResult<StudentHomePageDTO>> GetStudentHomePageAsync(string userId, CancellationToken ct)
         {
-            var attendedTutoringCoursesTask = _db.TutoringWalls.Where(x => x.StudentId == userId).Include(x => x.CourseBase).ThenInclude(x => x.Teacher).ToListAsync();
-            var attendedPathCoursesTask = _db.PathEnrollments.Where(x => x.AttendantId == userId).Include(x => x.Course).ThenInclude(x => x.Teacher).ToListAsync();
-            var upcomingEventsTask = _db.Events.Where(x => (x.Enrollment != null && x.Enrollment.AttendantId == userId) || (x.TutoringWall != null && x.TutoringWall.StudentId == userId)).Where(x => x.StartTime > DateTime.UtcNow).OrderBy(x => x.StartTime).Take(5).Include(x => x.PathCourse).Include(x => x.TutoringWall).ThenInclude(x => x.CourseBase).ToListAsync();
-            var notificationTask = _db.Notifications.Where(x => x.RecipientId == userId && !x.IsRead).OrderByDescending(x => x.CreatedAt).Take(1).ToListAsync();
-            var popularCoursesTask = _db.CourseBases.Where(x => x.Status == CourseStatus.Active).Include(x => x.Teacher).ThenInclude(x => x.User).Include(x => x.Currency).OrderByDescending(x => x.CreatedAt).Take(10).ToListAsync();
+            var walls = await _db.TutoringWalls.Where(x => x.StudentId == userId).Include(x => x.CourseBase).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ToListAsync(ct);
+            var paths = await _db.PathEnrollments.Where(x => x.AttendantId == userId).Include(x => x.Course).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ToListAsync(ct);
+            var upcomingEvents = await _db.Events.Where(x => (x.Enrollment != null && x.Enrollment.AttendantId == userId) || (x.TutoringWall != null && x.TutoringWall.StudentId == userId)).Where(x => x.StartTime > DateTime.UtcNow).OrderBy(x => x.StartTime).Take(5).Include(x => x.PathCourse).Include(x => x.TutoringWall).ThenInclude(x => x.CourseBase).ToListAsync();
+            var notifications = await _db.Notifications.Where(x => x.RecipientId == userId && !x.IsRead).OrderByDescending(x => x.CreatedAt).Take(1).ToListAsync(ct);
+            var popularCourses = await _db.CourseBases.Where(x => x.Status == CourseStatus.Active).Include(x => x.Teacher).ThenInclude(x => x.User).Include(x => x.Currency).OrderByDescending(x => x.CreatedAt).Take(10).ToListAsync(ct);
 
-            await Task.WhenAll(attendedPathCoursesTask, attendedTutoringCoursesTask, upcomingEventsTask, notificationTask, popularCoursesTask);
-
-            var walls = await attendedTutoringCoursesTask;
-            var paths = await attendedPathCoursesTask;
-            var upcomingEvents = await upcomingEventsTask;
-            var notifications = await notificationTask;
-            var popularCourses = await popularCoursesTask;
 
             var activeWalls = walls.Where(x => x.Status == EnrollmentStatus.Active).Select(x => new AttendedCourseDTO
             {
@@ -58,7 +52,7 @@ namespace backend.Modules.Pages.Student.Services
                 UpcomingEvents = [.. upcomingEvents.Where(y => y.PathCourseId == x.CourseId).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
 
-            var inactiveWalls = walls.Where(x => x.Status != EnrollmentStatus.Inactive).Select(x => new AttendedCourseDTO
+            var inactiveWalls = walls.Where(x => x.Status != EnrollmentStatus.Active).Select(x => new AttendedCourseDTO
             {
                 CourseId = x.CourseId,
                 InstanceId = x.Id,
@@ -70,7 +64,7 @@ namespace backend.Modules.Pages.Student.Services
                 UpcomingEvents = null
             }).ToList();
 
-            var inactivePaths= paths.Where(x => x.Status != EnrollmentStatus.Inactive).Select(x => new AttendedCourseDTO
+            var inactivePaths= paths.Where(x => x.Status != EnrollmentStatus.Active).Select(x => new AttendedCourseDTO
             {
                 CourseId = x.CourseId,
                 InstanceId = x.Id,
@@ -127,6 +121,36 @@ namespace backend.Modules.Pages.Student.Services
                 }).ToList()
             });
         }
+
+        public async Task<ServiceResult<List<StudentMyCourseDTO>>> GetStudentMyCoursesPageAsync(string userId, CancellationToken ct)
+        {
+            var attendedTutoringCourses = await _db.TutoringWalls.Where(x => x.StudentId == userId).Include(x => x.CourseBase).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ToListAsync(ct);
+            var attendedPathCourses = await _db.PathEnrollments.Where(x => x.AttendantId == userId).Include(x => x.Course).ThenInclude(x => x.Teacher).ToListAsync(ct);
+
+
+            var courses = attendedTutoringCourses.Select(x => new StudentMyCourseDTO
+            {
+                CourseBaseId = x.CourseBase?.Id ?? Guid.Empty,
+                InstanceId = x.Id,
+                TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
+                TeacherId = x.CourseBase?.TeacherId ?? "",
+                TeacherProfilePictureURL = "",
+                CourseBannerURL = x.CourseBase?.BannerImageId.ToString() ?? "",
+                Status = x.Status
+            }).ToList();
+            courses.AddRange(attendedPathCourses.Select(x => new StudentMyCourseDTO
+            {
+                CourseBaseId = x.Course?.Id ?? Guid.Empty,
+                InstanceId = x.Id,
+                TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
+                TeacherId = x.Course?.TeacherId ?? "",
+                TeacherProfilePictureURL = "",
+                CourseBannerURL = x.Course?.BannerImageId.ToString() ?? "",
+                Status = x.Status
+            }));
+            return ServiceResult<List<StudentMyCourseDTO>>.Success(courses);
+        }
+
         private static CourseCardUprocmingEventsDTO MapToCourseCardUpcomingEventDTO(Event e)
         {
             return new CourseCardUprocmingEventsDTO
