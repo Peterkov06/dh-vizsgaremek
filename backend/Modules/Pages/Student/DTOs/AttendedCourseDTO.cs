@@ -1,4 +1,4 @@
-﻿namespace backend.Modules.Pages.Student.DTOs.Student
+﻿namespace backend.Modules.Pages.Student.DTOs
 {
     public class AttendedCourseDTO
     {
