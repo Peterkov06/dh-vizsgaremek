@@ -1,4 +1,4 @@
-﻿namespace backend.Modules.Homepage.DTOs.Shared
+﻿namespace backend.Modules.Pages.Shared.DTOs
 {
     public class UpcomingEventDTO
     {

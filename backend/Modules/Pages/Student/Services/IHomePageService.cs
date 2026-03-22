@@ -1,7 +1,7 @@
-﻿using backend.Modules.Homepage.DTOs.Student;
+﻿using backend.Modules.Pages.Student.DTOs;
 using backend.Modules.Shared.Results;
 
-namespace backend.Modules.Homepage.Services
+namespace backend.Modules.Pages.Student.Services
 {
     public interface IHomePageService
     {

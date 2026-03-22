@@ -1,6 +1,6 @@
-﻿using backend.Modules.Homepage.DTOs.Shared;
+﻿using backend.Modules.Pages.Shared.DTOs;
 
-namespace backend.Modules.Homepage.DTOs.Student
+namespace backend.Modules.Pages.Student.DTOs
 {
     public class StudentHomePageDTO
     {

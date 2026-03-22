@@ -1,13 +1,14 @@
 ﻿using backend.Data;
 using backend.Modules.CoursesBase.Models;
-using backend.Modules.Homepage.DTOs.Shared;
-using backend.Modules.Homepage.DTOs.Student;
+using backend.Modules.Pages.Student.DTOs;
 using backend.Modules.Progression.Models;
 using backend.Modules.Scheduling.Models;
 using backend.Modules.Shared.Results;
+using backend.Modules.Shared.Models;
+using backend.Modules.Pages.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Modules.Homepage.Services
+namespace backend.Modules.Pages.Student.Services
 {
     public class HomePageService : IHomePageService
     {
@@ -33,7 +34,7 @@ namespace backend.Modules.Homepage.Services
             var notifications = await notificationTask;
             var popularCourses = await popularCoursesTask;
 
-            var activeWalls = walls.Where(x => x.Status == Shared.Models.EnrollmentStatus.Active).Select(x => new AttendedCourseDTO
+            var activeWalls = walls.Where(x => x.Status == EnrollmentStatus.Active).Select(x => new AttendedCourseDTO
             {
                 CourseId = x.CourseId,
                 InstanceId = x.Id,
@@ -45,7 +46,7 @@ namespace backend.Modules.Homepage.Services
                 UpcomingEvents = [.. upcomingEvents.Where(y => y.TutoringWallId == x.Id).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
             
-            var activePaths= paths.Where(x => x.Status == Shared.Models.EnrollmentStatus.Active).Select(x => new AttendedCourseDTO
+            var activePaths= paths.Where(x => x.Status == EnrollmentStatus.Active).Select(x => new AttendedCourseDTO
             {
                 CourseId = x.CourseId,
                 InstanceId = x.Id,
@@ -57,7 +58,7 @@ namespace backend.Modules.Homepage.Services
                 UpcomingEvents = [.. upcomingEvents.Where(y => y.PathCourseId == x.CourseId).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
 
-            var inactiveWalls = walls.Where(x => x.Status != Shared.Models.EnrollmentStatus.Inactive).Select(x => new AttendedCourseDTO
+            var inactiveWalls = walls.Where(x => x.Status != EnrollmentStatus.Inactive).Select(x => new AttendedCourseDTO
             {
                 CourseId = x.CourseId,
                 InstanceId = x.Id,
@@ -69,7 +70,7 @@ namespace backend.Modules.Homepage.Services
                 UpcomingEvents = null
             }).ToList();
 
-            var inactivePaths= paths.Where(x => x.Status != Shared.Models.EnrollmentStatus.Inactive).Select(x => new AttendedCourseDTO
+            var inactivePaths= paths.Where(x => x.Status != EnrollmentStatus.Inactive).Select(x => new AttendedCourseDTO
             {
                 CourseId = x.CourseId,
                 InstanceId = x.Id,

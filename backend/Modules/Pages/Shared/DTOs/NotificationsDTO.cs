@@ -1,4 +1,4 @@
-﻿namespace backend.Modules.Homepage.DTOs.Shared
+﻿namespace backend.Modules.Pages.Student.DTOs.Shared
 {
     public class NotificationsDTO
     {
