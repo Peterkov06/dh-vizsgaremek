@@ -1,5 +1,4 @@
 ﻿using backend.Modules.Pages.Shared.DTOs;
-using backend.Modules.Pages.Student.DTOs.Shared;
 
 namespace backend.Modules.Pages.Student.DTOs
 {

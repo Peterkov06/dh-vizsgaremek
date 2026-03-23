@@ -52,5 +52,12 @@ namespace backend.Modules.Tutoring.Controllers
             var res = await _wallService.PostOnWall(postDTO, posterId, ct);
             return res.Succeded ? CreatedAtAction("PostOnWall", res.Data) : StatusCode(res.StatusCode, res.Error);
         }
+
+        [HttpPost("wall/post/comment")]
+        public async Task<IActionResult> CommentOnWall(PostCommentCreationDTO commentCreationDTO, [FromQuery] string senderId, CancellationToken ct)
+        {
+            var res = await _wallService.CommentOnPost(commentCreationDTO, senderId, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
     }
 }

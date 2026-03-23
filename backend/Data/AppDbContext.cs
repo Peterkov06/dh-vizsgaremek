@@ -50,6 +50,7 @@ namespace backend.Data
         public DbSet<TutoringWall> TutoringWalls { get; set; }
         public DbSet<TutoringWallPost> TutoringWallPosts { get; set; }
         public DbSet<WallPostAttachment> WallPostAttachments { get; set; }
+        public DbSet<WallPostComment> WallPostComments { get; set; }
         public DbSet<PathEnrollment> PathEnrollments { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<TokenTransaction> TokenTransactions { get; set; }

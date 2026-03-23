@@ -7,7 +7,6 @@ using backend.Modules.Shared.Results;
 using backend.Modules.Shared.Models;
 using backend.Modules.Pages.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
-using backend.Modules.Pages.Student.DTOs.Student;
 
 namespace backend.Modules.Pages.Student.Services
 {
