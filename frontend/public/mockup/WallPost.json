@@ -1,0 +1,66 @@
+{
+    "id": "post-99",
+    "author": {
+        "id": "user-001",
+        "name": "Arany János József",
+        "avatarUrl": "https://i.pravatar.cc/150?u=arany"
+    },
+    "content": "Sziasztok! Feltöltöttem a múlt heti deriválási feladatok megoldásait. Kérlek, nézzétek át a dolgozat előtt!",
+    "attachments": [
+        {
+            "id": "att-1",
+            "label": "derivalas_megoldasok.pdf",
+            "url": "https://example.com/files/derivalas.pdf",
+            "type": "pdf"
+        },
+        {
+            "id": "att-2",
+            "label": "Gyakorló feladatsor",
+            "url": "https://kahoot.it/challenge/math",
+            "type": "link"
+        }
+    ],
+    "comments": [
+        {
+            "id": "comm-1",
+            "author": {
+                "id": "user-002",
+                "name": "Kovács Béla",
+                "avatarUrl": "https://i.pravatar.cc/150?u=bela"
+            },
+            "content": "A 4. feladatnál a végeredmény biztosan pozitív?",
+            "createdAt": "2024-03-20T10:30:00Z"
+        },
+        {
+            "id": "comm-11",
+            "author": {
+                "id": "user-002",
+                "name": "Kovács Béla",
+                "avatarUrl": "https://i.pravatar.cc/150?u=bela"
+            },
+            "content": "A 4. feladatnál a végeredmény biztosan pozitív?",
+            "createdAt": "2024-03-20T10:30:00Z"
+        },
+        {
+            "id": "comm-341",
+            "author": {
+                "id": "user-002",
+                "name": "Kovács Béla",
+                "avatarUrl": "https://i.pravatar.cc/150?u=bela"
+            },
+            "content": "A 4. feladatnál a végeredménydf vbhbfcvhjbdfjhvjhbsdb lknsdlévcmlédsxvmkjdfvbhjb n biztosan pozitív?",
+            "createdAt": "2024-03-20T10:30:00Z"
+        },
+        {
+            "id": "comm-1fhjn",
+            "author": {
+                "id": "user-002",
+                "name": "Kovács Béla",
+                "avatarUrl": "https://i.pravatar.cc/150?u=bela"
+            },
+            "content": "A 4. feladatnál a végedfmnbvjgdbjhdfgbhnnhjnm redmény biztosan pozitív?",
+            "createdAt": "2024-03-20T10:30:00Z"
+        }
+    ],
+    "createdAt": "2024-03-20T09:00:00Z"
+}

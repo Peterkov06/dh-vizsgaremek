@@ -30,12 +30,12 @@ const CourseWall = () => {
         </div>
       </section>
       <section className="flex mt-10 gap-7">
-        <section className="flex flex-col gap-5">
+        <section className="flex flex-1  flex-col gap-5">
           {page?.posts.map((p) => (
             <WallPost post={p} key={p.id}></WallPost>
           ))}
         </section>
-        <section className="bg-linear-to-br sticky top-2 from-primary to-secondary rounded-2xl flex flex-col flex-1 px-3 py-10    gap-5 h-fit">
+        <section className="bg-linear-to-br sticky top-2 from-primary w-[30em] to-secondary rounded-2xl flex flex-col px-3 py-10    gap-5 h-fit">
           <div className="flex flex-col">
             <h1 className="text-2xl text-primary-foreground">
               Közelgő beadandók
