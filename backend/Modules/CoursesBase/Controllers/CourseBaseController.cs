@@ -6,7 +6,7 @@ namespace backend.Modules.CoursesBase.Controllers
 {
     [ApiController]
     [Route("api/courses")]
-    public class CourseBaseController: ControllerBase
+    public class CourseBaseController : ControllerBase
     {
         private readonly ICourseBaseService _courseBaseService;
 
@@ -19,7 +19,7 @@ namespace backend.Modules.CoursesBase.Controllers
         public async Task<IActionResult> CreateCourse(CourseBaseCreationDTO newCourse, CancellationToken ct)
         {
             var res = await _courseBaseService.CreateCourseBaseAsync(newCourse, ct);
-            return res.Succeded ? CreatedAtAction(nameof(GetAllCourses),res.Data) : StatusCode(res.StatusCode, res.Error);
+            return res.Succeded ? CreatedAtAction(nameof(GetAllCourses), res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
         [HttpGet("all")]
@@ -29,5 +29,12 @@ namespace backend.Modules.CoursesBase.Controllers
             return Ok(res.Data);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCoursesPage([FromQuery] CourseFiltersDTO filters, CancellationToken ct)
+        {
+            var res = await _courseBaseService.GetCoursesPage(filters, ct);
+            return Ok(res.Data);
+
+        }
     }
 }

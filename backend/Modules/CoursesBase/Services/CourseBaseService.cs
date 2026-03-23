@@ -60,34 +60,34 @@ namespace backend.Modules.CoursesBase.Services
             return ServiceResult<List<CourseBaseDTO>>.Success(courses);
         }
 
-        public async Task<ServiceResult<List<CourseBaseDTO>>> GetCoursesPage(CourseFiltersDTO filtersDTO, CancellationToken ct)
+        public async Task<ServiceResult<CourseBaseListResultDTO>> GetCoursesPage(CourseFiltersDTO filtersDTO, CancellationToken ct)
         {
             var query = _db.CourseBases.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(filtersDTO.Keyword))
             {
                 var keyword = filtersDTO.Keyword.ToLower();
-                query = query.Where(x => x.CourseName.Contains(keyword, StringComparison.CurrentCultureIgnoreCase));
+                query = query.Where(x => x.CourseName.ToLower().Contains(keyword));
             }
 
             if (filtersDTO.Domains is { Count: > 0 }) 
             {
-                query = query.Where(x => filtersDTO.Domains.Contains(x.CourseDomainId));
+                query = query.Where(x => filtersDTO.Domains.Contains(x.CourseDomain.Name));
             }
 
             if (filtersDTO.Levels is { Count: > 0 }) 
             {
-                query = query.Where(x => filtersDTO.Levels.Contains(x.CourseLevelId));
+                query = query.Where(x => filtersDTO.Levels.Contains(x.CourseLevel.Name));
             }   
 
             if (filtersDTO.Tags is { Count: > 0 }) 
             {
-                query = query.Where(x => x.CourseToTags.Any(x => filtersDTO.Tags.Contains(x.TagId)));
+                query = query.Where(x => x.CourseToTags.Any(x => filtersDTO.Tags.Contains(x.Tag.Name)));
             }
 
             if (filtersDTO.Languages is { Count: > 0 }) 
             {
-                query = query.Where(x => x.CourseToLanguages.Any(x => filtersDTO.Languages.Contains(x.LanguageId)));
+                query = query.Where(x => x.CourseToLanguages.Any(x => filtersDTO.Languages.Contains(x.Language.Name)));
             }
 
             if (filtersDTO.MinPrice.HasValue)
@@ -98,6 +98,11 @@ namespace backend.Modules.CoursesBase.Services
             if (filtersDTO.MaxPrice.HasValue)
             {
                 query = query.Where(x => x.Price <= filtersDTO.MaxPrice);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filtersDTO.TeacherId))
+            {
+                query = query.Where(x => x.TeacherId == filtersDTO.TeacherId);
             }
 
             query = filtersDTO.OrderBy switch
@@ -125,14 +130,16 @@ namespace backend.Modules.CoursesBase.Services
                 .Include(x => x.Reviews)
                 .ToListAsync(ct);
 
-            return ServiceResult<List<CourseBaseDTO>>.Success(courses);
-        }
+            var coursesResponse = new CourseBaseListResultDTO
+            {
+                Courses = courses.Select(ToDto).ToList(),
+                CoursesPerPage = filtersDTO.CoursesPerPage,
+                PageNum = filtersDTO.PageNum,
+                TotalCourses = totalCount,
+                TotalPages = Convert.ToInt32(Math.Ceiling((double)totalCount / filtersDTO.CoursesPerPage))
+            };
 
-        public async Task<ServiceResult<List<CourseBaseDTO>>> GetTeacherCoursesPage(string teacherId, int perPage, int pageNum, CancellationToken ct)
-        {
-            var courses = _db.CourseBases.Where(x => x.TeacherId == teacherId).Include(x => x.CourseToTags).ThenInclude(x => x.Tag).Include(x => x.Teacher).Include(x => x.Currency).Include(x => x.CourseToLanguages).ThenInclude(x => x.Language).Include(x => x.Teacher).ThenInclude(x => x.User).Include(x => x.Reviews).ThenInclude(x => x.Reviewer).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Take(pageNum * perPage).TakeLast(perPage).Select(ToDto).ToList();
-
-            return ServiceResult<List<CourseBaseDTO>>.Success(courses);
+            return ServiceResult<CourseBaseListResultDTO>.Success(coursesResponse);
         }
 
         public Task<ServiceResult<CourseBaseCreationDTO>> UpdateCourseBaseAsync(CancellationToken ct)
