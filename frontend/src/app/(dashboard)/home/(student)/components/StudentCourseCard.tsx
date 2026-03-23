@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { StudentsCourse } from "@/lib/models/StudentCourseModel";
@@ -7,8 +9,11 @@ import {
   ClockFading,
   User,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const StudentCourseCard = (props: { data: StudentsCourse }) => {
+  const router = useRouter();
+
   return (
     <div className="flex hover:scale-105 transition-all duration-300 cursor-pointer will-change-transform">
       <div className="relative">
@@ -32,7 +37,13 @@ const StudentCourseCard = (props: { data: StudentsCourse }) => {
             {props.data.teacherName}
           </p>
         </div>
-        <Button disabled={props.data.isPedding} className="text-2xl h-12">
+        <Button
+          disabled={props.data.isPedding}
+          className="text-2xl h-12"
+          onClick={() => {
+            router.push(`course/wall?id=${props.data.id}`);
+          }}
+        >
           {props.data.isPedding && (
             <ClockFading className="size-8"></ClockFading>
           )}

@@ -15,6 +15,7 @@ import {
   UserStar,
   Wallet,
 } from "lucide-react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -52,17 +53,21 @@ const CourseOverView = () => {
           <div className="absolute rounded-xl inset-0 bg-linear-to-b from-20% from-transparent to-light-bg-gray p-1" />
           <div className="absolute bottom-5 left-3 flex items-end justify-between gap-5 w-full pr-5">
             <div className="flex gap-2 items-end">
-              <Avatar className="size-40 border-2 border-light-bg-gray">
-                <AvatarImage src={course.avatarImg}></AvatarImage>
-              </Avatar>
+              <Link href={`teacher?id=${id}`}>
+                <Avatar className="size-40 border-2 border-light-bg-gray">
+                  <AvatarImage src={course.avatarImg}></AvatarImage>
+                </Avatar>
+              </Link>
               <div className="">
                 <h1 className="font-bold text-2xl text-primary max-w-[17em]">
                   {course.courseName}
                 </h1>
-                <h2 className="flex gap-1 items-center text-xl">
-                  <User></User>
-                  {course.teacherName}
-                </h2>
+                <Link href={`teacher?id=${id}`}>
+                  <h2 className="flex gap-1 items-center text-xl">
+                    <User></User>
+                    {course.teacherName}
+                  </h2>
+                </Link>
               </div>
             </div>
             <Button className="h-14 bg-linear-to-tr from-primary to-secondary">

@@ -1,0 +1,155 @@
+{
+    "id": "course-101",
+    "title": "Emelt Szintű Matematika",
+    "teacher": {
+        "id": "user-001",
+        "name": "Arany János József",
+        "avatarUrl": "https://i.pravatar.cc/150?u=arany"
+    },
+    "posts": [
+        {
+            "id": "post-99",
+            "author": {
+                "id": "user-001",
+                "name": "Arany János József",
+                "avatarUrl": "https://i.pravatar.cc/150?u=arany"
+            },
+            "content": "Sziasztok! Feltöltöttem a múlt heti deriválási feladatok megoldásait. Kérlek, nézzétek át a dolgozat előtt!",
+            "attachments": [
+                {
+                    "id": "att-1",
+                    "label": "derivalas_megoldasok.pdf",
+                    "url": "https://example.com/files/derivalas.pdf",
+                    "type": "pdf"
+                },
+                {
+                    "id": "att-2",
+                    "label": "Gyakorló feladatsor",
+                    "url": "https://kahoot.it/challenge/math",
+                    "type": "link"
+                }
+            ],
+            "comments": [
+                {
+                    "id": "comm-1",
+                    "author": {
+                        "id": "user-002",
+                        "name": "Kovács Béla",
+                        "avatarUrl": "https://i.pravatar.cc/150?u=bela"
+                    },
+                    "content": "A 4. feladatnál a végeredmény biztosan pozitív?",
+                    "createdAt": "2024-03-20T10:30:00Z"
+                }
+            ],
+            "createdAt": "2024-03-20T09:00:00Z"
+        },
+        {
+            "id": "post-999",
+            "author": {
+                "id": "user-001",
+                "name": "Arany János József Jr.",
+                "avatarUrl": "https://i.pravatar.cc/150?u=arany"
+            },
+            "content": "Sziasztok! Lórum ipse burd mindig bordogat valamilyen javító szakszit: kaplogást, vasoront, zsinatot, akármit. A szítés villa lamia mentáján már készen is nyörítött. Ekkor szalálkodták el, hogy az első tabánás vígságán szorús cseletűrökre részkeskedt paris helyett pejkát ömpörödnek. Modást hasítottak, s egy parán akolás selyegetett. Az intő küzdő és a paris farénára robor galád 1-én ródított huzadal. A tözés bókásony kord csízése az intő gerekvég lagája volt. A fornyartát vermerész kölgyintést bakarbány csavos 10-én esés kótampán relyhelyzet feklés és esés zsomtagnás pános szulaklás mines aszta könnyezte fel. A dinár tölcsép a szelen dinár tölcsép lánka letlenés briumán kozta meg a tatatos harkos szívizt. Feltöltöttem a múlt heti deriválási feladatok megoldásait. Kérlek, nézzétek át a dolgozat előtt!",
+            "attachments": [
+                {
+                    "id": "att-12",
+                    "label": "derivalas_megoldasok.pdf",
+                    "url": "https://example.com/files/derivalas.pdf",
+                    "type": "pdf"
+                },
+                {
+                    "id": "att-24",
+                    "label": "Gyakorló feladatsor",
+                    "url": "https://kahoot.it/challenge/math",
+                    "type": "link"
+                }
+            ],
+            "comments": [
+                {
+                    "id": "comm-1f",
+                    "author": {
+                        "id": "user-002",
+                        "name": "Kovács Béla",
+                        "avatarUrl": "https://i.pravatar.cc/150?u=bela"
+                    },
+                    "content": "A 4. feladatnál a végeredmény biztosan pozitív?",
+                    "createdAt": "2024-03-20T10:30:00Z"
+                }
+            ],
+            "createdAt": "2024-03-20T09:00:00Z"
+        },
+        {
+            "id": "post-9999",
+            "author": {
+                "id": "user-0a01",
+                "name": "Arany János József Jr.",
+                "avatarUrl": "https://i.pravatar.cc/150?u=arany"
+            },
+            "content": "Sziasztok! Lórum ipse burd mindig bordogat valamilyen javító szakszit: kaplogást, vasoront, zsinatot, akármit. A szítés villa lamia mentáján már készen is nyörítött. Ekkor szalálkodták el, hogy az első tabánás vígságán szorús cseletűrökre részkeskedt paris helyett pejkát ömpörödnek. Modást hasítottak, s egy parán akolás selyegetett. Az intő küzdő és a paris farénára robor galád 1-én ródított huzadal. A tözés bókásony kord csízése az intő gerekvég lagája volt. A fornyartát vermerész kölgyintést bakarbány csavos 10-én esés kótampán relyhelyzet feklés és esés zsomtagnás pános szulaklás mines aszta könnyezte fel. A dinár tölcsép a szelen dinár tölcsép lánka letlenés briumán kozta meg a tatatos harkos szívizt. Feltöltöttem a múlt heti deriválási feladatok megoldásait. Kérlek, nézzétek át a dolgozat előtt!",
+            "attachments": [
+                {
+                    "id": "att-912",
+                    "label": "derivalas_megoldasok.pdf",
+                    "url": "https://example.com/files/derivalas.pdf",
+                    "type": "pdf"
+                },
+                {
+                    "id": "att-294",
+                    "label": "Gyakorló feladatsor",
+                    "url": "https://kahoot.it/challenge/math",
+                    "type": "link"
+                }
+            ],
+            "comments": [
+                {
+                    "id": "comm-1f",
+                    "author": {
+                        "id": "user-002",
+                        "name": "Kovács Béla",
+                        "avatarUrl": "https://i.pravatar.cc/150?u=bela"
+                    },
+                    "content": "A 4. feladatnál a végeredmény biztosan pozitív?",
+                    "createdAt": "2024-03-20T10:30:00Z"
+                }
+            ],
+            "createdAt": "2024-03-20T09:00:00Z"
+        }
+    ],
+    "sidebar": {
+        "upcoming": [
+            {
+                "id": "dead-1",
+                "title": "Trigonometria Beadandó",
+                "time": "23:59",
+                "date": "11.25",
+                "kind": "deadline"
+            },
+            {
+                "id": "dead-2",
+                "title": "Év végi projektmunka",
+                "time": "12:00",
+                "date": "12.10",
+                "kind": "deadline"
+            }
+        ],
+        "nextLessons": [
+            {
+                "id": "less-1",
+                "title": "Matematika Előadás",
+                "time": "08:00",
+                "date": "11.21",
+                "kind": "lesson",
+                "teacher": "Szakács Máté"
+            },
+            {
+                "id": "less-2",
+                "title": "Konzultáció",
+                "time": "15:30",
+                "date": "11.22",
+                "kind": "lesson",
+                "teacher": "Arany János József"
+            }
+        ]
+    }
+}
