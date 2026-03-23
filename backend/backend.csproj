@@ -9,9 +9,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Modules\Community\**" />
+    <Compile Remove="Modules\Pages\Student\DTOs\Student\**" />
     <Content Remove="Modules\Community\**" />
-    <EmbeddedResource Remove="Modules\Community\**" /> 
-    <None Remove="Modules\Community\**" />
+    <Content Remove="Modules\Pages\Student\DTOs\Student\**" />
+    <EmbeddedResource Remove="Modules\Community\**" />
+    <EmbeddedResource Remove="Modules\Pages\Student\DTOs\Student\**" /> 
+    <None Remove="Modules\Community\**" /> 
+    <None Remove="Modules\Pages\Student\DTOs\Student\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.15.1" />
@@ -37,7 +41,6 @@
     <Folder Include="Modules\Identity\DTOs\" />
     <Folder Include="Modules\Identity\Services\" />
     <Folder Include="Modules\Pages\Student\Controllers\" />
-    <Folder Include="Modules\Pages\Student\DTOs\Student\" />
     <Folder Include="Modules\Pages\Teacher\" />
     <Folder Include="Modules\Scheduling\Controllers\" />
     <Folder Include="Modules\Scheduling\DTOs\" />

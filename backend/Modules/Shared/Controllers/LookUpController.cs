@@ -16,14 +16,14 @@ namespace backend.Modules.Shared.Controllers
             _lookUpService = lookUpService;
         }
 
-        [HttpPost("add/currencies")]
+        [HttpPost("currencies/add")]
         public async Task<IActionResult> AddCurrency([FromBody] CurrencyDTO currencyDTO, CancellationToken ct)
         {
             var res = await _lookUpService.AddCurrencyAsync(currencyDTO, ct);
             return res.Succeded ? CreatedAtAction(nameof(GetCurrencies), res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
-        [HttpPost("add/languages")]
+        [HttpPost("languages/add")]
         public async Task<IActionResult> AddLanguage([FromBody] LookUpDTO lookUpDTO, CancellationToken ct)
         {
             var res = await _lookUpService.AddLanguageAsync(lookUpDTO, ct);
