@@ -1,7 +1,12 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { StudentsCourse } from "@/lib/models/StudentCourseModel";
-import { ArrowRightFromLine, ArrowRightIcon, User } from "lucide-react";
+import {
+  ArrowRightFromLine,
+  ArrowRightIcon,
+  ClockFading,
+  User,
+} from "lucide-react";
 
 const StudentCourseCard = (props: { data: StudentsCourse }) => {
   return (
@@ -28,6 +33,9 @@ const StudentCourseCard = (props: { data: StudentsCourse }) => {
           </p>
         </div>
         <Button disabled={props.data.isPedding} className="text-2xl h-12">
+          {props.data.isPedding && (
+            <ClockFading className="size-8"></ClockFading>
+          )}
           {props.data.isPedding ? "Függőben..." : "Aktív"}
           {!props.data.isPedding && (
             <ArrowRightFromLine className="size-8"></ArrowRightFromLine>

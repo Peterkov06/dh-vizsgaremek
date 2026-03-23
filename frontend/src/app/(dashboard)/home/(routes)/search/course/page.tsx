@@ -49,7 +49,7 @@ const CourseOverView = () => {
             alt="Kurzus borító"
             className="w-[55em] h-[30em] rounded-2xl"
           />
-          <div className="absolute rounded-2xl inset-0 bg-linear-to-b from-20% from-transparent to-light-bg-gray p-1" />
+          <div className="absolute rounded-xl inset-0 bg-linear-to-b from-20% from-transparent to-light-bg-gray p-1" />
           <div className="absolute bottom-5 left-3 flex items-end justify-between gap-5 w-full pr-5">
             <div className="flex gap-2 items-end">
               <Avatar className="size-40 border-2 border-light-bg-gray">
