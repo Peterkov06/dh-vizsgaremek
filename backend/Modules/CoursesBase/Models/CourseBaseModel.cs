@@ -17,7 +17,7 @@ namespace backend.Modules.CoursesBase.Models
         public decimal Price { get; set; }
         public required bool FirstConsultationFree { get; set; }
         public Guid PriceCurrencyId { get; set; }
-        public CourseStatus Status { get; set; }
+        public required CourseStatus Status { get; set; }
         public Guid? IconImageId { get; set; }
         public Guid? BannerImageId { get; set; }
 

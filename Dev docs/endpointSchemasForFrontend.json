@@ -387,5 +387,179 @@
       "darkMode": false,
       "linkedToGoogleCalendar": false
     }
-  }
+  },
+  "coursesExplorer":
+  {
+  "domains": [
+    {
+      "id": "29d845f3-9529-411d-aa4a-d2d0ca5bcb13",
+      "name": "Matematika"
+    }
+  ],
+  "tags": [
+    {
+      "id": "d34f1c4e-bc61-41ed-8dec-0e34369df8a2",
+      "name": "Elmélet"
+    },
+    {
+      "id": "b4913e85-4fc7-4c9f-b0e4-a9a83012e275",
+      "name": "Házi feladat"
+    },
+    {
+      "id": "ddbc20a6-8e83-4764-a65c-7255ca749720",
+      "name": "Letölthető anyagok"
+    }
+  ],
+  "languages": [
+    {
+      "id": "3c4e8c34-2982-42c5-af8f-c94cfd3d7db7",
+      "name": "Magyar"
+    }
+  ],
+  "levels": [
+    {
+      "id": "b49d1bdc-cca6-4f60-a231-9ac6e3c865c5",
+      "name": "Kezdő"
+    }
+  ],
+  "courses": {
+    "courses": [
+      {
+        "id": "d4e341fb-faeb-42ea-8593-7824b67341cc",
+        "teacherId": "8203014b-0b11-4c0e-9bc1-779ec7e53d3f",
+        "teacherName": "Mizsei János",
+        "teacherImage": "",
+        "teacherLocation": "Nagykereki",
+        "courseName": "Fizika - kezdőknek",
+        "description": "Lala",
+        "type": "Tutoring",
+        "courseDomainId": "29d845f3-9529-411d-aa4a-d2d0ca5bcb13",
+        "courseLevelId": "b49d1bdc-cca6-4f60-a231-9ac6e3c865c5",
+        "price": 6000,
+        "firstConsultationFree": true,
+        "currency": {
+          "id": "019d0778-533d-73fe-a9ee-f106d5a40cad",
+          "name": "Forint",
+          "currencyCode": "HUF",
+          "currencySymbol": "Ft"
+        },
+        "status": "Active",
+        "iconImageId": null,
+        "bannerImageId": null,
+        "tags": [
+          {
+            "id": "b4913e85-4fc7-4c9f-b0e4-a9a83012e275",
+            "name": "Házi feladat"
+          }
+        ],
+        "languages": [
+          {
+            "id": "3c4e8c34-2982-42c5-af8f-c94cfd3d7db7",
+            "name": "Magyar"
+          }
+        ],
+        "reviews": []
+      },
+      {
+        "id": "7f1fc5d0-f259-4576-bf2b-ff9703c6790a",
+        "teacherId": "8203014b-0b11-4c0e-9bc1-779ec7e53d3f",
+        "teacherName": "Mizsei János",
+        "teacherImage": "",
+        "teacherLocation": "Nagykereki",
+        "courseName": "Matek - kezdőknek",
+        "description": "Lala",
+        "type": "LearningPath",
+        "courseDomainId": "29d845f3-9529-411d-aa4a-d2d0ca5bcb13",
+        "courseLevelId": "b49d1bdc-cca6-4f60-a231-9ac6e3c865c5",
+        "price": 8000,
+        "firstConsultationFree": true,
+        "currency": {
+          "id": "019d0778-533d-73fe-a9ee-f106d5a40cad",
+          "name": "Forint",
+          "currencyCode": "HUF",
+          "currencySymbol": "Ft"
+        },
+        "status": "Draft",
+        "iconImageId": null,
+        "bannerImageId": null,
+        "tags": [
+          {
+            "id": "b4913e85-4fc7-4c9f-b0e4-a9a83012e275",
+            "name": "Házi feladat"
+          },
+          {
+            "id": "d34f1c4e-bc61-41ed-8dec-0e34369df8a2",
+            "name": "Elmélet"
+          },
+          {
+            "id": "ddbc20a6-8e83-4764-a65c-7255ca749720",
+            "name": "Letölthető anyagok"
+          }
+        ],
+        "languages": [
+          {
+            "id": "3c4e8c34-2982-42c5-af8f-c94cfd3d7db7",
+            "name": "Magyar"
+          }
+        ],
+        "reviews": []
+      },
+      {
+        "id": "7581992d-d97e-4787-aef8-f13651ed479b",
+        "teacherId": "8203014b-0b11-4c0e-9bc1-779ec7e53d3f",
+        "teacherName": "Mizsei János",
+        "teacherImage": "",
+        "teacherLocation": "Nagykereki",
+        "courseName": "Angol - Kezőknek",
+        "description": ",ofqkpkoüwqőf",
+        "type": "Tutoring",
+        "courseDomainId": "29d845f3-9529-411d-aa4a-d2d0ca5bcb13",
+        "courseLevelId": "b49d1bdc-cca6-4f60-a231-9ac6e3c865c5",
+        "price": 1,
+        "firstConsultationFree": false,
+        "currency": {
+          "id": "019d0778-533d-73fe-a9ee-f106d5a40cad",
+          "name": "Forint",
+          "currencyCode": "HUF",
+          "currencySymbol": "Ft"
+        },
+        "status": "Active",
+        "iconImageId": null,
+        "bannerImageId": null,
+        "tags": [
+          {
+            "id": "ddbc20a6-8e83-4764-a65c-7255ca749720",
+            "name": "Letölthető anyagok"
+          }
+        ],
+        "languages": [
+          {
+            "id": "3c4e8c34-2982-42c5-af8f-c94cfd3d7db7",
+            "name": "Magyar"
+          }
+        ],
+        "reviews": []
+      }
+    ],
+    "totalCourses": 3,
+    "totalPages": 1,
+    "pageNum": 1,
+    "coursesPerPage": 12
+  },
+  "minPrice": 1,
+  "maxPrice": 8000
+  },
+  "studentMyCourses":
+    [
+      {
+        "courseBaseId": "7f1fc5d0-f259-4576-bf2b-ff9703c6790a",
+        "instanceId": "30206571-0262-4487-af02-ff507983b3d7",
+        "teacherName": "Mizsei János",
+        "teacherId": "8203014b-0b11-4c0e-9bc1-779ec7e53d3f",
+        "teacherProfilePictureURL": "",
+        "courseBannerURL": "",
+        "status": "Active"
+      }
+    ]
+  
 }

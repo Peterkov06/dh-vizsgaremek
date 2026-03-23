@@ -7,6 +7,7 @@ using backend.Modules.Identity.Models;
 using backend.Modules.Shared.DTOs;
 using backend.Modules.Shared.Results;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 
 namespace backend.Modules.CoursesBase.Services
 {
