@@ -45,7 +45,7 @@ const WallPost = () => {
           </h2>
         </div>
         <hr className="border-2 rounded-2xl" />
-        <div className="overflow-hidden h-[30em]">
+        <div className="overflow-hidden max-h-[30em]">
           <p className="text-xl overflow-auto h-full">{post?.content}</p>
         </div>
         <hr className="border-2 rounded-2xl" />

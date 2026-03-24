@@ -21,7 +21,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { SearchCourseType } from "@/lib/models/CourseSearchModel";
+import {
+  Course,
+  CourseFilterResponse,
+  CoursesPage,
+  SearchCourseType,
+} from "@/lib/models/CourseSearchModel";
 import {
   ArrowUpDown,
   Book,
@@ -34,71 +39,58 @@ import {
   SlidersHorizontalIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Controller } from "react-hook-form";
 import SearchCourseCard from "./components/SearchCourseCard";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import SearchPagination from "./components/SearchPagination";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { CoursePage } from "@/lib/models/CourseWall";
+
+type SortByType = {
+  name: string;
+  value: string;
+};
 
 const CourseSearchPage = () => {
-  const subjects = [
-    "Matek",
-    "Angol",
-    "Német",
-    "Francia",
-    "Kínai",
-    "Magyar",
-    "Történelem",
-  ];
-  const languages = [
-    "Angol",
-    "Magyar",
-    "Német",
-    "Francia",
-    "Spanyol",
-    "Lengyel",
-  ];
+  const [subjects, setSubjects] = useState<string[]>([]);
+  const [languages, setLanguages] = useState<string[]>([]);
 
   const [searchQueryFromUser, setSearchQueryFromUser] = useState<string>("");
   const [cities, setCities] = useState<string[]>([]);
 
   const [city, setCity] = useState<string>("");
-  const minPrice = 0;
-  const maxPrice = 10000;
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [maxPrice, setMaxPrice] = useState<number>(10000);
   const [priceRange, setPriceRange] = useState<[number, number]>([
     minPrice,
     maxPrice,
   ]);
 
+  const [pageNum, setPageNum] = useState<number>(1);
+
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
 
-  const sortingCategories = [
-    "Népszerű",
-    "Legújabb",
-    "Értékelés",
-    "Ár: növekvő",
-    "Ár: csökkenő",
+  const sortingCategories: SortByType[] = [
+    { name: "Népszerű", value: "Popularity" },
+    { name: "Legújabb", value: "Recent" },
+    { name: "Értékelés", value: "Review" },
+    { name: "Ár: növekvő", value: "PriceAscending" },
+    { name: "Ár: csökkenő", value: "PriceDescending" },
   ];
   const [sortBy, setSortBy] = useState("");
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const page = searchParams.get("page");
 
   const [dummyCourses, setDummyCourses] = useState<SearchCourseType[]>([]);
+  const [courses, setCourses] = useState<CoursesPage>();
 
   const [isOpenFilter, setIsOpenFilter] = useState(false);
 
@@ -106,7 +98,43 @@ const CourseSearchPage = () => {
     fetch("/mockup/searchCourses.json")
       .then((data) => data.json())
       .then((res) => setDummyCourses(res));
+
+    fetch("/api/pages/course-explorer")
+      .then((data) => data.json())
+      .then((res) => {
+        const noState: CourseFilterResponse = res;
+
+        setCourses(noState.courses);
+
+        noState.domains.forEach((sub) => {
+          setSubjects((prev) => [...prev, sub.name]);
+        });
+        noState.languages.forEach((lan) => {
+          setLanguages((prev) => [...prev, lan.name]);
+        });
+
+        setMinPrice(noState.minPrice);
+        setMaxPrice(noState.maxPrice);
+
+        setPriceRange([noState.minPrice, noState.maxPrice]);
+
+        setPageNum(noState.courses.pageNum);
+
+        console.log(noState.courses.pageNum, noState.courses.coursesPerPage);
+      });
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    if (sortBy) params.set("orderBy", sortBy);
+    router.push(`${pathname}?${params.toString()}`);
+  }, [sortBy]);
+
+  useEffect(() => {
+    fetch(`/api/courses?${searchParams.toString()}`)
+      .then((res) => res.json())
+      .then((res) => setCourses(res));
+  }, [searchParams]);
 
   useEffect(() => {
     const searchQuery = city;
@@ -161,6 +189,26 @@ const CourseSearchPage = () => {
     );
   };
 
+  const SearchByName = () => {
+    const params = new URLSearchParams(searchParams);
+    params.set("keyword", searchQueryFromUser);
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const FilterToQuery = () => {
+    const params = new URLSearchParams(searchParams);
+
+    if (selectedSubjects.length > 0)
+      params.set("domains", selectedSubjects.join(","));
+    if (selectedLanguages.length > 0)
+      params.set("languages", selectedLanguages.join(","));
+    // params.set("location", city);
+    params.set("minPrice", priceRange[0].toString());
+    params.set("maxPrice", priceRange[1].toString());
+
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <main className="h-full flex flex-col gap-10">
       <div className="gap-4 flex-col lg:flex-row flex justify-between lg:items-center">
@@ -172,11 +220,12 @@ const CourseSearchPage = () => {
             onChange={(e) => {
               setSearchQueryFromUser(e.target.value);
             }}
+            onKeyDown={(e) => e.key === "Enter" && SearchByName()}
             className="text-lg!"
             placeholder="Keresés..."
           ></InputGroupInput>
           <InputGroupAddon align={"inline-end"}>
-            <InputGroupButton>
+            <InputGroupButton onClick={SearchByName}>
               <Search className="size-5"></Search>
             </InputGroupButton>
           </InputGroupAddon>
@@ -337,7 +386,12 @@ const CourseSearchPage = () => {
                 </div>
               </div>
             </div>
-            <Button className="bg-linear-to-br from-primary to-secondary from-10%">
+            <Button
+              className="bg-linear-to-br from-primary to-secondary from-10%"
+              onClick={() => {
+                FilterToQuery();
+              }}
+            >
               <SlidersHorizontalIcon></SlidersHorizontalIcon>
               Szűrés
             </Button>
@@ -353,22 +407,22 @@ const CourseSearchPage = () => {
               </SelectTrigger>
               <SelectContent>
                 {sortingCategories.map((sc) => (
-                  <SelectItem key={sc} value={sc}>
-                    {sc}
+                  <SelectItem key={sc.value} value={sc.value}>
+                    {sc.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div className="flex flex-col lg:grid grid-cols-3 gap-4 mt-3">
-            {dummyCourses.map((c) => (
+            {courses?.courses.map((c) => (
               <div className="flex justify-center" key={c.id}>
                 <SearchCourseCard card={c} key={c.id}></SearchCourseCard>
               </div>
             ))}
           </div>
           <div className="h-30 flex items-center ">
-            <SearchPagination></SearchPagination>
+            <SearchPagination maxPage={pageNum}></SearchPagination>
           </div>
         </section>
       </section>
