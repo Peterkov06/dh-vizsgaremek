@@ -153,7 +153,7 @@ namespace backend.Modules.CoursesBase.Services
                 .Include(x => x.Currency)
                 .Include(x => x.CourseLevel)
                 .Include(x => x.CourseDomain)
-                .Include(x => x.Reviews)
+                .Include(x => x.Reviews).ThenInclude(x => x.Reviewer).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture)
                 .FirstOrDefaultAsync(ct);
 
             if (course == null)
@@ -228,7 +228,7 @@ namespace backend.Modules.CoursesBase.Services
                 CourseName = model.CourseName,
                 Type = model.Type,
                 Description = model.Description,
-                Reviews = model.Reviews.Select(x => new CourseReviewDTO { Text = x.Text, CourseId = x.CourseId, Id = x.Id, Recommended = x.Recommended, ReviewerImage = x.Reviewer.User.ProfilePicture.StoragePath, ReviewerName = x.Reviewer.User.FullName, ReviewScore = x.ReviewScore }).ToList(),
+                Reviews = model.Reviews.Select(x => new CourseReviewDTO { Text = x.Text, CourseId = x.CourseId, Id = x.Id, Recommended = x.Recommended, ReviewerImage = "", ReviewerName = x.Reviewer.User.FullName, ReviewScore = x.ReviewScore }).ToList(),
                 CourseDomain = new LookUpDTO { Name = model.CourseDomain.Name, Id = model.CourseDomainId },
                 CourseLevel = new LookUpDTO { Name = model.CourseLevel.Name, Id = model.CourseLevelId },
                 Price = model.Price,

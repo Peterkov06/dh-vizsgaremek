@@ -2,6 +2,7 @@
 using backend.Data;
 using backend.Models;
 using backend.Modules.CoursesBase;
+using backend.Modules.Engagement;
 using backend.Modules.Pages;
 using backend.Modules.Shared;
 using backend.Modules.Tutoring;
@@ -109,6 +110,7 @@ namespace backend
             builder.Services.AddCoursesServiceCollection();
             builder.Services.AddTutoringServices();
             builder.Services.AddPagesServices();
+            builder.Services.AddEngagementServices();
 
             var app = builder.Build();
 
