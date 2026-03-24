@@ -1,11 +1,13 @@
 ﻿using backend.Models;
 using backend.Modules.Engagement.DTOs;
 using backend.Modules.Engagement.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Modules.Engagement.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/communication")]
     public class CommunicationController: ControllerBase
@@ -19,10 +21,18 @@ namespace backend.Modules.Engagement.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Roles = "Student")]
         [HttpPost("write_review")]
-        public async Task<IActionResult> WriteReview([FromBody] CourseReviewCreatorDTO dto, string userId, CancellationToken ct)
+        public async Task<IActionResult> WriteReview([FromBody] CourseReviewCreatorDTO dto, CancellationToken ct)
         {
-            var res = await _communicationService.WriteCourseReview(dto, userId, ct);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _communicationService.WriteCourseReview(dto, user.Id, ct);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
     }

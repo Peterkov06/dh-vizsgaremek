@@ -109,7 +109,7 @@ namespace backend.Modules.CoursesBase.Services
             query = filtersDTO.OrderBy switch
             {
                 OrderByType.Popularity => query.OrderByDescending(x => x.Id),
-                OrderByType.Review => query.OrderByDescending(x => x.Reviews.Select(x => x.ReviewScore).Sum() / ((x.Reviews.Count > 1) ? x.Reviews.Count : 1 ) ),
+                OrderByType.Review => query.OrderByDescending(x => x.Reviews.Average(x => (double?)x.ReviewScore) ?? 0),
                 OrderByType.Recent => query.OrderByDescending(x => x.CreatedAt),
                 OrderByType.PriceAscending => query.OrderBy(x => x.Price),
                 OrderByType.PriceDescending => query.OrderByDescending(x => x.Price),
@@ -213,6 +213,7 @@ namespace backend.Modules.CoursesBase.Services
                 BannerImage = "",
                 Tags = [.. model.CourseToTags.Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name })],
                 Languages = [.. model.CourseToLanguages.Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name })],
+                RatingAverage = model.Reviews.Average(x => (float?)x.ReviewScore) ?? 0f,
             };
         }
 
@@ -238,6 +239,7 @@ namespace backend.Modules.CoursesBase.Services
                 BannerImage = "",
                 Tags = [.. model.CourseToTags.Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name })],
                 Languages = [.. model.CourseToLanguages.Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name })],
+                RatingAverage = model.Reviews.Average(x => (float?)x.ReviewScore) ?? 0f,
             };
         }
 

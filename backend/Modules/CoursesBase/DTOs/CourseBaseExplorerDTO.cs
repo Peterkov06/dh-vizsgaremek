@@ -19,6 +19,7 @@ namespace backend.Modules.CoursesBase.DTOs
         public CurrencyDTO? Currency { get; set; } = null;
         public string IconImage { get; set; } = string.Empty;
         public string BannerImage { get; set; } = string.Empty;
+        public float RatingAverage { get; set; } = 0f;
 
         public List<LookUpDTO> Tags { get; set; } = [];
         public List<LookUpDTO> Languages { get; set; } = [];
