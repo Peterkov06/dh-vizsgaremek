@@ -109,7 +109,7 @@ namespace backend.Modules.CoursesBase.Services
             query = filtersDTO.OrderBy switch
             {
                 OrderByType.Popularity => query.OrderByDescending(x => x.Id),
-                OrderByType.Review => query.OrderByDescending(x => x.Reviews.Select(x => x.ReviewScore).Sum() / x.Reviews.Count),
+                OrderByType.Review => query.OrderByDescending(x => x.Reviews.Select(x => x.ReviewScore).Sum() / ((x.Reviews.Count > 1) ? x.Reviews.Count : 1 ) ),
                 OrderByType.Recent => query.OrderByDescending(x => x.CreatedAt),
                 OrderByType.PriceAscending => query.OrderBy(x => x.Price),
                 OrderByType.PriceDescending => query.OrderByDescending(x => x.Price),

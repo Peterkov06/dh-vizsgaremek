@@ -34,9 +34,9 @@ namespace backend.Modules.Tutoring.Services
             return ServiceResult<TutoringWallEnrollmentDTO>.Success(enrollmentDTO);
         }
 
-        public async Task<ServiceResult> RespondToApplication(EnrollmentResponseDTO responseDTO, CancellationToken ct)
+        public async Task<ServiceResult> RespondToApplication(EnrollmentResponseDTO responseDTO, string teacherId, CancellationToken ct)
         {
-            var tutoringWall = await _db.TutoringWalls.FirstOrDefaultAsync(x => x.Id == responseDTO.EnrollmentID, ct);
+            var tutoringWall = await _db.TutoringWalls.Include(x => x.CourseBase).ThenInclude(x => x.Teacher).FirstOrDefaultAsync(x => x.Id == responseDTO.EnrollmentID && x.CourseBase.TeacherId == teacherId, ct);
             
             if(tutoringWall == null)
             {
