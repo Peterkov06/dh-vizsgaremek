@@ -1,5 +1,5 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Course, SearchCourseType } from "@/lib/models/CourseSearchModel";
+import { Course } from "@/lib/models/CourseSearchModel";
 import { MapPin, Pin, User } from "lucide-react";
 import Link from "next/link";
 
@@ -10,12 +10,12 @@ const SearchCourseCard = (props: { card: Course }) => {
         <div className="relative">
           <img
             className="w-[20em] h-[12em] rounded-t-xl"
-            src={props.card.bannerImageId || "/defaults/default_course.jpg"}
+            src={props.card.bannerImage || "/defaults/default_course.jpg"}
             alt="Course banner"
           />
           <Avatar className="absolute right-[-15] bottom-[-15] size-20 border-2 border-light-bg-gray">
             <AvatarImage
-              src={props.card.iconImageId || "/defaults/default_avatar.jpg"}
+              src={props.card.iconImage || "/defaults/default_avatar.jpg"}
             ></AvatarImage>
           </Avatar>
         </div>

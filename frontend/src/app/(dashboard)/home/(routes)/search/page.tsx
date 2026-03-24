@@ -22,10 +22,8 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import {
-  Course,
   CourseFilterResponse,
   CoursesPage,
-  SearchCourseType,
 } from "@/lib/models/CourseSearchModel";
 import {
   ArrowUpDown,
@@ -89,16 +87,11 @@ const CourseSearchPage = () => {
 
   const page = searchParams.get("page");
 
-  const [dummyCourses, setDummyCourses] = useState<SearchCourseType[]>([]);
   const [courses, setCourses] = useState<CoursesPage>();
 
   const [isOpenFilter, setIsOpenFilter] = useState(false);
 
   useEffect(() => {
-    fetch("/mockup/searchCourses.json")
-      .then((data) => data.json())
-      .then((res) => setDummyCourses(res));
-
     fetch("/api/pages/course-explorer")
       .then((data) => data.json())
       .then((res) => {
@@ -107,10 +100,14 @@ const CourseSearchPage = () => {
         setCourses(noState.courses);
 
         noState.domains.forEach((sub) => {
-          setSubjects((prev) => [...prev, sub.name]);
+          setSubjects((prev) =>
+            !prev.includes(sub.name) ? [...prev, sub.name] : [...prev],
+          );
         });
         noState.languages.forEach((lan) => {
-          setLanguages((prev) => [...prev, lan.name]);
+          setLanguages((prev) =>
+            !prev.includes(lan.name) ? [...prev, lan.name] : [...prev],
+          );
         });
 
         setMinPrice(noState.minPrice);
@@ -232,7 +229,7 @@ const CourseSearchPage = () => {
         </InputGroup>
       </div>
       <section className="flex flex-col lg:grid grid-cols-12 grid-rows-5 h-full">
-        <section className="gap-3 flex flex-col border-4 border-light-bg-gray rounded-2xl col-span-3 row-span-4 p-3">
+        <section className="gap-3 flex flex-col border-4 border-light-bg-gray rounded-2xl col-span-3 h-fit p-3">
           <h1
             className="text-xl font-bold text-primary flex gap-2 bg-light-bg-gray p-2 rounded-xl"
             onClick={() => setIsOpenFilter((prev) => !prev)}
@@ -256,7 +253,7 @@ const CourseSearchPage = () => {
               <h2 className="text-primary text-lg bg-light-bg-gray p-1 flex gap-1">
                 <Book></Book>Tantárgy:
               </h2>
-              <div className="overflow-hidden h-26">
+              <div className="overflow-hidden h-fit max-h-26">
                 <div className="overflow-auto h-full">
                   {subjects.map((s, i) => {
                     const isChecked = selectedSubjects.includes(s);
@@ -287,7 +284,7 @@ const CourseSearchPage = () => {
               <h2 className="text-primary text-lg bg-light-bg-gray p-1 flex gap-1">
                 <Globe></Globe>Nyelvek:
               </h2>
-              <div className="overflow-hidden h-26">
+              <div className="overflow-hidden h-fit max-h-26">
                 <div className="overflow-auto h-full">
                   {languages.map((l, i) => {
                     const isChecked = selectedLanguages.includes(l);
@@ -415,11 +412,17 @@ const CourseSearchPage = () => {
             </Select>
           </div>
           <div className="flex flex-col lg:grid grid-cols-3 gap-4 mt-3">
-            {courses?.courses.map((c) => (
-              <div className="flex justify-center" key={c.id}>
-                <SearchCourseCard card={c} key={c.id}></SearchCourseCard>
+            {courses && courses?.courses.length > 0 ? (
+              courses?.courses.map((c) => (
+                <div className="flex justify-center" key={c.id}>
+                  <SearchCourseCard card={c} key={c.id}></SearchCourseCard>
+                </div>
+              ))
+            ) : (
+              <div className="text-2xl text-primary font-bold ">
+                Nincs kurzus
               </div>
-            ))}
+            )}
           </div>
           <div className="h-30 flex items-center ">
             <SearchPagination maxPage={pageNum}></SearchPagination>

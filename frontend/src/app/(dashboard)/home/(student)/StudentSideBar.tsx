@@ -96,7 +96,7 @@ const StudentSideBar = (props: { user: User }) => {
           <Link href={"/home/settings"}>
             <Cog className="size-10 group-data-[collapsible=icon]:size-6"></Cog>
           </Link>
-          <Link href={"#"} onClick={OnLogout}>
+          <Link href={"login"} onClick={OnLogout}>
             <LogOut className="size-10 group-data-[collapsible=icon]:size-6"></LogOut>
           </Link>
         </div>

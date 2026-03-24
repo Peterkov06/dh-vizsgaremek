@@ -1,30 +1,3 @@
-export interface SearchCourseType {
-  id: string;
-  bannerImg: string;
-  avatarImg: string;
-  courseName: string;
-  teacherName: string;
-  location: string;
-  price: string;
-}
-
-export interface SingleCourseType {
-  id: string;
-  bannerImg: string;
-  avatarImg: string;
-  courseName: string;
-  teacherName: string;
-  location: string;
-  price: string;
-  rating: number;
-  teacherIntroduction: string;
-  courseDescription: string;
-  tags: string[];
-  languages: string[];
-}
-
-// Rendes
-
 export type IdName = {
   id: string;
   name: string;
@@ -54,21 +27,17 @@ export type Course = {
   teacherImage: string;
   teacherLocation: string;
   courseName: string;
-  description: string;
   type: string;
-  courseDomainId: string;
-  courseLevelId: string;
+  courseDomain: IdName;
+  courseLevel: IdName;
   price: number;
   firstConsultationFree: boolean;
   currency: Currency;
-  status: string;
-  iconImageId: string | null;
-  bannerImageId: string | null;
+  iconImage: string;
+  bannerImage: string;
   tags: IdName[];
   languages: IdName[];
-  reviews: CourseReview[];
 };
-
 export type CoursesPage = {
   courses: Course[];
   totalCourses: number;
@@ -85,4 +54,26 @@ export type CourseFilterResponse = {
   courses: CoursesPage;
   minPrice: number;
   maxPrice: number;
+};
+
+export type CourseDetail = {
+  id: string;
+  teacherId: string;
+  teacherName: string;
+  teacherImage: string;
+  teacherLocation: string;
+  courseName: string;
+  description: string;
+  type: string;
+  courseDomain: IdName;
+  courseLevel: IdName;
+  price: number;
+  firstConsultationFree: boolean;
+  currency: Currency;
+  status: string;
+  iconImage: string;
+  bannerImage: string;
+  tags: IdName[];
+  languages: IdName[];
+  reviews: CourseReview[];
 };
