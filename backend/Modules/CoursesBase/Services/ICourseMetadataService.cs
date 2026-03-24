@@ -8,7 +8,7 @@ namespace backend.Modules.CoursesBase.Services
         Task<ServiceResult<List<LookUpDTO>>> GetAllTagsAsync(CancellationToken ct);
         Task<ServiceResult<List<LookUpDTO>>> GetCourseTags(Guid courseId, CancellationToken ct);
         Task<ServiceResult<LookUpDTO>> CreateTagAsync(LookUpDTO tag, CancellationToken ct);
-        Task<ServiceResult<List<LookUpDTO>>> CreateMultipleTagsAsync(List<LookUpDTO> tags, CancellationToken ct);
+        Task<ServiceResult<List<Guid>>> CreateOrGetTagsAsync(List<string> tags, CancellationToken ct);
         Task<ServiceResult> DeleteTag(Guid id);
 
         Task<ServiceResult<List<LookUpDTO>>> GetAllDomainsAsync(CancellationToken ct);

@@ -46,25 +46,23 @@ namespace backend.Modules.CoursesBase.Services
             return ServiceResult<LookUpDTO>.Success(new LookUpDTO() { Id = newLevel.Id, Name = newLevel.Name });
         }
 
-        // TODO: This method can be optimized by doing a bulk insert instead of adding each tag individually. Consider using a library like EFCore.BulkExtensions for better performance when inserting multiple records.
-        public async Task<ServiceResult<List<LookUpDTO>>> CreateMultipleTagsAsync(List<LookUpDTO> tags, CancellationToken ct = default)
+        public async Task<ServiceResult<List<Guid>>> CreateOrGetTagsAsync(List<string> tags, CancellationToken ct = default)
         {
-            var tagNames = tags.Select(x => x.Name).ToList();
-
-            var existingNames = await _db.CourseTags.Where(x => tagNames.Contains(x.Name)).Select(x => x.Name).ToListAsync(ct);
-
-            if (existingNames.Count > 0)
-            {
-                return ServiceResult<List<LookUpDTO>>.Failure($"These tags already exist: {string.Join(", ", existingNames)}");
-            }
-
+            List<Guid> createdTags = [];
             foreach (var tag in tags)
             {
-                CourseTag newTag = new () { Name = tag.Name };
+                var exists = await _db.CourseTags.Where(x => x.Name == tag).FirstOrDefaultAsync(ct);
+                if (exists is not null)
+                {
+                    createdTags.Add(exists.Id);
+                    continue;
+                }
+                CourseTag newTag = new () { Name = tag };
                 _db.CourseTags.Add(newTag);
+                createdTags.Add(newTag.Id);
             }
             await _db.SaveChangesAsync(ct);
-            return ServiceResult<List<LookUpDTO>>.Success([]);
+            return ServiceResult<List<Guid>>.Success(createdTags);
         }
 
         public async Task<ServiceResult<LookUpDTO>> CreateTagAsync(LookUpDTO tag, CancellationToken ct = default)

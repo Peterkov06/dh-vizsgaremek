@@ -17,7 +17,7 @@ namespace backend.Modules.CoursesBase.DTOs
         public CourseStatus Status { get; set; }
         public Guid? IconImageId { get; set; } = null;
         public Guid? BannerImageId { get; set; } = null;
-        public List<Guid> TagIds { get; set; } = [];
+        public List<string> Tags { get; set; } = [];
         public List<Guid> LanguageIds { get; set; } = [];
     }
 }

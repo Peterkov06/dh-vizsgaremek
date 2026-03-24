@@ -3,11 +3,9 @@ using backend.Modules.CoursesBase.DTOs;
 using backend.Modules.CoursesBase.Models;
 using backend.Modules.Engagement.DTOs;
 using backend.Modules.Engagement.Models;
-using backend.Modules.Identity.Models;
 using backend.Modules.Shared.DTOs;
 using backend.Modules.Shared.Results;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi;
 
 namespace backend.Modules.CoursesBase.Services
 {
@@ -35,11 +33,13 @@ namespace backend.Modules.CoursesBase.Services
             _db.CourseBases.Add(course);
             await _db.SaveChangesAsync(ct);
 
-            var tags = MapToCourseTags(course.Id, newCourse.TagIds);
-            var languages = MapToCourseLanguages(course.Id, newCourse.LanguageIds);
+            var tags = await _courseMetadataService.CreateOrGetTagsAsync(newCourse.Tags, ct);
 
-            _db.CoursesToTags.AddRange(tags);
-            _db.CoursesToLanguages.AddRange(languages);
+            var tagConnections = MapToCourseTags(course.Id, tags.Data);
+            var languageConnections = MapToCourseLanguages(course.Id, newCourse.LanguageIds);
+
+            _db.CoursesToTags.AddRange(tagConnections);
+            _db.CoursesToLanguages.AddRange(languageConnections);
 
             newCourse.Id = course.Id;
 
