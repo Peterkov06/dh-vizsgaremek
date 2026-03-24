@@ -1,30 +1,50 @@
-﻿using backend.Modules.Pages.Student.Services;
+﻿using backend.Models;
+using backend.Modules.Pages.Student.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Modules.Pages.Student.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/pages/student")]
     public class StudentPageController : ControllerBase
     {
         private readonly IStudentPageService _studentPageService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public StudentPageController(IStudentPageService studentPageService)
+        public StudentPageController(IStudentPageService studentPageService, UserManager<ApplicationUser> userManager)
         {
             _studentPageService = studentPageService;
+            _userManager = userManager;
         }
 
         [HttpGet("homepage")]
-        public async Task<IActionResult> GetHomePageData([FromQuery] string userId , CancellationToken ct)
+        public async Task<IActionResult> GetHomePageData(CancellationToken ct)
         {
-            var res = await _studentPageService.GetStudentHomePageAsync(userId, ct);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _studentPageService.GetStudentHomePageAsync(user.Id, ct);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
         [HttpGet("my-courses")]
-        public async Task<IActionResult> GetMyCoursesPageData([FromQuery] string userId, CancellationToken ct)
+        public async Task<IActionResult> GetMyCoursesPageData(CancellationToken ct)
         {
-            var res = await _studentPageService.GetStudentMyCoursesPageAsync(userId, ct);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _studentPageService.GetStudentMyCoursesPageAsync(user.Id, ct);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
     }

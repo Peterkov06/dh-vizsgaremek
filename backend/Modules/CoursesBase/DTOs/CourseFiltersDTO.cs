@@ -16,6 +16,5 @@ namespace backend.Modules.CoursesBase.DTOs
         public int? MaxPrice { get; set; } = null;
         public string? TeacherId { get; set; } = null;
 
-
     }
 }
