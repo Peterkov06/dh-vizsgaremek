@@ -14,14 +14,14 @@ namespace backend.Modules.CoursesBase.DTOs
         public required string CourseName { get; set; }
         public required string Description { get; set; }
         public required CourseType Type { get; set; }
-        public required Guid CourseDomainId { get; set; }
-        public required Guid CourseLevelId { get; set; }
+        public required LookUpDTO CourseDomain { get; set; }
+        public required LookUpDTO CourseLevel { get; set; }
         public decimal Price { get; set; }
         public required bool FirstConsultationFree { get; set; }
         public CurrencyDTO Currency { get; set; }
         public CourseStatus Status { get; set; }
-        public Guid? IconImageId { get; set; } = null;
-        public Guid? BannerImageId { get; set; } = null;
+        public string IconImage { get; set; } = string.Empty;
+        public string BannerImage { get; set; } = string.Empty;
 
         public List<LookUpDTO> Tags { get; set; } = [];
         public List<LookUpDTO> Languages { get; set; } = [];

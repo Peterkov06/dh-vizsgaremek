@@ -9,6 +9,7 @@ namespace backend.Modules.CoursesBase.Services
         Task<ServiceResult<List<CourseBaseExplorerDTO>>> GetTeacherCourses(string TeacherId, CancellationToken ct);
         Task<ServiceResult<CourseBaseListResultDTO>> GetCoursesPage(CourseFiltersDTO filtersDTO, CancellationToken ct);
         Task<ServiceResult<CourseBaseCreationDTO>> CreateCourseBaseAsync(CourseBaseCreationDTO newCourse, CancellationToken ct);
+        Task<ServiceResult<CourseBaseDTO>> GetOneCourse(Guid id, CancellationToken ct);
         Task<ServiceResult<CourseBaseCreationDTO>> UpdateCourseBaseAsync(CancellationToken ct);
         Task<ServiceResult> DeleteCourseBaseAsync(CancellationToken ct);
     }

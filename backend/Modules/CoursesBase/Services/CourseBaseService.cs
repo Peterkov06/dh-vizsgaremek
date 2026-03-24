@@ -143,6 +143,27 @@ namespace backend.Modules.CoursesBase.Services
             return ServiceResult<CourseBaseListResultDTO>.Success(coursesResponse);
         }
 
+        public async Task<ServiceResult<CourseBaseDTO>> GetOneCourse(Guid id, CancellationToken ct)
+        {
+            var course = await _db.CourseBases.Where(x => x.Id == id)
+                .Include(x => x.CourseToTags).ThenInclude(x => x.Tag)
+                .Include(x => x.CourseToLanguages).ThenInclude(x => x.Language)
+                .Include(x => x.Teacher).ThenInclude(x => x.User)
+                    .ThenInclude(x => x.ProfilePicture)
+                .Include(x => x.Currency)
+                .Include(x => x.CourseLevel)
+                .Include(x => x.CourseDomain)
+                .Include(x => x.Reviews)
+                .FirstOrDefaultAsync(ct);
+
+            if (course == null)
+            {
+                return ServiceResult<CourseBaseDTO>.Failure("No such course found");
+            }
+
+            return ServiceResult<CourseBaseDTO>.Success(ToOneCourseDto(course));
+        }
+
         public Task<ServiceResult<CourseBaseCreationDTO>> UpdateCourseBaseAsync(CancellationToken ct)
         {
             throw new NotImplementedException();
@@ -153,7 +174,7 @@ namespace backend.Modules.CoursesBase.Services
             throw new NotImplementedException();
         }
 
-        public CourseBaseModel ToEntity(CourseBaseCreationDTO dto)
+        public static CourseBaseModel ToEntity(CourseBaseCreationDTO dto)
         {
             return new CourseBaseModel
             {
@@ -172,7 +193,7 @@ namespace backend.Modules.CoursesBase.Services
             };
         }
 
-        public CourseBaseExplorerDTO ToExploreDto(CourseBaseModel model)
+        public static CourseBaseExplorerDTO ToExploreDto(CourseBaseModel model)
         {
             return new CourseBaseExplorerDTO
             {
@@ -195,7 +216,32 @@ namespace backend.Modules.CoursesBase.Services
             };
         }
 
-        public IEnumerable<CourseToTag> MapToCourseTags(Guid courseId, List<Guid> tagIds)
+        public static CourseBaseDTO ToOneCourseDto(CourseBaseModel model)
+        {
+            return new CourseBaseDTO
+            {
+                Id = model.Id,
+                TeacherId = model.TeacherId,
+                TeacherImage = "",
+                TeacherName = model.Teacher.User.FullName,
+                TeacherLocation = model.Teacher.User.City,
+                CourseName = model.CourseName,
+                Type = model.Type,
+                Description = model.Description,
+                Reviews = model.Reviews.Select(x => new CourseReviewDTO { Text = x.Text, CourseId = x.CourseId, Id = x.Id, Recommended = x.Recommended, ReviewerImage = x.Reviewer.User.ProfilePicture.StoragePath, ReviewerName = x.Reviewer.User.FullName, ReviewScore = x.ReviewScore }).ToList(),
+                CourseDomain = new LookUpDTO { Name = model.CourseDomain.Name, Id = model.CourseDomainId },
+                CourseLevel = new LookUpDTO { Name = model.CourseLevel.Name, Id = model.CourseLevelId },
+                Price = model.Price,
+                FirstConsultationFree = model.FirstConsultationFree,
+                Currency = new CurrencyDTO() { Id = model.PriceCurrencyId, CurrencyCode = model.Currency.CurrencyCode, CurrencySymbol = model.Currency.CurrencySymbol, Name = model.Currency.Name },
+                IconImage = "",
+                BannerImage = "",
+                Tags = [.. model.CourseToTags.Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name })],
+                Languages = [.. model.CourseToLanguages.Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name })],
+            };
+        }
+
+        public static IEnumerable<CourseToTag> MapToCourseTags(Guid courseId, List<Guid> tagIds)
         {
             return tagIds.Select(tagId => new CourseToTag
             {
@@ -204,7 +250,7 @@ namespace backend.Modules.CoursesBase.Services
             });
         }
 
-        public IEnumerable<CourseToLanguage> MapToCourseLanguages(Guid courseId, List<Guid> languageIds)
+        public static IEnumerable<CourseToLanguage> MapToCourseLanguages(Guid courseId, List<Guid> languageIds)
         {
             return languageIds.Select(langId => new CourseToLanguage
             {
@@ -213,7 +259,7 @@ namespace backend.Modules.CoursesBase.Services
             });
         }
 
-        public CourseReviewDTO CourseReviewToDto(CourseReview model)
+        public static CourseReviewDTO CourseReviewToDto(CourseReview model)
         {
             return new CourseReviewDTO
             {

@@ -37,12 +37,12 @@ namespace backend.Modules.CoursesBase.Controllers
 
         }
 
-        /*[HttpGet("{courseId:guid}")]
-        public async Task<IActionResult> GetCoursesPage(Guid courseId, CancellationToken ct)
+        [HttpGet("{courseId:guid}")]
+        public async Task<IActionResult> GetOneCoursePage(Guid courseId, CancellationToken ct)
         {
-            var res = await _courseBaseService.GetCoursesPage(filters, ct);
+            var res = await _courseBaseService.GetOneCourse(courseId, ct);
             return Ok(res.Data);
 
-        }*/
+        }
     }
 }
