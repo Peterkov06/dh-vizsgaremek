@@ -2,7 +2,7 @@
 {
     public class CourseBaseListResultDTO
     {
-        public List<CourseBaseDTO> Courses { get; set; } = [];
+        public List<CourseBaseExplorerDTO> Courses { get; set; } = [];
         public int TotalCourses { get; set; }
         public int TotalPages { get; set; }
         public int PageNum { get; set; }
