@@ -240,6 +240,7 @@ namespace backend.Modules.CoursesBase.Services
                 Tags = [.. model.CourseToTags.Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name })],
                 Languages = [.. model.CourseToLanguages.Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name })],
                 RatingAverage = model.Reviews.Average(x => (float?)x.ReviewScore) ?? 0f,
+                TeacherIntroduction = model.Teacher.User.Introduction ?? ""
             };
         }
 

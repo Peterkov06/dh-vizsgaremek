@@ -19,10 +19,10 @@ namespace backend.Modules.CoursesBase.DTOs
         public decimal Price { get; set; }
         public required bool FirstConsultationFree { get; set; }
         public CurrencyDTO Currency { get; set; }
-        public CourseStatus Status { get; set; }
         public string IconImage { get; set; } = string.Empty;
         public string BannerImage { get; set; } = string.Empty;
         public float RatingAverage { get; set; } = 0f;
+        public string TeacherIntroduction { get; set; } = string.Empty;
 
         public List<LookUpDTO> Tags { get; set; } = [];
         public List<LookUpDTO> Languages { get; set; } = [];
