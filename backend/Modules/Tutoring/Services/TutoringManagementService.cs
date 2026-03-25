@@ -16,15 +16,15 @@ namespace backend.Modules.Tutoring.Services
             _db = db;
         }
 
-        public async Task<ServiceResult<TutoringWallEnrollmentDTO>> ApplyToCourse(TutoringWallEnrollmentDTO enrollmentDTO, CancellationToken ct)
+        public async Task<ServiceResult<TutoringWallEnrollmentDTO>> ApplyToCourse(TutoringWallEnrollmentDTO enrollmentDTO, string userId, CancellationToken ct)
         {
-            var exists = await _db.TutoringWalls.Where(x => x.CourseId == enrollmentDTO.CourseId).AnyAsync(x => x.StudentId == enrollmentDTO.StudentId, ct);
+            var exists = await _db.TutoringWalls.Where(x => x.CourseId == enrollmentDTO.CourseId).AnyAsync(x => x.StudentId == userId, ct);
             if (exists)
             {
                 return ServiceResult<TutoringWallEnrollmentDTO>.Failure("Application already exists");
             }
 
-            var newEnrollment = new TutoringWall { CourseId =  enrollmentDTO.CourseId, Status = enrollmentDTO.Status, StudentId = enrollmentDTO.StudentId, TokenCount = enrollmentDTO.TokenCount };
+            var newEnrollment = new TutoringWall { CourseId =  enrollmentDTO.CourseId, Status = enrollmentDTO.Status, StudentId = userId, TokenCount = enrollmentDTO.TokenCount };
 
             _db.TutoringWalls.Add(newEnrollment);
 

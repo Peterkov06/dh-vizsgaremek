@@ -27,7 +27,14 @@ namespace backend.Modules.Tutoring.Controllers
         [HttpPost("enrollment")]
         public async Task<IActionResult> EnrollToTutoring([FromBody] TutoringWallEnrollmentDTO enrollmentDTO, CancellationToken ct)
         {
-            var res = await _tutoringManagementService.ApplyToCourse(enrollmentDTO, ct);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _tutoringManagementService.ApplyToCourse(enrollmentDTO, user.Id, ct);
             return res.Succeded ? CreatedAtAction("Enrollment", res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
