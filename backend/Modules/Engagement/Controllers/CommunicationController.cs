@@ -23,7 +23,7 @@ namespace backend.Modules.Engagement.Controllers
 
         [Authorize(Roles = "Student")]
         [HttpPost("write_review")]
-        public async Task<IActionResult> WriteReview([FromBody] CourseReviewCreatorDTO dto, CancellationToken ct)
+        public async Task<IActionResult> WriteReview([FromBody] CourseReviewCreatorDTO dto, [FromQuery] string id, CancellationToken ct)
         {
             var user = await _userManager.GetUserAsync(User);
 
@@ -32,7 +32,7 @@ namespace backend.Modules.Engagement.Controllers
                 return NotFound();
             }
 
-            var res = await _communicationService.WriteCourseReview(dto, user.Id, ct);
+            var res = await _communicationService.WriteCourseReview(dto, id, ct);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
     }

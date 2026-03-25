@@ -35,7 +35,7 @@ namespace backend.Modules.Tutoring.Controllers
             }
 
             var res = await _tutoringManagementService.ApplyToCourse(enrollmentDTO, user.Id, ct);
-            return res.Succeded ? CreatedAtAction("Enrollment", res.Data) : StatusCode(res.StatusCode, res.Error);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
         [Authorize(Roles = "Teacher")]
