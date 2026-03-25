@@ -53,7 +53,7 @@ const StudentHome = (props: { user: User }) => {
             <h2 className="absolute top-[-16] bg-background pr-1 pl-1 font-bold text-primary">
               Értesítések
             </h2>
-            <p className="text-sm">
+            <div className="text-sm">
               {dashboard?.notifications.lastUnread ? (
                 <p>
                   {dashboard?.notifications.lastUnread?.courseName}-
@@ -62,7 +62,7 @@ const StudentHome = (props: { user: User }) => {
               ) : (
                 <p>Nincs értesítésed</p>
               )}
-            </p>
+            </div>
             <div className="text-primary relative">
               <Bell size={35}></Bell>
               <div className="absolute top-[-5] right-[-5] flex justify-center items-center border-2 border-primary rounded-[100%] aspect-square">
@@ -190,7 +190,7 @@ const StudentHome = (props: { user: User }) => {
                 <div className="relative flex justify-center">
                   <div className="relative rounded-2xl">
                     <img
-                      className="w-full rounded-2xl"
+                      className="w-full h-[9em] rounded-2xl"
                       src={
                         pc.imageUrl === ""
                           ? "/defaults/default_course.jpg"
