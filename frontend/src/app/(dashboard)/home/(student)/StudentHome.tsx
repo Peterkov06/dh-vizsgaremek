@@ -14,6 +14,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import fetchWithAuth from "@/lib/api-client";
 
 const StudentHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<DashboardModel>();
@@ -21,7 +22,13 @@ const StudentHome = (props: { user: User }) => {
   const [isActiveTeachers, setIsActiveTeachers] = useState<boolean>(false);
 
   async function fetchDashboard() {
-    const response = await fetch("mockup/studentHome.json")
+    // const response = await fetch("mockup/studentHome.json")
+    //   .then((data) => data.json())
+    //   .then((data) => {
+    //     setDashboard(data);
+    //     console.log(data);
+    //   });
+    await fetchWithAuth("/api/pages/student/homepage")
       .then((data) => data.json())
       .then((data) => {
         setDashboard(data);
@@ -32,6 +39,8 @@ const StudentHome = (props: { user: User }) => {
   useEffect(() => {
     fetchDashboard();
   }, []);
+
+  if (!dashboard) return <main>Itt</main>;
 
   return (
     <main className="h-full flex flex-col justify-between pb-10 gap-10 lg:gap-7  lg:overflow-x-visible">
@@ -45,14 +54,20 @@ const StudentHome = (props: { user: User }) => {
               Értesítések
             </h2>
             <p className="text-sm">
-              {dashboard?.notifications.lastUnread.courseName}-
-              {dashboard?.notifications.lastUnread.text}
+              {dashboard?.notifications.lastUnread ? (
+                <p>
+                  {dashboard?.notifications.lastUnread?.courseName}-
+                  {dashboard?.notifications.lastUnread?.text}
+                </p>
+              ) : (
+                <p>Nincs értesítésed</p>
+              )}
             </p>
             <div className="text-primary relative">
               <Bell size={35}></Bell>
               <div className="absolute top-[-5] right-[-5] flex justify-center items-center border-2 border-primary rounded-[100%] aspect-square">
                 <p className="flex justify-center items-center w-5 h-5 bg-background rounded-[100%] text-center text-[0.8em]">
-                  {dashboard?.notifications.unreadNotificationNumber}
+                  {dashboard?.notifications?.unreadNotificationNumber}
                 </p>
               </div>
             </div>
@@ -67,7 +82,7 @@ const StudentHome = (props: { user: User }) => {
           </div>
         </div>
       </section>
-      <section className="flex justify-between gap-10 flex-col h-fit lg:flex-row">
+      <section className="flex justify-between gap-10 flex-col flex-1 h-fit lg:flex-row">
         <section className="w-fit lg:w-full flex gap-2 flex-col">
           <div className="flex justify-between items-center w-fit lg:w-full gap-5">
             <h1 className="text-xl lg:text-2xl font-bold">Felvett kurzusok</h1>
@@ -91,13 +106,23 @@ const StudentHome = (props: { user: User }) => {
             </div>
           </div>
           <div className="hidden lg:flex gap-5 h-full">
-            {!isActive
-              ? dashboard?.attendedCourses.active.map((c) => (
+            {!isActive ? (
+              dashboard?.attendedCourses.active.length > 0 ? (
+                dashboard?.attendedCourses.active.map((c) => (
                   <CourseCard course={c} key={c.courseId}></CourseCard>
                 ))
-              : dashboard?.attendedCourses.inactive.map((c) => (
-                  <CourseCard course={c} key={c.courseId}></CourseCard>
-                ))}
+              ) : (
+                <p className="text-2xl text-primary">Nincs felvett kurzusod</p>
+              )
+            ) : dashboard?.attendedCourses.inactive.length > 0 ? (
+              dashboard?.attendedCourses.inactive.map((c) => (
+                <CourseCard course={c} key={c.courseId}></CourseCard>
+              ))
+            ) : (
+              <p className="text-2xl text-primary">
+                Nincs teljesített kurzusod
+              </p>
+            )}
           </div>
           <Carousel
             className="block lg:hidden m-auto w-60"
@@ -120,9 +145,13 @@ const StudentHome = (props: { user: User }) => {
         <section className="w-full lg:w-[35em] flex flex-col gap-5">
           <h1 className="text-2xl font-bold">Közelgő események</h1>
           <div className="flex flex-col gap-5">
-            {dashboard?.upcomingEvents.map((ue, i) => (
-              <UpcomingCard key={i} event={ue}></UpcomingCard>
-            ))}
+            {dashboard?.upcomingEvents.length > 0 ? (
+              dashboard?.upcomingEvents.map((ue, i) => (
+                <UpcomingCard key={i} event={ue}></UpcomingCard>
+              ))
+            ) : (
+              <p className="text-2xl text-primary">Nincs közelgő esemény</p>
+            )}
           </div>
         </section>
       </section>

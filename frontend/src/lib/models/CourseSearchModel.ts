@@ -32,6 +32,7 @@ export type Course = {
   courseLevel: IdName;
   price: number;
   firstConsultationFree: boolean;
+  ratingAverage: number;
   currency: Currency;
   iconImage: string;
   bannerImage: string;
@@ -71,6 +72,7 @@ export type CourseDetail = {
   firstConsultationFree: boolean;
   currency: Currency;
   status: string;
+  ratingAverage: number;
   iconImage: string;
   bannerImage: string;
   tags: IdName[];

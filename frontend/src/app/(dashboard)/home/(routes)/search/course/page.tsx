@@ -4,6 +4,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CourseDetail } from "@/lib/models/CourseSearchModel";
 import {
+  CirclePercent,
   Languages,
   MapPin,
   MousePointerClick,
@@ -41,6 +42,13 @@ const CourseOverView = () => {
             className="w-[55em] h-[30em] rounded-2xl"
           />
           <div className="absolute rounded-xl inset-0 bg-linear-to-b from-20% from-transparent to-light-bg-gray p-1" />
+
+          {course?.firstConsultationFree && (
+            <div className="flex absolute -top-5 -right-3 bg-linear-to-tr from-red-800 to-red-500  text-lg py-1 px-2 rounded-2xl text-background items-center gap-2">
+              <CirclePercent className="size-7"></CirclePercent>
+              <p>Az első óra ingyenes !!!</p>
+            </div>
+          )}
           <div className="absolute bottom-5 left-3 flex items-end justify-between gap-5 w-full pr-5">
             <div className="flex gap-2 items-end">
               <Link href={`teacher?id=${id}`}>
@@ -109,7 +117,7 @@ const CourseOverView = () => {
           {/* <p
             className={`${course? > 70 ? "text-green-400" : course.rating > 40 ? "text-yellow-300" : "text-red-500"}`}
           > */}
-          <p>Ajánlás</p>
+          <p>{course?.ratingAverage}</p>
         </div>
 
         <div className="relative min-h-0">
