@@ -419,8 +419,8 @@ const CourseSearchPage = () => {
                 </div>
               ))
             ) : (
-              <div className="text-2xl text-primary font-bold ">
-                Nincs kurzus
+              <div className="text-2xl text-primary font-bold col-span-3 ">
+                Nincs a paramétereknek megfelelő kurzus
               </div>
             )}
           </div>

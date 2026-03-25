@@ -1,6 +1,6 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Course } from "@/lib/models/CourseSearchModel";
-import { MapPin, Pin, User } from "lucide-react";
+import { MapPin, Pin, Star, User } from "lucide-react";
 import Link from "next/link";
 
 const SearchCourseCard = (props: { card: Course }) => {
@@ -31,6 +31,10 @@ const SearchCourseCard = (props: { card: Course }) => {
             <MapPin className="text-primary"></MapPin>
             {props.card.location}
           </h2> */}
+          <h2 className="flex gap-1">
+            <Star className="text-primary"></Star>
+            {props.card.ratingAverage}
+          </h2>
           <div className="flex justify-end mt-3 gap-1">
             <p className="text-xl">{props.card.price}</p>
             <p className="text-xl">{props.card.currency.currencySymbol}</p>
