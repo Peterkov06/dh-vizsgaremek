@@ -150,9 +150,17 @@ namespace backend.Modules.CoursesBase.Services
             return ServiceResult<List<LookUpDTO>>.Success(levels);
         }
 
-        public async Task<ServiceResult<List<LookUpDTO>>> GetAllTagsAsync(CancellationToken ct = default)
+        public async Task<ServiceResult<List<LookUpDTO>>> GetAllTagsAsync(string? keyWord = null, CancellationToken ct = default)
         {
-            var tags = await _db.CourseTags.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
+            var tagQuery = _db.CourseTags.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyWord))
+            {
+                tagQuery = tagQuery.Where(x => x.Name.ToLower().StartsWith(keyWord.ToLower()));
+            }
+
+            var tags = await tagQuery.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
+
             return ServiceResult<List<LookUpDTO>>.Success(tags);
         }
 

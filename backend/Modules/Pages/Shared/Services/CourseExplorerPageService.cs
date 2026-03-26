@@ -23,7 +23,7 @@ namespace backend.Modules.Pages.Shared.Services
             var languages = await _lookUpService.GetLanguagesAsync(ct);
             var domains = await _courseMetadataService.GetAllDomainsAsync(ct);
             var levels = await _courseMetadataService.GetAllLevelsAsync(ct);
-            var tags = await _courseMetadataService.GetAllTagsAsync(ct);
+            var tags = await _courseMetadataService.GetAllTagsAsync(ct: ct);
             var courses = await _courseBaseService.GetCoursesPage(new(),ct);
             var minPrice = Convert.ToInt32(Math.Floor(courses.Data.Courses.Min(x => x.Price)));
             var maxPrice = Convert.ToInt32(Math.Ceiling(courses.Data.Courses.Max(x => x.Price)));

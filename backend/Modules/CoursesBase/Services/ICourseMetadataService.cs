@@ -5,7 +5,7 @@ namespace backend.Modules.CoursesBase.Services
 {
     public interface ICourseMetadataService
     {
-        Task<ServiceResult<List<LookUpDTO>>> GetAllTagsAsync(CancellationToken ct);
+        Task<ServiceResult<List<LookUpDTO>>> GetAllTagsAsync(string? keyWord = null, CancellationToken ct = default);
         Task<ServiceResult<List<LookUpDTO>>> GetCourseTags(Guid courseId, CancellationToken ct);
         Task<ServiceResult<LookUpDTO>> CreateTagAsync(LookUpDTO tag, CancellationToken ct);
         Task<ServiceResult<List<Guid>>> CreateOrGetTagsAsync(List<string> tags, CancellationToken ct);

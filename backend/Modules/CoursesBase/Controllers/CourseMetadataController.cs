@@ -32,7 +32,7 @@ namespace backend.Modules.CoursesBase.Controllers
         public async Task<IActionResult> AddTag([FromBody] LookUpDTO tagDTO, CancellationToken ct)
         {
             var res = await _courseMetadataService.CreateTagAsync(tagDTO, ct);
-            return res.Succeded ? CreatedAtAction(nameof(GetTags), res.Data) : StatusCode(res.StatusCode, res.Error);
+            return res.Succeded ? CreatedAtAction(nameof(GetAllTags), res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
         [HttpGet("domains")]
@@ -50,9 +50,16 @@ namespace backend.Modules.CoursesBase.Controllers
         }
 
         [HttpGet("tags")]
-        public async Task<IActionResult> GetTags(CancellationToken ct)
+        public async Task<IActionResult> GetAllTags(CancellationToken ct)
         {
-            var res = await _courseMetadataService.GetAllTagsAsync(ct);
+            var res = await _courseMetadataService.GetAllTagsAsync(ct: ct);
+            return Ok(res.Data);
+        }
+
+        [HttpGet("tags/{keyword}")]
+        public async Task<IActionResult> GetTagsWithPart(string keyword,CancellationToken ct)
+        {
+            var res = await _courseMetadataService.GetAllTagsAsync(keyword, ct);
             return Ok(res.Data);
         }
     }

@@ -573,5 +573,33 @@
         }
       ]
     }
-  ]
+  ],
+  "teacherCourseCreationPage": {
+    "currencies": [
+      {
+        "id": "019d0aae-7ba7-7644-b67c-6c57b5b672de",
+        "name": "Forint",
+        "currencyCode": "HUF",
+        "currencySymbol": "Ft"
+      }
+    ],
+    "languages": [
+      {
+        "id": "d1b4abb0-a027-4e8b-a73c-c54b38b79f2d",
+        "name": "Magyar"
+      }
+    ],
+    "domains": [
+      {
+        "id": "f1b97321-b5f8-42cc-8169-229cae69b8e4",
+        "name": "Matematika"
+      }
+    ],
+    "levels": [
+      {
+        "id": "6630772c-aedd-46b2-998b-6f739e52efcf",
+        "name": "Ultra kezdő"
+      }
+    ]
+  }
 }
