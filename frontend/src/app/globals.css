@@ -214,3 +214,29 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+
+[data-sonner-toast][data-type="success"] {
+  background: var(--secondary) !important;
+  color: #166534 !important;
+  border-color: #86efac !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+  border-color: #fca5a5 !important;
+}
+
+[data-sonner-toast][data-type="warning"] {
+  background: #fffbeb !important;
+  color: #92400e !important;
+  border-color: #fcd34d !important;
+}
+
+[data-sonner-toast][data-type="info"] {
+  background: #eff6ff !important;
+  color: #1e40af !important;
+  border-color: #93c5fd !important;
+}

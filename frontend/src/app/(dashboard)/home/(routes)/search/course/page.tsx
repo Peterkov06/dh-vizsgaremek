@@ -21,6 +21,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CourseReviewCard from "../components/CourseReviewCard";
+import { toast } from "sonner";
 
 const CourseOverView = () => {
   const searchParams = useSearchParams();
@@ -117,6 +118,10 @@ const CourseOverView = () => {
       .then((res) => res.json())
       .then((res) => setCourse(res));
   }, []);
+
+  const HandleRegister = () => {
+    toast.success("Jelentkezésedet elküldtük!");
+  };
   return (
     <main className="flex gap-2 h-full w-full">
       <section className="flex flex-col h-full w-[55em]">
@@ -136,7 +141,10 @@ const CourseOverView = () => {
           )}
           <div className="absolute bottom-5 left-3 flex items-end justify-between gap-5 w-full pr-5">
             <div className="flex gap-2 items-end">
-              <Link href={`teacher?id=${id}`}>
+              <Link
+                href={`teacher?id=${id}`}
+                className="hover:scale-110 transition-all duration-300"
+              >
                 <Avatar className="size-40 border-2 border-light-bg-gray">
                   <AvatarImage
                     src={course?.teacherImage || "/defaults/default_avatar.jpg"}
@@ -147,7 +155,10 @@ const CourseOverView = () => {
                 <h1 className="font-bold text-2xl text-primary max-w-[17em]">
                   {course?.courseName}
                 </h1>
-                <Link href={`teacher?id=${id}`}>
+                <Link
+                  href={`teacher?id=${id}`}
+                  className="hover:text-primary transition-all duration-500"
+                >
                   <h2 className="flex gap-1 items-center text-xl">
                     <User></User>
                     {course?.teacherName}
@@ -155,9 +166,15 @@ const CourseOverView = () => {
                 </Link>
               </div>
             </div>
-            <Button className="h-14 bg-linear-to-tr from-primary to-secondary">
-              <MousePointerClick className="size-10"></MousePointerClick>
-              <p className="text-xl">Jelentkezz!</p>
+            <Button
+              className="h-14 relative bg-linear-to-tr from-primary to-secondary overflow-hidden group/btn transition-all duration-300"
+              onClick={HandleRegister}
+            >
+              <span className="absolute inset-0 bg-linear-to-bl from-primary to-secondary opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+              <div className="relative z-10 flex items-center">
+                <MousePointerClick className="size-10"></MousePointerClick>
+                <p className="text-xl">Jelentkezz!</p>
+              </div>
             </Button>
           </div>
         </div>

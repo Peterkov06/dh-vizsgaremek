@@ -47,6 +47,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { CoursePage } from "@/lib/models/CourseWall";
+import { toast } from "sonner";
 
 type SortByType = {
   name: string;
@@ -131,6 +132,8 @@ const CourseSearchPage = () => {
     fetch(`/api/courses?${searchParams.toString()}`)
       .then((res) => res.json())
       .then((res) => setCourses(res));
+
+    if (searchParams.toString().length > 0) toast.success("Sikeres szűrés");
   }, [searchParams]);
 
   useEffect(() => {

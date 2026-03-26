@@ -15,6 +15,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import fetchWithAuth from "@/lib/api-client";
+import Link from "next/link";
 
 const StudentHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<DashboardModel>();
@@ -187,23 +188,25 @@ const StudentHome = (props: { user: User }) => {
           <CarouselContent>
             {dashboard?.popularCourses.map((pc, i) => (
               <CarouselItem className="basis-1/1 lg:basis-1/4" key={i}>
-                <div className="relative flex justify-center">
-                  <div className="relative rounded-2xl">
-                    <img
-                      className="w-full h-[9em] rounded-2xl"
-                      src={
-                        pc.imageUrl === ""
-                          ? "/defaults/default_course.jpg"
-                          : pc.imageUrl
-                      }
-                    ></img>
-                    <div className="absolute rounded-2xl inset-0 bg-linear-to-b from-30% from-transparent to-[#E5E3E3] p-1" />
+                <Link href={`home/search/course?id=${pc.courseId}`}>
+                  <div className="relative flex group">
+                    <div className="relative rounded-2xl">
+                      <img
+                        className="w-full h-[9em] rounded-2xl"
+                        src={
+                          pc.imageUrl === ""
+                            ? "/defaults/default_course.jpg"
+                            : pc.imageUrl
+                        }
+                      ></img>
+                      <div className="absolute rounded-2xl inset-0 bg-linear-to-b from-30% from-transparent to-[#E5E3E3] p-1" />
+                    </div>
+                    <div className="absolute z-20 text-primary bottom-0  flex text-sm justify-between w-full px-3 transition-all duration-300 group-hover:-translate-y-28 group-hover:text-white">
+                      <p>{pc.courseName}</p>
+                      <p>{pc.lessonPrice.amount} FT</p>
+                    </div>
                   </div>
-                  <div className="absolute z-20 text-primary bottom-0  flex text-sm justify-between w-full px-3">
-                    <p>{pc.courseName}</p>
-                    <p>{pc.lessonPrice.amount} FT</p>
-                  </div>
-                </div>
+                </Link>
               </CarouselItem>
             ))}
           </CarouselContent>
