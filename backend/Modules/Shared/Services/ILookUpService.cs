@@ -6,6 +6,7 @@ namespace backend.Modules.Shared.Services
     public interface ILookUpService
     {
         Task<ServiceResult<List<LookUpDTO>>> GetLanguagesAsync(CancellationToken ct);
+        Task<ServiceResult<List<Guid>>> GetLanguagesFromList(List<string> languages, CancellationToken ct);
         Task<ServiceResult<List<CurrencyDTO>>> GetCurrenciesAsync(CancellationToken ct);
 
         Task<ServiceResult<LookUpDTO>> AddLanguageAsync(LookUpDTO language, CancellationToken ct);

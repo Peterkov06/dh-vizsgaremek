@@ -9,9 +9,36 @@ namespace backend.Modules.Identity.Services
     {
         private readonly AppDbContext _db;
 
-        public Task<ServiceResult<StudentProfileDTO>> GetStudentProfile(string userId, CancellationToken ct)
+        public ProfileService(AppDbContext db)
         {
-            throw new NotImplementedException();
+            _db = db;
+        }
+
+        public async Task<ServiceResult<StudentProfileDTO>> GetStudentProfile(string userId, CancellationToken ct)
+        {
+            var user = await _db.Students.Include(x => x.User).ThenInclude(x => x.ProfilePicture)
+                .FirstOrDefaultAsync(x => x.UserId == userId, ct);
+            if (user == null)
+            {
+                return ServiceResult<StudentProfileDTO>.NotFound("Student not found");
+            }
+
+            var age = DateTime.Today.Year - user.User.DateOfBirth.Year;
+            if (DateTime.Today.DayOfYear < user.User.DateOfBirth.DayOfYear)
+            {
+                age = age - 1;
+            }
+
+            var profile = new StudentProfileDTO
+            {
+                Age = age,
+                FullName = user.User.FullName,
+                Id = userId,
+                Introduction = user.User.Introduction ?? "",
+                Nickname = user.User.Nickname,
+                ProfilePictureUrl = ""
+            };
+            return ServiceResult<StudentProfileDTO>.Success(profile);
         }
 
         public async Task<ServiceResult<TeacherProfileDTO>> GetTeacherProfile(string userId, CancellationToken ct)
@@ -39,6 +66,11 @@ namespace backend.Modules.Identity.Services
                 .AverageAsync(x => (float?)x.ReviewScore, ct) ?? 0f;
 
             var totalCourses = await _db.CourseBases.CountAsync(x => x.TeacherId == userId, ct);
+            var age = DateTime.Today.Year - user.User.DateOfBirth.Year;
+            if (DateTime.Today.DayOfYear < user.User.DateOfBirth.DayOfYear)
+            {
+                age = age - 1;
+            }
 
             var profile = new TeacherProfileDTO
             {
@@ -49,6 +81,7 @@ namespace backend.Modules.Identity.Services
                 RatingAverage = courseReviews,
                 TotalCourses = totalCourses,
                 TotalStudents = totalStudents,
+                Age = age
             };
 
             return ServiceResult<TeacherProfileDTO>.Success(profile);

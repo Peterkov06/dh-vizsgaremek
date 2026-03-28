@@ -53,5 +53,19 @@ namespace backend.Modules.Shared.Services
             var languages = await _db.Languages.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
             return ServiceResult<List<LookUpDTO>>.Success(languages);
         }
+
+        public async Task<ServiceResult<List<Guid>>> GetLanguagesFromList(List<string> languages, CancellationToken ct)
+        {
+            List<Guid> languageIds = [];
+            foreach (var language in languages)
+            {
+                var exists = await _db.Languages.FirstOrDefaultAsync(x => string.Equals(x.Name.ToLower(), language.ToLower()), ct);
+                if (exists is not null)
+                {
+                    languageIds.Add(exists.Id);
+                }
+            }
+            return ServiceResult<List<Guid>>.Success(languageIds);
+        }
     }
 }

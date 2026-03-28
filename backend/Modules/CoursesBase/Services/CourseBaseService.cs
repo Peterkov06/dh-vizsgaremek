@@ -5,6 +5,7 @@ using backend.Modules.Engagement.DTOs;
 using backend.Modules.Engagement.Models;
 using backend.Modules.Shared.DTOs;
 using backend.Modules.Shared.Results;
+using backend.Modules.Shared.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Modules.CoursesBase.Services
@@ -13,11 +14,13 @@ namespace backend.Modules.CoursesBase.Services
     {
         private readonly AppDbContext _db;
         private readonly ICourseMetadataService _courseMetadataService;
+        private readonly ILookUpService _lookupService;
 
-        public CourseBaseService(AppDbContext db, ICourseMetadataService courseMetadataService)
+        public CourseBaseService(AppDbContext db, ICourseMetadataService courseMetadataService, ILookUpService lookupService)
         {
             _db = db;
             _courseMetadataService = courseMetadataService;
+            _lookupService = lookupService;
         }
 
         public async Task<ServiceResult<CourseBaseCreationDTO>> CreateCourseBaseAsync(CourseBaseCreationDTO newCourse, CancellationToken ct)
@@ -34,9 +37,10 @@ namespace backend.Modules.CoursesBase.Services
             await _db.SaveChangesAsync(ct);
 
             var tags = await _courseMetadataService.CreateOrGetTagsAsync(newCourse.Tags, ct);
+            var languageIds = await _lookupService.GetLanguagesFromList(newCourse.Languages, ct);
 
             var tagConnections = MapToCourseTags(course.Id, tags.Data);
-            var languageConnections = MapToCourseLanguages(course.Id, newCourse.LanguageIds);
+            var languageConnections = MapToCourseLanguages(course.Id, languageIds.Data);
 
             _db.CoursesToTags.AddRange(tagConnections);
             _db.CoursesToLanguages.AddRange(languageConnections);
