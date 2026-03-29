@@ -1,6 +1,7 @@
 "use client";
 
 import { BASE_URL } from "@/app/api/auth/register/route";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Combobox,
@@ -36,12 +37,15 @@ import {
   MapPin,
   Pen,
   PiggyBank,
+  Plus,
   Tag,
   Tags,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
+import ImageUploader from "./components/ImgUploader";
+import AvatarUploader from "./components/AvatarUploader";
 
 const CourseCreator = () => {
   const formSchema = z.object({
@@ -100,6 +104,8 @@ const CourseCreator = () => {
   const [allLevels, setAllLevels] = useState<string[]>([]);
   const [allSubjects, setAllSubjects] = useState<string[]>([]);
   const [allCurrency, setAllCurrency] = useState<Currency[]>([]);
+
+  const [priceInput, setPriceInput] = useState("");
 
   useEffect(() => {
     const searchQuery = tagInputValue;
@@ -204,8 +210,18 @@ const CourseCreator = () => {
   };
 
   return (
-    <main className="flex w-full">
-      <section></section>
+    <main className="flex w-full flex-col gap-10">
+      <section className="relative">
+        {/* <div className="flex justify-center items-center w-full h-30 bg-linear-to-tr from-primary to-secondary rounded-2xl">
+          <Plus className="size-20 text-primary-foreground"></Plus>
+        </div> */}
+        <ImageUploader></ImageUploader>
+        {/* <div className="flex justify-center items-center absolute w-24 h-24 bg-black -bottom-7 left-5 rounded-[50%]">
+          {/* <Avatar></Avatar>
+          <Plus className="size-20 text-primary-foreground"></Plus>
+        </div> */}
+        <AvatarUploader></AvatarUploader>
+      </section>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid grid-cols-2 w-full gap-5"
@@ -596,8 +612,12 @@ const CourseCreator = () => {
                         fieldState.invalid ? "border-red-500" : "border-primary"
                       }`}
                       placeholder="Kurzus ára..."
-                      value={field.value ?? ""}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      value={priceInput}
+                      onChange={(e) => {
+                        setPriceInput(e.target.value);
+                        const num = Number(e.target.value);
+                        field.onChange(e.target.value === "" ? undefined : num);
+                      }}
                       onBlur={field.onBlur}
                     />
 
