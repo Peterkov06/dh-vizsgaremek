@@ -36,7 +36,8 @@ namespace backend.Modules.Identity.Services
                 Id = userId,
                 Introduction = user.User.Introduction ?? "",
                 Nickname = user.User.Nickname,
-                ProfilePictureUrl = ""
+                ProfilePictureUrl = "",
+                Type = "Student"
             };
             return ServiceResult<StudentProfileDTO>.Success(profile);
         }
@@ -81,7 +82,8 @@ namespace backend.Modules.Identity.Services
                 RatingAverage = courseReviews,
                 TotalCourses = totalCourses,
                 TotalStudents = totalStudents,
-                Age = age
+                Age = age,
+                Type = "Teacher"
             };
 
             return ServiceResult<TeacherProfileDTO>.Success(profile);

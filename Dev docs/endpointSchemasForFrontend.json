@@ -601,5 +601,29 @@
         "name": "Ultra kezdő"
       }
     ]
-  }
+  },
+  "teacherProfile":
+  {
+  "teachingLocations": [],
+  "qualifications": [],
+  "ratingAverage": 0,
+  "totalStudents": 1,
+  "totalCourses": 3,
+  "id": "8203014b-0b11-4c0e-9bc1-779ec7e53d3f",
+  "fullName": "Mizsei János",
+  "introduction": "",
+  "profilePictureUrl": "",
+  "type": "Teacher",
+  "age": 25
+  },
+  "studentProfile":
+  {
+  "nickname": null,
+  "id": "097e1f8b-4777-4b78-84f7-0a00033ea42a",
+  "fullName": "Szaki Maki",
+  "introduction": "",
+  "profilePictureUrl": "",
+  "type": "Student",
+  "age": 26
+}
 }
