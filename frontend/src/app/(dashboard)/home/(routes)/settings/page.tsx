@@ -7,15 +7,26 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Bell, Lock, Pencil, Save, Trash, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ResetPasswordDialog from "../../(teacher)/components/setting/ResetPasswordDialog";
 import { Switch } from "@/components/ui/switch";
+import { BASE_URL } from "@/app/api/auth/register/route";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 
 const Settings = () => {
   const [fullName, setFullName] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [mobileNumber, setMobileNumber] = useState<string>("");
+  const [cityName, setCityName] = useState<string>("");
+  const [cities, setCities] = useState<string[]>([]);
+  const [postalCode, setPostalCode] = useState<string>("");
+  const [postalCodeAll, setPostalCodeAll] = useState<string[]>([]);
   const [address, setAddress] = useState<string>("");
 
   const [allTabs, setAllTabs] = useState<string>("introduction");
@@ -24,6 +35,115 @@ const Settings = () => {
   const [activitySwitch, setActivitySwitch] = useState<boolean>(false);
   const [peddingSwitch, setPeddingSwitch] = useState<boolean>(false);
   const [marketingSwitch, setMarketingSwitch] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (cityName.length < 1) {
+      setCities([]);
+      return;
+    }
+
+    const delayDebounceFunction = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          BASE_URL + "/cities/search?city=" + cityName,
+          {
+            headers: {
+              Accept: "*/*",
+            },
+          },
+        );
+        const data = await response.json();
+        setCities(data);
+      } catch (error) {
+        console.error("Error fetching cities: ", error);
+      } finally {
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFunction);
+  }, [cityName]);
+
+  useEffect(() => {
+    if (postalCode.length < 1) {
+      setPostalCodeAll([]);
+      return;
+    }
+
+    const delayDebounceFunction = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          BASE_URL + "/cities/postal/search?postal=" + postalCode,
+          {
+            headers: {
+              Accept: "*/*",
+            },
+          },
+        );
+        const data = await response.json();
+        setPostalCodeAll(data);
+      } catch (error) {
+        console.error("Error fetching postal codes: ", error);
+      } finally {
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFunction);
+  }, [postalCode]);
+
+  useEffect(() => {
+    const isValid = postalCode.length === 4;
+    if (!isValid) {
+      return;
+    }
+
+    const setCity = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          BASE_URL + "/cities/search/city_by_postal?postal=" + postalCode,
+          {
+            headers: {
+              Accept: "*/*",
+            },
+          },
+        );
+        const data = await response.json();
+        if (data.length === 1) {
+          // form.setValue("cityName", data[0], { shouldValidate: true });
+          setCityName(data[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching cities: ", error);
+      }
+    }, 300);
+    return () => clearTimeout(setCity);
+  }, [postalCode]);
+
+  useEffect(() => {
+    const isValid = cityName.length > 0;
+    if (!isValid) {
+      return;
+    }
+
+    const setPostal = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          BASE_URL + "/cities/search/postal_by_city?city=" + cityName,
+          {
+            headers: {
+              Accept: "*/*",
+            },
+          },
+        );
+        const data = await response.json();
+        if (data.length === 1) {
+          setPostalCode(data[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching postal codes: ", error);
+      }
+    }, 300);
+    return () => clearTimeout(setPostal);
+  }, [cityName]);
 
   return (
     <main className="flex flex-col lg:grid grid-cols-10 grid-rows-12 h-full w-full">
@@ -51,29 +171,80 @@ const Settings = () => {
             className="bg-light-bg-gray rounded-xl text-lg! h-12 p-3"
             placeholder="Becenév..."
           ></Input>
-          <Input
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
+
+          <Combobox
+            items={cities}
+            value={cityName}
+            onValueChange={(e) => {
+              setCityName(e || "");
             }}
-            className="bg-light-bg-gray rounded-xl text-lg! h-12 p-3"
-            placeholder="Email-cím..."
-          ></Input>
-          <Input
-            value={mobileNumber}
+            id="postal-code"
+          >
+            <ComboboxInput
+              placeholder="Város..."
+              className="bg-light-bg-gray rounded-xl h-12"
+              style={{ fontSize: "1.125rem" }}
+              type="text"
+              value={cityName}
+              onChange={(e) => {
+                setCityName(e.target.value);
+              }}
+            />
+            <ComboboxContent>
+              <ComboboxEmpty>Nem találtunk ilyen várost.</ComboboxEmpty>
+              <ComboboxList>
+                {(item: any) => (
+                  <ComboboxItem key={item} value={item}>
+                    {item}
+                  </ComboboxItem>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
+          </Combobox>
+          {/* <Input
+            value={postalCode}
             onChange={(e) => {
-              setMobileNumber(e.target.value);
+              setPostalCode(e.target.value);
             }}
             className="bg-light-bg-gray rounded-xl text-lg! h-12 p-3"
             placeholder="Telefonszám..."
-          ></Input>
+          ></Input> */}
+          <Combobox
+            items={postalCodeAll}
+            value={postalCode}
+            onValueChange={(e) => {
+              setPostalCode(e || "");
+            }}
+            id="postal-code"
+          >
+            <ComboboxInput
+              placeholder="Irányítószám..."
+              className="bg-light-bg-gray rounded-xl h-12"
+              style={{ fontSize: "1.125rem" }}
+              type="number"
+              value={postalCode}
+              onChange={(e) => {
+                setPostalCode(e.target.value);
+              }}
+            />
+            <ComboboxContent>
+              <ComboboxEmpty>Nem találtunk ilyen irányítószámot.</ComboboxEmpty>
+              <ComboboxList>
+                {(item: any) => (
+                  <ComboboxItem key={item} value={item}>
+                    {item}
+                  </ComboboxItem>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
+          </Combobox>
           <Input
             value={address}
             onChange={(e) => {
               setAddress(e.target.value);
             }}
             className="bg-light-bg-gray rounded-xl text-lg! h-12 p-3"
-            placeholder="Lakcím..."
+            placeholder="Lakcím (utca, házszám)..."
           ></Input>
         </div>
         <Button className="text-xl w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">

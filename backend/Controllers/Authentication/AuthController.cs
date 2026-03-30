@@ -294,6 +294,30 @@ namespace backend.Controllers.Login
         }
 
         [Authorize]
+        [HttpGet("me/all")]
+        public async Task<IActionResult> UserProfileAll()
+        {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+            if (userId == null)
+                return Unauthorized();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                return BadRequest();
+            var roleList = await _userManager.GetRolesAsync(user);
+            if (roleList.Count() < 1)
+            {
+                return BadRequest();
+            }
+            var role = roleList[0];
+
+            return Ok(new { user, role });
+        }
+
+        [Authorize]
         [HttpGet("validate")]
         public async Task<IActionResult> ValidateUser() {
             return NoContent();

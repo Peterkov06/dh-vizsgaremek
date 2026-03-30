@@ -35,7 +35,7 @@ export default function ImageUploader() {
 
       <div
         onClick={handleClick}
-        className="relative flex justify-center items-center w-full h-30 bg-linear-to-tr from-primary to-secondary rounded-2xl cursor-pointer overflow-hidden group"
+        className="relative flex justify-center items-center w-full h-40 bg-linear-to-tr from-primary to-secondary rounded-2xl cursor-pointer overflow-hidden group"
       >
         {imageSrc ? (
           <>

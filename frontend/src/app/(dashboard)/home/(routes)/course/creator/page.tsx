@@ -33,6 +33,7 @@ import {
   Captions,
   ChartArea,
   CircleDollarSignIcon,
+  CirclePlus,
   Globe,
   MapPin,
   Pen,
@@ -733,7 +734,9 @@ const CourseCreator = () => {
               )}
             />
           </div>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" className="text-xl">
+            <CirclePlus className="size-5"></CirclePlus>Létrehozzás
+          </Button>
         </section>
       </form>
     </main>
