@@ -294,7 +294,7 @@ namespace backend.Controllers.Login
         }
 
         [Authorize]
-        [HttpGet("me/all")]
+        [HttpGet("me/settings")]
         public async Task<IActionResult> UserProfileAll()
         {
 
@@ -307,14 +307,9 @@ namespace backend.Controllers.Login
 
             if (user == null)
                 return BadRequest();
-            var roleList = await _userManager.GetRolesAsync(user);
-            if (roleList.Count() < 1)
-            {
-                return BadRequest();
-            }
-            var role = roleList[0];
+            
 
-            return Ok(new { user, role });
+            return Ok(new { user.FullName, user.Nickname, user.Address, user.City, user.PostalCode, user.Introduction, user.ProfilePicture});
         }
 
         [Authorize]

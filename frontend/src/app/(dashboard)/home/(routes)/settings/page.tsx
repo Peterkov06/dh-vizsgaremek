@@ -19,6 +19,8 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox";
+import { UserSettings } from "@/lib/models/SettingModels";
+import fetchWithAuth from "@/lib/api-client";
 
 const Settings = () => {
   const [fullName, setFullName] = useState<string>("");
@@ -35,6 +37,19 @@ const Settings = () => {
   const [activitySwitch, setActivitySwitch] = useState<boolean>(false);
   const [peddingSwitch, setPeddingSwitch] = useState<boolean>(false);
   const [marketingSwitch, setMarketingSwitch] = useState<boolean>(false);
+
+  useEffect(() => {
+    fetchWithAuth("/api/auth/me/settings")
+      .then((data) => data.json())
+      .then((data) => {
+        setFullName(data.fullName);
+        setNickname(data.nickname);
+        setCityName(data.city);
+        setPostalCode(data.postalCode);
+        setAddress(data.address);
+        setIntroduction(data.introduction || "");
+      });
+  }, []);
 
   useEffect(() => {
     if (cityName.length < 1) {
@@ -201,14 +216,6 @@ const Settings = () => {
               </ComboboxList>
             </ComboboxContent>
           </Combobox>
-          {/* <Input
-            value={postalCode}
-            onChange={(e) => {
-              setPostalCode(e.target.value);
-            }}
-            className="bg-light-bg-gray rounded-xl text-lg! h-12 p-3"
-            placeholder="Telefonszám..."
-          ></Input> */}
           <Combobox
             items={postalCodeAll}
             value={postalCode}
@@ -280,6 +287,7 @@ const Settings = () => {
               value="qualification"
               className="hidden"
               id="money"
+              disabled
             ></RadioGroupItem>
             <Label
               htmlFor="money"
