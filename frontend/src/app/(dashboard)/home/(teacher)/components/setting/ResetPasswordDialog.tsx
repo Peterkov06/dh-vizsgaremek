@@ -76,6 +76,8 @@ const ResetPasswordDialog = () => {
           form.setError("oldPassword", { message: "Hibás jelenlegi jelszó" });
         } else {
           toast.error("Hiba történt a jelszó módosítása során");
+          form.reset();
+          setOpen(false);
         }
         return;
       }

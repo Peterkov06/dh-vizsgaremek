@@ -19,7 +19,6 @@ export async function PATCH(request: NextRequest) {
       body: JSON.stringify(body),
       credentials: "include",
     });
-    console.log(response);
     return response;
   } catch (error) {
     console.error("Login error: ", error);

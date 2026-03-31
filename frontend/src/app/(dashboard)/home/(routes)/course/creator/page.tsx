@@ -225,7 +225,7 @@ const CourseCreator = () => {
       </section>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-2 w-full gap-5"
+        className="lg:grid grid-cols-2 w-full gap-5"
       >
         <section className="flex-1 flex flex-col gap-3">
           <div className="flex flex-col gap-2">
