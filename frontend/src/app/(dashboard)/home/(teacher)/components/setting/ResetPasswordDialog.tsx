@@ -16,10 +16,12 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import fetchWithAuth from "@/lib/api-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon, Save } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 const passwordField = z
   .string()
@@ -39,8 +41,8 @@ const passwordField = z
   });
 
 const formSchema = z.object({
-  old_password: passwordField,
-  new_password: passwordField,
+  oldPassword: passwordField,
+  newPassword: passwordField,
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -49,23 +51,50 @@ const ResetPasswordDialog = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      old_password: "",
-      new_password: "",
+      oldPassword: "",
+      newPassword: "",
     },
     mode: "onTouched",
   });
 
   const onSubmit = async (data: FormData) => {
-    // const res = await submitLogin(data);
-    console.log(data);
+    try {
+      const res = await fetchWithAuth("/api/auth/change-password", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const errors = await res.json();
+        const isMismatch = errors.some(
+          (e: any) => e.code === "PasswordMismatch",
+        );
+
+        if (isMismatch) {
+          form.setError("oldPassword", { message: "Hibás jelenlegi jelszó" });
+        } else {
+          toast.error("Hiba történt a jelszó módosítása során");
+        }
+        return;
+      }
+
+      toast.success("Jelszó sikeresen módosítva");
+      form.reset();
+      setOpen(false);
+    } catch (error) {
+      toast.error("Hiba történt a jelszó módosítása során");
+    }
   };
+
+  const [open, setOpen] = useState<boolean>(false);
 
   const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-linear-to-tl from-foreground to-[#868686] mt-3 lg:mt-0 text-lg lg:text-xl w-fit h-10 lg:h-12">
           Jelszó módosítása
@@ -88,7 +117,7 @@ const ResetPasswordDialog = () => {
               <div>
                 <h1>Jelenlegi jelszavad:</h1>
                 <Controller
-                  name="old_password"
+                  name="oldPassword"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field className="w-full" data-invalid={fieldState.invalid}>
@@ -126,7 +155,7 @@ const ResetPasswordDialog = () => {
               <div>
                 <h1>Új jelszavad:</h1>
                 <Controller
-                  name="new_password"
+                  name="newPassword"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field className="w-full" data-invalid={fieldState.invalid}>

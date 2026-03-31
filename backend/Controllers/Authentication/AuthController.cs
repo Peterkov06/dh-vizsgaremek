@@ -222,10 +222,10 @@ namespace backend.Controllers.Login
         }
 
 
-        public record ModifyDTO(string? Password,string? Full_name, string? Address,string? City, string? Postal_code, string? Nickname, string? Introduction);
+        public record ModifyDTO(string? Full_name, string? Address,string? City, string? Postal_code, string? Nickname, string? Introduction);
 
         [Authorize]
-        [HttpPut("account/modify")]
+        [HttpPatch("account/modify")]
         public async Task<IActionResult> ModifyUser([FromBody]ModifyDTO modify) {
 
             var user = await _userManager.GetUserAsync(User);
@@ -391,6 +391,22 @@ namespace backend.Controllers.Login
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        public record ChangePasswordDto(string OldPassword, string NewPassword);
+        [Authorize]
+        [HttpPatch("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+
+            var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok();
         }
 
         [HttpGet("google-login")]

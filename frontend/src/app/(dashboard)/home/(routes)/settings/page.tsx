@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/combobox";
 import { UserSettings } from "@/lib/models/SettingModels";
 import fetchWithAuth from "@/lib/api-client";
+import { toast } from "sonner";
 
 const Settings = () => {
   const [fullName, setFullName] = useState<string>("");
@@ -160,6 +161,40 @@ const Settings = () => {
     return () => clearTimeout(setPostal);
   }, [cityName]);
 
+  async function HandleInfoSave() {
+    const res = await fetchWithAuth("/api/auth/account/modify", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        full_name: fullName || null,
+        nickname: nickname || null,
+        address: address || null,
+        city: cityName || null,
+        postal_code: postalCode || null,
+      }),
+    });
+
+    if (res.ok) toast.success("Sikeres mentés");
+    else toast.error("Hiba történt");
+  }
+
+  async function HandleModifyIntrodustion() {
+    const res = await fetchWithAuth("/api/auth/account/modify", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        introduction: introduction || null,
+      }),
+    });
+
+    if (res.ok) toast.success("Sikeres módosítás");
+    else toast.error("Hiba történt");
+  }
+
   return (
     <main className="flex flex-col lg:grid grid-cols-10 grid-rows-12 h-full w-full">
       <div className="row-start-1">
@@ -254,7 +289,12 @@ const Settings = () => {
             placeholder="Lakcím (utca, házszám)..."
           ></Input>
         </div>
-        <Button className="text-xl w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
+        <Button
+          className="text-xl w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]"
+          onClick={() => {
+            HandleInfoSave();
+          }}
+        >
           <Save className="size-6"></Save>
           <p>Mentés</p>
         </Button>
@@ -308,11 +348,19 @@ const Settings = () => {
         ></Textarea>
 
         <div className="flex gap-3 items-center justify-center">
-          <Button className="h-10 w-50 text-lg bg-linear-to-tl from-primary to-[#7CB08C]">
+          <Button
+            className="h-10 w-50 text-lg bg-linear-to-tl from-primary to-[#7CB08C]"
+            onClick={HandleModifyIntrodustion}
+          >
             <Pencil className="size-6"></Pencil>
             Módosítás
           </Button>
-          <Button className="h-10 w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
+          <Button
+            className="h-10 w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]"
+            onClick={() => {
+              setIntroduction("");
+            }}
+          >
             <Trash className="size-6"></Trash>
           </Button>
         </div>
