@@ -1,4 +1,5 @@
-﻿using backend.Modules.Progression.Models;
+﻿using backend.Modules.Identity.Models;
+using backend.Modules.Progression.Models;
 using backend.Modules.Shared.Models;
 using backend.Modules.Tutoring.Models;
 
@@ -6,11 +7,12 @@ namespace backend.Modules.Engagement.Models
 {
     public class ChatRoom: ModelBase
     {
-        public Guid? WallId { get; set; }
-        public Guid? EnrollmentId { get; set; }
+        public string StudentId { get; set; } = string.Empty;
+        public string TeacherId { get; set; } = string.Empty;
 
-        public TutoringWall? Wall { get; set; }
-        public PathEnrollment? Enrollment { get; set; }
+        public Student? Student { get; set; }
+        public Teacher? Teacher { get; set; }
+
         public ICollection<ChatMessage> Messages { get; set; } = [];
     }
 }

@@ -12,8 +12,9 @@ namespace backend.Data.Configurations.Resources
             builder.ToTable("submissions");
             builder.Property(x => x.Text).IsRequired(false);
 
-            builder.HasOne(x => x.Submitter).WithMany().HasForeignKey(x => x.SubmitterId).IsRequired().OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(x => x.Submitter).WithMany().HasForeignKey(x => x.SubmitterId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(x => x.HandIn).WithMany(x => x.Submissions).HasForeignKey(x => x.HandInId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Teacher).WithMany().HasForeignKey(x => x.TeacherId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

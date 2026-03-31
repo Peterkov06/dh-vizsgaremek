@@ -5,7 +5,7 @@ namespace backend.Modules.Pages.Teacher.Services
 {
     public interface ITeacherPageService
     {
-        Task<ServiceResult<TeacherHomePageDTO>> GetTeacherHomepage(CancellationToken ct);
+        Task<ServiceResult<TeacherHomePageDTO>> GetTeacherHomepage(string userId, CancellationToken ct);
         Task<ServiceResult<CourseBaseCreationPageDTO>> GetCourseCreationPage(CancellationToken ct);
     }
 }

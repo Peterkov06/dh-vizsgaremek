@@ -22,8 +22,14 @@ namespace backend.Modules.Pages.Student.Services
         {
             var walls = await _db.TutoringWalls.Where(x => x.StudentId == userId).Include(x => x.CourseBase).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ToListAsync(ct);
             var paths = await _db.PathEnrollments.Where(x => x.AttendantId == userId).Include(x => x.Course).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ToListAsync(ct);
-            var upcomingEvents = await _db.Events.Where(x => (x.Enrollment != null && x.Enrollment.AttendantId == userId) || (x.TutoringWall != null && x.TutoringWall.StudentId == userId)).Where(x => x.StartTime > DateTime.UtcNow).OrderBy(x => x.StartTime).Take(5).Include(x => x.PathCourse).Include(x => x.TutoringWall).ThenInclude(x => x.CourseBase).ToListAsync();
-            var notifications = await _db.Notifications.Where(x => x.RecipientId == userId && !x.IsRead).OrderByDescending(x => x.CreatedAt).Take(1).ToListAsync(ct);
+            var upcomingEvents = await _db.Events
+                .Include(x => x.TutoringWall).ThenInclude(x => x.CourseBase).Include(x => x.Enrollment)
+                .Where(x => (x.Enrollment != null && x.Enrollment.AttendantId == userId) || (x.TutoringWall != null && x.TutoringWall.StudentId == userId)).Where(x => x.StartTime > DateTime.UtcNow)
+                .OrderBy(x => x.StartTime).Take(5)
+                .Include(x => x.PathCourse).ToListAsync(ct);
+            var notifications = await _db.Notifications
+                .Where(x => x.RecipientId == userId && !x.IsRead)
+                .OrderByDescending(x => x.CreatedAt).ToListAsync(ct);
             var popularCourses = await _db.CourseBases.Where(x => x.Status == CourseStatus.Active).Include(x => x.Teacher).ThenInclude(x => x.User).Include(x => x.Currency).OrderByDescending(x => x.CreatedAt).Take(10).ToListAsync(ct);
 
 
