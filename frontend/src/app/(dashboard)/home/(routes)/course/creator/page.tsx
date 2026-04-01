@@ -47,6 +47,8 @@ import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import ImageUploader from "./components/ImgUploader";
 import AvatarUploader from "./components/AvatarUploader";
+import fetchWithAuth from "@/lib/api-client";
+import { toast } from "sonner";
 
 const CourseCreator = () => {
   const formSchema = z.object({
@@ -102,8 +104,8 @@ const CourseCreator = () => {
   const [locInputValue, setLocInputValue] = useState("");
   const anchorLoc = useRef(null);
 
-  const [allLevels, setAllLevels] = useState<string[]>([]);
-  const [allSubjects, setAllSubjects] = useState<string[]>([]);
+  const [allLevels, setAllLevels] = useState<IdName[]>([]);
+  const [allSubjects, setAllSubjects] = useState<IdName[]>([]);
   const [allCurrency, setAllCurrency] = useState<Currency[]>([]);
 
   const [priceInput, setPriceInput] = useState("");
@@ -183,7 +185,7 @@ const CourseCreator = () => {
       },
     });
     const dataLevel: IdName[] = await levelRes.json();
-    setAllLevels(dataLevel.map((d) => d.name));
+    setAllLevels(dataLevel);
 
     const subRes = await fetch(BASE_URL + "/courses/metadata/domains", {
       headers: {
@@ -191,7 +193,7 @@ const CourseCreator = () => {
       },
     });
     const dataSub: IdName[] = await subRes.json();
-    setAllSubjects(dataSub.map((d) => d.name));
+    setAllSubjects(dataSub);
 
     const currRes = await fetch(BASE_URL + "/lookups/currencies", {
       headers: {
@@ -206,8 +208,40 @@ const CourseCreator = () => {
     getEverything();
   }, []);
 
-  const onSubmit = (data: CourseCreatorFormData) => {
-    console.log(data);
+  const onSubmit = async (data: CourseCreatorFormData) => {
+    const res = await fetchWithAuth("/api/courses/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        courseName: data.courseName,
+        description: data.description,
+        type: 1,
+        courseDomainId: data.subject || null,
+        courseLevelId: data.level || null,
+        price: data.price,
+        firstConsultationFree: data.firstFree === "Ingyenes",
+        priceCurrencyId: data.currency || null,
+        status: 1,
+        iconImageId: null,
+        bannerImageId: null,
+        tags: data.tags.filter(Boolean),
+        languages: data.languages.filter(Boolean),
+      }),
+    });
+
+    console.log(res);
+
+    if (!res.ok) {
+      const error = await res.json();
+      console.error("API error:", error);
+      toast.error("Hiba történt");
+      return;
+    }
+    if (res.ok) toast.success("Sikeres kurzus létrehozzás");
+
+    // form.reset();
   };
 
   return (
@@ -478,8 +512,8 @@ const CourseCreator = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {allLevels.map((level) => (
-                        <SelectItem key={level} value={level}>
-                          {level}
+                        <SelectItem key={level.id} value={level.id}>
+                          {level.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -518,8 +552,8 @@ const CourseCreator = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {allSubjects.map((level) => (
-                        <SelectItem key={level} value={level}>
-                          {level}
+                        <SelectItem key={level.id} value={level.id}>
+                          {level.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -716,7 +750,7 @@ const CourseCreator = () => {
                         )}
                       </ComboboxValue>
                     </ComboboxChips>
-                    <ComboboxContent anchor={anchorLoc}>
+                    <ComboboxContent anchor={anchorLoc} side="top">
                       <ComboboxEmpty>Nincs ilyen helyszín</ComboboxEmpty>
                       <ComboboxList>
                         {(item) => (

@@ -22,6 +22,18 @@ import {
 import { UserSettings } from "@/lib/models/SettingModels";
 import fetchWithAuth from "@/lib/api-client";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useRouter } from "next/navigation";
 
 const Settings = () => {
   const [fullName, setFullName] = useState<string>("");
@@ -38,6 +50,8 @@ const Settings = () => {
   const [activitySwitch, setActivitySwitch] = useState<boolean>(false);
   const [peddingSwitch, setPeddingSwitch] = useState<boolean>(false);
   const [marketingSwitch, setMarketingSwitch] = useState<boolean>(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     fetchWithAuth("/api/auth/me/settings")
@@ -193,6 +207,24 @@ const Settings = () => {
 
     if (res.ok) toast.success("Sikeres módosítás");
     else toast.error("Hiba történt");
+  }
+
+  async function HandleAccountDelete() {
+    const res = await fetchWithAuth("/api/auth/account/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      toast.error("Hiba történt!");
+      return;
+    }
+    toast.success("Sikeres fiók törlés");
+
+    await fetchWithAuth("api/auth/logout");
+    router.push("/login");
   }
 
   return (
@@ -457,14 +489,36 @@ const Settings = () => {
         </div>
       </section>
       <section className="mx-4 px-5 py-1 mt-4 row-start-8 col-span-5 row-span-1 border-4 border-light-bg-gray rounded-2xl flex items-center justify-between">
-        <h1 className="text-xl">Választott nyelvek: </h1>
-        <div className="mr-20">
-          <img
-            src="/imgs/flags/Hungary.png"
-            alt="hungary"
-            className="h-8 w-14"
-          />
-        </div>
+        <h1 className="text-xl">Fiók törlése: </h1>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button className="bg-linear-to-tl from-[#B02929] to-[#BD6060]">
+              <p className="text-xl">Törlés</p>
+              <Trash className="size-7"></Trash>
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Biztosan akarja törölni a fiókját?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Ez a művelet nem vonható vissza. Ezzel véglegesen törli az Ön
+                fiókját a szervereinkről.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Mégse</AlertDialogCancel>
+              <AlertDialogAction
+                variant={"destructive"}
+                onClick={HandleAccountDelete}
+              >
+                Folytatás
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </section>
     </main>
   );

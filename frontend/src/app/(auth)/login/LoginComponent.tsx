@@ -27,6 +27,7 @@ import {
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 
 const LoginComponent = () => {
   const router = useRouter();
@@ -101,7 +102,7 @@ const LoginComponent = () => {
     if (res.success) {
       router.push("/home");
     } else {
-      alert("Sikertelen bejelentkezés");
+      toast.error("Sikertelen bejelentkezés");
     }
   };
 
