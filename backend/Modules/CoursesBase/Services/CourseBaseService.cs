@@ -23,16 +23,16 @@ namespace backend.Modules.CoursesBase.Services
             _lookupService = lookupService;
         }
 
-        public async Task<ServiceResult<CourseBaseCreationDTO>> CreateCourseBaseAsync(CourseBaseCreationDTO newCourse, CancellationToken ct)
+        public async Task<ServiceResult<CourseBaseCreationDTO>> CreateCourseBaseAsync(CourseBaseCreationDTO newCourse, string teacherId, CancellationToken ct)
         {
-            var exists = await _db.CourseBases.Where(x => x.TeacherId == newCourse.TeacherId).AnyAsync(x => x.CourseName == newCourse.CourseName, ct);
+            var exists = await _db.CourseBases.Where(x => x.TeacherId == teacherId).AnyAsync(x => x.CourseName == newCourse.CourseName, ct);
 
             if (exists)
             {
                 return ServiceResult<CourseBaseCreationDTO>.Failure("Course with such name exists");
             }
 
-            var course = ToEntity(newCourse);
+            var course = ToEntity(newCourse, teacherId);
             _db.CourseBases.Add(course);
             await _db.SaveChangesAsync(ct);
 
@@ -178,11 +178,11 @@ namespace backend.Modules.CoursesBase.Services
             throw new NotImplementedException();
         }
 
-        public static CourseBaseModel ToEntity(CourseBaseCreationDTO dto)
+        public static CourseBaseModel ToEntity(CourseBaseCreationDTO dto, string teacherId)
         {
             return new CourseBaseModel
             {
-                TeacherId = dto.TeacherId,
+                TeacherId = teacherId,
                 CourseName = dto.CourseName,
                 Description = dto.Description,
                 Type = dto.Type,

@@ -5,7 +5,6 @@ namespace backend.Modules.CoursesBase.DTOs
     public class CourseBaseCreationDTO
     {
         public Guid? Id { get; set; } = null;
-        public required string TeacherId { get; set; }
         public required string CourseName { get; set; }
         public required string Description { get; set; }
         public required CourseType Type { get; set; }
