@@ -13,7 +13,7 @@ namespace backend.Modules.CoursesBase.DTOs
         public decimal Price { get; set; }
         public required bool FirstConsultationFree { get; set; }
         public Guid PriceCurrencyId { get; set; }
-        public CourseStatus Status { get; set; }
+        public CourseStatus? Status { get; set; } = null;
         public Guid? IconImageId { get; set; } = null;
         public Guid? BannerImageId { get; set; } = null;
         public List<string> Tags { get; set; } = [];

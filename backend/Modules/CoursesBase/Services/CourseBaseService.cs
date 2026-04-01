@@ -191,7 +191,7 @@ namespace backend.Modules.CoursesBase.Services
                 Price = dto.Price,
                 FirstConsultationFree = dto.FirstConsultationFree,
                 PriceCurrencyId = dto.PriceCurrencyId,
-                Status = dto.Status,
+                Status = dto.Status ?? CourseStatus.Active,
                 IconImageId = dto.IconImageId,
                 BannerImageId = dto.BannerImageId
             };

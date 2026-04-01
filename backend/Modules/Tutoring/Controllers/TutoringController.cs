@@ -75,6 +75,13 @@ namespace backend.Modules.Tutoring.Controllers
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
+        [HttpGet("{wallId:guid}/{postId:guid}")]
+        public async Task<IActionResult> GetOneWallPost(Guid wallId, Guid postId, CancellationToken ct)
+        {
+            var res = await _wallService.GetOneWallPost(wallId, postId, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
         [Authorize(Roles = "Teacher")]
         [HttpPost("wall/post")]
         public async Task<IActionResult> PostOnWall([FromBody] NewWallPostDTO postDTO, CancellationToken ct)

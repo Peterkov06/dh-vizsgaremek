@@ -602,7 +602,7 @@
       }
     ]
   },
-  "teacherProfile":
+  "teacherProfilePage":
   {
   "teachingLocations": [],
   "qualifications": [],
@@ -616,7 +616,7 @@
   "type": "Teacher",
   "age": 25
   },
-  "studentProfile":
+  "studentProfilePage":
   {
   "nickname": null,
   "id": "097e1f8b-4777-4b78-84f7-0a00033ea42a",
