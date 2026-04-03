@@ -40,11 +40,14 @@ export default function AvatarUploader() {
           <>
             <Image src={imageSrc} alt="Avatar" fill className="object-cover" />
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <Plus className="size-8 text-white" />
+              <Plus className="size-10 text-white" />
             </div>
           </>
         ) : (
-          <Plus className="size-20 text-primary-foreground" />
+          <div>
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl"></div>
+            <Plus className="size-20 text-white" />
+          </div>
         )}
       </div>
     </>

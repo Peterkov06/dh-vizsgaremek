@@ -47,11 +47,14 @@ export default function ImageUploader() {
             />
             {/* Hover overlay to re-select */}
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
-              <Plus className="size-10 text-white" />
+              <Plus className="size-20 text-white" />
             </div>
           </>
         ) : (
-          <Plus className="size-20 text-primary-foreground" />
+          <div>
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl"></div>
+            <Plus className="size-20 text-white" />
+          </div>
         )}
       </div>
     </>
