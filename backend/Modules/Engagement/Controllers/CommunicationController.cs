@@ -14,11 +14,13 @@ namespace backend.Modules.Engagement.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICommunicationService _communicationService;
+        private readonly INotificationService _notificationService;
 
-        public CommunicationController(ICommunicationService communicationService, UserManager<ApplicationUser> userManager)
+        public CommunicationController(ICommunicationService communicationService, UserManager<ApplicationUser> userManager, INotificationService notificationService)
         {
             _communicationService = communicationService;
             _userManager = userManager;
+            _notificationService = notificationService;
         }
 
         [Authorize(Roles = "Student")]
@@ -33,6 +35,13 @@ namespace backend.Modules.Engagement.Controllers
             }
 
             var res = await _communicationService.WriteCourseReview(dto, id, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
+        [HttpGet("notifications/{userId}")]
+        public async Task<IActionResult> GetNotifications(string userId, CancellationToken ct)
+        {
+            var res = await _notificationService.GetUserNotifications(userId, ct);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
     }

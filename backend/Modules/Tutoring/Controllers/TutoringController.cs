@@ -1,4 +1,7 @@
 ﻿using backend.Models;
+using backend.Modules.CoursesBase.Services;
+using backend.Modules.Engagement.Models;
+using backend.Modules.Engagement.Services;
 using backend.Modules.Tutoring.DTOs;
 using backend.Modules.Tutoring.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -15,12 +18,16 @@ namespace backend.Modules.Tutoring.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITutoringManagementService _tutoringManagementService;
         private readonly ITutoringWallService _wallService;
+        private readonly INotificationService _notificationService;
+        private readonly ICourseBaseService _courseBaseService;
 
-        public TutoringController(ITutoringManagementService tutoringManagementService, ITutoringWallService wallService, UserManager<ApplicationUser> userManager)
+        public TutoringController(ITutoringManagementService tutoringManagementService, ITutoringWallService wallService, UserManager<ApplicationUser> userManager, INotificationService notificationService, ICourseBaseService courseBaseService)
         {
             _tutoringManagementService = tutoringManagementService;
             _wallService = wallService;
             _userManager = userManager;
+            _notificationService = notificationService;
+            _courseBaseService = courseBaseService;
         }
 
         [Authorize(Roles = "Student")]
@@ -28,13 +35,15 @@ namespace backend.Modules.Tutoring.Controllers
         public async Task<IActionResult> EnrollToTutoring([FromBody] TutoringWallEnrollmentDTO enrollmentDTO, CancellationToken ct)
         {
             var user = await _userManager.GetUserAsync(User);
+            var teacherName = await _courseBaseService.GetCourseTeacherNameAsync(enrollmentDTO.CourseId, ct);
 
-            if (user == null)
+            if (user is null || teacherName.Data is null)
             {
                 return NotFound();
             }
 
             var res = await _tutoringManagementService.ApplyToCourse(enrollmentDTO, user.Id, ct);
+            await _notificationService.NotifyAsync(teacherName.Data, NotificationType.PendingEnrollment);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 

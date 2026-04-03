@@ -7,6 +7,7 @@ namespace backend.Modules.Engagement
         public static IServiceCollection AddEngagementServices(this IServiceCollection services)
         {
             services.AddScoped<ICommunicationService, CommunicationService>();
+            services.AddScoped<INotificationService, NotificationService>();
             return services;
         }
     }

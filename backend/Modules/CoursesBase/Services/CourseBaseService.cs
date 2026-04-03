@@ -65,6 +65,16 @@ namespace backend.Modules.CoursesBase.Services
             return ServiceResult<List<CourseBaseExplorerDTO>>.Success(courses);
         }
 
+        public async Task<ServiceResult<string>> GetCourseTeacherNameAsync(Guid courseId, CancellationToken ct = default)
+        {
+            var teacherName = await _db.CourseBases.Where(x => x.Id == courseId).Include(x => x.Teacher).ThenInclude(x => x.User).Select(x => x.Teacher.User.FullName).FirstOrDefaultAsync(ct);
+            if (teacherName is null)
+            {
+                return ServiceResult<string>.NotFound("No course found");
+            }
+            return ServiceResult<string>.Success(teacherName);
+        }
+
         public async Task<ServiceResult<CourseBaseListResultDTO>> GetCoursesPage(CourseFiltersDTO filtersDTO, CancellationToken ct)
         {
             var query = _db.CourseBases.AsQueryable();
