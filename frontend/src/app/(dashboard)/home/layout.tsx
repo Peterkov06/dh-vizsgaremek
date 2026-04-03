@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import StudentSideBar from "./(student)/StudentSideBar";
 import getCurrentUser from "@/lib/auth";
 import { redirect } from "next/navigation";
+import TeacherSidebar from "./(teacher)/TeacherSidebar";
 
 const DashboardLayout = async ({ children }: { children: ReactNode }) => {
   const user = await getCurrentUser();
@@ -12,7 +13,11 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
 
   return (
     <SidebarProvider>
-      <StudentSideBar user={user}></StudentSideBar>
+      {user.role === "Student" ? (
+        <StudentSideBar user={user}></StudentSideBar>
+      ) : (
+        <TeacherSidebar user={user}></TeacherSidebar>
+      )}
       <main className="w-full h-screen">
         <SidebarTrigger className="absolute"></SidebarTrigger>
         <div className="px-4 lg:px-16 pt-8 pb-5 h-screen">{children}</div>

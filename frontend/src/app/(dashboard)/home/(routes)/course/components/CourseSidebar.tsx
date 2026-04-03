@@ -1,6 +1,7 @@
 "use client";
 
 import { CourseDetail } from "@/lib/models/CourseSearchModel";
+import { FileText, Globe, Users } from "lucide-react";
 import {
   redirect,
   usePathname,
@@ -39,27 +40,30 @@ const CourseSidebar = () => {
       </div>
       <div className="flex flex-col gap-5 bg-background rounded-2xl py-5 px-2">
         <div
-          className={`bg-light-bg-gray px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "modify" && "bg-primary text-background"}`}
+          className={`flex gap-2 bg-light-bg-gray cursor-pointer px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "modify" && "bg-primary text-background"}`}
           onClick={() => {
             HandleNavigate("modify");
           }}
         >
+          <FileText></FileText>
           Kurzus profil
         </div>
         <div
-          className={`bg-light-bg-gray px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "students" && "bg-primary text-background"}`}
+          className={`flex gap-2 bg-light-bg-gray px-2 py-1 cursor-pointer rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "students" && "bg-primary text-background"}`}
           onClick={() => {
             HandleNavigate("students");
           }}
         >
+          <Users></Users>
           Tanulók
         </div>
         <div
-          className={`bg-light-bg-gray px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "community" && "bg-primary text-background"}`}
+          className={`flex gap-2 bg-light-bg-gray px-2 py-1 cursor-pointer rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "community" && "bg-primary text-background"}`}
           onClick={() => {
             HandleNavigate("community");
           }}
         >
+          <Globe></Globe>
           Közösség
         </div>
       </div>

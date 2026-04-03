@@ -20,7 +20,15 @@ import {
 } from "@/components/ui/tooltip";
 import fetchWithAuth from "@/lib/api-client";
 import { User } from "@/lib/auth";
-import { Book, Cog, House, LogOut, MessageCircle, Search } from "lucide-react";
+import {
+  Book,
+  Cog,
+  House,
+  LogOut,
+  MessageCircle,
+  Search,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -28,11 +36,12 @@ import { useEffect, useState } from "react";
 const navItems = [
   { title: "Főoldal", url: "/home", icon: House },
   { title: "Kurzusaim", url: "/home/course", icon: Book },
+  { title: "Tanulóim", url: "/home/students", icon: Users },
   { title: "Üzenetek", url: "/home/message", icon: MessageCircle },
   { title: "Kereső", url: "/home/search", icon: Search },
 ];
 
-const StudentSideBar = (props: { user: User }) => {
+const TeacherSidebar = (props: { user: User }) => {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -124,4 +133,4 @@ const StudentSideBar = (props: { user: User }) => {
   );
 };
 
-export default StudentSideBar;
+export default TeacherSidebar;

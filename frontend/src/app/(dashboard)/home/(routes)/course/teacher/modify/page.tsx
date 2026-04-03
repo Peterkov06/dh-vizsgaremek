@@ -797,7 +797,7 @@ const ModifyTeacherCourse = () => {
             />
           </div>
           <Button type="submit" className="text-xl">
-            <CirclePlus className="size-5"></CirclePlus>Létrehozzás
+            <Pen className="size-5"></Pen>Módosítás
           </Button>
         </section>
       </form>

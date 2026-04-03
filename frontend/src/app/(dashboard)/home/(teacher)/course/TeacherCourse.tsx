@@ -24,12 +24,6 @@ const TeacherCourse = (props: { user: User }) => {
     <main className="flex flex-col gap-3">
       <h1 className="text-5xl font-bold text-primary">Kurzusaim</h1>
 
-      <Link href={"course/creator"}>
-        <Button className="text-2xl h-14">
-          <Plus className="size-8"></Plus>Kurzus létrehozzása
-        </Button>
-      </Link>
-
       <section className="flex flex-col gap-7">
         {dummyTeacherCourses.map((tc) => (
           <TeacherCourseCardOverView
@@ -37,6 +31,13 @@ const TeacherCourse = (props: { user: User }) => {
             key={tc.id}
           ></TeacherCourseCardOverView>
         ))}
+        <Link href={"course/creator"}>
+          <div className="flex w-full hover:scale-105 transition-all duration-300 cursor-pointer will-change-transform">
+            <Button className="text-2xl w-full h-14">
+              <Plus className="size-10"></Plus>Kurzus létrehozzása
+            </Button>
+          </div>
+        </Link>
       </section>
     </main>
   );

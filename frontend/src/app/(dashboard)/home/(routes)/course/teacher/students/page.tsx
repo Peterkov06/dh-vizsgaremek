@@ -114,7 +114,7 @@ const StudentsPage = () => {
             {myStudents.isPeddingStudents.map((ps) => (
               <div
                 key={ps.id}
-                className="flex gap-3 bg-light-bg-gray px-3 py-5 rounded-2xl border-2 border-secondary"
+                className="flex gap-3 bg-light-bg-gray px-3 py-5 rounded-2xl border-2 border-secondary hover:border-primary transition-all duration-300"
               >
                 <Avatar className="size-20 bg-background">
                   <AvatarImage
@@ -187,11 +187,14 @@ const StudentsPage = () => {
           {myStudents.activeStudents
             .filter((as) => as.name.toLowerCase().includes(searchStudent))
             .map((as) => (
-              <div key={as.id} className="flex">
+              <div
+                key={as.id}
+                className="flex border-4 rounded-2xl hover:border-secondary border-transparent transition-all duration-300 shadow-2xl"
+              >
                 <img
                   src={as.avatarUrl || "/defaults/default_avatar.jpg"}
                   alt=""
-                  className="w-30 h-30"
+                  className="w-30 h-30 rounded-l-2xl"
                 />
                 <div className="bg-light-bg-gray px-6 w-full flex justify-between items-center rounded-r-2xl">
                   <div className="flex flex-col gap-3">
