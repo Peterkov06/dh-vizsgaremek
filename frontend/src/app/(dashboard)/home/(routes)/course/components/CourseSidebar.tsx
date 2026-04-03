@@ -33,13 +33,13 @@ const CourseSidebar = () => {
   };
 
   return (
-    <div className="border-4 border-light-bg-gray rounded-2xl h-fit px-2 py-4 bg-light-bg-gray w-[23em]">
+    <div className="border-4 border-light-bg-gray rounded-2xl h-fit px-2 py-4 bg-light-bg-gray w-[20em]">
       <div className="mb-5">
         <h1 className="text-primary font-bold">{course?.courseName}</h1>
       </div>
       <div className="flex flex-col gap-5 bg-background rounded-2xl py-5 px-2">
         <div
-          className={`bg-light-bg-gray p-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "modify" && "bg-primary text-background"}`}
+          className={`bg-light-bg-gray px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "modify" && "bg-primary text-background"}`}
           onClick={() => {
             HandleNavigate("modify");
           }}
@@ -47,7 +47,7 @@ const CourseSidebar = () => {
           Kurzus profil
         </div>
         <div
-          className={`bg-light-bg-gray p-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "students" && "bg-primary text-background"}`}
+          className={`bg-light-bg-gray px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "students" && "bg-primary text-background"}`}
           onClick={() => {
             HandleNavigate("students");
           }}
@@ -55,7 +55,7 @@ const CourseSidebar = () => {
           Tanulók
         </div>
         <div
-          className={`bg-light-bg-gray p-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "community" && "bg-primary text-background"}`}
+          className={`bg-light-bg-gray px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "community" && "bg-primary text-background"}`}
           onClick={() => {
             HandleNavigate("community");
           }}

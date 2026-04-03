@@ -4,16 +4,15 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { useEffect } from "react";
 
 const ForceSideBarClose = () => {
-  const { setOpen, setOpenMobile, open } = useSidebar();
+  const { setOpen, open, isMobile } = useSidebar();
 
   useEffect(() => {
     setOpen(false);
-    setOpenMobile(false);
 
     const trigger = document.querySelector(
       "[data-sidebar='trigger']",
     ) as HTMLElement;
-    if (trigger) trigger.style.display = "none";
+    if (trigger && !isMobile) trigger.style.display = "none";
 
     return () => {
       if (trigger) trigger.style.display = "";

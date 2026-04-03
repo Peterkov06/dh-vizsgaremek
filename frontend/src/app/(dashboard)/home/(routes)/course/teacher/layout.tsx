@@ -4,10 +4,10 @@ import CourseSidebar from "../components/CourseSidebar";
 
 const DashboardLayout = async ({ children }: { children: ReactNode }) => {
   return (
-    <main className="w-full h-screen flex gap-10">
+    <main className="w-full flex gap-10">
       <ForceSideBarClose></ForceSideBarClose>
       <CourseSidebar></CourseSidebar>
-      <div className="w-full h-screen">{children}</div>
+      <div className="flex-1">{children}</div>
     </main>
   );
 };
