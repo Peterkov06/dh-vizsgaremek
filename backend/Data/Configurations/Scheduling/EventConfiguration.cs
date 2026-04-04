@@ -15,7 +15,7 @@ namespace backend.Data.Configurations.Scheduling
             });
             builder.Property(x => x.OrganiserId).IsRequired().HasMaxLength(450);
             builder.Property(x => x.Type).HasConversion<string>().HasMaxLength(50).IsRequired();
-            builder.Property(x => x.Title).IsRequired().HasMaxLength(100).IsRequired();
+            builder.Property(x => x.Title).IsRequired().HasMaxLength(100).IsRequired(false);
             builder.Property(x => x.Description).IsRequired(false);
             builder.Property(x => x.StartTime).IsRequired();
             builder.Property(x => x.EndTime).IsRequired(false);

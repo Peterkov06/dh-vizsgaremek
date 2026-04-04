@@ -41,9 +41,11 @@ namespace backend.Data
         public DbSet<CourseDomain> CourseDomains { get; set; }
         public DbSet<CourseTag> CourseTags { get; set; }
         public DbSet<CourseToTag> CoursesToTags { get; set; }
+        public DbSet<CourseToPlace> CoursesToPlaces { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<CourseToLanguage> CoursesToLanguages { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<TeacherTimeblock> TeacherTimeblocks { get; set; }
         public DbSet<Unit> LearningPathUnits { get; set; }
         public DbSet<UnitLesson> LearningPathUnitLessons { get; set; }
         public DbSet<LessonToContent> LearningPathLessonsToContents { get; set; }

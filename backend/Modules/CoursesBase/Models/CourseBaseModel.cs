@@ -11,6 +11,7 @@ namespace backend.Modules.CoursesBase.Models
         public required string TeacherId { get; set; }
         public required string CourseName { get; set; }
         public required string Description { get; set; }
+        public int TokenMinuteValue { get; set; } = 60;
         public required CourseType Type { get; set; }
         public required Guid CourseDomainId { get; set; }
         public required Guid CourseLevelId { get; set; }
@@ -30,6 +31,7 @@ namespace backend.Modules.CoursesBase.Models
 
         public ICollection<CourseToTag> CourseToTags { get; set; } = [];
         public ICollection<CourseToLanguage> CourseToLanguages { get; set; } = [];
+        public ICollection<CourseToPlace> CourseToPlaces { get; set; } = [];
         public ICollection<CourseReview> Reviews { get; set; } = [];
 
     }
