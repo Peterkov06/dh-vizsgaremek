@@ -24,6 +24,7 @@ import {
   User,
   X,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type PeddingStudentType = {
@@ -48,6 +49,7 @@ type MYStudentsType = {
 
 const StudentsPage = () => {
   const [searchStudent, setSearchStudent] = useState<string>("");
+  const router = useRouter();
 
   const [myStudents, setMyStudents] = useState<MYStudentsType>({
     isPeddingStudents: [
@@ -126,7 +128,14 @@ const StudentsPage = () => {
                   <div className="flex justify-between w-[14em]">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button className="h-10 w-10">
+                        <Button
+                          className="h-10 w-10"
+                          onClick={() => {
+                            router.push(
+                              `/home/students/student/profile?id=${ps.id}`,
+                            );
+                          }}
+                        >
                           <CircleUserRound className="size-6"></CircleUserRound>
                         </Button>
                       </TooltipTrigger>
@@ -222,7 +231,14 @@ const StudentsPage = () => {
                   <div className="flex gap-4">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button className="h-16 w-16">
+                        <Button
+                          className="h-16 w-16"
+                          onClick={() => {
+                            router.push(
+                              `/home/students/student/profile?id=${as.id}`,
+                            );
+                          }}
+                        >
                           <CircleUserRound className="size-10"></CircleUserRound>
                         </Button>
                       </TooltipTrigger>
@@ -233,7 +249,14 @@ const StudentsPage = () => {
 
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button className="h-16 w-16">
+                        <Button
+                          className="h-16 w-16"
+                          onClick={() => {
+                            router.push(
+                              `/home/students/student/message?id=${as.id}`,
+                            );
+                          }}
+                        >
                           <MessageCircleMore className="size-10"></MessageCircleMore>
                         </Button>
                       </TooltipTrigger>
@@ -244,7 +267,14 @@ const StudentsPage = () => {
 
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button className="h-16 w-16">
+                        <Button
+                          className="h-16 w-16"
+                          onClick={() => {
+                            router.push(
+                              `/home/students/student/wall?id=${as.id}`,
+                            );
+                          }}
+                        >
                           <BrickWall className="size-10"></BrickWall>
                         </Button>
                       </TooltipTrigger>

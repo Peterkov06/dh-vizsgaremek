@@ -194,7 +194,12 @@ const StudentPage = () => {
 
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button className="h-16 w-16 cursor-pointer">
+                      <Button
+                        className="h-16 w-16 cursor-pointer"
+                        onClick={() => {
+                          HandleRedirect(as.id, "wall");
+                        }}
+                      >
                         <BrickWall className="size-10"></BrickWall>
                       </Button>
                     </TooltipTrigger>

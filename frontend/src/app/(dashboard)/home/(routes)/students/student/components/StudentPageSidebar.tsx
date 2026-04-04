@@ -1,7 +1,12 @@
 "use client";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CircleUserRound, FileText, MessageCircleMore } from "lucide-react";
+import {
+  BrickWall,
+  CircleUserRound,
+  FileText,
+  MessageCircleMore,
+} from "lucide-react";
 import { redirect, usePathname, useSearchParams } from "next/navigation";
 
 type StudentType = {
@@ -15,7 +20,7 @@ const StudentPageSidebar = () => {
   const searchParams = useSearchParams();
   const pathName = usePathname();
 
-  const path = pathName.split("/").at(-1);
+  const path = pathName.split("/");
 
   const id = searchParams.get("id");
 
@@ -35,7 +40,7 @@ const StudentPageSidebar = () => {
   //   }, []);
 
   const HandleNavigate = (name: string) => {
-    if (path !== name) {
+    if (!path.includes(name)) {
       redirect(`${name}?id=${id}`);
     }
   };
@@ -55,7 +60,7 @@ const StudentPageSidebar = () => {
       </div>
       <div className="flex flex-col gap-5 bg-background rounded-2xl py-5 px-2">
         <div
-          className={`flex gap-2 bg-light-bg-gray cursor-pointer px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "profile" && "bg-primary text-background"}`}
+          className={`flex gap-2 bg-light-bg-gray cursor-pointer px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path.includes("profile") && "bg-primary text-background"}`}
           onClick={() => {
             HandleNavigate("profile");
           }}
@@ -64,13 +69,23 @@ const StudentPageSidebar = () => {
           Profil
         </div>
         <div
-          className={`flex gap-2 bg-light-bg-gray px-2 py-1 cursor-pointer rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path === "message" && "bg-primary text-background"}`}
+          className={`flex gap-2 bg-light-bg-gray px-2 py-1 cursor-pointer rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path.includes("message") && "bg-primary text-background"}`}
           onClick={() => {
             HandleNavigate("message");
           }}
         >
           <MessageCircleMore></MessageCircleMore>
           Üzenetek
+        </div>
+
+        <div
+          className={`flex gap-2 bg-light-bg-gray px-2 py-1 cursor-pointer rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path.includes("wall") && "bg-primary text-background"}`}
+          onClick={() => {
+            HandleNavigate("wall");
+          }}
+        >
+          <BrickWall></BrickWall>
+          Kurzus fal
         </div>
       </div>
     </div>
