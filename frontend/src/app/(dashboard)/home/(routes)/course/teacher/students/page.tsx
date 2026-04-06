@@ -21,11 +21,11 @@ import {
   HandHelping,
   MessageCircleMore,
   Search,
-  User,
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import PeddingStudentProfile from "../../components/PeddingStudentProfile";
 
 type PeddingStudentType = {
   id: string;
@@ -126,23 +126,7 @@ const StudentsPage = () => {
                 <div className="flex flex-col justify-between">
                   <h2 className="text-2xl">{ps.name}</h2>
                   <div className="flex justify-between w-[14em]">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          className="h-10 w-10"
-                          onClick={() => {
-                            router.push(
-                              `/home/students/student/profile?id=${ps.id}`,
-                            );
-                          }}
-                        >
-                          <CircleUserRound className="size-6"></CircleUserRound>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-lg">Profil</p>
-                      </TooltipContent>
-                    </Tooltip>
+                    <PeddingStudentProfile id={ps.id}></PeddingStudentProfile>
                     <div className="flex gap-1">
                       <Tooltip>
                         <TooltipTrigger asChild>

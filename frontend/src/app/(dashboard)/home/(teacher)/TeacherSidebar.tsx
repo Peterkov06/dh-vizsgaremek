@@ -22,6 +22,7 @@ import fetchWithAuth from "@/lib/api-client";
 import { User } from "@/lib/auth";
 import {
   Book,
+  Calendar,
   Cog,
   House,
   LogOut,
@@ -38,6 +39,7 @@ const navItems = [
   { title: "Kurzusaim", url: "/home/course", icon: Book },
   { title: "Tanulóim", url: "/home/students", icon: Users },
   { title: "Üzenetek", url: "/home/message", icon: MessageCircle },
+  { title: "Órarend", url: "/home/time_table", icon: Calendar },
   { title: "Kereső", url: "/home/search", icon: Search },
 ];
 

@@ -34,6 +34,7 @@ import {
   ChartArea,
   CircleDollarSignIcon,
   CirclePlus,
+  Clock,
   Globe,
   MapPin,
   Pen,
@@ -72,6 +73,9 @@ const CourseCreator = () => {
     price: z
       .number({ message: "Ár megadása kötelező" })
       .min(1, { message: "Az ár nem lehet 1-nél kevesebb" }),
+    classLenght: z
+      .number({ message: "Óra hossz megadása kötelező" })
+      .min(1, { message: "Az óra hossza nem lehet 1-nél kevesebb" }),
   });
   type CourseCreatorFormData = z.infer<typeof formSchema>;
 
@@ -87,6 +91,7 @@ const CourseCreator = () => {
       subject: "",
       firstFree: "Ingyenes",
       price: 0,
+      classLenght: 0,
       currency: "",
     },
     mode: "onTouched",
@@ -109,6 +114,7 @@ const CourseCreator = () => {
   const [allCurrency, setAllCurrency] = useState<Currency[]>([]);
 
   const [priceInput, setPriceInput] = useState("");
+  const [classLenghtInput, setClassLenghtInput] = useState("");
 
   useEffect(() => {
     const searchQuery = tagInputValue;
@@ -699,6 +705,39 @@ const CourseCreator = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+            <div className="flex flex-col gap-2 w-full">
+              <div className="flex">
+                <Clock className="text-primary size-7"></Clock>
+                <h2 className="text-xl text-primary">Óra hossza</h2>
+              </div>
+              <Controller
+                name="classLenght"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <Input
+                      type="number"
+                      min={0}
+                      className={`border-2 text-xl! ${
+                        fieldState.invalid ? "border-red-500" : "border-primary"
+                      }`}
+                      placeholder="Óra hossza (perc)..."
+                      value={classLenghtInput}
+                      onChange={(e) => {
+                        setClassLenghtInput(e.target.value);
+                        const num = Number(e.target.value);
+                        field.onChange(e.target.value === "" ? undefined : num);
+                      }}
+                      onBlur={field.onBlur}
+                    />
+
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
