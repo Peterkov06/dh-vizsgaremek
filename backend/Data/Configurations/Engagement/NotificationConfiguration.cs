@@ -11,7 +11,7 @@ namespace backend.Data.Configurations.Engagement
             base.Configure(builder);
             builder.ToTable("notifications");
             builder.Property(x => x.Type).IsRequired().HasConversion<string>().HasMaxLength(50);
-            builder.Property(x => x.RecipientId).IsRequired().HasMaxLength(450);
+            builder.Property(x => x.RecipientId).IsRequired();
             builder.Property(x => x.Message).IsRequired().HasMaxLength(500);
             builder.Property(x => x.ReferenceId).IsRequired();
             builder.Property(x => x.IsRead).IsRequired();

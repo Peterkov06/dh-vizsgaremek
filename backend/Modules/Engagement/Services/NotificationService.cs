@@ -33,6 +33,16 @@ namespace backend.Modules.Engagement.Services
                 .ToListAsync(ct);
             return ServiceResult<List<NotificationDTO>>.Success(notifications);
         }
+        
+        public async Task SetNotificationsToRead(List<Guid> notificationIds, CancellationToken ct = default)
+        {
+            await _db.Notifications
+                .Where(x => notificationIds.Contains(x.Id))
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(n => n.IsRead, true)
+                    .SetProperty(n => n.ReadAt, DateTime.UtcNow),
+                ct);
+        }
 
         public static Expression<Func<Notification, NotificationDTO>> NotificationToDTO =>
             notification => new NotificationDTO

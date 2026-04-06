@@ -42,6 +42,11 @@ namespace backend.Modules.Engagement.Controllers
         public async Task<IActionResult> GetNotifications(string userId, CancellationToken ct)
         {
             var res = await _notificationService.GetUserNotifications(userId, ct);
+            if (res.Succeded && res.Data.Any())
+            {
+                var unreadIDs = res.Data.Where(x => x.IsRead == false).Select(x => x.Id).ToList();
+                await _notificationService.SetNotificationsToRead(unreadIDs, ct);
+            }
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
     }

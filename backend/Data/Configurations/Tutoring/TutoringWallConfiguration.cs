@@ -10,7 +10,7 @@ namespace backend.Data.Configurations.Tutoring
         {
             base.Configure(builder);
             builder.ToTable("tutoring_walls");
-            builder.Property(x => x.StudentId).IsRequired().HasMaxLength(450);
+            builder.Property(x => x.StudentId).IsRequired();
             builder.Property(x => x.CourseId).IsRequired();
             builder.Property(x => x.Status).IsRequired().HasConversion<string>().HasMaxLength(50);
             builder.Property(x => x.TokenCount).IsRequired();

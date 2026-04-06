@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class fourth_initial_migration : Migration
+    public partial class db_cleanup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,19 +39,6 @@ namespace backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Conversation",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Type = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Conversation", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,22 +117,6 @@ namespace backend.Migrations
                         principalTable: "folders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "hand_ins",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    MaxPoints = table.Column<int>(type: "integer", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_hand_ins", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -433,65 +404,12 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConversationParticipant",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ConversationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    LastOnlineAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConversationParticipant", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ConversationParticipant_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ConversationParticipant_Conversation_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversation",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Message",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ConversationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SenderId = table.Column<string>(type: "text", nullable: false),
-                    Content = table.Column<string>(type: "text", nullable: false),
-                    SentAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Message", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Message_AspNetUsers_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Message_Conversation_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversation",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "notifications",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    RecipientId = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: false),
-                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    RecipientId = table.Column<string>(type: "text", nullable: false),
+                    SenderId = table.Column<string>(type: "text", nullable: true),
                     Message = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     Type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     ReferenceId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -509,6 +427,12 @@ namespace backend.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_notifications_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -573,8 +497,7 @@ namespace backend.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "text", nullable: false),
-                    PreferenceId = table.Column<int>(type: "integer", nullable: false),
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    PreferenceId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -616,30 +539,29 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "submissions",
+                name: "chat_rooms",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Text = table.Column<string>(type: "text", nullable: true),
-                    HandInId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SubmitterId = table.Column<string>(type: "text", nullable: false),
+                    StudentId = table.Column<string>(type: "text", nullable: true),
+                    TeacherId = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_submissions", x => x.Id);
+                    table.PrimaryKey("PK_chat_rooms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_submissions_hand_ins_HandInId",
-                        column: x => x.HandInId,
-                        principalTable: "hand_ins",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_submissions_students_SubmitterId",
-                        column: x => x.SubmitterId,
+                        name: "FK_chat_rooms_students_StudentId",
+                        column: x => x.StudentId,
                         principalTable: "students",
                         principalColumn: "UserId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_chat_rooms_teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "teachers",
+                        principalColumn: "TeacherId",
                         onDelete: ReferentialAction.SetNull);
                 });
 
@@ -651,6 +573,7 @@ namespace backend.Migrations
                     TeacherId = table.Column<string>(type: "text", nullable: false),
                     CourseName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
+                    TokenMinuteValue = table.Column<int>(type: "integer", nullable: false),
                     Type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     CourseDomainId = table.Column<Guid>(type: "uuid", nullable: false),
                     CourseLevelId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -728,58 +651,45 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "hand_in_feedbacks",
+                name: "teacher_timeblocks",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Text = table.Column<string>(type: "text", nullable: true),
-                    Grade = table.Column<int>(type: "integer", nullable: true),
-                    Points = table.Column<int>(type: "integer", nullable: true),
-                    SubmissionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    GraderId = table.Column<Guid>(type: "uuid", maxLength: 450, nullable: false),
-                    TeacherId = table.Column<string>(type: "text", nullable: true),
+                    TeacherId = table.Column<string>(type: "text", nullable: false),
+                    Start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    End = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_hand_in_feedbacks", x => x.Id);
+                    table.PrimaryKey("PK_teacher_timeblocks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_hand_in_feedbacks_submissions_SubmissionId",
-                        column: x => x.SubmissionId,
-                        principalTable: "submissions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_hand_in_feedbacks_teachers_TeacherId",
+                        name: "FK_teacher_timeblocks_teachers_TeacherId",
                         column: x => x.TeacherId,
                         principalTable: "teachers",
-                        principalColumn: "TeacherId");
+                        principalColumn: "TeacherId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "submission_attachments",
+                name: "chat_messages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    SubmissionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ContentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SenderId = table.Column<string>(type: "text", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: false),
+                    ChatId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_submission_attachments", x => x.Id);
+                    table.PrimaryKey("PK_chat_messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_submission_attachments_content_items_ContentId",
-                        column: x => x.ContentId,
-                        principalTable: "content_items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_submission_attachments_submissions_SubmissionId",
-                        column: x => x.SubmissionId,
-                        principalTable: "submissions",
+                        name: "FK_chat_messages_chat_rooms_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "chat_rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -790,6 +700,7 @@ namespace backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CourseId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TeacherId = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -798,6 +709,40 @@ namespace backend.Migrations
                     table.PrimaryKey("PK_community_threads", x => x.Id);
                     table.ForeignKey(
                         name: "FK_community_threads_courses_base_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "courses_base",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_community_threads_teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "teachers",
+                        principalColumn: "TeacherId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "course_to_places",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    CourseId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PlaceId = table.Column<int>(type: "integer", nullable: true),
+                    Online = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_course_to_places", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_course_to_places_Cities_PlaceId",
+                        column: x => x.PlaceId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_course_to_places_courses_base_CourseId",
                         column: x => x.CourseId,
                         principalTable: "courses_base",
                         principalColumn: "Id",
@@ -909,7 +854,7 @@ namespace backend.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    StudentId = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: false),
+                    StudentId = table.Column<string>(type: "text", nullable: false),
                     CourseId = table.Column<Guid>(type: "uuid", nullable: false),
                     Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     TokenCount = table.Column<int>(type: "integer", nullable: false),
@@ -938,7 +883,7 @@ namespace backend.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    SenderId = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: false),
+                    SenderId = table.Column<string>(type: "text", nullable: false),
                     Text = table.Column<string>(type: "text", nullable: false),
                     ThreadId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -951,63 +896,6 @@ namespace backend.Migrations
                         name: "FK_community_messages_community_threads_ThreadId",
                         column: x => x.ThreadId,
                         principalTable: "community_threads",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "lessons",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UnitId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    HandInId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_lessons", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_lessons_hand_ins_HandInId",
-                        column: x => x.HandInId,
-                        principalTable: "hand_ins",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_lessons_learning_path_units_UnitId",
-                        column: x => x.UnitId,
-                        principalTable: "learning_path_units",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "chat_rooms",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    WallId = table.Column<Guid>(type: "uuid", nullable: true),
-                    EnrollmentId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_chat_rooms", x => x.Id);
-                    table.CheckConstraint("CK_ChatRoom_SingleContext", "((\"WallId\" IS NOT NULL)::int + (\"EnrollmentId\" IS NOT NULL)::int) = 1");
-                    table.ForeignKey(
-                        name: "FK_chat_rooms_path_enrollments_EnrollmentId",
-                        column: x => x.EnrollmentId,
-                        principalTable: "path_enrollments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_chat_rooms_tutoring_walls_WallId",
-                        column: x => x.WallId,
-                        principalTable: "tutoring_walls",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1030,7 +918,7 @@ namespace backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_course_feedbacks", x => x.Id);
-                    table.CheckConstraint("CK_CourseReviews_SingleContext", "((\"WallId\" IS NOT NULL)::int + (\"EnrollmentId\" IS NOT NULL)::int) = 1");
+                    table.CheckConstraint("CK_CourseReviews_SingleContext", "(\"WallId\" IS NOT NULL OR \"EnrollmentId\" IS NOT NULL)");
                     table.ForeignKey(
                         name: "FK_course_feedbacks_courses_base_CourseId",
                         column: x => x.CourseId,
@@ -1062,14 +950,14 @@ namespace backend.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrganiserId = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: false),
+                    OrganiserId = table.Column<string>(type: "text", nullable: false),
                     Type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     PathCourseId = table.Column<Guid>(type: "uuid", nullable: true),
                     TutoringWallId = table.Column<Guid>(type: "uuid", nullable: true),
                     PathEnrollmentId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
@@ -1102,6 +990,30 @@ namespace backend.Migrations
                         principalTable: "tutoring_walls",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "hand_ins",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    MaxPoints = table.Column<int>(type: "integer", nullable: true),
+                    WallId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_hand_ins", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_hand_ins_tutoring_walls_WallId",
+                        column: x => x.WallId,
+                        principalTable: "tutoring_walls",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1150,6 +1062,70 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "lessons",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UnitId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    HandInId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_lessons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_lessons_hand_ins_HandInId",
+                        column: x => x.HandInId,
+                        principalTable: "hand_ins",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_lessons_learning_path_units_UnitId",
+                        column: x => x.UnitId,
+                        principalTable: "learning_path_units",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "submissions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: true),
+                    HandInId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubmitterId = table.Column<string>(type: "text", nullable: false),
+                    TeacherId = table.Column<string>(type: "text", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_submissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_submissions_hand_ins_HandInId",
+                        column: x => x.HandInId,
+                        principalTable: "hand_ins",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_submissions_students_SubmitterId",
+                        column: x => x.SubmitterId,
+                        principalTable: "students",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_submissions_teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "teachers",
+                        principalColumn: "TeacherId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tutoring_wall_posts",
                 columns: table => new
                 {
@@ -1173,52 +1149,6 @@ namespace backend.Migrations
                         name: "FK_tutoring_wall_posts_tutoring_walls_WallId",
                         column: x => x.WallId,
                         principalTable: "tutoring_walls",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "lessons_to_contents",
-                columns: table => new
-                {
-                    LessonId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ContentId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_lessons_to_contents", x => new { x.LessonId, x.ContentId });
-                    table.ForeignKey(
-                        name: "FK_lessons_to_contents_content_items_ContentId",
-                        column: x => x.ContentId,
-                        principalTable: "content_items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_lessons_to_contents_lessons_LessonId",
-                        column: x => x.LessonId,
-                        principalTable: "lessons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "chat_messages",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    SenderId = table.Column<string>(type: "text", nullable: false),
-                    Text = table.Column<string>(type: "text", nullable: false),
-                    ChatId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_chat_messages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_chat_messages_chat_rooms_ChatId",
-                        column: x => x.ChatId,
-                        principalTable: "chat_rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1261,6 +1191,87 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "lessons_to_contents",
+                columns: table => new
+                {
+                    LessonId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ContentId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_lessons_to_contents", x => new { x.LessonId, x.ContentId });
+                    table.ForeignKey(
+                        name: "FK_lessons_to_contents_content_items_ContentId",
+                        column: x => x.ContentId,
+                        principalTable: "content_items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_lessons_to_contents_lessons_LessonId",
+                        column: x => x.LessonId,
+                        principalTable: "lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "hand_in_feedbacks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: true),
+                    Grade = table.Column<int>(type: "integer", nullable: true),
+                    Points = table.Column<int>(type: "integer", nullable: true),
+                    SubmissionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    GraderId = table.Column<string>(type: "text", nullable: false),
+                    TeacherId = table.Column<string>(type: "text", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_hand_in_feedbacks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_hand_in_feedbacks_submissions_SubmissionId",
+                        column: x => x.SubmissionId,
+                        principalTable: "submissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_hand_in_feedbacks_teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "teachers",
+                        principalColumn: "TeacherId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "submission_attachments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubmissionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ContentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_submission_attachments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_submission_attachments_content_items_ContentId",
+                        column: x => x.ContentId,
+                        principalTable: "content_items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_submission_attachments_submissions_SubmissionId",
+                        column: x => x.SubmissionId,
+                        principalTable: "submissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tutoring_wall_post_attachments",
                 columns: table => new
                 {
@@ -1280,6 +1291,41 @@ namespace backend.Migrations
                         name: "FK_tutoring_wall_post_attachments_tutoring_wall_posts_WallPost~",
                         column: x => x.WallPostId,
                         principalTable: "tutoring_wall_posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "wall_post_comments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    SenderId = table.Column<string>(type: "text", nullable: false),
+                    WallId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PostId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_wall_post_comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_wall_post_comments_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_wall_post_comments_tutoring_wall_posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "tutoring_wall_posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_wall_post_comments_tutoring_walls_WallId",
+                        column: x => x.WallId,
+                        principalTable: "tutoring_walls",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1332,16 +1378,14 @@ namespace backend.Migrations
                 column: "ChatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_chat_rooms_EnrollmentId",
+                name: "IX_chat_rooms_StudentId",
                 table: "chat_rooms",
-                column: "EnrollmentId",
-                unique: true);
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_chat_rooms_WallId",
+                name: "IX_chat_rooms_TeacherId",
                 table: "chat_rooms",
-                column: "WallId",
-                unique: true);
+                column: "TeacherId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_CityName_PostalCode",
@@ -1361,6 +1405,11 @@ namespace backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_community_threads_TeacherId",
+                table: "community_threads",
+                column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_content_items_FileId",
                 table: "content_items",
                 column: "FileId");
@@ -1374,16 +1423,6 @@ namespace backend.Migrations
                 name: "IX_content_items_TestId",
                 table: "content_items",
                 column: "TestId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ConversationParticipant_ConversationId",
-                table: "ConversationParticipant",
-                column: "ConversationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ConversationParticipant_UserId",
-                table: "ConversationParticipant",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_course_domains_Name",
@@ -1422,6 +1461,16 @@ namespace backend.Migrations
                 table: "course_tags",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_course_to_places_CourseId",
+                table: "course_to_places",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_course_to_places_PlaceId",
+                table: "course_to_places",
+                column: "PlaceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_courses_base_BannerImageId",
@@ -1500,6 +1549,11 @@ namespace backend.Migrations
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_hand_ins_WallId",
+                table: "hand_ins",
+                column: "WallId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_invoices_CurrencyId",
                 table: "invoices",
                 column: "CurrencyId");
@@ -1546,19 +1600,14 @@ namespace backend.Migrations
                 column: "ContentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_ConversationId",
-                table: "Message",
-                column: "ConversationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Message_SenderId",
-                table: "Message",
-                column: "SenderId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_notifications_RecipientId",
                 table: "notifications",
                 column: "RecipientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_notifications_SenderId",
+                table: "notifications",
+                column: "SenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_path_enrollments_AttendantId",
@@ -1610,6 +1659,16 @@ namespace backend.Migrations
                 name: "IX_submissions_SubmitterId",
                 table: "submissions",
                 column: "SubmitterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_submissions_TeacherId",
+                table: "submissions",
+                column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_teacher_timeblocks_TeacherId",
+                table: "teacher_timeblocks",
+                column: "TeacherId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_test_module_answers_ModuleId",
@@ -1667,6 +1726,21 @@ namespace backend.Migrations
                 name: "IX_UserPreferences_PreferenceId",
                 table: "UserPreferences",
                 column: "PreferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_wall_post_comments_PostId",
+                table: "wall_post_comments",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_wall_post_comments_SenderId",
+                table: "wall_post_comments",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_wall_post_comments_WallId",
+                table: "wall_post_comments",
+                column: "WallId");
         }
 
         /// <inheritdoc />
@@ -1691,16 +1765,13 @@ namespace backend.Migrations
                 name: "chat_messages");
 
             migrationBuilder.DropTable(
-                name: "Cities");
-
-            migrationBuilder.DropTable(
                 name: "community_messages");
 
             migrationBuilder.DropTable(
-                name: "ConversationParticipant");
+                name: "course_feedbacks");
 
             migrationBuilder.DropTable(
-                name: "course_feedbacks");
+                name: "course_to_places");
 
             migrationBuilder.DropTable(
                 name: "courses_to_languages");
@@ -1718,9 +1789,6 @@ namespace backend.Migrations
                 name: "lessons_to_contents");
 
             migrationBuilder.DropTable(
-                name: "Message");
-
-            migrationBuilder.DropTable(
                 name: "notifications");
 
             migrationBuilder.DropTable(
@@ -1731,6 +1799,9 @@ namespace backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "submission_attachments");
+
+            migrationBuilder.DropTable(
+                name: "teacher_timeblocks");
 
             migrationBuilder.DropTable(
                 name: "test_module_answers");
@@ -1745,6 +1816,9 @@ namespace backend.Migrations
                 name: "UserPreferences");
 
             migrationBuilder.DropTable(
+                name: "wall_post_comments");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -1754,6 +1828,9 @@ namespace backend.Migrations
                 name: "community_threads");
 
             migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
                 name: "languages");
 
             migrationBuilder.DropTable(
@@ -1761,9 +1838,6 @@ namespace backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "lessons");
-
-            migrationBuilder.DropTable(
-                name: "Conversation");
 
             migrationBuilder.DropTable(
                 name: "submissions");
@@ -1778,10 +1852,10 @@ namespace backend.Migrations
                 name: "content_items");
 
             migrationBuilder.DropTable(
-                name: "tutoring_wall_posts");
+                name: "Preferences");
 
             migrationBuilder.DropTable(
-                name: "Preferences");
+                name: "tutoring_wall_posts");
 
             migrationBuilder.DropTable(
                 name: "learning_path_units");
@@ -1796,13 +1870,13 @@ namespace backend.Migrations
                 name: "tests");
 
             migrationBuilder.DropTable(
+                name: "PreferenceGroups");
+
+            migrationBuilder.DropTable(
                 name: "hand_ins");
 
             migrationBuilder.DropTable(
                 name: "tutoring_walls");
-
-            migrationBuilder.DropTable(
-                name: "PreferenceGroups");
 
             migrationBuilder.DropTable(
                 name: "courses_base");

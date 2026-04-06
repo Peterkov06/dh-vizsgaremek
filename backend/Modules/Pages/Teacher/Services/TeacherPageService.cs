@@ -16,6 +16,7 @@ using backend.Modules.Shared.Services;
 using backend.Modules.Tutoring.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace backend.Modules.Pages.Teacher.Services
 {
@@ -124,6 +125,35 @@ namespace backend.Modules.Pages.Teacher.Services
             });
         }
 
+        public async Task<ServiceResult<MyStudentsPageDTO>> GetStudentsPage(string userId, string? searchText = null, CancellationToken ct = default)
+        {
+            var tutoringCourses = _db.TutoringWalls.Include(x => x.CourseBase)
+                .Where(x => x.CourseBase.TeacherId == userId)
+                .AsQueryable();
+
+            if (searchText is not null)
+            {
+                searchText = searchText.ToLower();
+                tutoringCourses = tutoringCourses
+                    .Where(x => x.Student.User.FullName.ToLower().Contains(searchText) || x.Student.User.Nickname.ToLower().Contains(searchText));
+            }
+            var students = await tutoringCourses.GroupBy(x => x.StudentId)
+                .Select(x => x.OrderBy(x => x.CreatedAt).First())
+                .Include(x => x.Student).ThenInclude(x => x.User)
+                .Include(x => x.Student).ThenInclude(x => x.Chats)
+                .Include(x => x.WallPosts).ThenInclude(x => x.HandIn).ThenInclude(x => x.Submissions).ThenInclude(x => x.Feedback)
+                .Select(MyStudentsDTOMapping)
+                .ToListAsync(ct);
+
+            return ServiceResult<MyStudentsPageDTO>.Success(
+                new MyStudentsPageDTO
+                {
+                    LearningPath = [],
+                    Tutoring = students
+                }
+            );
+        }
+
         public static CourseCardDTO MapToCourseCardDTO(CourseBaseModel course)
         {
             return new CourseCardDTO
@@ -135,7 +165,6 @@ namespace backend.Modules.Pages.Teacher.Services
                 EnrolledStudents = 0
             };
         }
-
         public static EnrollmentItemDTO MapToEnrollmentDTO(TutoringWall wall)
         {
             return new EnrollmentItemDTO
@@ -191,5 +220,21 @@ namespace backend.Modules.Pages.Teacher.Services
                 SubmittedDate = submission.CreatedAt,
             };
         }
+
+        public static Expression<Func<TutoringWall, MyStudentCardDTO>> MyStudentsDTOMapping => 
+            wall => new MyStudentCardDTO
+            {
+                StudentId = wall.StudentId,
+                Name = wall.Student.User.FullName ?? string.Empty,
+                Nickname = wall.Student.User.Nickname ?? string.Empty,
+                CourseNumber = 0,
+
+                OngoingHandins = wall.WallPosts.Count(post =>
+                    post.HandIn.Submissions.Where(x => x.Feedback == null).Any()),
+
+                ChatId = wall.Student.Chats.FirstOrDefault(c => c.TeacherId == wall.CourseBase.TeacherId).Id,
+
+                WallId = wall.Id
+            };
     }
 }

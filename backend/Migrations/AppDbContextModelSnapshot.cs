@@ -249,79 +249,6 @@ namespace backend.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("backend.Models.Chat.Conversation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Conversation");
-                });
-
-            modelBuilder.Entity("backend.Models.Chat.ConversationParticipant", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("LastOnlineAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ConversationParticipant");
-                });
-
-            modelBuilder.Entity("backend.Models.Chat.Message", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Message");
-                });
-
             modelBuilder.Entity("backend.Models.Cities.City", b =>
                 {
                     b.Property<int>("Id")
@@ -391,9 +318,6 @@ namespace backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("PreferenceId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Id")
                         .HasColumnType("integer");
 
                     b.HasKey("UserId", "PreferenceId");
@@ -683,11 +607,9 @@ namespace backend.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("StudentId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("TeacherId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -712,8 +634,7 @@ namespace backend.Migrations
 
                     b.Property<string>("SenderId")
                         .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -743,6 +664,10 @@ namespace backend.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("TeacherId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -750,6 +675,8 @@ namespace backend.Migrations
 
                     b.HasIndex("CourseId")
                         .IsUnique();
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("community_threads", (string)null);
                 });
@@ -800,7 +727,7 @@ namespace backend.Migrations
 
                     b.ToTable("course_feedbacks", null, t =>
                         {
-                            t.HasCheckConstraint("CK_CourseReviews_SingleContext", "((\"WallId\" IS NOT NULL)::int + (\"EnrollmentId\" IS NOT NULL)::int) = 1");
+                            t.HasCheckConstraint("CK_CourseReviews_SingleContext", "(\"WallId\" IS NOT NULL OR \"EnrollmentId\" IS NOT NULL)");
                         });
                 });
 
@@ -825,8 +752,7 @@ namespace backend.Migrations
 
                     b.Property<string>("RecipientId")
                         .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("ReferenceId")
                         .HasColumnType("uuid");
@@ -1242,9 +1168,9 @@ namespace backend.Migrations
                     b.Property<int?>("Grade")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("GraderId")
-                        .HasMaxLength(450)
-                        .HasColumnType("uuid");
+                    b.Property<string>("GraderId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int?>("Points")
                         .HasColumnType("integer");
@@ -1319,7 +1245,6 @@ namespace backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TeacherId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Text")
@@ -1468,8 +1393,7 @@ namespace backend.Migrations
 
                     b.Property<string>("OrganiserId")
                         .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("PathCourseId")
                         .HasColumnType("uuid");
@@ -1604,8 +1528,7 @@ namespace backend.Migrations
 
                     b.Property<string>("StudentId")
                         .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                        .HasColumnType("text");
 
                     b.Property<int>("TokenCount")
                         .HasColumnType("integer");
@@ -1680,8 +1603,7 @@ namespace backend.Migrations
 
                     b.Property<string>("SenderId")
                         .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -1762,44 +1684,6 @@ namespace backend.Migrations
                         .HasForeignKey("ProfilePictureId");
 
                     b.Navigation("ProfilePicture");
-                });
-
-            modelBuilder.Entity("backend.Models.Chat.ConversationParticipant", b =>
-                {
-                    b.HasOne("backend.Models.Chat.Conversation", "Conversation")
-                        .WithMany("ConversationParticipants")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("backend.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("backend.Models.Chat.Message", b =>
-                {
-                    b.HasOne("backend.Models.Chat.Conversation", "Conversation")
-                        .WithMany("Messages")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("backend.Models.ApplicationUser", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("backend.Models.Preferances.Preference", b =>
@@ -1964,14 +1848,12 @@ namespace backend.Migrations
                     b.HasOne("backend.Modules.Identity.Models.Student", "Student")
                         .WithMany("Chats")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("backend.Modules.Identity.Models.Teacher", "Teacher")
                         .WithMany("Chats")
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Student");
 
@@ -1996,7 +1878,15 @@ namespace backend.Migrations
                         .HasForeignKey("backend.Modules.Engagement.Models.CommunityThread", "CourseId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("backend.Modules.Identity.Models.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Course");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("backend.Modules.Engagement.Models.CourseReview", b =>
@@ -2286,8 +2176,7 @@ namespace backend.Migrations
                     b.HasOne("backend.Modules.Identity.Models.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("HandIn");
 
@@ -2460,13 +2349,6 @@ namespace backend.Migrations
                     b.Navigation("Sender");
 
                     b.Navigation("Wall");
-                });
-
-            modelBuilder.Entity("backend.Models.Chat.Conversation", b =>
-                {
-                    b.Navigation("ConversationParticipants");
-
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("backend.Models.Preferances.PreferenceGroup", b =>

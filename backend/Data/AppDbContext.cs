@@ -96,27 +96,7 @@ namespace backend.Data
                 .HasOne(up => up.Preference)
                 .WithMany()
                 .HasForeignKey(up => up.PreferenceId);
-
-
-            builder.Entity<ConversationParticipant>()
-                .HasOne(cp => cp.Conversation)
-                .WithMany(c => c.ConversationParticipants)
-                .HasForeignKey(cp=>cp.ConversationId);
-
-            builder.Entity<ConversationParticipant>()
-                .HasOne(cp => cp.User)
-                .WithMany()
-                .HasForeignKey(cp => cp.UserId);
-
-            builder.Entity<Message>()
-                .HasOne(m => m.Conversation)
-                .WithMany(c => c.Messages)
-                .HasForeignKey(m => m.ConversationId);
-
-            builder.Entity<Message>()
-                .HasOne(m => m.Sender)
-                .WithMany()
-                .HasForeignKey(m => m.SenderId);
+;
 
 
             builder.Entity<RefreshToken>().HasIndex(rt => rt.Token).IsUnique();

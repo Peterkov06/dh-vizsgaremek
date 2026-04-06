@@ -11,7 +11,7 @@ namespace backend.Data.Configurations.Engagement
             base.Configure(builder);
             builder.ToTable("course_feedbacks", x =>
             {
-                x.HasCheckConstraint("CK_CourseReviews_SingleContext", @"((""WallId"" IS NOT NULL)::int + (""EnrollmentId"" IS NOT NULL)::int) = 1");
+                x.HasCheckConstraint("CK_CourseReviews_SingleContext", @"(""WallId"" IS NOT NULL OR ""EnrollmentId"" IS NOT NULL)");
             });
             builder.Property(x => x.Recommended).IsRequired();
             builder.Property(x => x.Text).IsRequired();

@@ -13,7 +13,7 @@ namespace backend.Data.Configurations.Scheduling
             {
                 x.HasCheckConstraint("CK_Events_SingleContext", @"((""PathCourseId"" IS NOT NULL)::int + (""TutoringWallId"" IS NOT NULL)::int + (""PathEnrollmentId"" IS NOT NULL)::int) = 1");
             });
-            builder.Property(x => x.OrganiserId).IsRequired().HasMaxLength(450);
+            builder.Property(x => x.OrganiserId).IsRequired();
             builder.Property(x => x.Type).HasConversion<string>().HasMaxLength(50).IsRequired();
             builder.Property(x => x.Title).IsRequired().HasMaxLength(100).IsRequired(false);
             builder.Property(x => x.Description).IsRequired(false);

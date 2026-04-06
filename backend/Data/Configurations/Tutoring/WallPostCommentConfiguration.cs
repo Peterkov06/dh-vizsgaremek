@@ -10,7 +10,7 @@ namespace backend.Data.Configurations.Tutoring
         {
             base.Configure(builder);
             builder.ToTable("wall_post_comments");
-            builder.Property(x => x.SenderId).HasMaxLength(450).IsRequired();
+            builder.Property(x => x.SenderId).IsRequired();
             
             builder.HasOne(x => x.Sender).WithMany().HasForeignKey(x => x.SenderId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(x => x.Post).WithMany(x => x.Comments).HasForeignKey(x => x.PostId).IsRequired().OnDelete(DeleteBehavior.Cascade);
