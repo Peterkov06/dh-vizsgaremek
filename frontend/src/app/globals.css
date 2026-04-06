@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@schedule-x/theme-default/dist/index.css";
 
 @font-face {
   font-family: Lexend;
@@ -239,4 +240,11 @@ body {
   background: #eff6ff !important;
   color: #1e40af !important;
   border-color: #93c5fd !important;
+}
+
+
+.sx__background-event.my-custom-color {
+  background-color: hsl(var(--secondary)) !important;
+  border-radius: 0 !important; /* Square UI style */
+  opacity: 0.8; /* Optional: so you can still see the grid lines */
 }

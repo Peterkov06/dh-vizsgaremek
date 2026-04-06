@@ -1,12 +1,16 @@
+"use client";
+
+import dynamic from "next/dynamic";
+
+const MyCalendar = dynamic(() => import("./components/MyCalendar"), {
+  ssr: false,
+});
+
 const TimeTablePage = () => {
   return (
     <main>
       <section>
-        <iframe
-          src="https://calendar.google.com/calendar/embed"
-          width="100%"
-          height="600"
-        />
+        <MyCalendar />
       </section>
     </main>
   );
