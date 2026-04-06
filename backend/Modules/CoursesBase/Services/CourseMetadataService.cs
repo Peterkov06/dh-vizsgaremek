@@ -51,7 +51,7 @@ namespace backend.Modules.CoursesBase.Services
             List<Guid> createdTags = [];
             foreach (var tag in tags)
             {
-                var exists = await _db.CourseTags.Where(x => x.Name == tag).FirstOrDefaultAsync(ct);
+                var exists = await _db.CourseTags.Where(x => x.Name == tag).AsNoTracking().FirstOrDefaultAsync(ct);
                 if (exists is not null)
                 {
                     createdTags.Add(exists.Id);
@@ -140,13 +140,13 @@ namespace backend.Modules.CoursesBase.Services
 
         public async Task<ServiceResult<List<LookUpDTO>>> GetAllDomainsAsync(CancellationToken ct = default)
         {
-            var domains = await _db.CourseDomains.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
+            var domains = await _db.CourseDomains.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).AsNoTracking().ToListAsync(ct);
             return ServiceResult<List<LookUpDTO>>.Success(domains);
         }
 
         public async Task<ServiceResult<List<LookUpDTO>>> GetAllLevelsAsync(CancellationToken ct = default)
         {
-            var levels = await _db.CourseLevels.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
+            var levels = await _db.CourseLevels.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).AsNoTracking().ToListAsync(ct);
             return ServiceResult<List<LookUpDTO>>.Success(levels);
         }
 
@@ -159,14 +159,14 @@ namespace backend.Modules.CoursesBase.Services
                 tagQuery = tagQuery.Where(x => x.Name.ToLower().StartsWith(keyWord.ToLower()));
             }
 
-            var tags = await tagQuery.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).ToListAsync(ct);
+            var tags = await tagQuery.OrderBy(x => x.Name).Select(x => new LookUpDTO { Name = x.Name, Id = x.Id }).AsNoTracking().ToListAsync(ct);
 
             return ServiceResult<List<LookUpDTO>>.Success(tags);
         }
 
         public async Task<ServiceResult<List<LookUpDTO>>> GetCourseTags(Guid courseId, CancellationToken ct)
         {
-            var tags = await _db.CoursesToTags.Where(x => x.CourseId == courseId).Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name}).ToListAsync(ct);
+            var tags = await _db.CoursesToTags.Where(x => x.CourseId == courseId).Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name}).AsNoTracking().ToListAsync(ct);
             return ServiceResult<List<LookUpDTO>>.Success(tags);
         }
     }

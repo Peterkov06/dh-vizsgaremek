@@ -4,6 +4,7 @@ using backend.Modules.Shared.Results;
 using backend.Modules.Tutoring.DTOs;
 using backend.Modules.Tutoring.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Net.WebSockets;
 
 namespace backend.Modules.Tutoring.Services
 {
@@ -24,7 +25,14 @@ namespace backend.Modules.Tutoring.Services
                 return ServiceResult<TutoringWallEnrollmentDTO>.Failure("Application already exists");
             }
 
-            var newEnrollment = new TutoringWall { CourseId =  enrollmentDTO.CourseId, Status = enrollmentDTO.Status, StudentId = userId, TokenCount = enrollmentDTO.TokenCount };
+            var teacherId = _db.CourseBases.Where(x => x.Id == enrollmentDTO.CourseId).Select(x => x.TeacherId).FirstOrDefault();
+
+            if (teacherId is null)
+            {
+                return ServiceResult<TutoringWallEnrollmentDTO>.NotFound("Course does not exist");
+            }
+
+            var newEnrollment = new TutoringWall { CourseId =  enrollmentDTO.CourseId, Status = enrollmentDTO.Status, StudentId = userId, TokenCount = enrollmentDTO.TokenCount, TeacherId = teacherId };
 
             _db.TutoringWalls.Add(newEnrollment);
 

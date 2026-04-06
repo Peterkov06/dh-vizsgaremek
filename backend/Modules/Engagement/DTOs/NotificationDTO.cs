@@ -8,6 +8,7 @@ namespace backend.Modules.Engagement.DTOs
         public Guid Id { get; set; }
         public NotificationType Type { get; set; }
         public string Sender { get; set; } = string.Empty;
+        public string ReferenceText { get; set; } = string.Empty;
         public Guid? ReferenceId { get; set; } = null;
         public string? Message { get; set; } = null;
         public DateTime CreatedAt { get; set; }

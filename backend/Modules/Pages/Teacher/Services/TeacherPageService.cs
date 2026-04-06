@@ -2,6 +2,7 @@
 using backend.Models;
 using backend.Modules.CoursesBase.Models;
 using backend.Modules.CoursesBase.Services;
+using backend.Modules.Engagement.DTOs;
 using backend.Modules.Engagement.Models;
 using backend.Modules.Identity.Models;
 using backend.Modules.Pages.Shared.DTOs;
@@ -62,88 +63,204 @@ namespace backend.Modules.Pages.Teacher.Services
             {
                 return ServiceResult<TeacherHomePageDTO>.NotFound("No teacher found");
             }
-            var courses = teacher.Courses.Where(x => x.Status == CourseStatus.Active).Take(10).Select(MapToCourseCardDTO).ToList();
-            var pendingStudents = _db.TutoringWalls.Include(x => x.CourseBase)
-                .Where(x => x.CourseBase.TeacherId == userId && x.Status == EnrollmentStatus.Pending)
-                .Include(x => x.Student).ThenInclude(x => x.User)
-                .Select(MapToEnrollmentDTO).ToList();
-            var pendingPayments = _db.Invoices
-                .Include(x => x.Wall).ThenInclude(x => x.CourseBase)
-                .Include(x => x.Enrollment).ThenInclude(x => x.Course)
-                .Where(x => x.Status == PaymentStatus.Pending && (x.Wall.CourseBase.TeacherId == userId || x.Enrollment.Course.TeacherId == userId))
-                .Select(MapToPaymentItemDTO).ToList();
-            var students = await _db.Students.Include(x => x.TutoringWalls).ThenInclude(x => x.CourseBase)
-                .Include(x => x.LearningPathEnrollments).ThenInclude(x => x.Course)
-                .Where(x => x.TutoringWalls.Where(x => x.Status == EnrollmentStatus.Active).Any(x => x.CourseBase.TeacherId == userId) || x.LearningPathEnrollments.Where(x => x.Status == EnrollmentStatus.Active).Any(x => x.Course.TeacherId == userId))
-                .Include(x => x.Chats)
-                .Include(x => x.User)
-                .Select(x => MapToStudentDTO(x, userId)).ToListAsync(ct);
+
+            var courses = await _db.CourseBases
+                .Where(c => c.TeacherId == userId && c.Status == CourseStatus.Active)
+                .OrderByDescending(c => c.CreatedAt)
+                .Take(10)
+                .Select(c => new CourseCardDTO
+                {
+                    CourseId = c.Id,
+                    CourseName = c.CourseName,
+                    ImageUrl = c.IconImage != null ? c.IconImage.StoragePath : string.Empty,
+                    CourseType = c.Type.ToString(),
+                    EnrolledStudents = _db.TutoringWalls.Count(w => w.CourseId == c.Id && w.Status == EnrollmentStatus.Active)
+                                        + _db.PathEnrollments.Count(e => e.CourseId == c.Id && e.Status == EnrollmentStatus.Active)
+                })
+                .AsNoTracking()
+                .ToListAsync(ct);
+
+            var pendingStudents = await _db.TutoringWalls
+                .Where(w => w.TeacherId == userId && w.Status == EnrollmentStatus.Pending)
+                .Select(w => new EnrollmentItemDTO
+                {
+                    CourseId = w.CourseId,
+                    CourseName = w.CourseBase.CourseName,
+                    EnrollmentDate = w.CreatedAt,
+                    EnrollmentId = w.Id,
+                    UserId = w.StudentId,
+                    UserName = w.Student.User.FullName,
+                    ProfilePictureUrl = w.Student.User.ProfilePicture != null
+                        ? w.Student.User.ProfilePicture.StoragePath : string.Empty,
+                })
+                .AsNoTracking()
+                .ToListAsync(ct);
+
+            var pendingPayments = await _db.Invoices
+                .Where(i => i.Status == PaymentStatus.Pending
+                    && (i.Wall != null && i.Wall.TeacherId == userId
+                     || i.Enrollment != null && i.Enrollment.Course.TeacherId == userId))
+                .Select(i => new PaymentItemDTO
+                {
+                    CourseId = i.Enrollment != null ? i.Enrollment.CourseId : Guid.Empty,
+                    InstanceId = i.Enrollment != null ? i.Enrollment.Id : Guid.Empty,
+                    CourseName = i.Enrollment != null ? i.Enrollment.Course.CourseName
+                                    : i.Wall != null ? i.Wall.CourseBase.CourseName : string.Empty,
+                    UserId = i.UserId,
+                    UserName = i.User.UserName ?? string.Empty,
+                    PaymentValue = i.PaidPrice,
+                    PaymentCurrency = i.Currency.CurrencySymbol,
+                    TokenCount = i.TokenCount,
+                    PaymentDate = i.CreatedAt,
+                    InvoiceId = i.Id
+                })
+                .AsNoTracking()
+                .ToListAsync(ct);
+
+            var students = await _db.Students
+                .Where(s =>
+                    _db.TutoringWalls.Any(w => w.StudentId == s.UserId
+                        && w.TeacherId == userId && w.Status == EnrollmentStatus.Active)
+                 || _db.PathEnrollments.Any(e => e.AttendantId == s.UserId
+                        && e.Course.TeacherId == userId && e.Status == EnrollmentStatus.Active))
+                .Select(s => new StudentItemDTO
+                {
+                    UserId = s.UserId,
+                    FullName = s.User.FullName,
+                    NickName = s.User.Nickname ?? string.Empty,
+                    ProfilePictureUrl = s.User.ProfilePicture != null
+                        ? s.User.ProfilePicture.StoragePath : string.Empty,
+
+                    Courses = _db.TutoringWalls
+                        .Where(w => w.StudentId == s.UserId && w.TeacherId == userId
+                                 && w.Status == EnrollmentStatus.Active)
+                        .Select(w => new LookUpDTO { Id = w.Id, Name = w.CourseBase.CourseName })
+                        .Concat(
+                            _db.PathEnrollments
+                                .Where(e => e.AttendantId == s.UserId && e.Course.TeacherId == userId
+                                         && e.Status == EnrollmentStatus.Active)
+                                .Select(e => new LookUpDTO { Id = e.Id, Name = e.Course.CourseName })
+                        ).ToList(),
+
+                    ChatId = _db.ChatRooms
+                        .Where(c => c.StudentId == s.UserId && c.TeacherId == userId)
+                        .Select(c => (Guid?)c.Id)
+                        .FirstOrDefault() ?? Guid.Empty,
+                })
+                .AsNoTracking()
+                .ToListAsync(ct);
+
             var pendingSubmissions = await _db.Submissions
-                .Include(x => x.Feedback)
-                .Where(x => x.TeacherId == userId && x.Feedback == null)
-                .Select(x => MapToSubmissionDTO(x)).ToListAsync(ct);
+                .Where(s => s.TeacherId == userId && s.Feedback == null)
+                .Select(s => new GradingItemDTO
+                {
+                    SubmissionId = s.Id,
+                    SubmittedDate = s.CreatedAt,
+                    Completed = false,
+                    InstanceId = s.HandIn.WallId,
+                    CourseName = s.HandIn.Wall.CourseBase.CourseName,
+                    HandInTitle = s.HandIn.Title,
+                    StudentName = s.Submitter.User.FullName,
+                })
+                .AsNoTracking()
+                .ToListAsync(ct);
+
             var upcomingEvents = await _db.Events
-                .Include(x => x.TutoringWall).ThenInclude(x => x.CourseBase)
-                .Include(x => x.Enrollment).ThenInclude(x => x.Course)
-                .Where(x => (x.Enrollment != null && x.Enrollment.Course.TeacherId == userId) || (x.TutoringWall != null && x.TutoringWall.CourseBase.TeacherId == userId)).Where(x => x.StartTime > DateTime.UtcNow)
-                .OrderBy(x => x.StartTime).Take(5)
-                .Include(x => x.PathCourse).ToListAsync(ct);
+                .Where(e => e.StartTime > DateTime.UtcNow
+                    && (e.Enrollment != null && e.Enrollment.Course.TeacherId == userId
+                     || e.TutoringWall != null && e.TutoringWall.TeacherId == userId))
+                .OrderBy(e => e.StartTime)
+                .Take(5)
+                .Select(e => new UpcomingEventDTO
+                {
+                    EventId = e.Id,
+                    Title = e.Title ?? string.Empty,
+                    Description = e.Description ?? string.Empty,
+                    StartTime = TimeOnly.FromDateTime(e.StartTime),
+                    StartDate = DateOnly.FromDateTime(e.StartTime),
+                    EventType = e.Type.ToString(),
+                    CourseName = e.PathCourse != null ? e.PathCourse.CourseName
+                                : e.TutoringWall != null ? e.TutoringWall.CourseBase.CourseName
+                                : string.Empty,
+                    TeacherName = e.PathCourse != null ? e.PathCourse.Teacher.User.FullName
+                                : e.TutoringWall != null ? e.TutoringWall.CourseBase.Teacher.User.FullName
+                                : string.Empty,
+                    EventUrl = "#"
+                })
+                .AsNoTracking()
+                .ToListAsync(ct);
+
             var notifications = await _db.Notifications
-                .Where(x => x.RecipientId == userId && !x.IsRead)
-                .OrderByDescending(x => x.CreatedAt).ToListAsync(ct);
-            var lastNotification = notifications.FirstOrDefault();
+                .Where(n => n.RecipientId == userId && !n.IsRead)
+                .OrderByDescending(n => n.CreatedAt)
+                .Select(n => new NotificationDTO
+                {
+                    Id = n.Id,
+                    Message = n.Message,
+                    Type = n.Type,
+                    CreatedAt = n.CreatedAt
+                })
+                .AsNoTracking()
+                .ToListAsync(ct);
+            var lastUnread = notifications.FirstOrDefault();
 
             return ServiceResult<TeacherHomePageDTO>.Success(new TeacherHomePageDTO
             {
-                Notifications = new NotificationsDTO
-                {
-                    LastUnread = null,
-                    UnreadNotificationNumber = notifications.Count,
-                },
                 ActiveCourses = courses,
-                GradingQueue = pendingSubmissions, 
                 PendingEnrollments = pendingStudents,
                 PendingPayments = pendingPayments,
                 Students = students,
-                UpcomingEvents = upcomingEvents.Select(x => new UpcomingEventDTO
+                GradingQueue = pendingSubmissions,
+                UpcomingEvents = upcomingEvents,
+                Notifications = new NotificationsDTO
                 {
-                    EventId = x.Id,
-                    Title = x.Title,
-                    CourseName = x.PathCourse?.CourseName ?? x.TutoringWall?.CourseBase?.CourseName ?? "",
-                    TeacherName = x.PathCourse?.Teacher?.User?.FullName ?? x.TutoringWall?.CourseBase?.Teacher?.User?.FullName ?? "",
-                    StartTime = TimeOnly.FromDateTime(x.StartTime),
-                    StartDate = DateOnly.FromDateTime(x.StartTime),
-                    EventType = x.Type.ToString(),
-                    Description = x.Description ?? "",
-                    EventUrl = x.Type switch
+                    LastUnread = lastUnread is not null ? new LastUnreadNotificationDTO
                     {
-                        EventType.Lesson => $"#",
-                        EventType.Deadline => $"#",
-                        _ => "#"
-                    }
-                }).ToList()
+                        FirstText = lastUnread.ReferenceText,
+                        ReferenceId = lastUnread.ReferenceId ?? null,
+                        NotificationId = lastUnread.Id,
+                        SecondText = lastUnread.Type.ToString(),
+                    } : null,
+                    UnreadNotificationNumber = notifications.Count,
+                }
             });
         }
 
-        public async Task<ServiceResult<MyStudentsPageDTO>> GetStudentsPage(string userId, string? searchText = null, CancellationToken ct = default)
+        public async Task<ServiceResult<MyStudentsPageDTO>> GetStudentsPage(string userId, CancellationToken ct = default, string? searchText = null)
         {
-            var tutoringCourses = _db.TutoringWalls.Include(x => x.CourseBase)
-                .Where(x => x.CourseBase.TeacherId == userId)
-                .AsQueryable();
+            searchText = searchText?.ToLower();
+            var students = await _db.Students
+                .Where(s => _db.TutoringWalls
+                    .Any(w => w.StudentId == s.UserId && w.TeacherId == userId))
+                .Where(s => searchText == null
+                    || s.User.FullName.ToLower().Contains(searchText)
+                    || (s.User.Nickname != null && s.User.Nickname.ToLower().Contains(searchText)))
+                .Select(s => new MyStudentCardDTO
+                {
+                    StudentId = s.UserId,
+                    Name = s.User.FullName,
+                    Nickname = s.User.Nickname ?? string.Empty,
+                    CourseNumber = _db.TutoringWalls
+                        .Count(w => w.StudentId == s.UserId && w.TeacherId == userId),
 
-            if (searchText is not null)
-            {
-                searchText = searchText.ToLower();
-                tutoringCourses = tutoringCourses
-                    .Where(x => x.Student.User.FullName.ToLower().Contains(searchText) || x.Student.User.Nickname.ToLower().Contains(searchText));
-            }
-            var students = await tutoringCourses.GroupBy(x => x.StudentId)
-                .Select(x => x.OrderBy(x => x.CreatedAt).First())
-                .Include(x => x.Student).ThenInclude(x => x.User)
-                .Include(x => x.Student).ThenInclude(x => x.Chats)
-                .Include(x => x.WallPosts).ThenInclude(x => x.HandIn).ThenInclude(x => x.Submissions).ThenInclude(x => x.Feedback)
-                .Select(MyStudentsDTOMapping)
-                .ToListAsync(ct);
+                    OngoingHandins = _db.TutoringWalls
+                        .Where(w => w.StudentId == s.UserId && w.TeacherId == userId)
+                        .SelectMany(w => w.WallPosts)
+                        .Count(post => post.HandIn != null
+                            && post.HandIn.Submissions.Any(sub => sub.Feedback == null)),
+
+                    ChatId = _db.ChatRooms
+                        .Where(c => c.StudentId == s.UserId && c.TeacherId == userId)
+                        .Select(c => (Guid?)c.Id)
+                        .FirstOrDefault() ?? Guid.Empty,
+
+                    WallId = _db.TutoringWalls
+                        .Where(w => w.StudentId == s.UserId && w.TeacherId == userId)
+                        .OrderByDescending(w => w.CreatedAt)
+                        .Select(w => w.Id)
+                        .FirstOrDefault()
+        })
+        .ToListAsync(ct);
 
             return ServiceResult<MyStudentsPageDTO>.Success(
                 new MyStudentsPageDTO
@@ -153,88 +270,5 @@ namespace backend.Modules.Pages.Teacher.Services
                 }
             );
         }
-
-        public static CourseCardDTO MapToCourseCardDTO(CourseBaseModel course)
-        {
-            return new CourseCardDTO
-            {
-                CourseId = course.Id,
-                CourseName = course.CourseName,
-                ImageUrl = course.IconImage?.StoragePath ?? string.Empty,
-                CourseType = course.Type.ToString(),
-                EnrolledStudents = 0
-            };
-        }
-        public static EnrollmentItemDTO MapToEnrollmentDTO(TutoringWall wall)
-        {
-            return new EnrollmentItemDTO
-            {
-                CourseId = wall.CourseId,
-                CourseName = wall.CourseBase.CourseName,
-                EnrollmentDate = wall.CreatedAt,
-                EnrollmentId = wall.Id,
-                UserId = wall.StudentId,
-                UserName = wall.Student.User.FullName,
-                ProfilePictureUrl = "",
-            }; 
-        }
-        public static PaymentItemDTO MapToPaymentItemDTO(Invoice invoice)
-        {
-            return new PaymentItemDTO
-            {
-                CourseId = invoice.Enrollment?.CourseId ?? Guid.Empty,
-                InstanceId = invoice.Enrollment?.Id ?? Guid.Empty,
-                CourseName = invoice.Enrollment?.Course?.CourseName ?? "",
-                UserId = invoice.UserId,
-                UserName = invoice.User?.UserName ?? "",
-                PaymentValue = invoice.PaidPrice,
-                PaymentCurrency = invoice.Currency?.CurrencySymbol ?? "",
-                TokenCount = invoice.TokenCount,
-                PaymentDate = invoice.CreatedAt,
-                InvoiceId = invoice.Id
-            };
-        }
-        public static StudentItemDTO MapToStudentDTO (Identity.Models.Student student, string teacherId)
-        {
-            return new StudentItemDTO
-            {
-                Courses = student.TutoringWalls.Where(x => x.Status == EnrollmentStatus.Active && x.CourseBase.TeacherId == teacherId).Select(x => new LookUpDTO { Id = x.Id, Name = x.CourseBase.CourseName })
-                .Union(student.LearningPathEnrollments.Where(x => x.Status == EnrollmentStatus.Active && x.Course.TeacherId == teacherId).Select(x => new LookUpDTO { Id = x.Id, Name = x.Course.CourseName })).ToList(),
-                ChatId = student.Chats?.FirstOrDefault(x => x.TeacherId == teacherId).Id ?? Guid.Empty,
-                FullName = student.User.FullName ?? "",
-                NickName = student.User.Nickname ?? "",
-                UserId = student.UserId,
-                ProfilePictureUrl = ""
-            };
-        }
-        public static GradingItemDTO MapToSubmissionDTO(Submission submission)
-        {
-            return new GradingItemDTO
-            {
-                Completed = false,
-                InstanceId = submission.HandIn.WallId,
-                CourseName = submission.HandIn.Wall.CourseBase.CourseName,
-                HandInTitle = submission.HandIn.Title,
-                StudentName = submission.Submitter.User.FullName,
-                SubmissionId = submission.Id,
-                SubmittedDate = submission.CreatedAt,
-            };
-        }
-
-        public static Expression<Func<TutoringWall, MyStudentCardDTO>> MyStudentsDTOMapping => 
-            wall => new MyStudentCardDTO
-            {
-                StudentId = wall.StudentId,
-                Name = wall.Student.User.FullName ?? string.Empty,
-                Nickname = wall.Student.User.Nickname ?? string.Empty,
-                CourseNumber = 0,
-
-                OngoingHandins = wall.WallPosts.Count(post =>
-                    post.HandIn.Submissions.Where(x => x.Feedback == null).Any()),
-
-                ChatId = wall.Student.Chats.FirstOrDefault(c => c.TeacherId == wall.CourseBase.TeacherId).Id,
-
-                WallId = wall.Id
-            };
     }
 }

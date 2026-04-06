@@ -18,5 +18,6 @@ namespace backend.Modules.CoursesBase.DTOs
         public Guid? BannerImageId { get; set; } = null;
         public List<string> Tags { get; set; } = [];
         public List<string> Languages { get; set; } = [];
+        public List<string> Locations { get; set; } = [];
     }
 }

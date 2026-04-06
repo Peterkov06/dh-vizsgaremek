@@ -7,6 +7,7 @@ using backend.Modules.Shared.DTOs;
 using backend.Modules.Shared.Results;
 using backend.Modules.Shared.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace backend.Modules.CoursesBase.Services
 {
@@ -32,18 +33,42 @@ namespace backend.Modules.CoursesBase.Services
                 return ServiceResult<CourseBaseCreationDTO>.Failure("Course with such name exists");
             }
 
-            var course = ToEntity(newCourse, teacherId);
+            var course = new CourseBaseModel
+            {
+                TeacherId = teacherId,
+                CourseName = newCourse.CourseName,
+                Description = newCourse.Description,
+                Type = newCourse.Type,
+                CourseDomainId = newCourse.CourseDomainId,
+                CourseLevelId = newCourse.CourseLevelId,
+                Price = newCourse.Price,
+                FirstConsultationFree = newCourse.FirstConsultationFree,
+                PriceCurrencyId = newCourse.PriceCurrencyId,
+                Status = newCourse.Status ?? CourseStatus.Active,
+                IconImageId = newCourse.IconImageId,
+                BannerImageId = newCourse.BannerImageId,
+            };
+
             _db.CourseBases.Add(course);
             await _db.SaveChangesAsync(ct);
 
+            if (newCourse.Locations.Contains("Online"))
+            {
+                _db.CoursesToPlaces.Add(new CourseToPlace { Online = true, CourseId = course.Id, PlaceId = null  });
+                newCourse.Locations.Remove("Online");
+            }
+
             var tags = await _courseMetadataService.CreateOrGetTagsAsync(newCourse.Tags, ct);
             var languageIds = await _lookupService.GetLanguagesFromList(newCourse.Languages, ct);
+            var locationIds = await _lookupService.GetCititesFromList(newCourse.Locations, ct);
 
             var tagConnections = MapToCourseTags(course.Id, tags.Data);
             var languageConnections = MapToCourseLanguages(course.Id, languageIds.Data);
+            var cityConnections = MapToPlaces(course.Id, locationIds.Data);
 
             _db.CoursesToTags.AddRange(tagConnections);
             _db.CoursesToLanguages.AddRange(languageConnections);
+            _db.CoursesToPlaces.AddRange(cityConnections);
 
             newCourse.Id = course.Id;
 
@@ -53,21 +78,21 @@ namespace backend.Modules.CoursesBase.Services
 
         public async Task<ServiceResult<List<CourseBaseExplorerDTO>>> GetAllCourses(CancellationToken ct)
         {
-            var courses = _db.CourseBases.Include(x => x.CourseToTags).ThenInclude(x => x.Tag).Include(x => x.Teacher).Include(x => x.Currency).Include(x => x.CourseToLanguages).ThenInclude(x => x.Language).Include(x => x.Teacher).ThenInclude(x => x.User).Include(x => x.Reviews).ThenInclude(x => x.Reviewer).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Select(ToExploreDto).ToList();
+            var courses = await _db.CourseBases.Select(ToExploreDto).AsNoTracking().ToListAsync(ct);
 
             return ServiceResult<List<CourseBaseExplorerDTO>>.Success(courses);
         }
 
         public async Task<ServiceResult<List<CourseBaseExplorerDTO>>> GetTeacherCourses(string TeacherId, CancellationToken ct)
         {
-            var courses = _db.CourseBases.Where(x => x.TeacherId == TeacherId).Include(x => x.CourseToTags).ThenInclude(x => x.Tag).Include(x => x.Teacher).Include(x => x.Currency).Include(x => x.CourseToLanguages).ThenInclude(x => x.Language).Include(x => x.Teacher).ThenInclude(x => x.User).Include(x => x.Reviews).ThenInclude(x => x.Reviewer).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Select(ToExploreDto).ToList();
+            var courses = _db.CourseBases.Where(x => x.TeacherId == TeacherId).Select(ToExploreDto).ToList();
 
             return ServiceResult<List<CourseBaseExplorerDTO>>.Success(courses);
         }
 
         public async Task<ServiceResult<string>> GetCourseTeacherNameAsync(Guid courseId, CancellationToken ct = default)
         {
-            var teacherName = await _db.CourseBases.Where(x => x.Id == courseId).Include(x => x.Teacher).ThenInclude(x => x.User).Select(x => x.Teacher.User.FullName).FirstOrDefaultAsync(ct);
+            var teacherName = await _db.CourseBases.Where(x => x.Id == courseId).Select(x => x.Teacher.User.FullName).AsNoTracking().FirstOrDefaultAsync(ct);
             if (teacherName is null)
             {
                 return ServiceResult<string>.NotFound("No course found");
@@ -135,19 +160,12 @@ namespace backend.Modules.CoursesBase.Services
             var courses = await query
                 .Skip((filtersDTO.PageNum - 1) * filtersDTO.CoursesPerPage)
                 .Take(filtersDTO.CoursesPerPage)
-                .Include(x => x.CourseToTags).ThenInclude(x => x.Tag)
-                .Include(x => x.CourseToLanguages).ThenInclude(x => x.Language)
-                .Include(x => x.Teacher).ThenInclude(x => x.User)
-                    .ThenInclude(x => x.ProfilePicture)
-                .Include(x => x.Currency)
-                .Include(x => x.CourseLevel)
-                .Include(x => x.CourseDomain)
-                .Include(x => x.Reviews)
+                .Select(ToExploreDto)
                 .ToListAsync(ct);
 
             var coursesResponse = new CourseBaseListResultDTO
             {
-                Courses = courses.Select(ToExploreDto).ToList(),
+                Courses = courses,
                 CoursesPerPage = filtersDTO.CoursesPerPage,
                 PageNum = filtersDTO.PageNum,
                 TotalCourses = totalCount,
@@ -160,14 +178,8 @@ namespace backend.Modules.CoursesBase.Services
         public async Task<ServiceResult<CourseBaseDTO>> GetOneCourse(Guid id, CancellationToken ct)
         {
             var course = await _db.CourseBases.Where(x => x.Id == id)
-                .Include(x => x.CourseToTags).ThenInclude(x => x.Tag)
-                .Include(x => x.CourseToLanguages).ThenInclude(x => x.Language)
-                .Include(x => x.Teacher).ThenInclude(x => x.User)
-                    .ThenInclude(x => x.ProfilePicture)
-                .Include(x => x.Currency)
-                .Include(x => x.CourseLevel)
-                .Include(x => x.CourseDomain)
-                .Include(x => x.Reviews).ThenInclude(x => x.Reviewer).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture)
+                .Select(ToOneCourseDto)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(ct);
 
             if (course == null)
@@ -175,7 +187,7 @@ namespace backend.Modules.CoursesBase.Services
                 return ServiceResult<CourseBaseDTO>.Failure("No such course found");
             }
 
-            return ServiceResult<CourseBaseDTO>.Success(ToOneCourseDto(course));
+            return ServiceResult<CourseBaseDTO>.Success(course);
         }
 
         public Task<ServiceResult<CourseBaseCreationDTO>> UpdateCourseBaseAsync(CancellationToken ct)
@@ -188,28 +200,8 @@ namespace backend.Modules.CoursesBase.Services
             throw new NotImplementedException();
         }
 
-        public static CourseBaseModel ToEntity(CourseBaseCreationDTO dto, string teacherId)
-        {
-            return new CourseBaseModel
-            {
-                TeacherId = teacherId,
-                CourseName = dto.CourseName,
-                Description = dto.Description,
-                Type = dto.Type,
-                CourseDomainId = dto.CourseDomainId,
-                CourseLevelId = dto.CourseLevelId,
-                Price = dto.Price,
-                FirstConsultationFree = dto.FirstConsultationFree,
-                PriceCurrencyId = dto.PriceCurrencyId,
-                Status = dto.Status ?? CourseStatus.Active,
-                IconImageId = dto.IconImageId,
-                BannerImageId = dto.BannerImageId
-            };
-        }
-
-        public static CourseBaseExplorerDTO ToExploreDto(CourseBaseModel model)
-        {
-            return new CourseBaseExplorerDTO
+        public static Expression<Func<CourseBaseModel, CourseBaseExplorerDTO>> ToExploreDto =>
+            model => new CourseBaseExplorerDTO
             {
                 Id = model.Id,
                 TeacherId = model.TeacherId,
@@ -225,15 +217,13 @@ namespace backend.Modules.CoursesBase.Services
                 Currency = new CurrencyDTO() { Id = model.PriceCurrencyId, CurrencyCode = model.Currency.CurrencyCode, CurrencySymbol = model.Currency.CurrencySymbol, Name = model.Currency.Name },
                 IconImage = "",
                 BannerImage = "",
-                Tags = [.. model.CourseToTags.Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name })],
-                Languages = [.. model.CourseToLanguages.Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name })],
+                Tags = model.CourseToTags.Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name }).ToList(),
+                Languages = model.CourseToLanguages.Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name }).ToList(),
                 RatingAverage = model.Reviews.Average(x => (float?)x.ReviewScore) ?? 0f,
             };
-        }
 
-        public static CourseBaseDTO ToOneCourseDto(CourseBaseModel model)
-        {
-            return new CourseBaseDTO
+        public static Expression<Func<CourseBaseModel, CourseBaseDTO>> ToOneCourseDto => model =>
+             new CourseBaseDTO
             {
                 Id = model.Id,
                 TeacherId = model.TeacherId,
@@ -251,12 +241,11 @@ namespace backend.Modules.CoursesBase.Services
                 Currency = new CurrencyDTO() { Id = model.PriceCurrencyId, CurrencyCode = model.Currency.CurrencyCode, CurrencySymbol = model.Currency.CurrencySymbol, Name = model.Currency.Name },
                 IconImage = "",
                 BannerImage = "",
-                Tags = [.. model.CourseToTags.Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name })],
-                Languages = [.. model.CourseToLanguages.Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name })],
+                Tags = model.CourseToTags.Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name }).ToList(),
+                Languages = model.CourseToLanguages.Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name }).ToList(),
                 RatingAverage = model.Reviews.Average(x => (float?)x.ReviewScore) ?? 0f,
                 TeacherIntroduction = model.Teacher.User.Introduction ?? ""
             };
-        }
 
         public static IEnumerable<CourseToTag> MapToCourseTags(Guid courseId, List<Guid> tagIds)
         {
@@ -276,18 +265,24 @@ namespace backend.Modules.CoursesBase.Services
             });
         }
 
-        public static CourseReviewDTO CourseReviewToDto(CourseReview model)
+        public static IEnumerable<CourseToPlace> MapToPlaces(Guid courseId, List<int> placeIds)
         {
-            return new CourseReviewDTO
+            return placeIds.Select(placeId => new CourseToPlace
+            {
+                PlaceId = placeId, CourseId = courseId, Online = false
+            });
+        }
+
+        public static Expression<Func<CourseReview, CourseReviewDTO>> CourseReviewToDto => model =>
+             new CourseReviewDTO
             {
                 Id = model.Id,
                 CourseId = model.CourseId,
-                ReviewerName = model.Reviewer?.User?.FullName ?? "Anonymous",
-                ReviewerImage = model.Reviewer?.User?.ProfilePicture?.StoragePath ?? string.Empty,
+                ReviewerName = model.Reviewer.User.FullName ?? "Anonymous",
+                ReviewerImage = model.Reviewer.User.ProfilePicture.StoragePath ?? string.Empty,
                 Recommended = model.Recommended,
                 Text = model.Text,
                 ReviewScore = model.ReviewScore
             };
-        }
     }
 }

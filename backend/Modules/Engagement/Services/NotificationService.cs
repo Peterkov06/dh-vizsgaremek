@@ -30,6 +30,7 @@ namespace backend.Modules.Engagement.Services
                 .Where(x => x.RecipientId == userId)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(NotificationToDTO)
+                .AsNoTracking()
                 .ToListAsync(ct);
             return ServiceResult<List<NotificationDTO>>.Success(notifications);
         }

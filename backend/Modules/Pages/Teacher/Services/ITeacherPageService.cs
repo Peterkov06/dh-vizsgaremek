@@ -7,5 +7,6 @@ namespace backend.Modules.Pages.Teacher.Services
     {
         Task<ServiceResult<TeacherHomePageDTO>> GetTeacherHomepage(string userId, CancellationToken ct);
         Task<ServiceResult<CourseBaseCreationPageDTO>> GetCourseCreationPage(CancellationToken ct);
+        Task<ServiceResult<MyStudentsPageDTO>> GetStudentsPage(string userId, CancellationToken ct, string? searchText = null);
     }
 }

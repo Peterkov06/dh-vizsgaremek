@@ -54,18 +54,17 @@ namespace backend.Modules.Shared.Services
             return ServiceResult<List<LookUpDTO>>.Success(languages);
         }
 
-        public async Task<ServiceResult<List<Guid>>> GetLanguagesFromList(List<string> languages, CancellationToken ct)
+        public async Task<ServiceResult<List<Guid>>> GetLanguagesFromList(List<string> languages, CancellationToken ct = default)
         {
-            List<Guid> languageIds = [];
-            foreach (var language in languages)
-            {
-                var exists = await _db.Languages.FirstOrDefaultAsync(x => string.Equals(x.Name.ToLower(), language.ToLower()), ct);
-                if (exists is not null)
-                {
-                    languageIds.Add(exists.Id);
-                }
-            }
+            var languageIds = await _db.Languages.Where(x => languages.Contains(x.Name)).Select(x => x.Id).ToListAsync(ct);
             return ServiceResult<List<Guid>>.Success(languageIds);
+        }
+
+        public async Task<ServiceResult<List<int>>> GetCititesFromList(List<string> cities, CancellationToken ct = default)
+        {
+            var citIDs = await _db.Cities.Where(x => cities.Contains(x.CityName)).Select(x => x.Id).ToListAsync(ct);
+            
+            return ServiceResult<List<int>>.Success(citIDs);
         }
     }
 }

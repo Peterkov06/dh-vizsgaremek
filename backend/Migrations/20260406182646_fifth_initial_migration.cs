@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class db_cleanup : Migration
+    public partial class fifth_initial_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -855,6 +855,7 @@ namespace backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     StudentId = table.Column<string>(type: "text", nullable: false),
+                    TeacherId = table.Column<string>(type: "text", nullable: false),
                     CourseId = table.Column<Guid>(type: "uuid", nullable: false),
                     Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     TokenCount = table.Column<int>(type: "integer", nullable: false),
@@ -875,6 +876,12 @@ namespace backend.Migrations
                         column: x => x.StudentId,
                         principalTable: "students",
                         principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tutoring_walls_teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "teachers",
+                        principalColumn: "TeacherId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -1721,6 +1728,11 @@ namespace backend.Migrations
                 name: "IX_tutoring_walls_StudentId",
                 table: "tutoring_walls",
                 column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tutoring_walls_TeacherId",
+                table: "tutoring_walls",
+                column: "TeacherId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserPreferences_PreferenceId",
