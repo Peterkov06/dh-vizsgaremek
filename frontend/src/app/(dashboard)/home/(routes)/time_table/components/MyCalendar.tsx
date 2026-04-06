@@ -4,13 +4,27 @@ import { useNextCalendarApp, ScheduleXCalendar } from "@schedule-x/react";
 import { createViewMonthGrid, createViewWeek } from "@schedule-x/calendar";
 // @ts-ignore
 import "@schedule-x/theme-default/dist/index.css";
+import { translations, mergeLocales } from "@schedule-x/translations";
 
 export default function MyCalendar() {
   const calendarApp = useNextCalendarApp({
     views: [createViewMonthGrid(), createViewWeek()],
+    locale: "hu-HU",
+    translations: mergeLocales(translations, {
+      huHU: {
+        Today: "Ma",
+        Month: "Hónap",
+        Week: "Hét",
+        Day: "Nap",
+        View: "Nézet",
+        Date: "Dátum",
+        // Add any other specific UI strings you see in English
+      },
+    }) as any,
+
     backgroundEvents: [
       {
-        title: "Elérhetőség", // Optional: shows as a tooltip
+        title: "Elérhetőség",
         start: Temporal.ZonedDateTime.from({
           year: 2026,
           month: 4,
