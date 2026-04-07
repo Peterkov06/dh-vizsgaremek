@@ -13,8 +13,8 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260406182646_fifth_initial_migration")]
-    partial class fifth_initial_migration
+    [Migration("20260407083946_nullable_notification_message")]
+    partial class nullable_notification_message
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -254,11 +254,9 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Models.Cities.City", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("CityName")
                         .IsRequired()
@@ -542,8 +540,8 @@ namespace backend.Migrations
                     b.Property<bool>("Online")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("PlaceId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("PlaceId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -746,7 +744,6 @@ namespace backend.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 

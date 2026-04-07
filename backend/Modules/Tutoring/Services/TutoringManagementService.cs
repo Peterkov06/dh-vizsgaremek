@@ -1,4 +1,8 @@
 ﻿using backend.Data;
+using backend.Modules.CoursesBase.Models;
+using backend.Modules.Engagement.Models;
+using backend.Modules.Engagement.Services;
+using backend.Modules.Identity.Models;
 using backend.Modules.Shared.Models;
 using backend.Modules.Shared.Results;
 using backend.Modules.Tutoring.DTOs;
@@ -11,21 +15,29 @@ namespace backend.Modules.Tutoring.Services
     public class TutoringManagementService : ITutoringManagementService
     {
         private readonly AppDbContext _db;
+        private readonly INotificationService _notificationService;
 
-        public TutoringManagementService(AppDbContext db)
+        public TutoringManagementService(AppDbContext db, INotificationService notificationService)
         {
             _db = db;
+            _notificationService = notificationService;
         }
 
         public async Task<ServiceResult<TutoringWallEnrollmentDTO>> ApplyToCourse(TutoringWallEnrollmentDTO enrollmentDTO, string userId, CancellationToken ct)
         {
             var exists = await _db.TutoringWalls.Where(x => x.CourseId == enrollmentDTO.CourseId).AnyAsync(x => x.StudentId == userId, ct);
+            var isTutoring = await _db.CourseBases.Where(x => x.Id == enrollmentDTO.CourseId).AnyAsync(x => x.Type == CourseType.Tutoring, ct);
             if (exists)
             {
                 return ServiceResult<TutoringWallEnrollmentDTO>.Failure("Application already exists");
             }
+            else if (!isTutoring)
+            {
+                return ServiceResult<TutoringWallEnrollmentDTO>.Failure("The course is not Tutoring");
+            }
 
             var teacherId = _db.CourseBases.Where(x => x.Id == enrollmentDTO.CourseId).Select(x => x.TeacherId).FirstOrDefault();
+
 
             if (teacherId is null)
             {
@@ -36,19 +48,21 @@ namespace backend.Modules.Tutoring.Services
 
             _db.TutoringWalls.Add(newEnrollment);
 
+            await _notificationService.NotifyAsync(teacherId, NotificationType.PendingEnrollment, referenceId: enrollmentDTO.CourseId, senderId: userId);
+
             await _db.SaveChangesAsync(ct);
             enrollmentDTO.Id = newEnrollment.Id;
 
             return ServiceResult<TutoringWallEnrollmentDTO>.Success(enrollmentDTO);
         }
 
-        public async Task<ServiceResult> RespondToApplication(EnrollmentResponseDTO responseDTO, string teacherId, CancellationToken ct)
+        public async Task<ServiceResult<string>> RespondToApplication(EnrollmentResponseDTO responseDTO, string teacherId, CancellationToken ct)
         {
             var tutoringWall = await _db.TutoringWalls.Include(x => x.CourseBase).ThenInclude(x => x.Teacher).FirstOrDefaultAsync(x => x.Id == responseDTO.EnrollmentID && x.CourseBase.TeacherId == teacherId, ct);
             
             if(tutoringWall == null)
             {
-                return ServiceResult.NotFound("Couldn't find such application");
+                return ServiceResult<string>.NotFound("Couldn't find such application");
             }
 
             switch (responseDTO.Accepted)
@@ -62,13 +76,18 @@ namespace backend.Modules.Tutoring.Services
             }
 
             _db.TutoringWalls.Update(tutoringWall);
+
+            await _notificationService.NotifyAsync(tutoringWall.StudentId, responseDTO.Accepted ? NotificationType.EnrollmentAcceptance : NotificationType.EnrollmentRefusal, referenceId: tutoringWall.Id, senderId: teacherId);
+
+            await _notificationService.ClearReactedNotification(tutoringWall.StudentId, teacherId, NotificationType.PendingEnrollment, ct);
+
             await _db.SaveChangesAsync(ct);
 
-            return ServiceResult.Success();
+            return ServiceResult<string>.Success(tutoringWall.StudentId);
         }
         public async Task<ServiceResult<List<TutoringWallEnrollmentTeacherDTO>>> GetTeacherEnrollments(string teacherId, CancellationToken ct)
         {
-            var enrollments = await _db.TutoringWalls.Include(x => x.CourseBase).Include(x => x.Student).ThenInclude(x => x.User).Where(x => x.CourseBase.TeacherId == teacherId && x.Status == EnrollmentStatus.Pending).Select(x => new TutoringWallEnrollmentTeacherDTO { CourseId = x.CourseId, StudentId = x.StudentId, Id = x.Id, StudentName = x.Student.User.FullName, CourseName = x.CourseBase.CourseName}).ToListAsync(ct);
+            var enrollments = await _db.TutoringWalls.Where(x => x.CourseBase.TeacherId == teacherId && x.Status == EnrollmentStatus.Pending).Select(x => new TutoringWallEnrollmentTeacherDTO { CourseId = x.CourseId, StudentId = x.StudentId, Id = x.Id, StudentName = x.Student.User.FullName, CourseName = x.CourseBase.CourseName}).AsNoTracking().ToListAsync(ct);
             return ServiceResult<List<TutoringWallEnrollmentTeacherDTO>>.Success(enrollments);
         }
     }

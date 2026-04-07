@@ -1,4 +1,7 @@
 ﻿using backend.Data;
+using backend.Modules.Engagement.Models;
+using backend.Modules.Engagement.Services;
+using backend.Modules.Identity.Models;
 using backend.Modules.Shared.Results;
 using backend.Modules.Tutoring.DTOs;
 using backend.Modules.Tutoring.Models;
@@ -9,10 +12,12 @@ namespace backend.Modules.Tutoring.Services
     public class TutoringWallService : ITutoringWallService
     {
         private readonly AppDbContext _db;
+        private readonly INotificationService _notificationService;
 
-        public TutoringWallService(AppDbContext db)
+        public TutoringWallService(AppDbContext db, INotificationService notificationService)
         {
             _db = db;
+            _notificationService = notificationService;
         }
 
         public async Task<ServiceResult<TutoringWallPostDTO>> GetOneWallPost(Guid wallId, Guid postId, CancellationToken ct)
@@ -89,7 +94,14 @@ namespace backend.Modules.Tutoring.Services
                 HandInId = null,
             };
             _db.TutoringWallPosts.Add(newPost);
+
+            var studentId = await _db.TutoringWalls.Where(x => x.Id == postDTO.WallId).Select(x => x.StudentId).FirstAsync(ct);
+
+            await _notificationService.NotifyAsync(studentId, NotificationType.WallPost, referenceId: postDTO.WallId, senderId: posterId);
+
             await _db.SaveChangesAsync(ct);
+
+
             return ServiceResult<Guid>.Success(newPost.Id);
         }
 
@@ -103,7 +115,13 @@ namespace backend.Modules.Tutoring.Services
                 Text = commentCreationDTO.Text
             };
             _db.WallPostComments.Add(newComment);
+
+            var recipientId = await _db.TutoringWalls.Where(x => x.Id == commentCreationDTO.WallId).Select(x => x.StudentId == senderId ? x.TeacherId : x.StudentId).FirstAsync(ct);
+            await _notificationService.NotifyAsync(recipientId, NotificationType.WallPost, referenceId: commentCreationDTO.WallId, senderId: senderId);
+
             await _db.SaveChangesAsync(ct);
+
+
             return ServiceResult<Guid>.Success(newComment.Id);
         }
 

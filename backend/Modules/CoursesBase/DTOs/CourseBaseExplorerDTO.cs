@@ -23,5 +23,6 @@ namespace backend.Modules.CoursesBase.DTOs
 
         public List<LookUpDTO> Tags { get; set; } = [];
         public List<LookUpDTO> Languages { get; set; } = [];
+        public List<LookUpDTO> Locations { get; set; } = [];
     }
 }

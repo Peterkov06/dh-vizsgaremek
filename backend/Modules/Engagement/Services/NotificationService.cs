@@ -20,8 +20,6 @@ namespace backend.Modules.Engagement.Services
         public async Task NotifyAsync(string recipientId, NotificationType type, string? message = null, Guid? referenceId = null, string? senderId = null)
         {
             _db.Notifications.Add(new Notification {  RecipientId = recipientId, Type = type, Message = message, ReferenceId = referenceId, IsRead = false, ReadAt = null, SenderId = senderId});
-
-            await _db.SaveChangesAsync();
         }
 
         public async Task<ServiceResult<List<NotificationDTO>>> GetUserNotifications(string userId, CancellationToken ct = default)
@@ -33,6 +31,16 @@ namespace backend.Modules.Engagement.Services
                 .AsNoTracking()
                 .ToListAsync(ct);
             return ServiceResult<List<NotificationDTO>>.Success(notifications);
+        }
+
+        public async Task ClearReactedNotification(string senderId, string recipientId, NotificationType type, CancellationToken ct = default)
+        {
+            await _db.Notifications
+               .Where(x => x.SenderId == senderId && x.RecipientId == recipientId && x.Type == type)
+               .ExecuteUpdateAsync(s => s
+                   .SetProperty(n => n.IsRead, true)
+                   .SetProperty(n => n.ReadAt, DateTime.UtcNow),
+               ct);
         }
         
         public async Task SetNotificationsToRead(List<Guid> notificationIds, CancellationToken ct = default)

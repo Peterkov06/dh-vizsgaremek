@@ -135,12 +135,7 @@ namespace backend.Modules.Pages.Teacher.Services
                         .Where(w => w.StudentId == s.UserId && w.TeacherId == userId
                                  && w.Status == EnrollmentStatus.Active)
                         .Select(w => new LookUpDTO { Id = w.Id, Name = w.CourseBase.CourseName })
-                        .Concat(
-                            _db.PathEnrollments
-                                .Where(e => e.AttendantId == s.UserId && e.Course.TeacherId == userId
-                                         && e.Status == EnrollmentStatus.Active)
-                                .Select(e => new LookUpDTO { Id = e.Id, Name = e.Course.CourseName })
-                        ).ToList(),
+                        .ToList(),
 
                     ChatId = _db.ChatRooms
                         .Where(c => c.StudentId == s.UserId && c.TeacherId == userId)
@@ -198,7 +193,8 @@ namespace backend.Modules.Pages.Teacher.Services
                     Id = n.Id,
                     Message = n.Message,
                     Type = n.Type,
-                    CreatedAt = n.CreatedAt
+                    CreatedAt = n.CreatedAt,
+                    ReferenceId = n.ReferenceId
                 })
                 .AsNoTracking()
                 .ToListAsync(ct);

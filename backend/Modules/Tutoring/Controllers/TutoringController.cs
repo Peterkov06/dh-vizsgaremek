@@ -2,6 +2,7 @@
 using backend.Modules.CoursesBase.Services;
 using backend.Modules.Engagement.Models;
 using backend.Modules.Engagement.Services;
+using backend.Modules.Identity.Models;
 using backend.Modules.Tutoring.DTOs;
 using backend.Modules.Tutoring.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -20,14 +21,16 @@ namespace backend.Modules.Tutoring.Controllers
         private readonly ITutoringWallService _wallService;
         private readonly INotificationService _notificationService;
         private readonly ICourseBaseService _courseBaseService;
+        private readonly ICommunicationService _communicationService;
 
-        public TutoringController(ITutoringManagementService tutoringManagementService, ITutoringWallService wallService, UserManager<ApplicationUser> userManager, INotificationService notificationService, ICourseBaseService courseBaseService)
+        public TutoringController(ITutoringManagementService tutoringManagementService, ITutoringWallService wallService, UserManager<ApplicationUser> userManager, INotificationService notificationService, ICourseBaseService courseBaseService, ICommunicationService communicationService)
         {
             _tutoringManagementService = tutoringManagementService;
             _wallService = wallService;
             _userManager = userManager;
             _notificationService = notificationService;
             _courseBaseService = courseBaseService;
+            _communicationService = communicationService;
         }
 
         [Authorize(Roles = "Student")]
@@ -35,15 +38,13 @@ namespace backend.Modules.Tutoring.Controllers
         public async Task<IActionResult> EnrollToTutoring([FromBody] TutoringWallEnrollmentDTO enrollmentDTO, CancellationToken ct)
         {
             var user = await _userManager.GetUserAsync(User);
-            var teacherName = await _courseBaseService.GetCourseTeacherNameAsync(enrollmentDTO.CourseId, ct);
 
-            if (user is null || teacherName.Data is null)
+            if (user is null)
             {
                 return NotFound();
             }
 
             var res = await _tutoringManagementService.ApplyToCourse(enrollmentDTO, user.Id, ct);
-            await _notificationService.NotifyAsync(teacherName.Data, NotificationType.PendingEnrollment);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
@@ -59,7 +60,20 @@ namespace backend.Modules.Tutoring.Controllers
             }
 
             var res = await _tutoringManagementService.RespondToApplication(responseDTO, user.Id, ct);
-            return res.Succeded ? NoContent() : StatusCode(res.StatusCode, res.Error);
+
+            if (!res.Succeded || res.Data is null)
+            {
+                return StatusCode(res.StatusCode, res.Error);
+            }
+
+            var studentId = res.Data;
+
+            if (responseDTO.Accepted)
+            {
+                await _communicationService.CreateChat(user.Id, studentId, ct);
+            }
+
+            return NoContent();
         }
 
         [Authorize(Roles = "Teacher")]
@@ -103,7 +117,8 @@ namespace backend.Modules.Tutoring.Controllers
             }
 
             var res = await _wallService.PostOnWall(postDTO, user.Id, ct);
-            return res.Succeded ? CreatedAtAction(nameof(GetWallPosts), res.Data) : StatusCode(res.StatusCode, res.Error);
+
+            return res.Succeded ? Created(string.Empty, res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
         [HttpPost("wall/post/comment")]
@@ -117,7 +132,7 @@ namespace backend.Modules.Tutoring.Controllers
             }
 
             var res = await _wallService.CommentOnPost(commentCreationDTO, user.Id, ct);
-            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+            return res.Succeded ? Created(string.Empty, res.Data) : StatusCode(res.StatusCode, res.Error);
         }
     }
 }

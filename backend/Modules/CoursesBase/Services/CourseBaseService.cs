@@ -90,14 +90,14 @@ namespace backend.Modules.CoursesBase.Services
             return ServiceResult<List<CourseBaseExplorerDTO>>.Success(courses);
         }
 
-        public async Task<ServiceResult<string>> GetCourseTeacherNameAsync(Guid courseId, CancellationToken ct = default)
+        public async Task<ServiceResult<string>> GetCourseTeacherIdAsync(Guid courseId, CancellationToken ct = default)
         {
-            var teacherName = await _db.CourseBases.Where(x => x.Id == courseId).Select(x => x.Teacher.User.FullName).AsNoTracking().FirstOrDefaultAsync(ct);
-            if (teacherName is null)
+            var teacherId = await _db.CourseBases.Where(x => x.Id == courseId).Select(x => x.TeacherId).AsNoTracking().FirstOrDefaultAsync(ct);
+            if (teacherId is null)
             {
                 return ServiceResult<string>.NotFound("No course found");
             }
-            return ServiceResult<string>.Success(teacherName);
+            return ServiceResult<string>.Success(teacherId);
         }
 
         public async Task<ServiceResult<CourseBaseListResultDTO>> GetCoursesPage(CourseFiltersDTO filtersDTO, CancellationToken ct)
@@ -128,6 +128,13 @@ namespace backend.Modules.CoursesBase.Services
             if (filtersDTO.Languages is { Count: > 0 }) 
             {
                 query = query.Where(x => x.CourseToLanguages.Any(x => filtersDTO.Languages.Contains(x.Language.Name)));
+            }
+
+            if (filtersDTO.Locations is { Count: > 0})
+            {
+                bool includeOnline = filtersDTO.Locations.Contains("Online");
+                var cities = filtersDTO.Locations.Where(x => x != "Online").ToList();
+                query = query.Where(x => x.CourseToPlaces.Any(x => (includeOnline && x.Online) || (cities.Contains(x.City.CityName))));
             }
 
             if (filtersDTO.MinPrice.HasValue)
@@ -220,6 +227,8 @@ namespace backend.Modules.CoursesBase.Services
                 Tags = model.CourseToTags.Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name }).ToList(),
                 Languages = model.CourseToLanguages.Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name }).ToList(),
                 RatingAverage = model.Reviews.Average(x => (float?)x.ReviewScore) ?? 0f,
+                Locations = model.CourseToPlaces.Select(x => new LookUpDTO { Id = x.PlaceId, Name = x.City.CityName ?? "Online" }).ToList()
+                
             };
 
         public static Expression<Func<CourseBaseModel, CourseBaseDTO>> ToOneCourseDto => model =>
@@ -265,7 +274,7 @@ namespace backend.Modules.CoursesBase.Services
             });
         }
 
-        public static IEnumerable<CourseToPlace> MapToPlaces(Guid courseId, List<int> placeIds)
+        public static IEnumerable<CourseToPlace> MapToPlaces(Guid courseId, List<Guid> placeIds)
         {
             return placeIds.Select(placeId => new CourseToPlace
             {

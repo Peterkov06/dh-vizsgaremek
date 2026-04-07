@@ -103,6 +103,7 @@ namespace backend.Data
 
             builder.Entity<City>(entity =>
             {
+                entity.HasKey(e => e.Id);
                 entity.Property(e => e.PostalCode)
                       .HasColumnType("char(4)");
 

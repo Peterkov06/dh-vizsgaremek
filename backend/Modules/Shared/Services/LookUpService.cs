@@ -60,11 +60,11 @@ namespace backend.Modules.Shared.Services
             return ServiceResult<List<Guid>>.Success(languageIds);
         }
 
-        public async Task<ServiceResult<List<int>>> GetCititesFromList(List<string> cities, CancellationToken ct = default)
+        public async Task<ServiceResult<List<Guid>>> GetCititesFromList(List<string> cities, CancellationToken ct = default)
         {
             var citIDs = await _db.Cities.Where(x => cities.Contains(x.CityName)).Select(x => x.Id).ToListAsync(ct);
             
-            return ServiceResult<List<int>>.Success(citIDs);
+            return ServiceResult<List<Guid>>.Success(citIDs);
         }
     }
 }

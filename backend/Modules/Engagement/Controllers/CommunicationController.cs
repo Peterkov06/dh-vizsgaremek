@@ -25,7 +25,7 @@ namespace backend.Modules.Engagement.Controllers
 
         [Authorize(Roles = "Student")]
         [HttpPost("write_review")]
-        public async Task<IActionResult> WriteReview([FromBody] CourseReviewCreatorDTO dto, [FromQuery] string id, CancellationToken ct)
+        public async Task<IActionResult> WriteReview([FromBody] CourseReviewCreatorDTO dto, CancellationToken ct)
         {
             var user = await _userManager.GetUserAsync(User);
 
@@ -34,14 +34,21 @@ namespace backend.Modules.Engagement.Controllers
                 return NotFound();
             }
 
-            var res = await _communicationService.WriteCourseReview(dto, id, ct);
-            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+            var res = await _communicationService.WriteCourseReview(dto, user.Id, ct);
+            return res.Succeded ? Created(string.Empty, res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
-        [HttpGet("notifications/{userId}")]
-        public async Task<IActionResult> GetNotifications(string userId, CancellationToken ct)
+        [HttpGet("notifications")]
+        public async Task<IActionResult> GetNotifications(CancellationToken ct)
         {
-            var res = await _notificationService.GetUserNotifications(userId, ct);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _notificationService.GetUserNotifications(user.Id, ct);
             if (res.Succeded && res.Data.Any())
             {
                 var unreadIDs = res.Data.Where(x => x.IsRead == false).Select(x => x.Id).ToList();

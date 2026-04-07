@@ -31,8 +31,7 @@ namespace backend.Migrations
                 name: "Cities",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CityName = table.Column<string>(type: "text", nullable: false),
                     PostalCode = table.Column<string>(type: "char(4)", nullable: false)
                 },
@@ -727,7 +726,7 @@ namespace backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CourseId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PlaceId = table.Column<int>(type: "integer", nullable: true),
+                    PlaceId = table.Column<Guid>(type: "uuid", nullable: true),
                     Online = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
