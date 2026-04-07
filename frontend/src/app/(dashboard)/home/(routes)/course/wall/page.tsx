@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import WallPost from "./components/WallPost";
 import { Button } from "@/components/ui/button";
 import EnrollingClassDialog from "./components/EnrollingClassDialog";
+import ReviewCourseDialog from "./components/ReviewCourseDialog";
 
 const CourseWall = () => {
   const [page, setPage] = useState<CoursePage>();
@@ -29,6 +30,9 @@ const CourseWall = () => {
             <User className="size-8 "></User>
             {page?.teacher.name}
           </p>
+        </div>
+        <div className="absolute right-5 bottom-5">
+          <ReviewCourseDialog></ReviewCourseDialog>
         </div>
       </section>
       <section className="flex mt-10 gap-7">

@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Save, ShoppingBag } from "lucide-react";
+import { CirclePlus, Save, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const EnrollingClassDialog = (props: { course?: string }) => {
@@ -54,8 +54,11 @@ const EnrollingClassDialog = (props: { course?: string }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="text-xl mt-3" variant={"outline"}>
-          Új óra felvétele
+        <Button
+          className="text-xl mt-3 flex gap-2 h-10 border-2 border-secondary"
+          variant={"outline"}
+        >
+          <CirclePlus className="size-6"></CirclePlus> Új óra felvétele
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-none! w-[30%]">
