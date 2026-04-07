@@ -82,7 +82,10 @@ const ReviewCourseDialog = () => {
           ></Textarea>
         </div>
         <DialogFooter className="justify-center!">
-          <Button className="text-2xl flex gap-1 h-12 w-50">
+          <Button
+            className="text-2xl flex gap-1 h-12 w-50"
+            disabled={recommend === "" || text === ""}
+          >
             <UserStar className="size-8"></UserStar> Értékelem
           </Button>
         </DialogFooter>

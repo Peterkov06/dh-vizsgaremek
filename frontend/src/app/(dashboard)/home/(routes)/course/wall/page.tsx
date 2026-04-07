@@ -8,6 +8,7 @@ import WallPost from "./components/WallPost";
 import { Button } from "@/components/ui/button";
 import EnrollingClassDialog from "./components/EnrollingClassDialog";
 import ReviewCourseDialog from "./components/ReviewCourseDialog";
+import BuyingTokenDialog from "./components/BuyingTokenDialog";
 
 const CourseWall = () => {
   const [page, setPage] = useState<CoursePage>();
@@ -31,8 +32,9 @@ const CourseWall = () => {
             {page?.teacher.name}
           </p>
         </div>
-        <div className="absolute right-5 bottom-5">
+        <div className="absolute right-5 bottom-5 flex gap-3">
           <ReviewCourseDialog></ReviewCourseDialog>
+          {page && <BuyingTokenDialog course={page.title}></BuyingTokenDialog>}
         </div>
       </section>
       <section className="flex mt-10 gap-7">

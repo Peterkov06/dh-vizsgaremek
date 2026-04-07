@@ -47,8 +47,6 @@ const EnrollingClassDialog = (props: { course?: string }) => {
       setCourses([props.course as string]);
       setSelectedCourse(props.course);
     }
-    console.log("here");
-    console.log(props.course);
   }, []);
 
   return (
@@ -102,8 +100,9 @@ const EnrollingClassDialog = (props: { course?: string }) => {
                 className="shadow-2xl"
                 value={classLenghtInput}
                 onChange={(e) => {
-                  if (parseInt(e.target.value))
+                  if (parseInt(e.target.value) && parseInt(e.target.value) > 0)
                     setClassLenght(parseInt(e.target.value));
+                  else setClassLenght(0);
                   setClassLenghtInput(e.target.value);
                 }}
                 placeholder="Órák száma..."
