@@ -5,6 +5,8 @@ import { CoursePage } from "@/lib/models/CourseWall";
 import { User } from "lucide-react";
 import { useEffect, useState } from "react";
 import WallPost from "./components/WallPost";
+import { Button } from "@/components/ui/button";
+import EnrollingClassDialog from "./components/EnrollingClassDialog";
 
 const CourseWall = () => {
   const [page, setPage] = useState<CoursePage>();
@@ -35,7 +37,7 @@ const CourseWall = () => {
             <WallPost post={p} key={p.id}></WallPost>
           ))}
         </section>
-        <section className="bg-linear-to-br sticky top-2 from-primary w-[30em] to-secondary rounded-2xl flex flex-col px-3 py-10    gap-5 h-fit">
+        <section className="bg-linear-to-br sticky top-2 from-primary w-[30em] to-secondary rounded-2xl flex flex-col px-3 pt-10 pb-5 gap-5 h-fit">
           <div className="flex flex-col">
             <h1 className="text-2xl text-primary-foreground">
               Közelgő beadandók
@@ -84,6 +86,9 @@ const CourseWall = () => {
               </div>
             </div>
           </div>
+          {page && (
+            <EnrollingClassDialog course={page?.title}></EnrollingClassDialog>
+          )}
         </section>
       </section>
     </main>
