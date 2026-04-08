@@ -5,6 +5,7 @@ using backend.Modules.CoursesBase;
 using backend.Modules.Engagement;
 using backend.Modules.Identity;
 using backend.Modules.Pages;
+using backend.Modules.Scheduling;
 using backend.Modules.Shared;
 using backend.Modules.Tutoring;
 using backend.Services.JwtServices;
@@ -113,6 +114,7 @@ namespace backend
             builder.Services.AddPagesServices();
             builder.Services.AddEngagementServices();
             builder.Services.AddIdentityServices();
+            builder.Services.AddSchedulingServices();
 
             var app = builder.Build();
 

@@ -93,7 +93,7 @@ namespace backend.Modules.Pages.Student.Services
                 Notifications = new()
                 {
                     UnreadNotificationNumber = notifications.Count,
-                    LastUnread = new LastUnreadNotificationDTO { FirstText = lastNotification.Type.ToString(), NotificationId = lastNotification.Id, ReferenceId = lastNotification.ReferenceId, SecondText = "" },
+                    LastUnread = lastNotification is not null ? new LastUnreadNotificationDTO { FirstText = lastNotification.Type.ToString(), NotificationId = lastNotification.Id, ReferenceId = lastNotification.ReferenceId, SecondText = "" } : null,
                 },
                 PopularCourses = popularCourses.Select(x => new PopularCourseDTO
                 {
