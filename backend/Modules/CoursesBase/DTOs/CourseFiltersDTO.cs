@@ -12,6 +12,7 @@ namespace backend.Modules.CoursesBase.DTOs
         public List<string>? Tags { get; set; } = null;
         public List<string>? Levels { get; set; } = null;
         public List<string>? Languages { get; set; } = null;
+        public List<string>? Locations { get; set; } = null;
         public int? MinPrice { get; set; } = null;
         public int? MaxPrice { get; set; } = null;
         public string? TeacherId { get; set; } = null;

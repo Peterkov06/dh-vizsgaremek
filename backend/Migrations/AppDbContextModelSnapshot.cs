@@ -249,86 +249,11 @@ namespace backend.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("backend.Models.Chat.Conversation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Conversation");
-                });
-
-            modelBuilder.Entity("backend.Models.Chat.ConversationParticipant", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("LastOnlineAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ConversationParticipant");
-                });
-
-            modelBuilder.Entity("backend.Models.Chat.Message", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Message");
-                });
-
             modelBuilder.Entity("backend.Models.Cities.City", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("CityName")
                         .IsRequired()
@@ -391,9 +316,6 @@ namespace backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("PreferenceId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Id")
                         .HasColumnType("integer");
 
                     b.HasKey("UserId", "PreferenceId");
@@ -485,6 +407,9 @@ namespace backend.Migrations
                     b.Property<string>("TeacherId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("TokenMinuteValue")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -598,6 +523,35 @@ namespace backend.Migrations
                     b.ToTable("courses_to_languages", (string)null);
                 });
 
+            modelBuilder.Entity("backend.Modules.CoursesBase.Models.CourseToPlace", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Online")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid?>("PlaceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("PlaceId");
+
+                    b.ToTable("course_to_places", (string)null);
+                });
+
             modelBuilder.Entity("backend.Modules.CoursesBase.Models.CourseToTag", b =>
                 {
                     b.Property<Guid>("CourseId")
@@ -650,27 +604,22 @@ namespace backend.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("EnrollmentId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("StudentId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TeacherId")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("WallId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("EnrollmentId")
-                        .IsUnique();
+                    b.HasIndex("StudentId");
 
-                    b.HasIndex("WallId")
-                        .IsUnique();
+                    b.HasIndex("TeacherId");
 
-                    b.ToTable("chat_rooms", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_ChatRoom_SingleContext", "((\"WallId\" IS NOT NULL)::int + (\"EnrollmentId\" IS NOT NULL)::int) = 1");
-                        });
+                    b.ToTable("chat_rooms", (string)null);
                 });
 
             modelBuilder.Entity("backend.Modules.Engagement.Models.CommunityMessage", b =>
@@ -683,8 +632,7 @@ namespace backend.Migrations
 
                     b.Property<string>("SenderId")
                         .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -714,6 +662,10 @@ namespace backend.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("TeacherId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -721,6 +673,8 @@ namespace backend.Migrations
 
                     b.HasIndex("CourseId")
                         .IsUnique();
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("community_threads", (string)null);
                 });
@@ -771,7 +725,7 @@ namespace backend.Migrations
 
                     b.ToTable("course_feedbacks", null, t =>
                         {
-                            t.HasCheckConstraint("CK_CourseReviews_SingleContext", "((\"WallId\" IS NOT NULL)::int + (\"EnrollmentId\" IS NOT NULL)::int) = 1");
+                            t.HasCheckConstraint("CK_CourseReviews_SingleContext", "(\"WallId\" IS NOT NULL OR \"EnrollmentId\" IS NOT NULL)");
                         });
                 });
 
@@ -787,7 +741,6 @@ namespace backend.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
@@ -796,16 +749,13 @@ namespace backend.Migrations
 
                     b.Property<string>("RecipientId")
                         .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("ReferenceId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<string>("SenderId")
+                        .HasColumnType("text");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -818,6 +768,8 @@ namespace backend.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
 
                     b.ToTable("notifications", (string)null);
                 });
@@ -1180,6 +1132,10 @@ namespace backend.Migrations
                     b.Property<int?>("MaxPoints")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1188,7 +1144,12 @@ namespace backend.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid>("WallId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("WallId");
 
                     b.ToTable("hand_ins", (string)null);
                 });
@@ -1204,9 +1165,9 @@ namespace backend.Migrations
                     b.Property<int?>("Grade")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("GraderId")
-                        .HasMaxLength(450)
-                        .HasColumnType("uuid");
+                    b.Property<string>("GraderId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int?>("Points")
                         .HasColumnType("integer");
@@ -1280,6 +1241,9 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TeacherId")
+                        .HasColumnType("text");
+
                     b.Property<string>("Text")
                         .HasColumnType("text");
 
@@ -1291,6 +1255,8 @@ namespace backend.Migrations
                     b.HasIndex("HandInId");
 
                     b.HasIndex("SubmitterId");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("submissions", (string)null);
                 });
@@ -1424,8 +1390,7 @@ namespace backend.Migrations
 
                     b.Property<string>("OrganiserId")
                         .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("PathCourseId")
                         .HasColumnType("uuid");
@@ -1437,7 +1402,6 @@ namespace backend.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
@@ -1466,6 +1430,34 @@ namespace backend.Migrations
                         {
                             t.HasCheckConstraint("CK_Events_SingleContext", "((\"PathCourseId\" IS NOT NULL)::int + (\"TutoringWallId\" IS NOT NULL)::int + (\"PathEnrollmentId\" IS NOT NULL)::int) = 1");
                         });
+                });
+
+            modelBuilder.Entity("backend.Modules.Scheduling.Models.TeacherTimeblock", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("End")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TeacherId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("teacher_timeblocks", (string)null);
                 });
 
             modelBuilder.Entity("backend.Modules.Shared.Models.Currency", b =>
@@ -1533,8 +1525,11 @@ namespace backend.Migrations
 
                     b.Property<string>("StudentId")
                         .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                        .HasColumnType("text");
+
+                    b.Property<string>("TeacherId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("TokenCount")
                         .HasColumnType("integer");
@@ -1547,6 +1542,8 @@ namespace backend.Migrations
                     b.HasIndex("CourseId");
 
                     b.HasIndex("StudentId");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("tutoring_walls", (string)null);
                 });
@@ -1609,8 +1606,7 @@ namespace backend.Migrations
 
                     b.Property<string>("SenderId")
                         .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -1691,44 +1687,6 @@ namespace backend.Migrations
                         .HasForeignKey("ProfilePictureId");
 
                     b.Navigation("ProfilePicture");
-                });
-
-            modelBuilder.Entity("backend.Models.Chat.ConversationParticipant", b =>
-                {
-                    b.HasOne("backend.Models.Chat.Conversation", "Conversation")
-                        .WithMany("ConversationParticipants")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("backend.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("backend.Models.Chat.Message", b =>
-                {
-                    b.HasOne("backend.Models.Chat.Conversation", "Conversation")
-                        .WithMany("Messages")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("backend.Models.ApplicationUser", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("backend.Models.Preferances.Preference", b =>
@@ -1840,6 +1798,24 @@ namespace backend.Migrations
                     b.Navigation("Language");
                 });
 
+            modelBuilder.Entity("backend.Modules.CoursesBase.Models.CourseToPlace", b =>
+                {
+                    b.HasOne("backend.Modules.CoursesBase.Models.CourseBaseModel", "CourseBase")
+                        .WithMany("CourseToPlaces")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend.Models.Cities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("City");
+
+                    b.Navigation("CourseBase");
+                });
+
             modelBuilder.Entity("backend.Modules.CoursesBase.Models.CourseToTag", b =>
                 {
                     b.HasOne("backend.Modules.CoursesBase.Models.CourseBaseModel", "Course")
@@ -1872,19 +1848,19 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Modules.Engagement.Models.ChatRoom", b =>
                 {
-                    b.HasOne("backend.Modules.Progression.Models.PathEnrollment", "Enrollment")
-                        .WithOne()
-                        .HasForeignKey("backend.Modules.Engagement.Models.ChatRoom", "EnrollmentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("backend.Modules.Identity.Models.Student", "Student")
+                        .WithMany("Chats")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("backend.Modules.Tutoring.Models.TutoringWall", "Wall")
-                        .WithOne()
-                        .HasForeignKey("backend.Modules.Engagement.Models.ChatRoom", "WallId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("backend.Modules.Identity.Models.Teacher", "Teacher")
+                        .WithMany("Chats")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("Enrollment");
+                    b.Navigation("Student");
 
-                    b.Navigation("Wall");
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("backend.Modules.Engagement.Models.CommunityMessage", b =>
@@ -1905,7 +1881,15 @@ namespace backend.Migrations
                         .HasForeignKey("backend.Modules.Engagement.Models.CommunityThread", "CourseId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("backend.Modules.Identity.Models.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Course");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("backend.Modules.Engagement.Models.CourseReview", b =>
@@ -1943,13 +1927,20 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Modules.Engagement.Models.Notification", b =>
                 {
-                    b.HasOne("backend.Models.ApplicationUser", "User")
+                    b.HasOne("backend.Models.ApplicationUser", "RecipientUser")
                         .WithMany()
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.HasOne("backend.Models.ApplicationUser", "SenderUser")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("RecipientUser");
+
+                    b.Navigation("SenderUser");
                 });
 
             modelBuilder.Entity("backend.Modules.Identity.Models.Qualification", b =>
@@ -2143,6 +2134,17 @@ namespace backend.Migrations
                     b.Navigation("ParentFolder");
                 });
 
+            modelBuilder.Entity("backend.Modules.Resources.Models.HandIn", b =>
+                {
+                    b.HasOne("backend.Modules.Tutoring.Models.TutoringWall", "Wall")
+                        .WithMany()
+                        .HasForeignKey("WallId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Wall");
+                });
+
             modelBuilder.Entity("backend.Modules.Resources.Models.HandInFeedback", b =>
                 {
                     b.HasOne("backend.Modules.Resources.Models.Submission", "Submission")
@@ -2171,12 +2173,19 @@ namespace backend.Migrations
                     b.HasOne("backend.Modules.Identity.Models.Student", "Submitter")
                         .WithMany()
                         .HasForeignKey("SubmitterId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("backend.Modules.Identity.Models.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("HandIn");
 
                     b.Navigation("Submitter");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("backend.Modules.Resources.Models.SubmissionAttachment", b =>
@@ -2251,6 +2260,17 @@ namespace backend.Migrations
                     b.Navigation("TutoringWall");
                 });
 
+            modelBuilder.Entity("backend.Modules.Scheduling.Models.TeacherTimeblock", b =>
+                {
+                    b.HasOne("backend.Modules.Identity.Models.Teacher", "Teacher")
+                        .WithMany("TeacherTimeblocks")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Teacher");
+                });
+
             modelBuilder.Entity("backend.Modules.Tutoring.Models.TutoringWall", b =>
                 {
                     b.HasOne("backend.Modules.CoursesBase.Models.CourseBaseModel", "CourseBase")
@@ -2265,9 +2285,17 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("backend.Modules.Identity.Models.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("CourseBase");
 
                     b.Navigation("Student");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("backend.Modules.Tutoring.Models.TutoringWallPost", b =>
@@ -2334,13 +2362,6 @@ namespace backend.Migrations
                     b.Navigation("Wall");
                 });
 
-            modelBuilder.Entity("backend.Models.Chat.Conversation", b =>
-                {
-                    b.Navigation("ConversationParticipants");
-
-                    b.Navigation("Messages");
-                });
-
             modelBuilder.Entity("backend.Models.Preferances.PreferenceGroup", b =>
                 {
                     b.Navigation("Preferences");
@@ -2349,6 +2370,8 @@ namespace backend.Migrations
             modelBuilder.Entity("backend.Modules.CoursesBase.Models.CourseBaseModel", b =>
                 {
                     b.Navigation("CourseToLanguages");
+
+                    b.Navigation("CourseToPlaces");
 
                     b.Navigation("CourseToTags");
 
@@ -2367,6 +2390,8 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Modules.Identity.Models.Student", b =>
                 {
+                    b.Navigation("Chats");
+
                     b.Navigation("LearningPathEnrollments");
 
                     b.Navigation("TutoringWalls");
@@ -2374,7 +2399,11 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Modules.Identity.Models.Teacher", b =>
                 {
+                    b.Navigation("Chats");
+
                     b.Navigation("Courses");
+
+                    b.Navigation("TeacherTimeblocks");
                 });
 
             modelBuilder.Entity("backend.Modules.LearningPathTemplate.Models.Unit", b =>

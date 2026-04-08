@@ -1,6 +1,7 @@
 import json
 import psycopg2
 import os
+import uuid
 
 with open("IrszHnk.json", "r", encoding="utf-8") as file:
     cities_data = json.load(file)
@@ -29,15 +30,16 @@ for city in cities_data:
     if city_name and postal_code:
         postal_code = postal_code[:4].rjust(4, '0')
         city_name = city_name.split(" ")[0]
+        city_id = str(uuid.uuid4())
         
         try:
             cur.execute(
                 """
-                INSERT INTO "Cities" ("CityName", "PostalCode")
-                VALUES (%s, %s)
+                INSERT INTO "Cities" ("Id", "CityName", "PostalCode")
+                VALUES (%s, %s, %s)
                 ON CONFLICT ("CityName", "PostalCode") DO NOTHING
                 """,
-                (city_name, postal_code)
+                (city_id, city_name, postal_code)
             )
         except Exception as e:
             print(f"Error inserting {city_name}: {e}")

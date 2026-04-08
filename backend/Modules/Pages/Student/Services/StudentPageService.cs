@@ -93,7 +93,7 @@ namespace backend.Modules.Pages.Student.Services
                 Notifications = new()
                 {
                     UnreadNotificationNumber = notifications.Count,
-                    LastUnread = null,
+                    LastUnread = new LastUnreadNotificationDTO { FirstText = lastNotification.Type.ToString(), NotificationId = lastNotification.Id, ReferenceId = lastNotification.ReferenceId, SecondText = "" },
                 },
                 PopularCourses = popularCourses.Select(x => new PopularCourseDTO
                 {
@@ -105,7 +105,9 @@ namespace backend.Modules.Pages.Student.Services
                     {
                         Amount = x.Price,
                         Currency = x.Currency?.CurrencySymbol ?? "HUF"
-                    }
+                    },
+                    Description = x.Description,
+                    CourseType = x.Type.ToString()
                 }).ToList(),
                 UpcomingEvents = upcomingEvents.Select(x => new UpcomingEventDTO
                 {

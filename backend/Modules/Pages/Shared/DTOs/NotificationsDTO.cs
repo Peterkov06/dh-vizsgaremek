@@ -9,8 +9,8 @@
     public class LastUnreadNotificationDTO
     {
         public Guid NotificationId { get; set; }
-        public string EventUrl { get; set; } = "";
-        public string CourseName { get; set; } = "";
-        public string Text { get; set; } = "";
+        public Guid? ReferenceId { get; set; } = null;
+        public string FirstText { get; set; } = "";
+        public string SecondText { get; set; } = "";
     }
 }

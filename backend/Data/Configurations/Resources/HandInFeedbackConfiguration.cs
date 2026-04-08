@@ -13,7 +13,7 @@ namespace backend.Data.Configurations.Resources
             builder.Property(x => x.Text).IsRequired(false);
             builder.Property(x => x.Grade).IsRequired(false);
             builder.Property(x => x.Points).IsRequired(false);
-            builder.Property(x => x.GraderId).IsRequired().HasMaxLength(450);
+            builder.Property(x => x.GraderId).IsRequired();
 
             builder.HasOne(x => x.Submission).WithOne(x => x.Feedback).HasForeignKey<HandInFeedback>(x => x.SubmissionId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }

@@ -2,6 +2,7 @@
 using backend.Modules.Engagement.DTOs;
 using backend.Modules.Engagement.Models;
 using backend.Modules.Shared.Results;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Modules.Engagement.Services
 {
@@ -37,6 +38,18 @@ namespace backend.Modules.Engagement.Services
             await _db.SaveChangesAsync(ct);
 
             return ServiceResult<Guid>.Success(newReview.Id);
+        }
+
+        public async Task<ServiceResult> CreateChat(string teacherId, string studentId, CancellationToken ct = default)
+        {
+            var exists = await _db.ChatRooms.Where(x => x.TeacherId == teacherId && x.StudentId == studentId).AnyAsync(ct);
+
+            if (!exists)
+            {
+                _db.ChatRooms.Add(new ChatRoom { StudentId = studentId, TeacherId = teacherId });
+                await _db.SaveChangesAsync(ct);
+            }
+            return ServiceResult.Success();
         }
     }
 }

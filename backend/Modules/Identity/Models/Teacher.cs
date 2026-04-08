@@ -1,6 +1,7 @@
 ﻿using backend.Models;
 using backend.Modules.CoursesBase.Models;
 using backend.Modules.Engagement.Models;
+using backend.Modules.Scheduling.Models;
 
 namespace backend.Modules.Identity.Models
 {
@@ -12,5 +13,6 @@ namespace backend.Modules.Identity.Models
 
         public ICollection<ChatRoom> Chats { get; set; } = [];
         public ICollection<CourseBaseModel> Courses { get; set; } = [];
+        public ICollection<TeacherTimeblock> TeacherTimeblocks { get; set; } = [];
     }
 }

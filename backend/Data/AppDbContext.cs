@@ -41,9 +41,11 @@ namespace backend.Data
         public DbSet<CourseDomain> CourseDomains { get; set; }
         public DbSet<CourseTag> CourseTags { get; set; }
         public DbSet<CourseToTag> CoursesToTags { get; set; }
+        public DbSet<CourseToPlace> CoursesToPlaces { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<CourseToLanguage> CoursesToLanguages { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<TeacherTimeblock> TeacherTimeblocks { get; set; }
         public DbSet<Unit> LearningPathUnits { get; set; }
         public DbSet<UnitLesson> LearningPathUnitLessons { get; set; }
         public DbSet<LessonToContent> LearningPathLessonsToContents { get; set; }
@@ -94,33 +96,14 @@ namespace backend.Data
                 .HasOne(up => up.Preference)
                 .WithMany()
                 .HasForeignKey(up => up.PreferenceId);
-
-
-            builder.Entity<ConversationParticipant>()
-                .HasOne(cp => cp.Conversation)
-                .WithMany(c => c.ConversationParticipants)
-                .HasForeignKey(cp=>cp.ConversationId);
-
-            builder.Entity<ConversationParticipant>()
-                .HasOne(cp => cp.User)
-                .WithMany()
-                .HasForeignKey(cp => cp.UserId);
-
-            builder.Entity<Message>()
-                .HasOne(m => m.Conversation)
-                .WithMany(c => c.Messages)
-                .HasForeignKey(m => m.ConversationId);
-
-            builder.Entity<Message>()
-                .HasOne(m => m.Sender)
-                .WithMany()
-                .HasForeignKey(m => m.SenderId);
+;
 
 
             builder.Entity<RefreshToken>().HasIndex(rt => rt.Token).IsUnique();
 
             builder.Entity<City>(entity =>
             {
+                entity.HasKey(e => e.Id);
                 entity.Property(e => e.PostalCode)
                       .HasColumnType("char(4)");
 

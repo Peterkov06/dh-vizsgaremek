@@ -11,8 +11,8 @@ namespace backend.Data.Configurations.Engagement
             base.Configure(builder);
             builder.ToTable("chat_rooms");
 
-            builder.HasOne(x => x.Student).WithMany(x => x.Chats).HasForeignKey(x => x.StudentId).OnDelete(DeleteBehavior.SetNull);
-            builder.HasOne(x => x.Teacher).WithMany(x => x.Chats).HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(x => x.Student).WithMany(x => x.Chats).HasForeignKey(x => x.StudentId).IsRequired(false).OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(x => x.Teacher).WithMany(x => x.Chats).HasForeignKey(x => x.TeacherId).IsRequired(false).OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

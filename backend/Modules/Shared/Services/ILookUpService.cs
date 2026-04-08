@@ -11,5 +11,7 @@ namespace backend.Modules.Shared.Services
 
         Task<ServiceResult<LookUpDTO>> AddLanguageAsync(LookUpDTO language, CancellationToken ct);
         Task<ServiceResult<CurrencyDTO>> AddCurrencyAsync(CurrencyDTO currency, CancellationToken ct);
+
+        Task<ServiceResult<List<Guid>>> GetCititesFromList(List<string> cities, CancellationToken ct);
     }
 }

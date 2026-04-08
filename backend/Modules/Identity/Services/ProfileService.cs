@@ -16,7 +16,7 @@ namespace backend.Modules.Identity.Services
 
         public async Task<ServiceResult<StudentProfileDTO>> GetStudentProfile(string userId, CancellationToken ct)
         {
-            var user = await _db.Students.Include(x => x.User).ThenInclude(x => x.ProfilePicture)
+            var user = await _db.Students.Include(x => x.User).ThenInclude(x => x.ProfilePicture).AsNoTracking()
                 .FirstOrDefaultAsync(x => x.UserId == userId, ct);
             if (user == null)
             {
@@ -45,7 +45,7 @@ namespace backend.Modules.Identity.Services
         public async Task<ServiceResult<TeacherProfileDTO>> GetTeacherProfile(string userId, CancellationToken ct)
         {
             var user = await _db.Teachers
-                .Include(x => x.User).ThenInclude(x => x.ProfilePicture)
+                .Include(x => x.User).ThenInclude(x => x.ProfilePicture).AsNoTracking()
                 .FirstOrDefaultAsync(x => x.TeacherId == userId, ct);
             if (user == null)
             {
@@ -53,7 +53,6 @@ namespace backend.Modules.Identity.Services
             }
 
             var totalStudents = await _db.TutoringWalls
-                .Include(x => x.CourseBase)
                 .Where(x => x.CourseBase.TeacherId == userId).Select(x => x.StudentId)
                 .Union(
                     _db.PathEnrollments
@@ -62,7 +61,6 @@ namespace backend.Modules.Identity.Services
                         .Select(x => x.AttendantId)
                 ).CountAsync(ct);
             var courseReviews = await _db.CourseReviews
-                .Include(x => x.Course)
                 .Where(x => x.Course.TeacherId == userId)
                 .AverageAsync(x => (float?)x.ReviewScore, ct) ?? 0f;
 

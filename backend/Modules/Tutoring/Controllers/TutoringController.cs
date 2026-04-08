@@ -1,4 +1,8 @@
 ﻿using backend.Models;
+using backend.Modules.CoursesBase.Services;
+using backend.Modules.Engagement.Models;
+using backend.Modules.Engagement.Services;
+using backend.Modules.Identity.Models;
 using backend.Modules.Tutoring.DTOs;
 using backend.Modules.Tutoring.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -15,12 +19,18 @@ namespace backend.Modules.Tutoring.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITutoringManagementService _tutoringManagementService;
         private readonly ITutoringWallService _wallService;
+        private readonly INotificationService _notificationService;
+        private readonly ICourseBaseService _courseBaseService;
+        private readonly ICommunicationService _communicationService;
 
-        public TutoringController(ITutoringManagementService tutoringManagementService, ITutoringWallService wallService, UserManager<ApplicationUser> userManager)
+        public TutoringController(ITutoringManagementService tutoringManagementService, ITutoringWallService wallService, UserManager<ApplicationUser> userManager, INotificationService notificationService, ICourseBaseService courseBaseService, ICommunicationService communicationService)
         {
             _tutoringManagementService = tutoringManagementService;
             _wallService = wallService;
             _userManager = userManager;
+            _notificationService = notificationService;
+            _courseBaseService = courseBaseService;
+            _communicationService = communicationService;
         }
 
         [Authorize(Roles = "Student")]
@@ -29,7 +39,7 @@ namespace backend.Modules.Tutoring.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
-            if (user == null)
+            if (user is null)
             {
                 return NotFound();
             }
@@ -50,7 +60,20 @@ namespace backend.Modules.Tutoring.Controllers
             }
 
             var res = await _tutoringManagementService.RespondToApplication(responseDTO, user.Id, ct);
-            return res.Succeded ? NoContent() : StatusCode(res.StatusCode, res.Error);
+
+            if (!res.Succeded || res.Data is null)
+            {
+                return StatusCode(res.StatusCode, res.Error);
+            }
+
+            var studentId = res.Data;
+
+            if (responseDTO.Accepted)
+            {
+                await _communicationService.CreateChat(user.Id, studentId, ct);
+            }
+
+            return NoContent();
         }
 
         [Authorize(Roles = "Teacher")]
@@ -75,6 +98,13 @@ namespace backend.Modules.Tutoring.Controllers
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
+        [HttpGet("{wallId:guid}/{postId:guid}")]
+        public async Task<IActionResult> GetOneWallPost(Guid wallId, Guid postId, CancellationToken ct)
+        {
+            var res = await _wallService.GetOneWallPost(wallId, postId, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
         [Authorize(Roles = "Teacher")]
         [HttpPost("wall/post")]
         public async Task<IActionResult> PostOnWall([FromBody] NewWallPostDTO postDTO, CancellationToken ct)
@@ -87,7 +117,24 @@ namespace backend.Modules.Tutoring.Controllers
             }
 
             var res = await _wallService.PostOnWall(postDTO, user.Id, ct);
-            return res.Succeded ? CreatedAtAction(nameof(GetWallPosts), res.Data) : StatusCode(res.StatusCode, res.Error);
+
+            return res.Succeded ? Created(string.Empty, res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
+        [Authorize(Roles = "Teacher")]
+        [HttpPost("wall/post/handin")]
+        public async Task<IActionResult> PostHandinOnWall([FromBody] NewHandinDTO handinDTO, CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _wallService.PostHandinOnWall(handinDTO, user.Id, ct);
+
+            return res.Succeded ? Created(string.Empty, res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
         [HttpPost("wall/post/comment")]
@@ -101,7 +148,7 @@ namespace backend.Modules.Tutoring.Controllers
             }
 
             var res = await _wallService.CommentOnPost(commentCreationDTO, user.Id, ct);
-            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+            return res.Succeded ? Created(string.Empty, res.Data) : StatusCode(res.StatusCode, res.Error);
         }
     }
 }
