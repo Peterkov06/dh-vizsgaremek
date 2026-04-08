@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Modules.CoursesBase.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/courses")]
     public class CourseBaseController : ControllerBase
@@ -21,6 +20,7 @@ namespace backend.Modules.CoursesBase.Controllers
             _courseBaseService = courseBaseService;
         }
 
+        [Authorize(Roles = "Teacher")]
         [HttpPost("add")]
         public async Task<IActionResult> CreateCourse(CourseBaseCreationDTO newCourse, CancellationToken ct)
         {
