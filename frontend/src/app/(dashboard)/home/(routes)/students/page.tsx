@@ -40,6 +40,7 @@ type StudentType = {
 type PeddingStudentType = {
   id: string;
   name: string;
+  courseName: string;
   avatarUrl: string;
 };
 
@@ -58,26 +59,31 @@ const StudentPage = () => {
       {
         id: "p1",
         name: "Alice Thompson",
+        courseName: "Emelt matek",
         avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alice",
       },
       {
         id: "p2",
         name: "Bob Vancamp",
+        courseName: "Emelt matek",
         avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
       },
       {
         id: "p3",
         name: "Charlie Day",
+        courseName: "Emelt matek",
         avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie",
       },
       {
         id: "p4",
         name: "Charlie Day",
+        courseName: "Emelt matek",
         avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie",
       },
       {
         id: "p5",
         name: "Charlie Day",
+        courseName: "Emelt matek",
         avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie",
       },
     ],
@@ -160,7 +166,10 @@ const StudentPage = () => {
                   ></AvatarImage>
                 </Avatar>
                 <div className="flex flex-col justify-between">
-                  <h2 className="text-2xl">{ps.name}</h2>
+                  <div className="mb-3">
+                    <h2 className="text-2xl">{ps.name}</h2>
+                    <h3>{ps.courseName}</h3>
+                  </div>
                   <div className="flex justify-between w-[14em]">
                     <PeddingStudentProfile id={ps.id}></PeddingStudentProfile>
                     <div className="flex gap-1">
@@ -215,36 +224,121 @@ const StudentPage = () => {
         {dummyStudents.activeStudents
           .filter((as) => as.name.toLowerCase().includes(searchStudent))
           .map((as) => (
+            // <div
+            //   key={as.id}
+            //   className="relative flex  border-4 rounded-2xl hover:border-secondary border-transparent transition-all duration-300 shadow-2xl"
+            // >
+            //   <h2 className="absolute -top-5 right-6 bg-background px-2 py-1 text-lg rounded-2xl">
+            //     {as.courseName}
+            //   </h2>
+            //   <img
+            //     src={as.avatarUrl || "/defaults/default_avatar.jpg"}
+            //     alt=""
+            //     className="w-30 h-30 rounded-l-2xl"
+            //   />
+            //   <div className="bg-light-bg-gray px-6 w-full flex justify-between items-center rounded-r-2xl">
+            //     <div className="flex flex-col gap-3">
+            //       <div>
+            //         <h1 className="text-2xl text-primary font-bold">
+            //           {as.name}
+            //         </h1>
+            //         <h2 className=" text-gray-500">{as.nickname}</h2>
+            //       </div>
+            //       <div className="flex gap-5">
+            //         <div className="flex gap-2 bg-background border-2 border-primary rounded-md w-fit p-1">
+            //           <Book></Book>
+            //           <p>Kurzusok:</p>
+            //           <p className="font-bold">{as.courses}</p>
+            //         </div>
+
+            //         <div className="flex gap-2 bg-background border-2 border-primary rounded-md w-fit px-2 py-1">
+            //           <HandHelping></HandHelping>
+            //           <p>Beadandók:</p>
+            //           <p className="font-bold">{as.handIn}</p>
+            //         </div>
+            //       </div>
+            //     </div>
+
+            //     <div className="flex gap-4">
+            //       <Tooltip>
+            //         <TooltipTrigger asChild>
+            //           <Button
+            //             className="h-16 w-16 cursor-pointer"
+            //             onClick={() => {
+            //               HandleRedirect(as.id, "profile");
+            //             }}
+            //           >
+            //             <CircleUserRound className="size-10"></CircleUserRound>
+            //           </Button>
+            //         </TooltipTrigger>
+            //         <TooltipContent>
+            //           <p className="text-lg">Profil</p>
+            //         </TooltipContent>
+            //       </Tooltip>
+
+            //       <Tooltip>
+            //         <TooltipTrigger asChild>
+            //           <Button
+            //             className="h-16 w-16 cursor-pointer"
+            //             onClick={() => {
+            //               HandleRedirect(as.id, "message");
+            //             }}
+            //           >
+            //             <MessageCircleMore className="size-10"></MessageCircleMore>
+            //           </Button>
+            //         </TooltipTrigger>
+            //         <TooltipContent>
+            //           <p className="text-lg">Üzenetek</p>
+            //         </TooltipContent>
+            //       </Tooltip>
+
+            //       <Tooltip>
+            //         <TooltipTrigger asChild>
+            //           <Button
+            //             className="h-16 w-16 cursor-pointer"
+            //             onClick={() => {
+            //               HandleRedirect(as.id, "wall");
+            //             }}
+            //           >
+            //             <BrickWall className="size-10"></BrickWall>
+            //           </Button>
+            //         </TooltipTrigger>
+            //         <TooltipContent>
+            //           <p className="text-lg">Tanulói fal</p>
+            //         </TooltipContent>
+            //       </Tooltip>
+            //     </div>
+            //   </div>
+            // </div>
             <div
               key={as.id}
-              className="relative flex  border-4 rounded-2xl hover:border-secondary border-transparent transition-all duration-300 shadow-2xl"
+              className="flex border-4 rounded-2xl hover:border-secondary border-transparent transition-all duration-300 shadow-2xl"
             >
-              <h2 className="absolute -top-5 right-6 bg-background px-2 py-1 text-lg rounded-2xl">
-                {as.courseName}
-              </h2>
               <img
                 src={as.avatarUrl || "/defaults/default_avatar.jpg"}
                 alt=""
-                className="w-30 h-30 rounded-l-2xl"
+                className="h-24 w-24 lg:w-30 lg:h-30 rounded-l-2xl"
               />
-              <div className="bg-light-bg-gray px-6 w-full flex justify-between items-center rounded-r-2xl">
-                <div className="flex flex-col gap-3">
+              <div className="bg-light-bg-gray gap-2 lg:gap-0 px-6 w-full lg:flex-row flex-col flex justify-between lg:items-center rounded-r-2xl">
+                <div className="flex lg:flex-col gap-3">
                   <div>
-                    <h1 className="text-2xl text-primary font-bold">
+                    <h1 className="text-lg lg:text-2xl text-primary font-bold">
                       {as.name}
                     </h1>
-                    <h2 className=" text-gray-500">{as.nickname}</h2>
+                    <h2 className="text-sm lg:text-md text-gray-500">
+                      {as.nickname}
+                    </h2>
                   </div>
-                  <div className="flex gap-5">
-                    <div className="flex gap-2 bg-background border-2 border-primary rounded-md w-fit p-1">
-                      <Book></Book>
-                      <p>Kurzusok:</p>
+                  <div className="hidden lg:flex gap-2 lg:gap-5">
+                    <div className="text-xs lg:text-md flex gap-2 bg-background border-2 border-primary rounded-md w-fit h-fit p-1">
+                      <Book className="size-4 lg:size-6"></Book>
+                      <p className="hidden lg:block">Kurzusok:</p>
                       <p className="font-bold">{as.courses}</p>
                     </div>
 
-                    <div className="flex gap-2 bg-background border-2 border-primary rounded-md w-fit px-2 py-1">
-                      <HandHelping></HandHelping>
-                      <p>Beadandók:</p>
+                    <div className="flex gap-2 text-xs lg:text-md  bg-background border-2 border-primary rounded-md w-fit h-fit px-1 lg:px-2 py-1">
+                      <HandHelping className="size-4 lg:size-6"></HandHelping>
+                      <p className="hidden lg:block">Beadandók:</p>
                       <p className="font-bold">{as.handIn}</p>
                     </div>
                   </div>
@@ -254,12 +348,12 @@ const StudentPage = () => {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
-                        className="h-16 w-16 cursor-pointer"
+                        className="h-11 w-11 lg:h-16 lg:w-16"
                         onClick={() => {
                           HandleRedirect(as.id, "profile");
                         }}
                       >
-                        <CircleUserRound className="size-10"></CircleUserRound>
+                        <CircleUserRound className="size-7 lg:size-10"></CircleUserRound>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -270,12 +364,12 @@ const StudentPage = () => {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
-                        className="h-16 w-16 cursor-pointer"
+                        className="h-11 w-11 lg:h-16 lg:w-16"
                         onClick={() => {
                           HandleRedirect(as.id, "message");
                         }}
                       >
-                        <MessageCircleMore className="size-10"></MessageCircleMore>
+                        <MessageCircleMore className="size-7 lg:size-10"></MessageCircleMore>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -286,12 +380,12 @@ const StudentPage = () => {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
-                        className="h-16 w-16 cursor-pointer"
+                        className="h-11 w-11 lg:h-16 lg:w-16"
                         onClick={() => {
                           HandleRedirect(as.id, "wall");
                         }}
                       >
-                        <BrickWall className="size-10"></BrickWall>
+                        <BrickWall className="size-7 lg:size-10"></BrickWall>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>

@@ -24,7 +24,9 @@ const CourseCard = (props: { course: ActiveCourse }) => {
         </div>
 
         <div className={`w-full hidden lg:flex justify-end`}>
-          <Link href={`/home/course?id=${props.course.courseId}`}>
+          <Link
+            href={`/home/course/teacher/modify?id=${props.course.courseId}`}
+          >
             <Button className="py-1 px-5 h-fit rounded-2xl">
               <p>A kurzusra</p>
               <ChevronRightCircle size={30}></ChevronRightCircle>

@@ -1,7 +1,16 @@
-import React from "react";
+"use client";
 
-const MessageStudentP0ge = () => {
-  return <div>MessageStudentPAge</div>;
+import { useSearchParams } from "next/navigation";
+import MessageWall from "../../../message/components/MessageWall";
+
+const MessageStudentPage = () => {
+  const searchParams = useSearchParams();
+
+  const id = searchParams.get("id");
+
+  return (
+    <main className="h-full">{id && <MessageWall id={id}></MessageWall>}</main>
+  );
 };
 
-export default MessageStudentP0ge;
+export default MessageStudentPage;

@@ -56,7 +56,8 @@ const MessageSidebar = () => {
   };
 
   return (
-    <div className="border-4 border-light-bg-gray rounded-2xl h-fit px-2 py-4 bg-light-bg-gray w-[20em]">
+    <div className="border-4 border-light-bg-gray rounded-2xl h-full px-2 py-4 bg-light-bg-gray w-[20em]">
+      <h1 className="text-3xl text-primary mb-5">Üzenetek</h1>
       <InputGroup className="mb-5 shadow-2xl">
         <InputGroupInput
           type="text"
@@ -74,7 +75,7 @@ const MessageSidebar = () => {
         </InputGroupAddon>
       </InputGroup>
       <div className="overflow-hidden max-h-[30em]">
-        <div className="overflow-auto h-max flex flex-col gap-5 bg-background px-3">
+        <div className="overflow-auto h-max flex flex-col gap-5 bg-background p-3">
           {dummyUsers
             .filter((u) => u.name.toLowerCase().includes(searchUser))
             .map((u) => (
@@ -90,7 +91,7 @@ const MessageSidebar = () => {
                     src={u.avatarUrl || "/defaults/default_avatar.jpg"}
                   ></AvatarImage>
                 </Avatar>
-                <h2>{u.name}</h2>
+                <h2 className="truncate max-w-56">{u.name}</h2>
               </div>
             ))}
         </div>

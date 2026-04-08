@@ -32,6 +32,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import TodayList from "./components/TodayList";
 import EventCalendar from "./components/EventCalendar";
 import AllList from "./components/AllList";
+import Link from "next/link";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const TeacherHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<TeacherDashboardModel>();
@@ -183,12 +189,26 @@ const TeacherHome = (props: { user: User }) => {
                       </div>
                     </div>
                     <div className="flex gap-1">
-                      <Button className="h-8 w-8 bg-linear-to-tl from-primary to-[#7CB08C]">
-                        <Check className="size-6"></Check>
-                      </Button>
-                      <Button className="h-8 w-8 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
-                        <X className="size-6"></X>
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button className="h-10 w-10 bg-linear-to-tl from-primary to-[#7CB08C]">
+                            <Check className="size-8"></Check>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-lg">Elfogadás</p>
+                        </TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button className="h-10 w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
+                            <X className="size-8"></X>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-lg">Elutasítás</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                 ))}
@@ -196,10 +216,12 @@ const TeacherHome = (props: { user: User }) => {
             </div>
           </div>
           <div className="row-start-6 flex justify-center items-center">
-            <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
-              <p>Összes Kérés</p>
-              <ChevronRight className="size-5 m-0"></ChevronRight>
-            </Button>
+            <Link href={"/home/students"}>
+              <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
+                <p>Összes Kérés</p>
+                <ChevronRight className="size-5 m-0"></ChevronRight>
+              </Button>
+            </Link>
           </div>
         </section>
         <section className="col-start-4 grid grid-rows-5 p-2 border-4 border-light-bg-gray rounded-2xl mt-7">
@@ -279,10 +301,12 @@ const TeacherHome = (props: { user: User }) => {
             </div>
           </div>
           <div className="flex justify-center items-center mt-3">
-            <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
-              <p>Összes tanuló</p>
-              <ChevronRight className="size-5 m-0"></ChevronRight>
-            </Button>
+            <Link href={"home/message"}>
+              <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
+                <p>Összes tanuló</p>
+                <ChevronRight className="size-5 m-0"></ChevronRight>
+              </Button>
+            </Link>
           </div>
         </section>
         <section className=" border-4 border-light-bg-gray rounded-2xl col-span-5 p-2 flex flex-col gap-2">
@@ -412,10 +436,12 @@ const TeacherHome = (props: { user: User }) => {
           Keresd meg a számodra megfelelő kurzusokat vagy hozd létre a
           sajátodat!
         </p>
-        <Button className="h-6 lg:h-8 w-26 lg:w-40 flex gap-1 bg-background text-primary">
-          <Plus className="size-5 m-0"></Plus>
-          <p className="text-sm lg:text-xl">Új kurzus</p>
-        </Button>
+        <Link href={"home/course/creator"}>
+          <Button className="h-6 lg:h-8 w-26 lg:w-40 flex gap-1 bg-background text-primary hover:text-white transition-all duration-300">
+            <Plus className="size-5 m-0"></Plus>
+            <p className="text-sm lg:text-xl">Új kurzus</p>
+          </Button>
+        </Link>
       </section>
     </main>
   );

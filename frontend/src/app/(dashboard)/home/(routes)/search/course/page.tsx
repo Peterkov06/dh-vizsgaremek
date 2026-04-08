@@ -43,7 +43,7 @@ const CourseOverView = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ courseId: id }),
+      body: JSON.stringify({ courseId: id, status: 1, tokenCount: 1 }),
     });
 
     if (res.ok) toast.success("Jelentkezésedet elküldtük!");

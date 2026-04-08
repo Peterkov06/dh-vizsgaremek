@@ -9,7 +9,7 @@ import TeacherCourseCardOverView, {
 const TeacherCourse = (props: { user: User }) => {
   const dummyTeacherCourses: TeacherCourseType[] = [
     {
-      id: "36f0bdf2-1571-4df0-9a21-b2b4b0adfa29",
+      id: "9b77334b-b12a-44cd-91f6-36dd7b493ad9",
       courseName: "Fullstack .NET & React Masterclass",
       avatarImg: "https://api.dicebear.com/7.x/identicon/svg?seed=dotnet",
       bannerImg:

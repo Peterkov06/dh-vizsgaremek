@@ -47,8 +47,8 @@ const PeddingStudentProfile = (props: { id: string }) => {
       <TooltipTrigger asChild>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="h-10 w-10">
-              <CircleUserRound className="size-6"></CircleUserRound>
+            <Button className="h-8 w-8 lg:h-10 lg:w-10">
+              <CircleUserRound className="size-5 lg:size-6"></CircleUserRound>
             </Button>
           </DialogTrigger>
           <DialogContent className="w-fit max-w-none!">

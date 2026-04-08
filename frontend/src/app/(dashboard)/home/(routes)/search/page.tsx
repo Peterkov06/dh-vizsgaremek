@@ -215,13 +215,6 @@ const CourseSearchPage = () => {
 
   return (
     <main className="h-full flex flex-col gap-10">
-      <button
-        onClick={() => {
-          console.log(courses);
-        }}
-      >
-        Szaros
-      </button>
       <div className="gap-4 flex-col lg:flex-row flex justify-between lg:items-center">
         <h1 className="text-4xl font-bold text-primary">Kurzus keresése</h1>
         <InputGroup className=" lg:max-w-[60%] shadow-2xl">
