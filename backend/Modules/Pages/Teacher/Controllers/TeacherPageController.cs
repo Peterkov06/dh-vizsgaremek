@@ -40,7 +40,7 @@ namespace backend.Modules.Pages.Teacher.Controllers
         }
 
         [HttpGet("my-students")]
-        public async Task<IActionResult> GetStudentsAsync(CancellationToken ct)
+        public async Task<IActionResult> GetStudentsAsync(CancellationToken ct, [FromQuery] string? searchText = null)
         {
             var user = await _userManager.GetUserAsync(User);
 
@@ -49,7 +49,21 @@ namespace backend.Modules.Pages.Teacher.Controllers
                 return NotFound();
             }
 
-            var res = await _teacherPageService.GetStudentsPage(user.Id, ct);
+            var res = await _teacherPageService.GetStudentsPage(user.Id, ct, searchText);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
+        [HttpGet("my-courses")]
+        public async Task<IActionResult> GetCoursesAsync(CancellationToken ct, [FromQuery] string? searchText = null)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _teacherPageService.GetMyCoursesPage(user.Id, ct, searchText);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
     }

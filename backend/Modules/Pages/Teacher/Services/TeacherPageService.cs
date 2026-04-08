@@ -266,5 +266,53 @@ namespace backend.Modules.Pages.Teacher.Services
                 }
             );
         }
+
+        public async Task<ServiceResult<MyCoursesPageDTO>> GetMyCoursesPage(string userId, CancellationToken ct = default, string? searchText = null)
+        {
+            var tutoringCoursesQuery = _db.CourseBases.Where(x => x.TeacherId == userId && x.Type == CourseType.Tutoring).AsQueryable();
+
+            if (searchText is not null)
+            {
+                var searchtextLower = searchText.ToLower();
+                tutoringCoursesQuery = tutoringCoursesQuery.Where(x => x.CourseName.ToLower().StartsWith(searchText));
+            }
+
+            var tutoringCourses = await tutoringCoursesQuery
+                .Select(x => new MyCoursesCourseCardDTO
+                {
+                    CourseId = x.Id,
+                    CourseName = x.CourseName,
+                    Type = CourseType.Tutoring,
+                    CourseBannerURL = "",
+                    CoursePictureURL = "",
+                    Status = x.Status,
+                    EnrolledStudents = _db.Students.Where(s => s.TutoringWalls.Where(t => t.CourseId == x.Id || t.Status == EnrollmentStatus.Active).Any()).Count(),
+                    CourseRating = _db.CourseReviews.Where(cr => cr.CourseId == x.Id).Average(x => x.ReviewScore),
+                    OngoingAssignments = _db.HandIns.Where(h => h.Wall.Id == x.Id && h.DueDate <= DateTime.UtcNow).Count(),
+                })
+                .AsNoTracking()
+                .ToListAsync(ct);
+
+
+            var draftCourses = await _db.CourseBases.Where(x => x.TeacherId == userId && x.Status == CourseStatus.Draft)
+                .Select(x => new DraftCourseDTO
+                {
+                    CourseId = x.Id,
+                    CourseName = x.CourseName,
+                    CourseBannerURL = "",
+                    CoursePictureURL = "",
+                    Type = x.Type
+                })
+                .AsNoTracking()
+                .ToListAsync(ct);
+
+            return ServiceResult<MyCoursesPageDTO>.Success(new MyCoursesPageDTO
+            {
+                DraftCourses = draftCourses,
+                TutoringCourses = tutoringCourses,
+                PathCourses = []
+            });
+
+        }
     }
 }

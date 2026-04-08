@@ -121,6 +121,22 @@ namespace backend.Modules.Tutoring.Controllers
             return res.Succeded ? Created(string.Empty, res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
+        [Authorize(Roles = "Teacher")]
+        [HttpPost("wall/post/handin")]
+        public async Task<IActionResult> PostHandinOnWall([FromBody] NewHandinDTO handinDTO, CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _wallService.PostHandinOnWall(handinDTO, user.Id, ct);
+
+            return res.Succeded ? Created(string.Empty, res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
         [HttpPost("wall/post/comment")]
         public async Task<IActionResult> CommentOnWall(PostCommentCreationDTO commentCreationDTO, CancellationToken ct)
         {
