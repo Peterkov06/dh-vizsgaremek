@@ -200,15 +200,15 @@ const StudentsPage = () => {
                       </h2>
                     </div>
                     <div className="hidden lg:flex gap-2 lg:gap-5">
-                      <div className="text-xs lg:text-md flex gap-2 bg-background border-2 border-primary rounded-md w-fit h-fit p-1">
+                      <div className="text-xs lg:text-base flex gap-2 bg-background border-2 border-primary rounded-md w-fit h-fit p-1">
                         <Book className="size-4 lg:size-6"></Book>
                         <p className="hidden lg:block">Kurzusok:</p>
                         <p className="font-bold">{as.courses}</p>
                       </div>
 
-                      <div className="flex gap-2 text-xs lg:text-md  bg-background border-2 border-primary rounded-md w-fit h-fit px-1 lg:px-2 py-1">
+                      <div className="flex gap-2 text-xs lg:text-base  bg-background border-2 border-primary rounded-md w-fit h-fit px-1 lg:px-2 py-1">
                         <HandHelping className="size-4 lg:size-6"></HandHelping>
-                        <p className="hidden lg:block">Beadandók:</p>
+                        <p>Beadandók:</p>
                         <p className="font-bold">{as.handIn}</p>
                       </div>
                     </div>

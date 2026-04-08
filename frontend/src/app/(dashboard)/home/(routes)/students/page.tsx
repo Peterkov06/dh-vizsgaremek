@@ -151,32 +151,30 @@ const StudentPage = () => {
 
   return (
     <main>
-      <section className="border-4 border-light-bg-gray p-3 rounded-2xl w-fit mb-10">
-        <h1 className="text-2xl text-primary">Új jelentkezések</h1>
-        <div className="overflow-hidden max-w-[92em]">
-          <div className="flex gap-7 overflow-auto">
+      <section className="border-4 border-light-bg-gray lg:p-3 p-2 m-auto rounded-2xl w-fit mb-5 lg:mb-10">
+        <h1 className="lg:text-2xl text-xl text-primary">Új jelentkezések</h1>
+        <div className="max-w-[90em] max-h-[14em]">
+          <div className="flex-col lg:flex-row max-h-[14em] flex gap-3 lg:gap-7 overflow-auto touch-pan-y">
             {dummyStudents.isPeddingStudents.map((ps) => (
               <div
                 key={ps.id}
-                className="flex gap-3 bg-light-bg-gray px-3 py-5 rounded-2xl border-2 border-secondary hover:border-primary transition-all duration-300"
+                className="flex items-center gap-3 bg-light-bg-gray px-1 py-2 lg:px-3 lg:py-5 rounded-2xl border-2 border-secondary hover:border-primary transition-all duration-300"
               >
-                <Avatar className="size-20 bg-background">
+                <Avatar className="size-14 lg:size-20 bg-background">
                   <AvatarImage
                     src={ps.avatarUrl || "/defaults/default_avatar.jpg"}
                   ></AvatarImage>
                 </Avatar>
                 <div className="flex flex-col justify-between">
-                  <div className="mb-3">
-                    <h2 className="text-2xl">{ps.name}</h2>
-                    <h3>{ps.courseName}</h3>
-                  </div>
+                  <h2 className="text-xl lg:text-2xl">{ps.name}</h2>
+                  <h3>{ps.courseName}</h3>
                   <div className="flex justify-between w-[14em]">
                     <PeddingStudentProfile id={ps.id}></PeddingStudentProfile>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 items-center mr-5 lg:mr-0">
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button className="h-10 w-10 bg-linear-to-tl from-primary to-[#7CB08C]">
-                            <Check className="size-8"></Check>
+                          <Button className="h-8 w-8 lg:h-10 lg:w-10 bg-linear-to-tl from-primary to-[#7CB08C]">
+                            <Check className="size-7 lg:size-8"></Check>
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -185,8 +183,8 @@ const StudentPage = () => {
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button className="h-10 w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
-                            <X className="size-8"></X>
+                          <Button className="h-8 w-8 lg:h-10 lg:w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
+                            <X className="size-7 lg:size-8"></X>
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -201,8 +199,10 @@ const StudentPage = () => {
           </div>
         </div>
       </section>
-      <div className="flex justify-between mb-10">
-        <h1 className="text-5xl text-primary font-bold">Tanulóim</h1>
+      <div className="lg:flex-row flex-col gap-2 flex justify-between mb-10">
+        <h1 className="text-3xl lg:text-5xl text-primary font-bold">
+          Tanulóim
+        </h1>
         <InputGroup className=" lg:max-w-[40%] shadow-2xl">
           <InputGroupInput
             type="text"
@@ -210,7 +210,7 @@ const StudentPage = () => {
             onChange={(e) => {
               setSearchStudent(e.target.value.toLowerCase());
             }}
-            className="text-lg!"
+            className="lg:text-lg!"
             placeholder="Keresés..."
           ></InputGroupInput>
           <InputGroupAddon align={"inline-end"}>
@@ -224,119 +224,36 @@ const StudentPage = () => {
         {dummyStudents.activeStudents
           .filter((as) => as.name.toLowerCase().includes(searchStudent))
           .map((as) => (
-            // <div
-            //   key={as.id}
-            //   className="relative flex  border-4 rounded-2xl hover:border-secondary border-transparent transition-all duration-300 shadow-2xl"
-            // >
-            //   <h2 className="absolute -top-5 right-6 bg-background px-2 py-1 text-lg rounded-2xl">
-            //     {as.courseName}
-            //   </h2>
-            //   <img
-            //     src={as.avatarUrl || "/defaults/default_avatar.jpg"}
-            //     alt=""
-            //     className="w-30 h-30 rounded-l-2xl"
-            //   />
-            //   <div className="bg-light-bg-gray px-6 w-full flex justify-between items-center rounded-r-2xl">
-            //     <div className="flex flex-col gap-3">
-            //       <div>
-            //         <h1 className="text-2xl text-primary font-bold">
-            //           {as.name}
-            //         </h1>
-            //         <h2 className=" text-gray-500">{as.nickname}</h2>
-            //       </div>
-            //       <div className="flex gap-5">
-            //         <div className="flex gap-2 bg-background border-2 border-primary rounded-md w-fit p-1">
-            //           <Book></Book>
-            //           <p>Kurzusok:</p>
-            //           <p className="font-bold">{as.courses}</p>
-            //         </div>
-
-            //         <div className="flex gap-2 bg-background border-2 border-primary rounded-md w-fit px-2 py-1">
-            //           <HandHelping></HandHelping>
-            //           <p>Beadandók:</p>
-            //           <p className="font-bold">{as.handIn}</p>
-            //         </div>
-            //       </div>
-            //     </div>
-
-            //     <div className="flex gap-4">
-            //       <Tooltip>
-            //         <TooltipTrigger asChild>
-            //           <Button
-            //             className="h-16 w-16 cursor-pointer"
-            //             onClick={() => {
-            //               HandleRedirect(as.id, "profile");
-            //             }}
-            //           >
-            //             <CircleUserRound className="size-10"></CircleUserRound>
-            //           </Button>
-            //         </TooltipTrigger>
-            //         <TooltipContent>
-            //           <p className="text-lg">Profil</p>
-            //         </TooltipContent>
-            //       </Tooltip>
-
-            //       <Tooltip>
-            //         <TooltipTrigger asChild>
-            //           <Button
-            //             className="h-16 w-16 cursor-pointer"
-            //             onClick={() => {
-            //               HandleRedirect(as.id, "message");
-            //             }}
-            //           >
-            //             <MessageCircleMore className="size-10"></MessageCircleMore>
-            //           </Button>
-            //         </TooltipTrigger>
-            //         <TooltipContent>
-            //           <p className="text-lg">Üzenetek</p>
-            //         </TooltipContent>
-            //       </Tooltip>
-
-            //       <Tooltip>
-            //         <TooltipTrigger asChild>
-            //           <Button
-            //             className="h-16 w-16 cursor-pointer"
-            //             onClick={() => {
-            //               HandleRedirect(as.id, "wall");
-            //             }}
-            //           >
-            //             <BrickWall className="size-10"></BrickWall>
-            //           </Button>
-            //         </TooltipTrigger>
-            //         <TooltipContent>
-            //           <p className="text-lg">Tanulói fal</p>
-            //         </TooltipContent>
-            //       </Tooltip>
-            //     </div>
-            //   </div>
-            // </div>
             <div
               key={as.id}
-              className="flex border-4 rounded-2xl hover:border-secondary border-transparent transition-all duration-300 shadow-2xl"
+              className="relative flex border-4 rounded-2xl hover:border-secondary border-transparent transition-all duration-300 shadow-2xl"
             >
+              <h2 className="absolute -top-5 right-6 bg-background py-0 px-1 lg:px-2 lg:py-1 text-xs lg:text-lg rounded-2xl">
+                {as.courseName}
+              </h2>
               <img
                 src={as.avatarUrl || "/defaults/default_avatar.jpg"}
                 alt=""
                 className="h-24 w-24 lg:w-30 lg:h-30 rounded-l-2xl"
               />
-              <div className="bg-light-bg-gray gap-2 lg:gap-0 px-6 w-full lg:flex-row flex-col flex justify-between lg:items-center rounded-r-2xl">
-                <div className="flex lg:flex-col gap-3">
+              <div className="bg-light-bg-gray gap-2 lg:gap-0 px-6 w-full lg:flex-row flex-col flex lg:justify-between lg:items-center rounded-r-2xl">
+                <div className="flex lg:flex-col gap-1 lg:gap-3">
                   <div>
-                    <h1 className="text-lg lg:text-2xl text-primary font-bold">
+                    <h1 className="text-md lg:text-2xl text-primary font-bold">
                       {as.name}
                     </h1>
-                    <h2 className="text-sm lg:text-md text-gray-500">
+                    <h2 className="text-xs lg:text-sm text-gray-500">
                       {as.nickname}
                     </h2>
                   </div>
                   <div className="hidden lg:flex gap-2 lg:gap-5">
-                    <div className="text-xs lg:text-md flex gap-2 bg-background border-2 border-primary rounded-md w-fit h-fit p-1">
+                    <div className="text-xs lg:text-lg items-center flex gap-2 bg-background border-2 border-primary rounded-md w-fit h-fit p-1">
                       <Book className="size-4 lg:size-6"></Book>
-                      <p className="hidden lg:block">Kurzusok:</p>
+                      <p className="">Kurzusok:</p>
                       <p className="font-bold">{as.courses}</p>
                     </div>
 
-                    <div className="flex gap-2 text-xs lg:text-md  bg-background border-2 border-primary rounded-md w-fit h-fit px-1 lg:px-2 py-1">
+                    <div className="flex gap-2 text-xs lg:text-lg items-center  bg-background border-2 border-primary rounded-md w-fit h-fit px-1 lg:px-2 py-1">
                       <HandHelping className="size-4 lg:size-6"></HandHelping>
                       <p className="hidden lg:block">Beadandók:</p>
                       <p className="font-bold">{as.handIn}</p>

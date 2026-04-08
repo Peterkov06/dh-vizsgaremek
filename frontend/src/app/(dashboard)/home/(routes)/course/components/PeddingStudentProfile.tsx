@@ -51,56 +51,58 @@ const PeddingStudentProfile = (props: { id: string }) => {
               <CircleUserRound className="size-5 lg:size-6"></CircleUserRound>
             </Button>
           </DialogTrigger>
-          <DialogContent className="w-fit max-w-none!">
+          <DialogContent className="w-fit lg:max-w-none!">
             <DialogHeader>
-              <DialogTitle className="text-4xl">Profil</DialogTitle>
+              <DialogTitle className="text-2xl lg:text-4xl">Profil</DialogTitle>
             </DialogHeader>
-            <div className="flex flex-col gap-5">
-              <section className="flex flex-col gap-5">
-                <div className="bg-secondary rounded-2xl w-full h-30 flex items-center px-5 gap-5">
-                  <Avatar className="size-24 bg-background">
+            <div className="flex flex-col gap-2 lg:gap-5">
+              <section className="w-fit flex flex-col gap-5">
+                <div className="bg-secondary rounded-2xl w-full lg:h-30 flex items-center py-2 px-2 lg:px-5 gap-5">
+                  <Avatar className="size-16 lg:size-24 bg-background">
                     <AvatarImage
                       src={student.avatarUrl || "/defaults/default_avatar.jpg"}
                     ></AvatarImage>
                   </Avatar>
                   <div>
-                    <h1 className="text-3xl text-primary font-bold">
+                    <h1 className="text-xl lg:text-3xl text-primary font-bold">
                       {student.name}
                     </h1>
-                    <h2 className="text-xl text-gray-500">
+                    <h2 className="text-md lg:text-xl text-gray-500">
                       {student.nickname}
                     </h2>
                   </div>
                 </div>
-                <div className="bg-secondary rounded-2xl w-full flex gap-2 flex-col p-4">
-                  <h1 className="text-2xl text-primary">Bemutatkozás</h1>
-                  <div className="overflow-hidden max-w-[40em] max-h-[10em]">
-                    <p className="text-lg overflow-auto h-full">
+                <div className="bg-secondary rounded-2xl  lg:w-full flex gap-2 flex-col p-4">
+                  <h1 className="text-xl lg:text-2xl text-primary">
+                    Bemutatkozás
+                  </h1>
+                  <div className="overflow-hidden w-[16em] lg:w-[40em] max-h-[10em]">
+                    <p className="lg:text-lg overflow-auto h-full">
                       {student.introduction}
                     </p>
                   </div>
                 </div>
               </section>
-              <section className="w-full bg-light-bg-gray rounded-2xl p-5 flex flex-col gap-5 h-fit">
+              <section className="w-[18em] lg:w-full bg-light-bg-gray rounded-2xl p-2 px-3 lg:p-5 flex flex-col gap-5 h-fit">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-xl text-primary">Életkor:</h2>
-                  <h2 className="text-xl text-primary font-bold">
+                  <h2 className="lg:text-xl text-primary">Életkor:</h2>
+                  <h2 className="lg:text-xl text-primary font-bold">
                     {student.age}
                   </h2>
                 </div>
                 <div className="flex justify-between items-center">
-                  <h2 className="text-xl text-primary">Lakhely:</h2>
-                  <h2 className="text-xl text-primary font-bold text-end">
+                  <h2 className="lg:text-xl text-primary">Lakhely:</h2>
+                  <h2 className="lg:text-xl text-primary font-bold text-end">
                     {student.address}
                   </h2>
                 </div>
                 <div className="flex justify-between gap-3">
-                  <h2 className="text-xl text-primary">Preferenciák:</h2>
-                  <div className="flex gap-2">
+                  <h2 className="lg:text-xl text-primary">Preferenciák:</h2>
+                  <div className="flex gap-1 lg:gap-2 overflow-auto max-w-[10em] lg:max-w-[25em]">
                     {student.preferences.map((pref, id) => (
                       <div
                         key={id}
-                        className="bg-background py-1 px-2 rounded-lg border-2 border-primary"
+                        className="bg-background h-fit shrink-0 p-1 lg:px-2 rounded-lg border-2 border-primary text-xs lg:text-base"
                       >
                         {pref}
                       </div>
