@@ -51,12 +51,12 @@ const CourseOverView = () => {
   };
   return (
     <main className="lg:flex gap-2 h-full w-full">
-      <section className="flex flex-col h-full w-[55em]">
+      <section className="flex flex-col gap-2 h-full lg:w-[55em]">
         <div className="relative">
           <img
             src={course?.bannerImage || "/defaults/default_course.jpg"}
             alt="Kurzus borító"
-            className="w-[55em] h-[30em] rounded-2xl"
+            className="h-[14em] lg:w-[55em] lg:h-[30em] rounded-2xl"
           />
           <div className="absolute rounded-xl inset-0 bg-linear-to-b from-20% from-transparent to-light-bg-gray p-1" />
 
@@ -72,21 +72,21 @@ const CourseOverView = () => {
                 href={`teacher?id=${course?.teacherId}`}
                 className="hover:scale-110 transition-all duration-300"
               >
-                <Avatar className="size-40 border-2 border-light-bg-gray">
+                <Avatar className="size-20 lg:size-40 border-2 border-light-bg-gray">
                   <AvatarImage
                     src={course?.teacherImage || "/defaults/default_avatar.jpg"}
                   ></AvatarImage>
                 </Avatar>
               </Link>
               <div className="">
-                <h1 className="font-bold text-2xl text-primary max-w-[17em]">
+                <h1 className="font-bold text-lg lg:text-2xl text-primary max-w-[17em]">
                   {course?.courseName}
                 </h1>
                 <Link
                   href={`teacher?id=${course?.teacherId}`}
                   className="hover:text-primary transition-all duration-500"
                 >
-                  <h2 className="flex gap-1 items-center text-xl">
+                  <h2 className="flex gap-1 items-center text-base lg:text-xl">
                     <User></User>
                     {course?.teacherName}
                   </h2>
@@ -94,7 +94,7 @@ const CourseOverView = () => {
               </div>
             </div>
             <Button
-              className="h-14 relative bg-linear-to-tr from-primary to-secondary overflow-hidden group/btn transition-all duration-300"
+              className="hidden lg:block h-14 relative bg-linear-to-tr from-primary to-secondary overflow-hidden group/btn transition-all duration-300"
               onClick={HandleRegister}
             >
               <span className="absolute inset-0 bg-linear-to-bl from-primary to-secondary opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
@@ -105,8 +105,18 @@ const CourseOverView = () => {
             </Button>
           </div>
         </div>
-        <div className="flex flex-col gap-2 border-4 border-light-bg-gray rounded-2xl p-1 h-full justify-between">
-          <div className="overflow-hidden h-[11em] bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
+        <Button
+          className="lg:hidden h-14 relative bg-linear-to-tr from-primary to-secondary overflow-hidden group/btn transition-all duration-300"
+          onClick={HandleRegister}
+        >
+          <span className="absolute inset-0 bg-linear-to-bl from-primary to-secondary opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+          <div className="relative z-10 flex items-center">
+            <MousePointerClick className="size-10"></MousePointerClick>
+            <p className="text-xl">Jelentkezz!</p>
+          </div>
+        </Button>
+        <div className="grid grid-rows-2 grid-cols-1 gap-2 w-full border-4 border-light-bg-gray rounded-2xl p-1 mb-2 h-full justify-between">
+          <div className="overflow-hidden row-start-1 flex-1 bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
             <div className="overflow-auto h-full px-3">
               <p className="text-lg">{course?.description}</p>
             </div>
@@ -116,7 +126,7 @@ const CourseOverView = () => {
             </h2>
           </div>
 
-          <div className="overflow-hidden h-[11em] bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
+          <div className="overflow-hidden row-start-2 bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
             <div className="overflow-auto h-full px-3">
               <p className="text-lg">{course?.description}</p>
             </div>
@@ -213,6 +223,7 @@ const CourseOverView = () => {
           </div>
         </div>
       </section>
+      <div className="lg:hidden h-5"></div>
     </main>
   );
 };

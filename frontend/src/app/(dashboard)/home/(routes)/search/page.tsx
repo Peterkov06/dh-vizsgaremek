@@ -214,7 +214,7 @@ const CourseSearchPage = () => {
   };
 
   return (
-    <main className="h-full flex flex-col gap-10">
+    <main className="h-full flex flex-col gap-5 lg:gap-10">
       <div className="gap-4 flex-col lg:flex-row flex justify-between lg:items-center">
         <h1 className="text-4xl font-bold text-primary">Kurzus keresése</h1>
         <InputGroup className=" lg:max-w-[60%] shadow-2xl">
@@ -236,7 +236,9 @@ const CourseSearchPage = () => {
         </InputGroup>
       </div>
       <section className="flex flex-col lg:grid grid-cols-12 grid-rows-5 h-full">
-        <section className="gap-3 flex flex-col border-4 border-light-bg-gray rounded-2xl col-span-3 h-fit p-3">
+        <section
+          className={`lg:gap-3 flex flex-col border-4 border-light-bg-gray rounded-2xl col-span-3 h-fit p-3 ${isOpenFilter && "gap-3"}`}
+        >
           <h1
             className="text-xl font-bold text-primary flex gap-2 bg-light-bg-gray p-2 rounded-xl"
             onClick={() => setIsOpenFilter((prev) => !prev)}
@@ -402,7 +404,7 @@ const CourseSearchPage = () => {
           </div>
         </section>
 
-        <section className="col-span-9 lg:ml-4">
+        <section className="col-span-9 mt-3 lg:mt-0 lg:ml-4">
           <div className="flex gap-1 items-center">
             <ArrowUpDown className="text-primary"></ArrowUpDown>
             <Select value={sortBy} onValueChange={setSortBy}>
