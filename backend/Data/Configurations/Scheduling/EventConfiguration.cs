@@ -15,13 +15,19 @@ namespace backend.Data.Configurations.Scheduling
             });
             builder.Property(x => x.OrganiserId).IsRequired();
             builder.Property(x => x.Type).HasConversion<string>().HasMaxLength(50).IsRequired();
-            builder.Property(x => x.Title).IsRequired().HasMaxLength(100).IsRequired(false);
+            builder.Property(x => x.Title).HasMaxLength(100).IsRequired(false);
             builder.Property(x => x.Description).IsRequired(false);
             builder.Property(x => x.StartTime).IsRequired();
             builder.Property(x => x.EndTime).IsRequired();
             builder.Property(x => x.PathCourseId).IsRequired(false);
             builder.Property(x => x.TutoringWallId).IsRequired(false);
             builder.Property(x => x.PathEnrollmentId).IsRequired(false);
+
+            builder.HasIndex(x => new { x.OrganiserId, x.StartTime })
+                    .HasDatabaseName("IX_Events_OrganiserId_StartTime");
+
+            builder.HasIndex(x => new { x.OrganiserId, x.EndTime })
+                   .HasDatabaseName("IX_Events_OrganiserId_EndTime");
 
             builder.HasOne(x => x.Organiser).WithMany().HasForeignKey(x => x.OrganiserId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.PathCourse).WithMany().HasForeignKey(x => x.PathCourseId).IsRequired(false).OnDelete(DeleteBehavior.SetNull);

@@ -23,7 +23,7 @@ namespace backend.Modules.Scheduling.Services
         public async Task<ServiceResult> CreateAvailableBlock(string userId, AvailableTimeblockCreationDTO dto, CancellationToken ct = default)
         {
             List<TeacherTimeblock> timeblocks = [];
-            foreach (var block in timeblocks)
+            foreach (var block in dto.Timeblocks)
             {
                 timeblocks.Add(new TeacherTimeblock { TeacherId = userId, Start = block.Start, End = block.End });
             }
@@ -54,7 +54,7 @@ namespace backend.Modules.Scheduling.Services
             return ServiceResult<AvailableDaysDTO>.Success(availableDays);
         }
 
-        public async Task<ServiceResult<AvailableTimesDTO>> GetAvailableTimes(string teacherId, Guid courseId, int lessonNum, DateTime searchDate, EventType type, CancellationToken ct = default)
+        public async Task<ServiceResult<AvailableTimesDTO>> GetAvailableTimes(string teacherId, Guid courseId, int lessonNum, DateTime searchDate, CancellationToken ct = default)
         {
             List<TimeblockDTO> lessons = []; 
             int? oneLessonLength = _db.CourseBases.Where(x => x.Id == courseId).Select(x => x.TokenMinuteValue).FirstOrDefault();
@@ -109,6 +109,78 @@ namespace backend.Modules.Scheduling.Services
             }
 
             return ServiceResult<AvailableTimesDTO>.Success(new AvailableTimesDTO { AvailableTimes = lessons });
+        }
+
+        public async Task<ServiceResult<Event>> BookLesson(string? studentId, string? teacherId, BookingDTO dto, CancellationToken ct = default)
+        {
+            if (teacherId is null && studentId is not null)
+            {
+                switch (dto.Type)
+                {
+                    case EventType.Lesson or EventType.Deadline:
+                        teacherId = await _db.TutoringWalls.Where(x => x.StudentId == studentId && x.CourseId == dto.CourseBaseId).Select(x => x.TeacherId).AsNoTracking().FirstOrDefaultAsync(ct);
+                        break;
+                    case EventType.Consultation:
+                        teacherId = await _db.PathEnrollments.Where(x => x.AttendantId == studentId && x.CourseId == dto.CourseBaseId).Select(x => x.Course.TeacherId).AsNoTracking().FirstOrDefaultAsync(ct);
+                        break;
+                    default:
+                        return ServiceResult<Event>.Failure("Unrecognised type");
+                }
+            }
+            if (teacherId is null)
+            {
+                return ServiceResult<Event>.NotFound("No course was found");
+            }
+
+            var withinAvailability = await _db.TeacherTimeblocks
+                .AnyAsync(x => x.TeacherId == teacherId
+                    && x.Start <= dto.Timeblock.Start
+                    && x.End >= dto.Timeblock.End, ct);
+
+            if (!withinAvailability)
+                return ServiceResult<Event>.Failure("Time slot is outside teacher availability");
+
+            var conflict = await _db.Events
+                .AnyAsync(x => x.OrganiserId == teacherId
+                    && x.StartTime < dto.Timeblock.End
+                    && x.EndTime > dto.Timeblock.Start, ct);
+
+            if (conflict)
+                return ServiceResult<Event>.Failure("Time slot is no longer available");
+
+            var newEvent = new Event
+            {
+                StartTime = dto.Timeblock.Start,
+                EndTime = dto.Timeblock.End,
+                Type = dto.Type,
+                Description = dto.Description,
+                Title = dto.Title,
+                OrganiserId = teacherId,
+            };
+
+            switch (dto.Type)
+            {
+                case EventType.Lesson or EventType.Deadline:
+                    newEvent.TutoringWallId = dto.InstanceId;
+                    break;
+                case EventType.Consultation:
+                    newEvent.PathEnrollmentId = dto.InstanceId;
+                    break;
+                default:
+                    return ServiceResult<Event>.Failure("Unrecognised type");
+            }
+
+            try
+            {
+                _db.Events.Add(newEvent);
+                await _db.SaveChangesAsync(ct);
+            }
+            catch (DbUpdateException)
+            {
+                return ServiceResult<Event>.Failure("Time slot is no longer available");
+            }
+
+            return ServiceResult<Event>.Success(newEvent);
         }
     }
 }

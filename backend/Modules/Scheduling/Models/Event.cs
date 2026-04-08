@@ -16,7 +16,7 @@ namespace backend.Modules.Scheduling.Models
         public Guid? PathCourseId { get; set; } = null;
         public Guid? TutoringWallId { get; set; } = null;
         public Guid? PathEnrollmentId { get; set; } = null;
-        public string Title { get; set; } = string.Empty;
+        public string? Title { get; set; } = null;
         public string? Description { get; set; } = null;
 
         public Teacher? Organiser { get; set; }

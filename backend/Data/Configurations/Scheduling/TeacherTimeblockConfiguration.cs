@@ -14,6 +14,9 @@ namespace backend.Data.Configurations.Scheduling
             builder.Property(x => x.Start).IsRequired();
             builder.Property(x => x.End).IsRequired();
 
+            builder.HasIndex(x => new { x.TeacherId, x.Start, x.End })
+                .HasDatabaseName("IX_TeacherTimeblocks_TeacherId_Start_End");
+
             builder.HasOne(x => x.Teacher).WithMany(x => x.TeacherTimeblocks).HasForeignKey(x => x.TeacherId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }

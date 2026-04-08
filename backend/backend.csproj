@@ -40,7 +40,6 @@
     <Folder Include="Migrations\" />
     <Folder Include="Modules\Pages\Student\Controllers\" />
     <Folder Include="Modules\Scheduling\Controllers\" />
-    <Folder Include="Modules\Scheduling\DTOs\" />
     <Folder Include="Modules\Cities\Controllers\" />
     <Folder Include="Modules\Cities\DTOs\" />
     <Folder Include="Modules\Cities\Models\" />

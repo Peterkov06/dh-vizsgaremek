@@ -2,6 +2,6 @@
 {
     public class AvailableTimeblockCreationDTO
     {
-        public List<TimeblockDTO> Timeblock { get; set; } = [];
+        public List<TimeblockDTO> Timeblocks { get; set; } = [];
     }
 }
