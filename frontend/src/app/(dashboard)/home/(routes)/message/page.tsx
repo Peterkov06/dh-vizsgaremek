@@ -1,7 +1,12 @@
-import React from "react";
+"use client";
+
+import { useSearchParams } from "next/navigation";
 
 const MessagePage = () => {
-  return <div>MessagePage</div>;
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
+  return <div>{id}</div>;
 };
 
 export default MessagePage;

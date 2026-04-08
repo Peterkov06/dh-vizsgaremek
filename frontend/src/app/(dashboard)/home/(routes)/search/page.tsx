@@ -48,6 +48,7 @@ import {
 } from "@/components/ui/input-group";
 import { CoursePage } from "@/lib/models/CourseWall";
 import { toast } from "sonner";
+import fetchWithAuth from "@/lib/api-client";
 
 type SortByType = {
   name: string;
@@ -96,9 +97,12 @@ const CourseSearchPage = () => {
     fetch("/api/pages/course-explorer")
       .then((data) => data.json())
       .then((res) => {
+        if (res.error !== undefined) return;
         const noState: CourseFilterResponse = res;
 
-        setCourses(noState.courses);
+        console.log(res);
+
+        setCourses(res.courses);
 
         noState.domains.forEach((sub) => {
           setSubjects((prev) =>
@@ -211,6 +215,13 @@ const CourseSearchPage = () => {
 
   return (
     <main className="h-full flex flex-col gap-10">
+      <button
+        onClick={() => {
+          console.log(courses);
+        }}
+      >
+        Szaros
+      </button>
       <div className="gap-4 flex-col lg:flex-row flex justify-between lg:items-center">
         <h1 className="text-4xl font-bold text-primary">Kurzus keresése</h1>
         <InputGroup className=" lg:max-w-[60%] shadow-2xl">
@@ -415,7 +426,8 @@ const CourseSearchPage = () => {
             </Select>
           </div>
           <div className="flex flex-col lg:grid grid-cols-3 gap-4 mt-3">
-            {courses && courses?.courses.length > 0 ? (
+            {/* && courses?.courses.length > 0  */}
+            {courses && courses.courses && courses?.courses.length > 0 ? (
               courses?.courses.map((c) => (
                 <div className="flex justify-center" key={c.id}>
                   <SearchCourseCard card={c} key={c.id}></SearchCourseCard>
