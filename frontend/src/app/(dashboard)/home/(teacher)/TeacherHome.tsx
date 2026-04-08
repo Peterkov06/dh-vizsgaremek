@@ -368,7 +368,7 @@ const TeacherHome = (props: { user: User }) => {
               </Label>
             </div>
             <div
-              className={`border-4 border-light-bg-gray rounded-l-xl ${selectedTabDate === "day" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
+              className={`border-4 border-light-bg-gray ${selectedTabDate === "day" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
             >
               <RadioGroupItem
                 value="day"

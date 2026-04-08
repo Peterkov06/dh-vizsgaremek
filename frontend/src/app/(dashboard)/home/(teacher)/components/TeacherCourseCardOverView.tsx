@@ -25,7 +25,7 @@ const TeacherCourseCardOverView = (props: { data: TeacherCourseType }) => {
         <img
           src={props.data.bannerImg || "/defaults/default_course.jpg"}
           alt=""
-          className="w-full h-[10em] lg:w-[20em] lg:h-[10em] rounded-t-2xl lg:rounded-r-none lg:rounded-l-2xl"
+          className="w-full h-[12em] lg:w-[20em] lg:h-[10em] rounded-t-2xl lg:rounded-r-none lg:rounded-l-2xl"
         />
         <div className="absolute inset-0 bg-linear-to-b lg:bg-linear-to-r from-60% from-transparent to-light-bg-gray p-1" />
         <Avatar className="size-20 absolute -bottom-7 -right-3 lg:-bottom-5 lg:-right-10 border-2 border-light-bg-gray">
