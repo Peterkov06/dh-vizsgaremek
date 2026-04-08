@@ -12,7 +12,7 @@ namespace backend.Modules.Scheduling.Models
         public required string OrganiserId { get; set; }
         public required EventType Type { get; set; }
         public required DateTime StartTime { get; set; }
-        public DateTime? EndTime { get; set; } = null;
+        public required DateTime EndTime { get; set; }
         public Guid? PathCourseId { get; set; } = null;
         public Guid? TutoringWallId { get; set; } = null;
         public Guid? PathEnrollmentId { get; set; } = null;
