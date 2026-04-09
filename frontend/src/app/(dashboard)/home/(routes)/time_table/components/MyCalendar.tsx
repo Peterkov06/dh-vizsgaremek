@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useNextCalendarApp, ScheduleXCalendar } from "@schedule-x/react";
-import { createViewMonthGrid, createViewWeek } from "@schedule-x/calendar";
+import {
+  createViewMonthGrid,
+  createViewWeek,
+  createViewDay,
+} from "@schedule-x/calendar";
 // @ts-ignore
 import "@schedule-x/theme-default/dist/index.css";
 import { translations, mergeLocales } from "@schedule-x/translations";
@@ -42,9 +46,20 @@ export default function MyCalendar() {
     return events;
   }
   // const [calendarApp, setCalendarApp] = useState<any>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const calendarApp = useNextCalendarApp({
-    views: [createViewMonthGrid(), createViewWeek()],
+    views: isMobile
+      ? [createViewDay()]
+      : [createViewDay(), createViewWeek(), createViewMonthGrid()],
+    defaultView: isMobile ? "day" : "week",
     locale: "hu-HU",
     plugins: [createEventRecurrencePlugin()],
     translations: mergeLocales(translations, {

@@ -57,8 +57,8 @@ const StudentHome = (props: { user: User }) => {
             <div className="text-sm">
               {dashboard?.notifications.lastUnread ? (
                 <p>
-                  {dashboard?.notifications.lastUnread?.courseName}-
-                  {dashboard?.notifications.lastUnread?.text}
+                  {dashboard?.notifications.lastUnread?.firstText}-
+                  {dashboard?.notifications.lastUnread?.secondText}
                 </p>
               ) : (
                 <p>Nincs értesítésed</p>

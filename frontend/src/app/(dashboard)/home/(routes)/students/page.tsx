@@ -23,127 +23,78 @@ import {
   X,
 } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PeddingStudentProfile from "../course/components/PeddingStudentProfile";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import fetchWithAuth from "@/lib/api-client";
+import { toast } from "sonner";
 
-type StudentType = {
-  id: string;
+export interface TutoringStudent {
+  studentId: string;
   name: string;
-  avatarUrl: string;
   nickname: string;
-  courses: number;
-  handIn: number;
-  courseName: string;
-};
+  courseNumber: number;
+  ongoingHandins: number;
+  chatId: string;
+  wallId: string;
+}
 
-type PeddingStudentType = {
+export interface MyStudents {
+  tutoring: TutoringStudent[];
+  learningPath: any[];
+}
+
+export interface PeddingStudentType {
   id: string;
-  name: string;
+  studentName: string;
+  studentId: string;
   courseName: string;
-  avatarUrl: string;
-};
-
-type MYStudentsType = {
-  isPeddingStudents: PeddingStudentType[];
-  activeStudents: StudentType[];
-};
+  courseId: string;
+}
 
 const StudentPage = () => {
   const router = useRouter();
 
   const [searchStudent, setSearchStudent] = useState<string>("");
+  const [peddingStudents, setPeddingStudents] =
+    useState<PeddingStudentType[]>();
 
-  const dummyStudents: MYStudentsType = {
-    isPeddingStudents: [
-      {
-        id: "p1",
-        name: "Alice Thompson",
-        courseName: "Emelt matek",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alice",
-      },
-      {
-        id: "p2",
-        name: "Bob Vancamp",
-        courseName: "Emelt matek",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
-      },
-      {
-        id: "p3",
-        name: "Charlie Day",
-        courseName: "Emelt matek",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie",
-      },
-      {
-        id: "p4",
-        name: "Charlie Day",
-        courseName: "Emelt matek",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie",
-      },
-      {
-        id: "p5",
-        name: "Charlie Day",
-        courseName: "Emelt matek",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie",
-      },
-    ],
-    activeStudents: [
-      {
-        id: "s1",
-        name: "Emma Richardson",
-        nickname: "EmmaDev",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma",
-        courses: 3,
-        handIn: 15,
-        courseName: "Advanced React Patterns",
-      },
-      {
-        id: "s2",
-        name: "Liam O'Connor",
-        nickname: "Liamy",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Liam",
-        courses: 1,
-        handIn: 2,
-        courseName: "Introduction to .NET Auth",
-      },
-      {
-        id: "s3",
-        name: "Sophia Martinez",
-        nickname: "SophiCode",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia",
-        courses: 4,
-        handIn: 28,
-        courseName: "Entity Framework Deep Dive",
-      },
-      {
-        id: "s4",
-        name: "Noah Williams",
-        nickname: "No-Ah",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Noah",
-        courses: 2,
-        handIn: 8,
-        courseName: "Advanced React Patterns",
-      },
-      {
-        id: "s5",
-        name: "Olivia Chen",
-        nickname: "Livvy",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Olivia",
-        courses: 1,
-        handIn: 0,
-        courseName: "PostgreSQL Architecture",
-      },
-      {
-        id: "s6",
-        name: "Lucas Varga",
-        nickname: "VargaL",
-        avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas",
-        courses: 5,
-        handIn: 42,
-        courseName: "Fullstack Diploma",
-      },
-    ],
+  const [myStudents, setMyStudents] = useState<MyStudents>();
+
+  const HandleFetches = async () => {
+    await fetchWithAuth("/api/tutoring/enrollment/teacher")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setPeddingStudents(data);
+      });
+    await fetchWithAuth("/api/pages/teacher/my-student")
+      .then((res) => res.json())
+      .then((data) => {
+        setMyStudents(data);
+      });
   };
+
+  const HandleAcceptance = async (id: string, accepted: boolean) => {
+    await fetchWithAuth("/api/tutoring/enrollment/react", {
+      method: "PATCH",
+      body: JSON.stringify({
+        enrollmentID: id,
+        accepted: accepted,
+      }),
+    }).then((res) => {
+      if (res.ok)
+        toast.success(
+          `Sikeres tanuló ${accepted ? "elfogadás" : "elutasítás"}`,
+        );
+      else toast.error("Hiba történt");
+      HandleFetches();
+    });
+  };
+
+  useEffect(() => {
+    HandleFetches();
+  }, []);
 
   function HandleRedirect(id: string, name: string) {
     router.push(`students/student/${name}?id=${id}`);
@@ -151,54 +102,69 @@ const StudentPage = () => {
 
   return (
     <main>
-      <section className="border-4 border-light-bg-gray lg:p-3 p-2 m-auto rounded-2xl w-fit mb-5 lg:mb-10">
-        <h1 className="lg:text-2xl text-xl text-primary">Új jelentkezések</h1>
-        <div className="max-w-[90em] max-h-[14em]">
-          <div className="flex-col lg:flex-row max-h-[14em] flex gap-3 lg:gap-7 overflow-auto touch-pan-y">
-            {dummyStudents.isPeddingStudents.map((ps) => (
-              <div
-                key={ps.id}
-                className="flex items-center gap-3 bg-light-bg-gray px-1 py-2 lg:px-3 lg:py-5 rounded-2xl border-2 border-secondary hover:border-primary transition-all duration-300"
-              >
-                <Avatar className="size-14 lg:size-20 bg-background">
-                  <AvatarImage
-                    src={ps.avatarUrl || "/defaults/default_avatar.jpg"}
-                  ></AvatarImage>
-                </Avatar>
-                <div className="flex flex-col justify-between">
-                  <h2 className="text-xl lg:text-2xl">{ps.name}</h2>
-                  <h3>{ps.courseName}</h3>
-                  <div className="flex justify-between w-[14em]">
-                    <PeddingStudentProfile id={ps.id}></PeddingStudentProfile>
-                    <div className="flex gap-1 items-center mr-5 lg:mr-0">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button className="h-8 w-8 lg:h-10 lg:w-10 bg-linear-to-tl from-primary to-[#7CB08C]">
-                            <Check className="size-7 lg:size-8"></Check>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="text-lg">Elfogadás</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button className="h-8 w-8 lg:h-10 lg:w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
-                            <X className="size-7 lg:size-8"></X>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="text-lg">Elutasítás</p>
-                        </TooltipContent>
-                      </Tooltip>
+      {peddingStudents && peddingStudents.length > 0 && (
+        <section className="border-4 border-light-bg-gray lg:p-3 p-2 m-auto rounded-2xl w-fit mb-5 lg:mb-10">
+          <h1 className="lg:text-2xl text-xl text-primary">Új jelentkezések</h1>
+          <div className="max-w-[90em] max-h-[14em]">
+            <div className="flex-col lg:flex-row max-h-[14em] flex gap-3 lg:gap-7 overflow-auto touch-pan-y">
+              {peddingStudents &&
+                peddingStudents.map((ps) => (
+                  <div
+                    key={ps.id}
+                    className="flex items-center gap-3 bg-light-bg-gray px-1 py-2 lg:px-3 lg:py-5 rounded-2xl border-2 border-secondary hover:border-primary transition-all duration-300"
+                  >
+                    <Avatar className="size-14 lg:size-20 bg-background">
+                      <AvatarImage
+                        src={"/defaults/default_avatar.jpg"}
+                      ></AvatarImage>
+                    </Avatar>
+                    <div className="flex flex-col justify-between">
+                      <h2 className="text-xl lg:text-2xl">{ps.studentName}</h2>
+                      <h3>{ps.courseName}</h3>
+                      <div className="flex justify-between w-[14em]">
+                        <PeddingStudentProfile
+                          id={ps.studentId}
+                        ></PeddingStudentProfile>
+                        <div className="flex gap-1 items-center mr-5 lg:mr-0">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                className="h-8 w-8 lg:h-10 lg:w-10 bg-linear-to-tl from-primary to-[#7CB08C]"
+                                onClick={() => {
+                                  HandleAcceptance(ps.id, true);
+                                }}
+                              >
+                                <Check className="size-7 lg:size-8"></Check>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="text-lg">Elfogadás</p>
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                className="h-8 w-8 lg:h-10 lg:w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]"
+                                onClick={() => {
+                                  HandleAcceptance(ps.id, false);
+                                }}
+                              >
+                                <X className="size-7 lg:size-8"></X>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="text-lg">Elutasítás</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
       <div className="lg:flex-row flex-col gap-2 flex justify-between mb-10">
         <h1 className="text-3xl lg:text-5xl text-primary font-bold">
           Tanulóim
@@ -221,18 +187,18 @@ const StudentPage = () => {
         </InputGroup>
       </div>
       <div className="flex flex-col gap-6">
-        {dummyStudents.activeStudents
+        {myStudents?.tutoring
           .filter((as) => as.name.toLowerCase().includes(searchStudent))
           .map((as) => (
             <div
-              key={as.id}
+              key={as.studentId}
               className="relative flex border-4 rounded-2xl hover:border-secondary border-transparent transition-all duration-300 shadow-2xl"
             >
-              <h2 className="absolute -top-5 right-6 bg-background py-0 px-1 lg:px-2 lg:py-1 text-xs lg:text-lg rounded-2xl">
+              {/* <h2 className="absolute -top-5 right-6 bg-background py-0 px-1 lg:px-2 lg:py-1 text-xs lg:text-lg rounded-2xl">
                 {as.courseName}
-              </h2>
+              </h2> */}
               <img
-                src={as.avatarUrl || "/defaults/default_avatar.jpg"}
+                src={"/defaults/default_avatar.jpg"}
                 alt=""
                 className="h-24 w-24 lg:w-30 lg:h-30 rounded-l-2xl"
               />
@@ -250,13 +216,13 @@ const StudentPage = () => {
                     <div className="text-xs lg:text-lg items-center flex gap-2 bg-background border-2 border-primary rounded-md w-fit h-fit p-1">
                       <Book className="size-4 lg:size-6"></Book>
                       <p className="">Kurzusok:</p>
-                      <p className="font-bold">{as.courses}</p>
+                      <p className="font-bold">{as.courseNumber}</p>
                     </div>
 
                     <div className="flex gap-2 text-xs lg:text-lg items-center  bg-background border-2 border-primary rounded-md w-fit h-fit px-1 lg:px-2 py-1">
                       <HandHelping className="size-4 lg:size-6"></HandHelping>
                       <p className="hidden lg:block">Beadandók:</p>
-                      <p className="font-bold">{as.handIn}</p>
+                      <p className="font-bold">{as.ongoingHandins}</p>
                     </div>
                   </div>
                 </div>
@@ -267,7 +233,7 @@ const StudentPage = () => {
                       <Button
                         className="h-11 w-11 lg:h-16 lg:w-16"
                         onClick={() => {
-                          HandleRedirect(as.id, "profile");
+                          HandleRedirect(as.studentId, "profile");
                         }}
                       >
                         <CircleUserRound className="size-7 lg:size-10"></CircleUserRound>
@@ -283,7 +249,7 @@ const StudentPage = () => {
                       <Button
                         className="h-11 w-11 lg:h-16 lg:w-16"
                         onClick={() => {
-                          HandleRedirect(as.id, "message");
+                          HandleRedirect(as.chatId, "message");
                         }}
                       >
                         <MessageCircleMore className="size-7 lg:size-10"></MessageCircleMore>
@@ -299,7 +265,7 @@ const StudentPage = () => {
                       <Button
                         className="h-11 w-11 lg:h-16 lg:w-16"
                         onClick={() => {
-                          HandleRedirect(as.id, "wall");
+                          HandleRedirect(as.wallId, "wall");
                         }}
                       >
                         <BrickWall className="size-7 lg:size-10"></BrickWall>

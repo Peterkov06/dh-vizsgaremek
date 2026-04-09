@@ -243,8 +243,8 @@ body {
 }
 
 
-.sx__background-event.my-custom-color {
+/* .sx__background-event.my-custom-color {
   background-color: hsl(var(--secondary)) !important;
-  border-radius: 0 !important; /* Square UI style */
-  opacity: 0.8; /* Optional: so you can still see the grid lines */
-}
+  border-radius: 0 !important; 
+  opacity: 0.8; 
+} */

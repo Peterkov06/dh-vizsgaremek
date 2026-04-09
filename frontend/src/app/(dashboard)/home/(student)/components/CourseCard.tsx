@@ -30,7 +30,7 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
             {props.course.progress}%
           </div>
         </div>
-        {isActive(props.course) && (
+        {isActive(props.course) && props.course.upcomingEvents.length > 0 && (
           <div className="flex flex-col gap-0">
             <div className="flex flex-col gap-0! bg-background text-primary rounded-lg px-3 py-1 shadow-2xl">
               <div className="flex justify-between items-end min-w-0">

@@ -29,9 +29,10 @@ import {
   MessageCircle,
   Search,
   Users,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navItems = [
@@ -41,6 +42,7 @@ const navItems = [
   { title: "Üzenetek", url: "/home/message", icon: MessageCircle },
   { title: "Órarend", url: "/home/time_table", icon: Calendar },
   { title: "Kereső", url: "/home/search", icon: Search },
+  { title: "Pénzügyek", url: "/home/money", icon: Wallet },
 ];
 
 const TeacherSidebar = (props: { user: User }) => {
@@ -49,7 +51,7 @@ const TeacherSidebar = (props: { user: User }) => {
 
   const OnLogout = async () => {
     await fetchWithAuth("api/auth/logout");
-    router.push("/login"); //Gány megoldás
+    redirect("/login"); //Gány megoldás
   };
 
   return (

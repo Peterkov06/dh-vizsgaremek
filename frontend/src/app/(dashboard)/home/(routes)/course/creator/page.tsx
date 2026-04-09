@@ -223,7 +223,7 @@ const CourseCreator = () => {
       body: JSON.stringify({
         courseName: data.courseName,
         description: data.description,
-        type: 1,
+        type: 0,
         courseDomainId: data.subject || null,
         courseLevelId: data.level || null,
         price: data.price,
@@ -247,7 +247,9 @@ const CourseCreator = () => {
     }
     if (res.ok) toast.success("Sikeres kurzus létrehozzás");
 
-    // form.reset();
+    form.reset();
+    setPriceInput("");
+    setClassLenghtInput("");
   };
 
   return (

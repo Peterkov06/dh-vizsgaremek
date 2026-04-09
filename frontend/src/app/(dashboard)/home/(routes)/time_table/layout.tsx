@@ -4,7 +4,7 @@ import TimeTableSidebar from "./components/TimeTableSidebar";
 
 const TimeTableLayout = async ({ children }: { children: ReactNode }) => {
   return (
-    <main className="w-full flex gap-10">
+    <main className="w-full flex-col flex lg:flex-row gap-3 lg:gap-10">
       <ForceSideBarClose></ForceSideBarClose>
       <TimeTableSidebar></TimeTableSidebar>
       <div className="flex-1">{children}</div>

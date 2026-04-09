@@ -28,6 +28,7 @@ import {
   LogOut,
   MessageCircle,
   Search,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -39,6 +40,7 @@ const navItems = [
   { title: "Üzenetek", url: "/home/message", icon: MessageCircle },
   { title: "Órarend", url: "/home/time_table", icon: Calendar },
   { title: "Kereső", url: "/home/search", icon: Search },
+  { title: "Pénzügyek", url: "/home/money", icon: Wallet },
 ];
 
 const StudentSideBar = (props: { user: User }) => {

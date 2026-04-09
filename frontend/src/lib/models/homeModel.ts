@@ -68,9 +68,9 @@ export interface PopularCourse {
 
 export interface LastUnreadNotification {
   notificationId: string;
-  eventUrl: string;
-  courseName: string;
-  text: string;
+  referenceId: string;
+  firstText: string;
+  secondText: string;
 }
 
 export interface Notifications {
