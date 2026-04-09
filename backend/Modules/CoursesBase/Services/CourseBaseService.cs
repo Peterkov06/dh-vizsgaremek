@@ -47,6 +47,7 @@ namespace backend.Modules.CoursesBase.Services
                 Status = newCourse.Status ?? CourseStatus.Active,
                 IconImageId = newCourse.IconImageId,
                 BannerImageId = newCourse.BannerImageId,
+                TokenMinuteValue = newCourse.LessonLenght
             };
 
             _db.CourseBases.Add(course);

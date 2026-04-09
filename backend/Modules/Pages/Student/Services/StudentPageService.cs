@@ -7,6 +7,7 @@ using backend.Modules.Shared.Results;
 using backend.Modules.Shared.Models;
 using backend.Modules.Pages.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
+using backend.Modules.Shared.DTOs;
 
 namespace backend.Modules.Pages.Student.Services
 {
@@ -117,14 +118,17 @@ namespace backend.Modules.Pages.Student.Services
                     TeacherName = x.PathCourse?.Teacher?.User?.FullName ?? x.TutoringWall?.CourseBase?.Teacher?.User?.FullName ?? "",
                     StartTime = TimeOnly.FromDateTime(x.StartTime),
                     StartDate = DateOnly.FromDateTime(x.StartTime),
-                    EventType = x.Type.ToString(),
+                    EventType = x.Type,
                     Description = x.Description ?? "",
-                    EventUrl = x.Type switch
+                    EndTime = TimeOnly.FromDateTime(x.EndTime),
+                    InstanceId = x.Type switch
                     {
-                        EventType.Lesson => $"#",
-                        EventType.Deadline => $"#",
-                        _ => "#"
-                    }
+                        EventType.Lesson => x.TutoringWallId ?? Guid.Empty,
+                        EventType.Consultation => x.PathEnrollmentId ?? Guid.Empty,
+                        EventType.Deadline => x.TutoringWallId ?? Guid.Empty,
+                        _ => Guid.Empty,
+                    },
+                    TeacherId = x.OrganiserId
                 }).ToList()
             });
         }
@@ -163,17 +167,16 @@ namespace backend.Modules.Pages.Student.Services
             return new CourseCardUprocmingEventsDTO
             {
                 EventId = e.Id,
-                Title = e.Title,
+                Title = e.Title ?? "",
                 StartTime = TimeOnly.FromDateTime(e.StartTime),
                 StartDate = DateOnly.FromDateTime(e.StartTime),
-                EventType = e.Type.ToString(),
+                EventType = e.Type,
                 Description = e.Description ?? "",
-                EventUrl = e.Type switch
-                {
-                    EventType.Lesson => $"#",
-                    EventType.Deadline => $"#",
-                    _ => "#"
-                }
+                InstanceId =
+                    e.Type == EventType.Lesson ? (e.TutoringWallId ?? Guid.Empty) :
+                    e.Type == EventType.Consultation ? (e.PathEnrollmentId ?? Guid.Empty) :
+                    e.Type == EventType.Deadline ? (e.TutoringWallId ?? Guid.Empty) :
+                    Guid.Empty,
             };
         }
 

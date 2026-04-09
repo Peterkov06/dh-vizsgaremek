@@ -11,9 +11,16 @@
         Message,
         WallPost,
         NewHandIn,
+        DeletedHandin,
         SubmissionGraded,
         PendingSubmission,
         SubmissionRefusal,
         System,
+        NewLesson,
+        NewConsultation,
+        NewCommunityEvent,
+        DeletedLesson,
+        DeletedConsultation,
+        DeletedCommunityEvent,
     }
 }

@@ -173,14 +173,20 @@ namespace backend.Modules.Pages.Teacher.Services
                     Description = e.Description ?? string.Empty,
                     StartTime = TimeOnly.FromDateTime(e.StartTime),
                     StartDate = DateOnly.FromDateTime(e.StartTime),
-                    EventType = e.Type.ToString(),
+                    EventType = e.Type,
                     CourseName = e.PathCourse != null ? e.PathCourse.CourseName
                                 : e.TutoringWall != null ? e.TutoringWall.CourseBase.CourseName
                                 : string.Empty,
                     TeacherName = e.PathCourse != null ? e.PathCourse.Teacher.User.FullName
                                 : e.TutoringWall != null ? e.TutoringWall.CourseBase.Teacher.User.FullName
                                 : string.Empty,
-                    EventUrl = "#"
+                    EndTime = TimeOnly.FromDateTime(e.EndTime),
+                    InstanceId =
+                        e.Type == EventType.Lesson ? (e.TutoringWallId ?? Guid.Empty) :
+                        e.Type == EventType.Consultation ? (e.PathEnrollmentId ?? Guid.Empty) :
+                        e.Type == EventType.Deadline ? (e.TutoringWallId ?? Guid.Empty) : 
+                        Guid.Empty,
+                    TeacherId = e.OrganiserId
                 })
                 .AsNoTracking()
                 .ToListAsync(ct);
@@ -286,9 +292,10 @@ namespace backend.Modules.Pages.Teacher.Services
                     CourseBannerURL = "",
                     CoursePictureURL = "",
                     Status = x.Status,
-                    EnrolledStudents = _db.Students.Where(s => s.TutoringWalls.Where(t => t.CourseId == x.Id || t.Status == EnrollmentStatus.Active).Any()).Count(),
-                    CourseRating = _db.CourseReviews.Where(cr => cr.CourseId == x.Id).Average(x => x.ReviewScore),
+                    EnrolledStudents = _db.Students.Where(s => s.TutoringWalls.Where(t => t.CourseId == x.Id && t.Status == EnrollmentStatus.Active).Any()).Count(),
+                    CourseRating = _db.CourseReviews.Where(cr => cr.CourseId == x.Id).Average(x => (int?)x.ReviewScore) ?? 0,
                     OngoingAssignments = _db.HandIns.Where(h => h.Wall.Id == x.Id && h.DueDate <= DateTime.UtcNow).Count(),
+                    
                 })
                 .AsNoTracking()
                 .ToListAsync(ct);

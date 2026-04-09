@@ -11,6 +11,7 @@ namespace backend.Modules.CoursesBase.DTOs
         public required Guid CourseDomainId { get; set; }
         public required Guid CourseLevelId { get; set; }
         public decimal Price { get; set; }
+        public int LessonLenght { get; set; } = 60;
         public required bool FirstConsultationFree { get; set; }
         public Guid PriceCurrencyId { get; set; }
         public CourseStatus? Status { get; set; } = null;

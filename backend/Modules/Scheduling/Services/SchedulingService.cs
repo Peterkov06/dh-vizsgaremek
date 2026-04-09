@@ -1,8 +1,11 @@
 ﻿using backend.Data;
 using backend.Models;
+using backend.Modules.Engagement.Models;
 using backend.Modules.Engagement.Services;
+using backend.Modules.Identity.Models;
 using backend.Modules.Scheduling.DTOs;
 using backend.Modules.Scheduling.Models;
+using backend.Modules.Shared.DTOs;
 using backend.Modules.Shared.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,23 +23,68 @@ namespace backend.Modules.Scheduling.Services
             _notificationService = notificationService;
         }
 
-        public async Task<ServiceResult> CreateAvailableBlock(string userId, AvailableTimeblockCreationDTO dto, CancellationToken ct = default)
+        public async Task<ServiceResult> CreateAvailableBlocks(string userId, AvailableTimeblockCreationDTO dto, CancellationToken ct = default)
         {
-            List<TeacherTimeblock> timeblocks = [];
-            foreach (var block in dto.Timeblocks)
+            var minStart = dto.Timeblocks.Min(x => x.Start);
+            var maxEnd = dto.Timeblocks.Max(x => x.End);
+
+            var existingBlocks = await _db.TeacherTimeblocks
+                .Where(x => x.TeacherId == userId && x.End > minStart && x.Start < maxEnd)
+                .ToListAsync(ct);
+
+            foreach (var newBlock in dto.Timeblocks)
             {
-                timeblocks.Add(new TeacherTimeblock { TeacherId = userId, Start = block.Start, End = block.End });
+                bool overlaps = existingBlocks.Any(existing =>
+                    existing.Start < newBlock.End && existing.End > newBlock.Start);
+
+                if (overlaps)
+                {
+                    return ServiceResult.Failure($"Overlap detected for block: {newBlock.Start} - {newBlock.End}");
+                }
             }
 
-            _db.TeacherTimeblocks.AddRange(timeblocks);
-            await _db.SaveChangesAsync(ct);
+            var timeblocks = dto.Timeblocks.Select(block => new TeacherTimeblock
+            {
+                TeacherId = userId,
+                Start = block.Start,
+                End = block.End
+            }).ToList();
 
-            return ServiceResult.Success();
+            _db.TeacherTimeblocks.AddRange(timeblocks);
+            int result = await _db.SaveChangesAsync(ct);
+
+            return result > 0
+                ? ServiceResult.Success()
+                : ServiceResult.Failure("No records were saved to the database.");
+        }
+
+        public async Task<ServiceResult<Dictionary<DateTime,List<TimeblockWithIdDTO>>>> GetCurrentTimeBlocks(string teacherId, DateTime searchDate, CancellationToken ct = default)
+        {
+            int diff = (7 + (searchDate.DayOfWeek - DayOfWeek.Monday)) % 7;
+            DateTime startOfWeek = searchDate.AddDays(-1 * diff).Date;
+            startOfWeek = DateTime.SpecifyKind(startOfWeek, DateTimeKind.Utc);
+
+            DateTime endOfWeek = startOfWeek.AddDays(7);
+
+            var timeBlocksOfTheWeek = await _db.TeacherTimeblocks
+                .Where(x => x.TeacherId == teacherId
+                       && x.Start >= startOfWeek
+                       && x.Start < endOfWeek)
+                .Select(x => new TimeblockWithIdDTO { Start = x.Start, End = x.End, Id = x.Id })
+                .OrderBy(x => x.Start)
+                .AsNoTracking()
+                .ToListAsync(ct);
+
+            var blocksByDay = timeBlocksOfTheWeek
+                .GroupBy(x => x.Start.Date)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            return ServiceResult<Dictionary<DateTime, List<TimeblockWithIdDTO>>>.Success(blocksByDay);
         }
 
         public async Task<ServiceResult<AvailableDaysDTO>> GetAvailableDays(string teacherId, DateTime searchDate, CancellationToken ct = default)
         {
-            var firstDayOfMonth = new DateTime(searchDate.Year, searchDate.Month, 1);
+            var firstDayOfMonth = new DateTime(searchDate.Year, searchDate.Month, 1, 0, 0 ,0, DateTimeKind.Utc);
             var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddTicks(-1);
 
             var availableStarts = await _db.TeacherTimeblocks
@@ -66,7 +114,7 @@ namespace backend.Modules.Scheduling.Services
 
             var lessonLength = oneLessonLength * lessonNum;
 
-            var firstTime = new DateTime(searchDate.Year, searchDate.Month, searchDate.Day, 0,0,0);
+            var firstTime = new DateTime(searchDate.Year, searchDate.Month, searchDate.Day, 0,0,0, DateTimeKind.Utc);
             var lastTime = firstTime.AddDays(1);
 
             var originalTimeBlocks = await _db.TeacherTimeblocks.Where( x => x.TeacherId == teacherId && x.Start < lastTime && x.Start >= firstTime && x.End > firstTime && x.End <= lastTime).OrderBy(x => x.Start).AsNoTracking().ToListAsync(ct);
@@ -111,23 +159,42 @@ namespace backend.Modules.Scheduling.Services
             return ServiceResult<AvailableTimesDTO>.Success(new AvailableTimesDTO { AvailableTimes = lessons });
         }
 
-        public async Task<ServiceResult<Event>> BookLesson(string? studentId, string? teacherId, BookingDTO dto, CancellationToken ct = default)
+        public async Task<ServiceResult<Event>> BookEvent(string userId, string role, BookingDTO dto, CancellationToken ct = default)
         {
-            if (teacherId is null && studentId is not null)
+            string? teacherId = null;
+            string? studentId = null;
+            if (role == "Student")
             {
+                studentId = userId;
                 switch (dto.Type)
                 {
                     case EventType.Lesson or EventType.Deadline:
-                        teacherId = await _db.TutoringWalls.Where(x => x.StudentId == studentId && x.CourseId == dto.CourseBaseId).Select(x => x.TeacherId).AsNoTracking().FirstOrDefaultAsync(ct);
+                        teacherId = await _db.TutoringWalls.Where(x => x.StudentId == userId && x.CourseId == dto.CourseBaseId).Select(x => x.TeacherId).AsNoTracking().FirstOrDefaultAsync(ct);
                         break;
                     case EventType.Consultation:
-                        teacherId = await _db.PathEnrollments.Where(x => x.AttendantId == studentId && x.CourseId == dto.CourseBaseId).Select(x => x.Course.TeacherId).AsNoTracking().FirstOrDefaultAsync(ct);
+                        teacherId = await _db.PathEnrollments.Where(x => x.AttendantId == userId && x.CourseId == dto.CourseBaseId).Select(x => x.Course.TeacherId).AsNoTracking().FirstOrDefaultAsync(ct);
                         break;
                     default:
                         return ServiceResult<Event>.Failure("Unrecognised type");
                 }
             }
-            if (teacherId is null)
+            else if (role == "teacher")
+            {
+                teacherId = userId;
+
+                switch (dto.Type)
+                {
+                    case EventType.Lesson or EventType.Deadline:
+                        studentId = await _db.TutoringWalls.Where(x => x.TeacherId == userId && x.CourseId == dto.CourseBaseId).Select(x => x.StudentId).AsNoTracking().FirstOrDefaultAsync(ct);
+                        break;
+                    case EventType.Consultation:
+                        studentId = await _db.PathEnrollments.Where(x => x.Course.TeacherId == userId && x.CourseId == dto.CourseBaseId).Select(x => x.AttendantId).AsNoTracking().FirstOrDefaultAsync(ct);
+                        break;
+                    default:
+                        return ServiceResult<Event>.Failure("Unrecognised type");
+                }
+            }
+            if (teacherId is null || studentId is null)
             {
                 return ServiceResult<Event>.NotFound("No course was found");
             }
@@ -141,7 +208,7 @@ namespace backend.Modules.Scheduling.Services
                 return ServiceResult<Event>.Failure("Time slot is outside teacher availability");
 
             var conflict = await _db.Events
-                .AnyAsync(x => x.OrganiserId == teacherId
+                .AnyAsync(x => x.OrganiserId == teacherId && x.Type != EventType.Deadline
                     && x.StartTime < dto.Timeblock.End
                     && x.EndTime > dto.Timeblock.Start, ct);
 
@@ -158,13 +225,20 @@ namespace backend.Modules.Scheduling.Services
                 OrganiserId = teacherId,
             };
 
+            NotificationType notificationType = NotificationType.NewLesson;
+
             switch (dto.Type)
             {
-                case EventType.Lesson or EventType.Deadline:
+                case EventType.Lesson:
                     newEvent.TutoringWallId = dto.InstanceId;
+                    break;
+                case EventType.Deadline:
+                    newEvent.TutoringWallId = dto.InstanceId;
+                    notificationType = NotificationType.NewHandIn;
                     break;
                 case EventType.Consultation:
                     newEvent.PathEnrollmentId = dto.InstanceId;
+                    notificationType = NotificationType.NewConsultation;
                     break;
                 default:
                     return ServiceResult<Event>.Failure("Unrecognised type");
@@ -173,6 +247,17 @@ namespace backend.Modules.Scheduling.Services
             try
             {
                 _db.Events.Add(newEvent);
+                switch (role)
+                {
+                    case "Teacher":
+                        await _notificationService.NotifyAsync(studentId, notificationType, null, dto.InstanceId, teacherId);
+                        break;
+                    case "Student":
+                        await _notificationService.NotifyAsync(teacherId, notificationType, null, dto.InstanceId, studentId);
+                        break;
+                    default:
+                        break;
+                }
                 await _db.SaveChangesAsync(ct);
             }
             catch (DbUpdateException)
@@ -181,6 +266,88 @@ namespace backend.Modules.Scheduling.Services
             }
 
             return ServiceResult<Event>.Success(newEvent);
+        }
+
+        /*public async Task<ServiceResult<EventDTO>> GetWeeklyEvents()
+        {
+
+        }*/
+
+        public async Task<ServiceResult> DeleteTimeblock(Guid blockId, CancellationToken ct = default)
+        {
+            var block = await _db.TeacherTimeblocks.SingleOrDefaultAsync(x => x.Id == blockId, ct);
+
+            if (block == null)
+            {
+                return ServiceResult.NotFound("Timeblock not found");
+            }
+
+            _db.TeacherTimeblocks.Remove(block);
+            int result = await _db.SaveChangesAsync(ct);
+
+            return result > 0
+                ? ServiceResult.Success()
+                : ServiceResult.Failure("No records were deleted from the database.");
+        }
+
+        public async Task<ServiceResult> DeleteBookedEvent(string userId, string role, Guid eventId, CancellationToken ct = default)
+        {
+            var lesson = await _db.Events.Include(x => x.TutoringWall).Include(x => x.Enrollment).SingleOrDefaultAsync(x => x.Id == eventId, ct);
+
+            if (lesson is null)
+            {
+                return ServiceResult.NotFound("Booked event not found");
+            }
+
+            Guid? instanceId = null;
+            string teacherId = lesson.OrganiserId;
+            string? studentId = null;
+            NotificationType notificationType = NotificationType.DeletedLesson;
+
+            switch (lesson.Type)
+            {
+                case EventType.Lesson:
+                    studentId = lesson.TutoringWall?.StudentId;
+                    instanceId = lesson.TutoringWallId;
+                    break;
+                case EventType.Consultation:
+                    studentId = lesson.Enrollment?.AttendantId;
+                    notificationType = NotificationType.DeletedConsultation;
+                    instanceId = lesson.PathEnrollmentId;
+                    break;
+                case EventType.Deadline:
+                    studentId = lesson.TutoringWall?.StudentId;
+                    notificationType = NotificationType.DeletedHandin;
+                    instanceId = lesson.TutoringWallId;
+                    break;
+                default:
+                    break;
+            }
+
+            if (studentId is null)
+            {
+                return ServiceResult.NotFound("Booked event not found");
+            }
+
+
+            _db.Events.Remove(lesson);
+            switch (role)
+            {
+                case "Teacher":
+                    await _notificationService.NotifyAsync(studentId, notificationType, null, instanceId, teacherId);
+                    break;
+                case "Student":
+                    await _notificationService.NotifyAsync(teacherId, notificationType, null, instanceId, studentId);
+                    break;
+                default:
+                    break;
+            }
+
+            int result = await _db.SaveChangesAsync(ct);
+
+            return result > 0
+                ? ServiceResult.Success()
+                : ServiceResult.Failure("No records were deleted from the database.");
         }
     }
 }
