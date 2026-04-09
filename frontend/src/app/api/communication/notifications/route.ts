@@ -1,23 +1,19 @@
-import { BASE_URL } from "@/app/api/auth/register/route";
 import { NextRequest, NextResponse } from "next/server";
+import { BASE_URL } from "../../auth/register/route";
 
 export async function GET(request: NextRequest) {
   try {
     const cookies = request.headers.get("cookie") ?? "";
-
-    const response = await fetch(`${BASE_URL}/pages/student/homepage`, {
+    const response = await fetch(`${BASE_URL}/communication/notifications`, {
       method: "GET",
       credentials: "include",
       headers: {
+        "Content-Type": "application/json",
         cookie: cookies,
       },
     });
 
-    console.log(response);
-
-    if (response.ok) {
-      return response;
-    }
+    return response;
   } catch (error) {
     console.error("Login error: ", error);
     return NextResponse.json(

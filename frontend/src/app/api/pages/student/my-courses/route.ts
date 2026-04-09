@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     const cookies = request.headers.get("cookie") ?? "";
 
-    const response = await fetch(`${BASE_URL}/pages/student/homepage`, {
+    const response = await fetch(`${BASE_URL}/pages/student/my-courses`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -13,11 +13,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    console.log(response);
-
-    if (response.ok) {
-      return response;
-    }
+    return response;
   } catch (error) {
     console.error("Login error: ", error);
     return NextResponse.json(

@@ -6,30 +6,26 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { User } from "@/lib/auth";
 import { StudentsCourse } from "@/lib/models/StudentCourseModel";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import StudentCourseCard from "../components/StudentCourseCard";
+import fetchWithAuth from "@/lib/api-client";
 
 const StudentCourse = (props: { user: User }) => {
   const [courseStatus, setCourseStatus] = useState<string>("active");
 
-  const [studentCourses, setStudentCourses] = useState<StudentsCourse[]>([
-    {
-      id: "1",
-      bannerImg: "https://picsum.photos/seed/course1/800/200",
-      avatarImg: "https://picsum.photos/seed/teacher1/100/100",
-      courseName: "Matematika alapok",
-      teacherName: "Kovács János",
-      isPedding: false,
-    },
-    {
-      id: "2",
-      bannerImg: "https://picsum.photos/seed/course2/800/200",
-      avatarImg: "https://picsum.photos/seed/teacher2/100/100",
-      courseName: "Angol nyelvtan",
-      teacherName: "Nagy Éva",
-      isPedding: true,
-    },
-  ]);
+  const [studentCourses, setStudentCourses] = useState<StudentsCourse[]>([]);
+
+  const HandleFetch = async () => {
+    await fetchWithAuth("/api/pages/student/my-courses")
+      .then((res) => res.json())
+      .then((data) => {
+        setStudentCourses(data);
+      });
+  };
+
+  useEffect(() => {
+    HandleFetch();
+  }, []);
 
   return (
     <main>
@@ -74,7 +70,10 @@ const StudentCourse = (props: { user: User }) => {
 
         <section className="flex flex-col gap-10 mt-5">
           {studentCourses.map((sc) => (
-            <StudentCourseCard data={sc} key={sc.id}></StudentCourseCard>
+            <StudentCourseCard
+              data={sc}
+              key={sc.instanceId}
+            ></StudentCourseCard>
           ))}
         </section>
       </section>

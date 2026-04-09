@@ -1,8 +1,9 @@
 export interface StudentsCourse {
-  id: string;
-  bannerImg: string;
-  avatarImg: string;
-  courseName: string;
+  courseBaseId: string;
+  instanceId: string;
   teacherName: string;
-  isPedding: boolean;
+  teacherId: string;
+  teacherProfilePictureURL: string;
+  courseBannerURL: string;
+  status: "Active" | "Inactive" | "Completed";
 }
