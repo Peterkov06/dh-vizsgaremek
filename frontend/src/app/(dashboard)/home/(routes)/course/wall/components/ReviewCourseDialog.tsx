@@ -17,10 +17,12 @@ import { Pen, ThumbsDown, ThumbsUp, UserStar } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import StarRating from "./StarRating";
 
 const ReviewCourseDialog = () => {
   const [recommend, setRecommend] = useState<string>("");
   const [text, setText] = useState<string>("");
+  const [reviewScore, setReviewScore] = useState<number>(0);
 
   const searcParams = useSearchParams();
 
@@ -41,7 +43,7 @@ const ReviewCourseDialog = () => {
         wallId,
         recommended: recommend === "true",
         text,
-        reviewScore: 5,
+        reviewScore,
       }),
     });
 
@@ -51,6 +53,9 @@ const ReviewCourseDialog = () => {
       console.error("Error response:", errorText);
       toast.error("Hiba történt - " + errorText);
     }
+    setRecommend("");
+    setText("");
+    setReviewScore(0);
     setIsOpen(false);
   }
 
@@ -107,6 +112,9 @@ const ReviewCourseDialog = () => {
               </Label>
             </div>
           </RadioGroup>
+          <div className="m-auto w-[15em]">
+            <StarRating value={reviewScore} onChange={setReviewScore} />
+          </div>
           <Textarea
             value={text}
             onChange={(e) => {
@@ -120,7 +128,7 @@ const ReviewCourseDialog = () => {
           <Button
             className="text-2xl flex gap-1 h-12 w-50"
             onClick={HandleReview}
-            disabled={recommend === "" || text === ""}
+            disabled={recommend === "" || text === "" || reviewScore === 0}
           >
             <UserStar className="size-8"></UserStar> Értékelem
           </Button>
