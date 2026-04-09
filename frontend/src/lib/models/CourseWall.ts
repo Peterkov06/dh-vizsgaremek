@@ -78,7 +78,7 @@ export interface PostComment {
   text: string;
 }
 
-export interface WallPost {
+export interface WallPostType {
   id: string;
   posterName: string;
   posterId: string;

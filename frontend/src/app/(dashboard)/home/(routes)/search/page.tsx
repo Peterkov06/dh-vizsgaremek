@@ -266,7 +266,7 @@ const CourseSearchPage = () => {
                 <Book></Book>Tantárgy:
               </h2>
               <div className="overflow-hidden h-fit max-h-26">
-                <div className="overflow-auto h-full">
+                <div className="overflow-auto h-full max-h-26">
                   {subjects.map((s, i) => {
                     const isChecked = selectedSubjects.includes(s);
                     return (
@@ -297,7 +297,7 @@ const CourseSearchPage = () => {
                 <Globe></Globe>Nyelvek:
               </h2>
               <div className="overflow-hidden h-fit max-h-26">
-                <div className="overflow-auto h-full">
+                <div className="overflow-auto h-full max-h-26">
                   {languages.map((l, i) => {
                     const isChecked = selectedLanguages.includes(l);
                     return (

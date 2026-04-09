@@ -3,18 +3,21 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Post } from "@/lib/models/CourseWall";
+import fetchWithAuth from "@/lib/api-client";
+import { Post, WallPostType } from "@/lib/models/CourseWall";
 import { ArrowRight, User } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const WallPost = () => {
   const params = useSearchParams();
-  const id = params.get("id");
-  const [post, setPost] = useState<Post>();
+  const wallId = params.get("wallId");
+  const postId = params.get("postId");
+  const [post, setPost] = useState<WallPostType>();
   const [comment, setComment] = useState<string>("");
 
-  const formatDate = (dateString?: Date) => {
+  const formatDate = (dateString?: string) => {
     if (!dateString) return;
 
     return new Date(dateString).toLocaleDateString("hu-HU", {
@@ -26,11 +29,39 @@ const WallPost = () => {
     });
   };
 
+  const handleFetch = async () => {
+    await fetchWithAuth(`/api/tutoring/${wallId}/${postId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPost(data);
+      });
+  };
+
   useEffect(() => {
-    fetch("/mockup/WallPost.json")
-      .then((data) => data.json())
-      .then((res) => setPost(res));
+    handleFetch();
   }, []);
+
+  async function handleComment() {
+    const res = await fetchWithAuth("/api/tutoring/wall/post/comment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        wallId,
+        postId,
+        text: comment,
+      }),
+    });
+
+    if (res.ok) {
+      setComment("");
+      handleFetch();
+    } else {
+      toast.error("Hiba történt");
+    }
+  }
 
   return (
     <main className="flex gap-3 px-10 w-full">
@@ -41,12 +72,12 @@ const WallPost = () => {
           </h1>
           <h2 className="flex  gap-2">
             <User className="text-primary"></User>
-            {post?.author.name}
+            {post?.posterName}
           </h2>
         </div>
         <hr className="border-2 rounded-2xl" />
         <div className="overflow-hidden max-h-[30em]">
-          <p className="text-xl overflow-auto h-full">{post?.content}</p>
+          <p className="text-xl overflow-auto h-full">{post?.text}</p>
         </div>
         <hr className="border-2 rounded-2xl" />
       </section>
@@ -54,17 +85,19 @@ const WallPost = () => {
         <h1 className="text-3xl text-primary">Kommentek</h1>
         <div className=" overflow-hidden flex-1 max-h-[25em]">
           <div className="flex flex-col gap-2 overflow-auto h-full">
-            {post?.comments.map((coms) => (
+            {post?.comments.map((coms, i) => (
               <div
                 className="flex gap-2 items-start bg-background p-2 rounded-2xl mr-2"
-                key={coms.id}
+                key={i}
               >
                 <Avatar className="size-10 mt-3">
-                  <AvatarImage src={coms.author.avatarUrl}></AvatarImage>
+                  <AvatarImage
+                    src={coms.senderImg || "/defaults/default_avatar.jpg"}
+                  ></AvatarImage>
                 </Avatar>
                 <div>
-                  <h3>{coms.author.name}</h3>
-                  <h1 className="text-lg">{coms.content}</h1>
+                  <h3>{coms.senderName}</h3>
+                  <h1 className="text-lg">{coms.text}</h1>
                 </div>
               </div>
             ))}
@@ -79,7 +112,7 @@ const WallPost = () => {
             }}
             placeholder="Komment..."
           ></Input>
-          <Button>
+          <Button onClick={handleComment}>
             <ArrowRight></ArrowRight>
           </Button>
         </div>

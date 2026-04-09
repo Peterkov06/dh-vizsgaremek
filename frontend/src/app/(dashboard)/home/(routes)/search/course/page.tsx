@@ -115,8 +115,8 @@ const CourseOverView = () => {
             <p className="text-xl">Jelentkezz!</p>
           </div>
         </Button>
-        <div className="grid grid-rows-2 grid-cols-1 gap-2 w-full border-4 border-light-bg-gray rounded-2xl p-1 mb-2 h-full justify-between">
-          <div className="overflow-hidden row-start-1 flex-1 bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
+        <div className="grid grid-cols-1 gap-2 w-full border-4 border-light-bg-gray rounded-2xl p-1 mb-2 h-full justify-between">
+          {/* <div className="overflow-hidden row-start-1 flex-1 bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
             <div className="overflow-auto h-full px-3">
               <p className="text-lg">{course?.description}</p>
             </div>
@@ -124,9 +124,9 @@ const CourseOverView = () => {
               <PenLine className="text-primary"></PenLine>
               Bemutatkozás
             </h2>
-          </div>
+          </div> */}
 
-          <div className="overflow-hidden row-start-2 bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
+          <div className="overflow-hidden max-h-[30em] bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
             <div className="overflow-auto h-full px-3">
               <p className="text-lg">{course?.description}</p>
             </div>

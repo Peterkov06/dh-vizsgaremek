@@ -194,6 +194,9 @@ const StudentPage = () => {
         </InputGroup>
       </div>
       <div className="flex flex-col gap-6">
+        {myStudents?.tutoring.length === 0 && (
+          <h1 className="text-2xl">Még nincs tanulód!</h1>
+        )}
         {myStudents?.tutoring
           .filter((as) => as.name.toLowerCase().includes(searchStudent))
           .map((as) => (

@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useEffect, useEffectEvent, useState } from "react";
 import StudentCourseCard from "../components/StudentCourseCard";
 import fetchWithAuth from "@/lib/api-client";
+import { Search } from "lucide-react";
 
 const StudentCourse = (props: { user: User }) => {
   const [courseStatus, setCourseStatus] = useState<string>("active");
@@ -69,6 +70,16 @@ const StudentCourse = (props: { user: User }) => {
         </RadioGroup>
 
         <section className="flex flex-col gap-10 mt-5">
+          {studentCourses.length === 0 && (
+            <div className="flex gap-3">
+              <h1 className="text-2xl">Még nincs kurzusod! Keress egyet: </h1>
+              <Link href={"search"}>
+                <Button>
+                  <Search></Search>Keresés
+                </Button>
+              </Link>
+            </div>
+          )}
           {studentCourses.map((sc) => (
             <StudentCourseCard
               data={sc}

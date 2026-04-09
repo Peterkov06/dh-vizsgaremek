@@ -5,5 +5,5 @@ export interface StudentsCourse {
   teacherId: string;
   teacherProfilePictureURL: string;
   courseBannerURL: string;
-  status: "Active" | "Inactive" | "Completed";
+  status: "Active" | "Pending" | "Completed";
 }

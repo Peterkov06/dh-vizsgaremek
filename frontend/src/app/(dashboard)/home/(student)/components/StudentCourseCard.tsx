@@ -43,17 +43,20 @@ const StudentCourseCard = (props: { data: StudentsCourse }) => {
           </p>
         </div>
         <Button
-          disabled={props.data.status === "Inactive"}
+          disabled={props.data.status === "Pending"}
           className="text-2xl h-12"
           onClick={() => {
-            router.push(`course/wall?id=${props.data.courseBaseId}`);
+            // // router.push(`course/wall?wallId=${props.data.courseBaseId}`);
+            router.push(
+              `course/wall?wallId=c7dd8292-dcf0-4c55-bd34-210b849fa4f2`,
+            );
           }}
         >
-          {props.data.status === "Inactive" && (
+          {props.data.status === "Pending" && (
             <ClockFading className="size-8"></ClockFading>
           )}
-          {props.data.status === "Inactive" ? "Függőben..." : "Aktív"}
-          {props.data.status !== "Inactive" && (
+          {props.data.status === "Pending" ? "Függőben..." : "Aktív"}
+          {props.data.status !== "Pending" && (
             <ArrowRightFromLine className="size-8"></ArrowRightFromLine>
           )}
         </Button>
