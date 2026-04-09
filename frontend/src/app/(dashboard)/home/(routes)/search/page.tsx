@@ -204,9 +204,12 @@ const CourseSearchPage = () => {
 
     if (selectedSubjects.length > 0)
       params.set("domains", selectedSubjects.join(","));
+    else params.delete("domains");
+
     if (selectedLanguages.length > 0)
       params.set("languages", selectedLanguages.join(","));
-    // params.set("location", city);
+    else params.delete("languages");
+
     params.set("minPrice", priceRange[0].toString());
     params.set("maxPrice", priceRange[1].toString());
 
