@@ -15,12 +15,21 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import fetchWithAuth from "@/lib/api-client";
 import { FilePlusCorner, Plus, Trash } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
+interface PostDialogProps {
+  onSuccess?: () => void;
+}
 
-const PostDialog = () => {
+const PostDialog = ({ onSuccess }: PostDialogProps) => {
   const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const searchParams = useSearchParams();
+
+  const wallId = searchParams.get("wallId");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files ?? []);
@@ -29,9 +38,31 @@ const PostDialog = () => {
   };
 
   const [postText, setPostText] = useState<string>("");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  async function HandlePost() {
+    const res = await fetchWithAuth("/api/tutoring/wall/post", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        wallId,
+        text: postText,
+      }),
+    });
+
+    if (res.ok) {
+      toast.success("Sikeres poszt létrehozzás!");
+      onSuccess?.();
+    } else toast.error("Hiba történt");
+    setPostText("");
+    setIsOpen(false);
+  }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="flex gap-1 text-xl h-10">
           <Plus className="size-8"></Plus>Új poszt létrehozása
@@ -103,7 +134,11 @@ const PostDialog = () => {
           </div>
         </div>
         <DialogFooter className="flex justify-center! w-full items-center">
-          <Button className="text-2xl flex gap-1 h-12">
+          <Button
+            className="text-2xl flex gap-1 h-12"
+            onClick={HandlePost}
+            disabled={postText === ""}
+          >
             <Plus className="size-8"></Plus>Poszt létrehozzása
           </Button>
         </DialogFooter>

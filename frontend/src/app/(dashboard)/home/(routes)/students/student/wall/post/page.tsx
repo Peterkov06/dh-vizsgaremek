@@ -91,6 +91,7 @@ const WallPost = () => {
         <h1 className="text-3xl text-primary">Kommentek</h1>
         <div className=" overflow-hidden flex-1 max-h-[25em]">
           <div className="flex flex-col gap-2 overflow-auto h-full">
+            {post && post?.comments.length < 1 && <h1>Nincs komment</h1>}
             {post?.comments.map((coms, i) => (
               <div
                 className="flex gap-2 items-start bg-background p-2 rounded-2xl mr-2"
@@ -110,7 +111,7 @@ const WallPost = () => {
             <div ref={bottomRef} />
           </div>
         </div>
-        <div className="flex gap-3 mt-5" onClick={(e) => e.stopPropagation()}>
+        <div className="flex gap-3" onClick={(e) => e.stopPropagation()}>
           <Input
             value={comment}
             className="border-2 border-primary"

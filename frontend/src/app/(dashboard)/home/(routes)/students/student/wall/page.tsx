@@ -53,7 +53,7 @@ const TeacherCourseWallPage = () => {
       <section className="flex mt-10 gap-7">
         <section className="flex flex-1  flex-col gap-5">
           <div className="flex justify-evenly">
-            <PostDialog></PostDialog>
+            <PostDialog onSuccess={handleFetch}></PostDialog>
             <HandInDialog></HandInDialog>
           </div>
           {posts?.map((p) => (

@@ -17,7 +17,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CircleUserRound, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { StudentProfileType } from "../../students/student/components/StudentPageSidebar";
 
 type Student = {
   id: string;
@@ -31,17 +32,13 @@ type Student = {
 };
 
 const PeddingStudentProfile = (props: { id: string }) => {
-  const [student, setStudent] = useState<Student>({
-    id: "st-001",
-    name: "Benjamin Taylor",
-    nickname: "BennyT",
-    avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ben",
-    introduction:
-      "Aspiring full-stack developer with a passion for clean code and UX design. I love solving complex problems with simple solutions. Lórum ipse mint mindó kértő opán, elsősorban egy kelyes öbeny. Két csent közekedt be szenikóval, s beszélgetve kolichoz luldácsoltak. Ahogy ott minó, ikézem a szenikóval, a netés ugyancsak fürelte a kedétlelését, s a bölőkből forcolta, hogy a villa másik zottájában jó bélyező estés van. El is vegesztette, hogy oda köhéhedi be magát, mihelyt magára szerkedik. Egy zúra telen luskucsát is jól átoztatotta körülbelül a tenyzőn, azzal a csemzővel, hogy néhányat a fáros alantás ürkelemébe csalik egy mekségre. A két rédság végre zsugdalta kolicát, a közöttségöt maguk mögött ejtetették, a telit tüsszögték s teztek. A borpás netés pedig gyorsan, ahogy csak a sítőben tudott, tagolt a szfizésekhez. Sargosodta őket, aztán tapogatózva, szerencsésen ricskált az estésbe.",
-    age: 24,
-    address: "123 Tech Lane, San Francisco, CA",
-    preferences: ["React", "TypeScript", "Node.js", "Dark Mode"],
-  });
+  const [student, setStudent] = useState<StudentProfileType>();
+
+  useEffect(() => {
+    fetch(`/api/identity/profile/${props.id}`)
+      .then((res) => res.json())
+      .then((res) => setStudent(res));
+  }, []);
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -60,15 +57,18 @@ const PeddingStudentProfile = (props: { id: string }) => {
                 <div className="bg-secondary rounded-2xl w-full lg:h-30 flex items-center py-2 px-2 lg:px-5 gap-5">
                   <Avatar className="size-16 lg:size-24 bg-background">
                     <AvatarImage
-                      src={student.avatarUrl || "/defaults/default_avatar.jpg"}
+                      src={
+                        student?.profilePictureUrl ||
+                        "/defaults/default_avatar.jpg"
+                      }
                     ></AvatarImage>
                   </Avatar>
                   <div>
                     <h1 className="text-xl lg:text-3xl text-primary font-bold">
-                      {student.name}
+                      {student?.fullName}
                     </h1>
                     <h2 className="text-md lg:text-xl text-gray-500">
-                      {student.nickname}
+                      {student?.nickname}
                     </h2>
                   </div>
                 </div>
@@ -78,7 +78,7 @@ const PeddingStudentProfile = (props: { id: string }) => {
                   </h1>
                   <div className="overflow-hidden w-[16em] lg:w-[40em] max-h-[10em]">
                     <p className="lg:text-lg overflow-auto h-full">
-                      {student.introduction}
+                      {student?.introduction}
                     </p>
                   </div>
                 </div>
@@ -87,16 +87,16 @@ const PeddingStudentProfile = (props: { id: string }) => {
                 <div className="flex justify-between items-center">
                   <h2 className="lg:text-xl text-primary">Életkor:</h2>
                   <h2 className="lg:text-xl text-primary font-bold">
-                    {student.age}
+                    {student?.age}
                   </h2>
                 </div>
                 <div className="flex justify-between items-center">
                   <h2 className="lg:text-xl text-primary">Lakhely:</h2>
                   <h2 className="lg:text-xl text-primary font-bold text-end">
-                    {student.address}
+                    {student?.type}
                   </h2>
                 </div>
-                <div className="flex justify-between gap-3">
+                {/* <div className="flex justify-between gap-3">
                   <h2 className="lg:text-xl text-primary">Preferenciák:</h2>
                   <div className="flex gap-1 lg:gap-2 overflow-auto max-w-[10em] lg:max-w-[25em]">
                     {student.preferences.map((pref, id) => (
@@ -108,7 +108,7 @@ const PeddingStudentProfile = (props: { id: string }) => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </div> */}
               </section>
             </div>
             <DialogFooter>
