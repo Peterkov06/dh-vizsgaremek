@@ -6,7 +6,7 @@ import MessageWall from "../../../message/components/MessageWall";
 const MessageStudentPage = () => {
   const searchParams = useSearchParams();
 
-  const id = searchParams.get("id");
+  const id = searchParams.get("chatId");
 
   return (
     <main className="h-full">{id && <MessageWall id={id}></MessageWall>}</main>

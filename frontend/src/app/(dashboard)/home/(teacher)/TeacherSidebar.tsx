@@ -21,6 +21,7 @@ import {
 import fetchWithAuth from "@/lib/api-client";
 import { User } from "@/lib/auth";
 import {
+  Bell,
   Book,
   Calendar,
   Cog,
@@ -41,7 +42,7 @@ const navItems = [
   { title: "Tanulóim", url: "/home/students", icon: Users },
   { title: "Üzenetek", url: "/home/message", icon: MessageCircle },
   { title: "Órarend", url: "/home/time_table", icon: Calendar },
-  { title: "Kereső", url: "/home/search", icon: Search },
+  { title: "Értesítések", url: "/home/notifications", icon: Bell },
   { title: "Pénzügyek", url: "/home/money", icon: Wallet },
 ];
 

@@ -69,3 +69,25 @@ export type CoursePage = {
   posts: Post[];
   sidebar: Sidebar;
 };
+
+export interface PostComment {
+  senderId: string;
+  senderName: string;
+  senderImg: string;
+  sentTime: string;
+  text: string;
+}
+
+export interface WallPost {
+  id: string;
+  posterName: string;
+  posterId: string;
+  posterImg: string;
+  title: string | null;
+  text: string;
+  handInId: string | null;
+  createdAt: string;
+  updatedAt: string | null;
+  attachmentURLs: string[];
+  comments: PostComment[];
+}

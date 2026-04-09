@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/carousel";
 import fetchWithAuth from "@/lib/api-client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const StudentHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<DashboardModel>();
@@ -49,7 +50,10 @@ const StudentHome = (props: { user: User }) => {
         <h1 className="text-4xl font-bold text-primary">
           Üdv {props.user.nickname}!
         </h1>
-        <div className="relative p-1 bg-linear-to-br from-primary to-secondary rounded-2xl hidden lg:block">
+        <Link
+          href={"home/notifications"}
+          className="relative p-1 bg-linear-to-br from-primary to-secondary rounded-2xl hidden lg:block"
+        >
           <div className="w-[21em] relative flex items-center justify-between gap-3 p-2 bg-background rounded-xl">
             <h2 className="absolute top-[-16] bg-background pr-1 pl-1 font-bold text-primary">
               Értesítések
@@ -61,7 +65,7 @@ const StudentHome = (props: { user: User }) => {
                   {dashboard?.notifications.lastUnread?.secondText}
                 </p>
               ) : (
-                <p>Nincs értesítésed</p>
+                <p>Nincs új értesítésed</p>
               )}
             </div>
             <div className="text-primary relative">
@@ -73,15 +77,19 @@ const StudentHome = (props: { user: User }) => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="text-primary relative block lg:hidden">
+        </Link>
+
+        <Link
+          href={"home/notifications"}
+          className="text-primary relative block lg:hidden"
+        >
           <Bell size={35}></Bell>
           <div className="absolute top-[-5] right-[-5] flex justify-center items-center border-2 border-primary rounded-[100%] aspect-square">
             <p className="flex justify-center items-center w-5 h-5 bg-background rounded-[100%] text-center text-[0.8em]">
               {dashboard?.notifications.unreadNotificationNumber}
             </p>
           </div>
-        </div>
+        </Link>
       </section>
       <section className="flex justify-between gap-10 flex-col flex-1 h-fit lg:flex-row">
         <section className="w-fit lg:w-full flex gap-2 flex-col">

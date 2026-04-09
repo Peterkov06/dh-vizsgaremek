@@ -96,8 +96,15 @@ const StudentPage = () => {
     HandleFetches();
   }, []);
 
-  function HandleRedirect(id: string, name: string) {
-    router.push(`students/student/${name}?id=${id}`);
+  function HandleRedirect(
+    studentId: string,
+    wallId: string,
+    chatId: string,
+    name: string,
+  ) {
+    router.push(
+      `students/student/${name}?studentId=${studentId}&wallId=${wallId}&chatId=${chatId}`,
+    );
   }
 
   return (
@@ -233,7 +240,12 @@ const StudentPage = () => {
                       <Button
                         className="h-11 w-11 lg:h-16 lg:w-16"
                         onClick={() => {
-                          HandleRedirect(as.studentId, "profile");
+                          HandleRedirect(
+                            as.studentId,
+                            as.wallId,
+                            as.chatId,
+                            "profile",
+                          );
                         }}
                       >
                         <CircleUserRound className="size-7 lg:size-10"></CircleUserRound>
@@ -249,7 +261,12 @@ const StudentPage = () => {
                       <Button
                         className="h-11 w-11 lg:h-16 lg:w-16"
                         onClick={() => {
-                          HandleRedirect(as.chatId, "message");
+                          HandleRedirect(
+                            as.studentId,
+                            as.wallId,
+                            as.chatId,
+                            "message",
+                          );
                         }}
                       >
                         <MessageCircleMore className="size-7 lg:size-10"></MessageCircleMore>
@@ -265,7 +282,12 @@ const StudentPage = () => {
                       <Button
                         className="h-11 w-11 lg:h-16 lg:w-16"
                         onClick={() => {
-                          HandleRedirect(as.wallId, "wall");
+                          HandleRedirect(
+                            as.studentId,
+                            as.wallId,
+                            as.chatId,
+                            "wall",
+                          );
                         }}
                       >
                         <BrickWall className="size-7 lg:size-10"></BrickWall>

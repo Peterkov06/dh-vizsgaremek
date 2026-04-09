@@ -9,7 +9,7 @@ import {
   MessageCircleMore,
 } from "lucide-react";
 import { redirect, usePathname, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type StudentType = {
   id: string;
@@ -18,33 +18,42 @@ type StudentType = {
   avatarUrl: string;
 };
 
+export interface StudentProfileType {
+  id: string;
+  fullName: string;
+  nickname: string;
+  introduction: string;
+  profilePictureUrl: string;
+  type: "Student" | "Teacher" | "Admin" | string;
+  age: number;
+}
+
 const StudentPageSidebar = () => {
   const searchParams = useSearchParams();
   const pathName = usePathname();
 
   const path = pathName.split("/");
 
-  const id = searchParams.get("id");
+  const studentId = searchParams.get("studentId");
+  const wallId = searchParams.get("wallId");
+  const chatId = searchParams.get("chatId");
   const [isOpenFilter, setIsOpenFilter] = useState(false);
 
-  const student: StudentType = {
-    id: "Valami",
-    name: "Matyus the third",
-    nickname: "III. Matyi",
-    avatarUrl: "",
-  };
+  const [student, setStudent] = useState<StudentProfileType>();
 
   //   const [course, setCourse] = useState<CourseDetail>();
 
-  //   useEffect(() => {
-  //     fetch(`/api/courses/${id}`)
-  //       .then((res) => res.json())
-  //       .then((res) => setCourse(res));
-  //   }, []);
+  useEffect(() => {
+    fetch(`/api/identity/profile/${studentId}`)
+      .then((res) => res.json())
+      .then((res) => setStudent(res));
+  }, []);
 
   const HandleNavigate = (name: string) => {
     if (!path.includes(name)) {
-      redirect(`${name}?id=${id}`);
+      redirect(
+        `${name}?studentId=${studentId}&wallId=${wallId}&chatId=${chatId}`,
+      );
     }
   };
 
@@ -57,12 +66,14 @@ const StudentPageSidebar = () => {
         <div className="flex items-center gap-3">
           <Avatar className="size-10">
             <AvatarImage
-              src={student.avatarUrl || "/defaults/default_avatar.jpg"}
+              src={student?.profilePictureUrl || "/defaults/default_avatar.jpg"}
             ></AvatarImage>
           </Avatar>
           <div>
-            <h1 className="text-xl text-primary font-bold">{student.name}</h1>
-            <h2 className="text-gray-500">{student.nickname}</h2>
+            <h1 className="text-xl text-primary font-bold">
+              {student?.fullName}
+            </h1>
+            <h2 className="text-gray-500">{student?.nickname}</h2>
           </div>
         </div>
         <ChevronDown
