@@ -1,21 +1,39 @@
 "use client";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CoursePage } from "@/lib/models/CourseWall";
+import { CoursePage, WallPostType } from "@/lib/models/CourseWall";
 import { User } from "lucide-react";
 import { useEffect, useState } from "react";
 import WallPost from "../../../course/wall/components/WallPost";
 import { Button } from "@/components/ui/button";
 import PostDialog from "../components/PostDialog";
 import HandInDialog from "../components/HandInDialog";
+import fetchWithAuth from "@/lib/api-client";
+import { useSearchParams } from "next/navigation";
 
 const TeacherCourseWallPage = () => {
   const [page, setPage] = useState<CoursePage>();
 
-  useEffect(() => {
-    fetch("/mockup/courseWall.json")
+  const [posts, setPosts] = useState<WallPostType[]>();
+
+  const searchParams = useSearchParams();
+
+  const wallId = searchParams.get("wallId");
+
+  const handleFetch = async () => {
+    await fetch("/mockup/courseWall.json")
       .then((data) => data.json())
       .then((res) => setPage(res));
+    await fetchWithAuth(`/api/tutoring/${wallId}/posts`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setPosts(data);
+      });
+  };
+
+  useEffect(() => {
+    handleFetch();
   }, []);
 
   return (
@@ -38,7 +56,7 @@ const TeacherCourseWallPage = () => {
             <PostDialog></PostDialog>
             <HandInDialog></HandInDialog>
           </div>
-          {page?.posts.map((p) => (
+          {posts?.map((p) => (
             <WallPost post={p} key={p.id}></WallPost>
           ))}
         </section>

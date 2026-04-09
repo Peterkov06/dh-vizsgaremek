@@ -43,16 +43,23 @@ const StudentPageSidebar = () => {
 
   //   const [course, setCourse] = useState<CourseDetail>();
 
+  const [studentIdEternal, setStudentIdEternal] = useState<string>();
+  const [chatIdEternal, setChatIdEternal] = useState<string>();
+  const [wallIdEternal, setWallIdEternal] = useState<string>();
+
   useEffect(() => {
     fetch(`/api/identity/profile/${studentId}`)
       .then((res) => res.json())
       .then((res) => setStudent(res));
+    setStudentIdEternal(studentId || "");
+    setChatIdEternal(chatId || "");
+    setWallIdEternal(wallId || "");
   }, []);
 
   const HandleNavigate = (name: string) => {
     if (!path.includes(name)) {
       redirect(
-        `${name}?studentId=${studentId}&wallId=${wallId}&chatId=${chatId}`,
+        `/home/students/student/${name}?studentId=${studentIdEternal}&wallId=${wallIdEternal}&chatId=${chatIdEternal}`,
       );
     }
   };
