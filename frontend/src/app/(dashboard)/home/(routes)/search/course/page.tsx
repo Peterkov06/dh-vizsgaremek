@@ -115,7 +115,7 @@ const CourseOverView = () => {
             <p className="text-xl">Jelentkezz!</p>
           </div>
         </Button>
-        <div className="grid grid-cols-1 gap-2 w-full border-4 border-light-bg-gray rounded-2xl p-1 mb-2 h-full justify-between">
+        <div className="grid grid-cols-1 gap-2 w-full border-4 border-light-bg-gray rounded-2xl p-1 mb-2 h-fit justify-between">
           {/* <div className="overflow-hidden row-start-1 flex-1 bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
             <div className="overflow-auto h-full px-3">
               <p className="text-lg">{course?.description}</p>
@@ -126,7 +126,7 @@ const CourseOverView = () => {
             </h2>
           </div> */}
 
-          <div className="overflow-hidden max-h-[30em] bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
+          <div className="overflow-hidden max-h-[25em] bg-light-bg-gray rounded-xl pb-3 pt-7  relative">
             <div className="overflow-auto h-full px-3">
               <p className="text-lg">{course?.description}</p>
             </div>
@@ -209,7 +209,7 @@ const CourseOverView = () => {
           <div className="border-4 border-light-bg-gray rounded-2xl pt-4 px-2 pb-2">
             <div className="overflow-y-auto max-h-[32em]">
               <div className="flex flex-col content-start gap-4 w-full pr-1">
-                {course && course?.reviews.length > 1 ? (
+                {course && course.reviews.length > 0 ? (
                   course?.reviews.map((r) => (
                     <CourseReviewCard key={r.id} review={r}></CourseReviewCard>
                   ))

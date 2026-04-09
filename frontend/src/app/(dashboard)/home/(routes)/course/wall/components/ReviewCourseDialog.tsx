@@ -12,15 +12,50 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import fetchWithAuth from "@/lib/api-client";
 import { Pen, ThumbsDown, ThumbsUp, UserStar } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const ReviewCourseDialog = () => {
   const [recommend, setRecommend] = useState<string>("");
   const [text, setText] = useState<string>("");
 
+  const searcParams = useSearchParams();
+
+  const wallId = searcParams.get("wallId");
+  const courseId = searcParams.get("courseId");
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  async function HandleReview() {
+    const res = await fetchWithAuth("/api/communication/write_review", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        courseId,
+        wallId,
+        recommended: recommend === "true",
+        text,
+        reviewScore: 5,
+      }),
+    });
+
+    if (res.ok) toast.success("Sikeres értékelés");
+    else {
+      const errorText = await res.text();
+      console.error("Error response:", errorText);
+      toast.error("Hiba történt - " + errorText);
+    }
+    setIsOpen(false);
+  }
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
           className="text-lg border-2 border-secondary flex gap-2 text-black"
@@ -84,6 +119,7 @@ const ReviewCourseDialog = () => {
         <DialogFooter className="justify-center!">
           <Button
             className="text-2xl flex gap-1 h-12 w-50"
+            onClick={HandleReview}
             disabled={recommend === "" || text === ""}
           >
             <UserStar className="size-8"></UserStar> Értékelem

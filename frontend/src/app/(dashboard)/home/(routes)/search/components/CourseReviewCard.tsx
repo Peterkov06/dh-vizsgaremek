@@ -7,9 +7,7 @@ const CourseReviewCard = (props: { review: CourseReview }) => {
     <div className="flex bg-light-bg-gray gap-2 border-2 border-primary rounded-2xl p-2">
       <Avatar className="size-10">
         <AvatarImage
-          src={
-            props.review.reviewerImage || "/public/defaults/default_avatar.jpg"
-          }
+          src={props.review.reviewerImage || "/defaults/default_avatar.jpg"}
         ></AvatarImage>
       </Avatar>
       <div className="flex flex-col">

@@ -51,7 +51,7 @@ const CourseWall = () => {
           </p>
         </div>
         <div className="absolute right-5 bottom-5 flex gap-3">
-          {/* <ReviewCourseDialog></ReviewCourseDialog> */}
+          <ReviewCourseDialog></ReviewCourseDialog>
           {page && <BuyingTokenDialog course={page.title}></BuyingTokenDialog>}
         </div>
       </section>

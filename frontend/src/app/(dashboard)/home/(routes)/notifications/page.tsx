@@ -48,8 +48,9 @@ const NotificationPage = () => {
               </h2>
               <div>
                 <h1 className="text-2xl flex items-center gap-3">
-                  {n.type === "EnrollmentAcceptance" &&
-                    "Jelentkezésedet elfogadták"}
+                  {/* {n.type === "EnrollmentAcceptance" &&
+                    "Jelentkezésedet elfogadták"} */}
+                  {n.type}
                 </h1>
                 <span className="flex gap-2 text-lg text-gray-500">
                   <User className="text-primary"></User>
