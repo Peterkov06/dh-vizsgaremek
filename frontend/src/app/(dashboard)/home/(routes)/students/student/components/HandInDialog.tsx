@@ -26,10 +26,21 @@ import { format } from "date-fns";
 import { CalendarIcon, FilePlusCorner, Plus, Trash } from "lucide-react";
 import { useRef, useState } from "react";
 import DateTimePicker from "./DateTimePicker";
+import { useSearchParams } from "next/navigation";
+import fetchWithAuth from "@/lib/api-client";
+import { toast } from "sonner";
 
-const HandInDialog = () => {
+interface PostDialogProps {
+  onSuccess?: () => void;
+}
+
+const HandInDialog = ({ onSuccess }: PostDialogProps) => {
   const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const searchParams = useSearchParams();
+
+  const wallId = searchParams.get("wallId");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files ?? []);
@@ -38,11 +49,44 @@ const HandInDialog = () => {
   };
 
   const [postText, setPostText] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
 
   const [date, setDate] = useState<Date | undefined>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  async function HandlePost() {
+    const res = await fetchWithAuth("/api/tutoring/wall/post/handin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        wallId,
+        text: postText,
+        title,
+        dueDate: date?.toISOString(),
+        type: 1,
+        maxPoints: 1,
+      }),
+    });
+
+    if (res.ok) {
+      toast.success("Sikeres poszt létrehozzás!");
+      onSuccess?.();
+    } else {
+      const errorText = await res.text();
+      console.error("Error response:", errorText);
+      toast.error("Hiba történt - " + errorText);
+    }
+    setPostText("");
+    setTitle("");
+    setDate(undefined);
+    setIsOpen(false);
+  }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="flex gap-1 text-xl h-10">
           <Plus className="size-8"></Plus>Új beadandó létrehozása
@@ -57,6 +101,10 @@ const HandInDialog = () => {
         <div className="flex gap-10 px-6">
           <div className="flex flex-col gap-3">
             <Input
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
               className="border-2 border-secondary shadow-2xl text-xl!"
               placeholder="Beadandó címe..."
             ></Input>
@@ -124,7 +172,11 @@ const HandInDialog = () => {
           </div>
         </div>
         <DialogFooter className="flex justify-center! w-full items-center">
-          <Button className="text-2xl flex gap-1 h-12">
+          <Button
+            className="text-2xl flex gap-1 h-12"
+            disabled={postText === "" || title === "" || date === undefined}
+            onClick={HandlePost}
+          >
             <Plus className="size-8"></Plus>Beadandó létrehozzása
           </Button>
         </DialogFooter>

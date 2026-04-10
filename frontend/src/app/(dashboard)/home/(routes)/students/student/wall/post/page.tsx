@@ -28,6 +28,16 @@ const WallPost = () => {
       minute: "2-digit",
     });
   };
+  const formatDateComment = (dateString?: string) => {
+    if (!dateString) return;
+
+    return new Date(dateString).toLocaleDateString("hu-HU", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   const handleFetch = async () => {
     await fetchWithAuth(`/api/tutoring/${wallId}/${postId}`)
@@ -94,7 +104,7 @@ const WallPost = () => {
             {post && post?.comments.length < 1 && <h1>Nincs komment</h1>}
             {post?.comments.map((coms, i) => (
               <div
-                className="flex gap-2 items-start bg-background p-2 rounded-2xl mr-2"
+                className="relative flex gap-2 items-start bg-background p-2 rounded-2xl mr-2"
                 key={i}
               >
                 <Avatar className="size-10 mt-3">
@@ -102,6 +112,9 @@ const WallPost = () => {
                     src={coms.senderImg || "/defaults/default_avatar.jpg"}
                   ></AvatarImage>
                 </Avatar>
+                <div className="absolute top-0 right-3 text-sm">
+                  {formatDateComment(coms.sentTime)}
+                </div>
                 <div>
                   <h3>{coms.senderName}</h3>
                   <h1 className="text-lg">{coms.text}</h1>
