@@ -35,7 +35,7 @@ const StudentCourseCard = (props: { data: StudentsCourse }) => {
       <div className="bg-light-bg-gray flex-1 flex justify-between items-center px-5 rounded-r-2xl">
         <div className="flex flex-col gap-3">
           <h1 className="text-4xl text-primary font-bold">
-            {props.data.courseBaseId}
+            {props.data.courseName}
           </h1>
           <p className="flex gap-2 ml-10 text-lg">
             <User className="size-8 "></User>

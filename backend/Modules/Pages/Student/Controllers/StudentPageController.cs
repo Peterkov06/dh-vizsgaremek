@@ -48,7 +48,7 @@ namespace backend.Modules.Pages.Student.Controllers
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
-        [HttpGet("/walls/{wallId}")]
+        [HttpGet("walls/{wallId}")]
         public async Task<IActionResult> GetWallPageData(Guid wallId, CancellationToken ct)
         {
             var user = await _userManager.GetUserAsync(User);
