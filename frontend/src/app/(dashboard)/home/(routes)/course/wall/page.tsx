@@ -39,6 +39,7 @@ const CourseWall = () => {
       .then((data) => data.json())
       .then((res) => {
         setPage(res);
+        console.log(res.teacherId);
       });
     await fetchWithAuth(`/api/tutoring/${wallId}/posts`)
       .then((res) => res.json())
@@ -139,6 +140,8 @@ const CourseWall = () => {
           </div>
           {page && (
             <EnrollingClassDialog
+              token={2} //kell
+              teacherId={page.teacherId}
               course={page?.courseName}
             ></EnrollingClassDialog>
           )}
