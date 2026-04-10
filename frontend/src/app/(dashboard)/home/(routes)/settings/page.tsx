@@ -418,16 +418,14 @@ const Settings = () => {
         </div>
       </section>
 
-      <section className="mx-3 px-1 py-1 mt-4 row-start-9 col-span-3 row-span-3 border-4 border-light-bg-gray rounded-2xl flex flex-col items-center justify-between">
+      <section className="mx-3 px-1 py-1 mt-4 row-start-9 col-span-3 row-span-3 border-4 border-light-bg-gray rounded-2xl flex flex-col items-center ">
         <div className="flex gap-3 items-center bg-light-bg-gray rounded-xl py-2 px-5 w-full">
           <Lock className="text-primary size-8"></Lock>
           <h1 className="text-2xl font-bold">Fiókom</h1>
         </div>
-        <ResetPasswordDialog></ResetPasswordDialog>
-        <Button className="bg-linear-to-tl from-[#B02929] to-[#BD6060] text-xl w-fit h-10 mt-3 lg:mt-0 lg:h-12">
-          <Trash className="size-5 lg:size-6"></Trash>
-          Törlés
-        </Button>
+        <div className="flex items-center h-full">
+          <ResetPasswordDialog></ResetPasswordDialog>
+        </div>
       </section>
       <section className=" px-1 py-1 mt-4 row-start-8 col-span-3 row-span-4 border-4 border-light-bg-gray rounded-2xl flex flex-col">
         <div className="flex gap-3 items-center bg-light-bg-gray rounded-xl py-2 px-5 w-full">

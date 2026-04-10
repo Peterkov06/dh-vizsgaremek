@@ -85,6 +85,7 @@ export interface WallPostType {
   posterImg: string;
   title: string | null;
   text: string;
+  dueDate: string;
   handInId: string | null;
   createdAt: string;
   updatedAt: string | null;

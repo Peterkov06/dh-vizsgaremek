@@ -1,7 +1,7 @@
 "use client";
 
 import { CourseDetail } from "@/lib/models/CourseSearchModel";
-import { ChevronDown, FileText, Globe, Users } from "lucide-react";
+import { ChevronDown, Eye, FileText, Globe, Users } from "lucide-react";
 import {
   redirect,
   usePathname,
@@ -82,8 +82,8 @@ const CourseSidebar = () => {
               HandleNavigate("community");
             }}
           >
-            <Globe></Globe>
-            Közösség
+            <Eye></Eye>
+            Áttekintés
           </div>
         </div>
       </div>

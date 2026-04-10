@@ -30,7 +30,9 @@ const WallPost = (props: { post: WallPostType }) => {
     <div
       className="bg-light-bg-gray relative  rounded-2xl flex flex-col gap-4 p-6 hover:scale-103 transition-all duration-300"
       onClick={() => {
-        router.push(`wall/post?wallId=${wallId}&postId=${props.post.id}`);
+        router.push(
+          `wall/${props.post.handInId === null ? "post" : "handin"}?wallId=${wallId}&postId=${props.post.id}`,
+        );
       }}
     >
       <div className="flex items-center gap-2">

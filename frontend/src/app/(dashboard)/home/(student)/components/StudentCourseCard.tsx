@@ -48,7 +48,7 @@ const StudentCourseCard = (props: { data: StudentsCourse }) => {
           onClick={() => {
             // // router.push(`course/wall?wallId=${props.data.courseBaseId}`);
             router.push(
-              `course/wall?courseId=${props.data.courseBaseId}&wallId=c7dd8292-dcf0-4c55-bd34-210b849fa4f2`,
+              `course/wall?courseId=${props.data.courseBaseId}&wallId=${props.data.instanceId}`,
             );
           }}
         >

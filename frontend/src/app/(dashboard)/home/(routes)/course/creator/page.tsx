@@ -227,6 +227,7 @@ const CourseCreator = () => {
         courseDomainId: data.subject || null,
         courseLevelId: data.level || null,
         price: data.price,
+        lessonLenght: data.classLenght,
         firstConsultationFree: data.firstFree === "Ingyenes",
         priceCurrencyId: data.currency || null,
         status: 1,

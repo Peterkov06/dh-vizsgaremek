@@ -2,7 +2,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Course } from "@/lib/models/CourseSearchModel";
 import { MapPin, Pin, Star, User } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 const SearchCourseCard = (props: { card: Course }) => {
   const router = useRouter();
@@ -11,7 +11,7 @@ const SearchCourseCard = (props: { card: Course }) => {
     <section
       className="rounded-2xl shadow-2xl w-fit hover:scale-105 transition-all duration-300"
       onClick={() => {
-        router.push(`search/course?id=${props.card.id}`);
+        redirect(`/home/search/course?id=${props.card.id}`);
       }}
     >
       <div className="relative">

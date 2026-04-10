@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ActiveCourse, InactiveCourse } from "@/lib/models/homeModel";
-import { ChevronRightCircle } from "lucide-react";
+import { ChevronRightCircle, User } from "lucide-react";
 import Link from "next/link";
 
 const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
@@ -10,9 +10,9 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
     return "upcomingEvents" in course;
   };
   return (
-    <div className="rounded-lg w-fit text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
+    <div className="rounded-lg w-fit flex flex-col text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
       <img
-        className="rounded-t-lg h-[10em] w-[16em] lg:w-[22em]"
+        className="rounded-t-lg h-[8em] lg:h-[10em] w-[14em] lg:w-[22em]"
         src={
           props.course.imageUrl === ""
             ? "defaults/default_course.jpg"
@@ -20,19 +20,20 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
         }
         alt="course img"
       />
-      <div className="bg-linear-to-br from-primary to-secondary py-2 px-3 rounded-b-lg flex flex-col gap-2 h-full">
+      <div className="bg-linear-to-br flex-1 justify-between from-primary to-secondary py-3 lg:py-6 px-3 rounded-b-lg flex flex-col gap-2 w-[14em] lg:w-[22em]">
         <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-lg truncate max-w-[15em]">
-              {props.course.courseName}
-            </h1>
-            <h2 className="text-xl">{props.course.teacherName}</h2>
-          </div>
-          <div className="bg-background text-primary px-3  py-1 text-lg rounded-2xl">
-            {props.course.progress}%
+          <div className="flex flex-col gap-2 lg:gap-5">
+            <h1 className="lg:text-2xl">{props.course.courseName}</h1>
+            <h2 className="text-sm lg:text-xl flex lg:gap-2 items-center">
+              <User></User>
+              {props.course.teacherName}
+            </h2>
           </div>
         </div>
-        {isActive(props.course) && props.course.upcomingEvents.length > 0 && (
+        <div className="bg-background text-primary flex justify-center px-3 py-1 lg:text-2xl rounded-2xl">
+          {props.course.progress}%
+        </div>
+        {/* {isActive(props.course) && props.course.upcomingEvents.length > 0 && (
           <div className="flex flex-col gap-0">
             <div className="flex flex-col gap-0! bg-background text-primary rounded-lg px-3 py-1 shadow-2xl">
               <div className="flex justify-between items-end min-w-0">
@@ -81,12 +82,10 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
               </div>
             </div>
           </div>
-        )}
-        <div
-          className={`w-full hidden lg:flex justify-end ${!isActive(props.course) && "mt-[33%]"}`}
-        >
+        )} */}
+        <div className={`w-full flex justify-center lg:justify-end `}>
           <Link href={`/home/course?id=${props.course.courseId}`}>
-            <Button className="py-1 px-5 h-fit text-lg rounded-2xl">
+            <Button className="py-1 px-5 h-fit lg:text-lg rounded-2xl">
               <p>A kurzusra</p>
               <ChevronRightCircle size={30}></ChevronRightCircle>
             </Button>

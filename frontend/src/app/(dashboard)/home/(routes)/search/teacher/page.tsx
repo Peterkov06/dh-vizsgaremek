@@ -1,10 +1,12 @@
 "use client";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { CoursesPage } from "@/lib/models/CourseSearchModel";
 import { Teacher } from "@/lib/models/TeacherProfileModels";
 import { Captions, MapPin, Star, User, Users } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import SearchCourseCard from "../components/SearchCourseCard";
 
 const TeacherProfile = () => {
   const searchParams = useSearchParams();
@@ -12,12 +14,16 @@ const TeacherProfile = () => {
 
   const [teacher, setTeacher] = useState<Teacher>();
 
+  const [courses, setCourses] = useState<CoursesPage>();
   const getTeacherInfo = async () => {
     await fetch(`/api/identity/profile/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setTeacher(data);
       });
+    await fetch(`/api/courses?teacherId=${id}`)
+      .then((res) => res.json())
+      .then((res) => setCourses(res));
   };
 
   useEffect(() => {
@@ -26,7 +32,7 @@ const TeacherProfile = () => {
 
   return (
     <main className="flex gap-10">
-      <section className="flex-1">
+      <section className="flex-1 flex flex-col gap-16">
         <section className="flex items-end py-2 relative bg-linear-to-br from-primary to-secondary h-46 rounded-2xl w-full text-primary-foreground">
           <Avatar className="absolute size-30 -bottom-8 left-5 border-2 border-light-bg-gray">
             <AvatarImage
@@ -41,8 +47,13 @@ const TeacherProfile = () => {
             </p> */}
           </div>
         </section>
+        <section className="grid grid-cols-3 gap-3">
+          {courses?.courses.map((c, id) => (
+            <SearchCourseCard card={c} key={id}></SearchCourseCard>
+          ))}
+        </section>
       </section>
-      <section className="border-4 border-light-bg-gray rounded-2xl w-[35em] p-3 flex flex-col gap-5">
+      <section className="border-4 border-light-bg-gray rounded-2xl w-[35em] h-fit p-3 flex flex-col gap-5">
         <div>
           <div className="flex text-3xl font-bold text-primary items-center gap-3">
             <Captions className="size-10"></Captions>

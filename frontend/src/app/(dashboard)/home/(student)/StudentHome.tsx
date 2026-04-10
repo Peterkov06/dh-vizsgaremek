@@ -114,7 +114,7 @@ const StudentHome = (props: { user: User }) => {
               </Button>
             </div>
           </div>
-          <div className="hidden lg:flex gap-5 h-full">
+          <div className="hidden lg:flex gap-5 lg:h-full">
             {!isActive ? (
               dashboard?.attendedCourses.active.length > 0 ? (
                 dashboard?.attendedCourses.active.map((c) => (
@@ -168,7 +168,7 @@ const StudentHome = (props: { user: User }) => {
         <h1 className="absolute bg-background px-2 lg:px-5 py-1 lg:py-2 text-md lg:text-xl right-3 lg:right-10 top-[-20] font-bold rounded-2xl">
           Népszerű kurzusok
         </h1>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Button
             className={`h-2 lg:px-5 lg:h-6 rounded-lg border-2 hover:border-transparent!  hover:bg-foreground/80 hover:text-background border-foreground ${isActiveTeachers ? "bg-background  text-foreground" : "bg-foreground"}`}
             onClick={() => {
@@ -185,7 +185,7 @@ const StudentHome = (props: { user: User }) => {
           >
             Tanárok
           </Button>
-        </div>
+        </div> */}
         <Carousel
           className="w-full rounded-2xl"
           opts={{
@@ -200,7 +200,7 @@ const StudentHome = (props: { user: User }) => {
                   <div className="relative flex group">
                     <div className="relative rounded-2xl">
                       <img
-                        className="w-full h-[9em] rounded-2xl"
+                        className="w-full h-[7em] lg:h-[9em] rounded-2xl"
                         src={
                           pc.imageUrl === ""
                             ? "/defaults/default_course.jpg"
@@ -209,8 +209,10 @@ const StudentHome = (props: { user: User }) => {
                       ></img>
                       <div className="absolute rounded-2xl inset-0 bg-linear-to-b from-30% from-transparent to-[#E5E3E3] p-1" />
                     </div>
-                    <div className="absolute z-20 text-primary bottom-0  flex text-sm justify-between w-full px-3 transition-all duration-300 group-hover:-translate-y-28 group-hover:text-white">
-                      <p>{pc.courseName}</p>
+                    <div className="absolute z-20 text-primary bottom-3  flex text-sm justify-between w-full px-3 transition-all duration-300 group-hover:-translate-y-28 group-hover:text-white">
+                      <p className="truncate max-w-[7em] lg:max-w-[20em]">
+                        {pc.courseName}
+                      </p>
                       <p>{pc.lessonPrice.amount} FT</p>
                     </div>
                   </div>

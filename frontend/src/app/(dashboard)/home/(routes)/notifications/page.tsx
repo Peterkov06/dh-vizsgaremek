@@ -17,6 +17,7 @@ export interface SystemNotification {
 
 const NotificationPage = () => {
   const [notifications, setNotifications] = useState<SystemNotification[]>();
+  const [once, setOnce] = useState<boolean>(true);
 
   const HandleFetch = async () => {
     await fetchWithAuth("/api/communication/notifications")
@@ -28,8 +29,10 @@ const NotificationPage = () => {
   };
 
   useEffect(() => {
-    HandleFetch();
-    console.log(notifications);
+    if (once) {
+      HandleFetch();
+      setOnce(false);
+    }
   }, []);
 
   return (

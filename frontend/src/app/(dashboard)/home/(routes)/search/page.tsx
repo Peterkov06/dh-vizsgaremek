@@ -202,13 +202,11 @@ const CourseSearchPage = () => {
   const FilterToQuery = () => {
     const params = new URLSearchParams(searchParams);
 
-    if (selectedSubjects.length > 0)
-      params.set("domains", selectedSubjects.join(","));
-    else params.delete("domains");
+    params.delete("Domains");
+    selectedSubjects.forEach((s) => params.append("Domains", s));
 
-    if (selectedLanguages.length > 0)
-      params.set("languages", selectedLanguages.join(","));
-    else params.delete("languages");
+    params.delete("Languages");
+    selectedLanguages.forEach((l) => params.append("Languages", l));
 
     params.set("minPrice", priceRange[0].toString());
     params.set("maxPrice", priceRange[1].toString());

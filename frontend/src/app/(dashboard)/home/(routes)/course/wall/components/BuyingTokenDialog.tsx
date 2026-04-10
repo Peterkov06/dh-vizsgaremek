@@ -45,7 +45,8 @@ const BuyingTokenDialog = (props: { course?: string }) => {
           className="text-lg border-2 border-secondary flex gap-2 text-black"
           variant={"outline"}
         >
-          <ShoppingCart></ShoppingCart>Token vásárlása
+          <ShoppingCart></ShoppingCart>
+          <span className="lg:block hidden">Token vásárlása</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-none! w-[30%]">

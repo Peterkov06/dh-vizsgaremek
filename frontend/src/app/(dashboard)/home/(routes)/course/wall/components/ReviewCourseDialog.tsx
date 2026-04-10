@@ -66,7 +66,8 @@ const ReviewCourseDialog = () => {
           className="text-lg border-2 border-secondary flex gap-2 text-black"
           variant={"outline"}
         >
-          <Pen className="size-5"></Pen> Adj értékelést!
+          <Pen className="size-5"></Pen>{" "}
+          <span className="hidden lg:block">Adj értékelést!</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-none! w-[40%]">

@@ -39,29 +39,29 @@ const CourseWall = () => {
 
   return (
     <main>
-      <section className="flex items-end py-2 relative bg-linear-to-br from-primary to-secondary h-46 rounded-2xl w-full text-primary-foreground">
-        <Avatar className="absolute size-30 -bottom-8 left-5">
+      <section className="flex items-center lg:items-end py-2 relative bg-linear-to-br from-primary to-secondary h-30 lg:h-46 rounded-2xl w-full text-primary-foreground">
+        <Avatar className="lg:absolute size-12 lg:size-30 lg:-bottom-8 lg:left-5">
           <AvatarImage src={page?.teacher.avatarUrl}></AvatarImage>
         </Avatar>
-        <div className="flex flex-col gap-3 ml-40">
-          <h1 className="text-3xl font-bold">{page?.title}</h1>
-          <p className="flex gap-2 ml-10 text-lg">
-            <User className="size-8 "></User>
+        <div className="flex flex-col lg:gap-3 lg:ml-40">
+          <h1 className="text-lg lg:text-3xl font-bold">{page?.title}</h1>
+          <p className="flex gap-2 lg:ml-10 lg:text-lg">
+            <User className="lg:size-8"></User>
             {page?.teacher.name}
           </p>
         </div>
-        <div className="absolute right-5 bottom-5 flex gap-3">
+        <div className="absolute bottom-5 right-0 lg:right-5 lg:bottom-5 flex-col lg:flex-row flex gap-3">
           <ReviewCourseDialog></ReviewCourseDialog>
           {page && <BuyingTokenDialog course={page.title}></BuyingTokenDialog>}
         </div>
       </section>
-      <section className="flex mt-10 gap-7">
+      <section className="lg:flex-row flex-col-reverse flex mt-10 gap-7">
         <section className="flex flex-1  flex-col gap-5">
           {posts?.map((p) => (
             <WallPost post={p} key={p.id}></WallPost>
           ))}
         </section>
-        <section className="bg-linear-to-br sticky top-2 from-primary w-[30em] to-secondary rounded-2xl flex flex-col px-3 pt-10 pb-5 gap-5 h-fit">
+        <section className="bg-linear-to-br lg:sticky top-2 from-primary lg:w-[30em] to-secondary rounded-2xl flex flex-col px-3 pt-10 pb-5 gap-5 h-fit">
           <div className="flex flex-col">
             <h1 className="text-2xl text-primary-foreground">
               Közelgő beadandók
