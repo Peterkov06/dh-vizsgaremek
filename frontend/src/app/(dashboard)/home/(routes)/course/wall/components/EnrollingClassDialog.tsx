@@ -24,7 +24,9 @@ import {
 } from "@/components/ui/select";
 import fetchWithAuth from "@/lib/api-client";
 import { CirclePlus, Save, ShoppingBag } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export interface TimeSlot {
   start: string;
@@ -43,8 +45,6 @@ const EnrollingClassDialog = (props: {
   const [courses, setCourses] = useState<string[]>(["Kurzus neve"]);
   const [selectedCourse, setSelectedCourse] = useState<string>("");
 
-  const [usedTokenCount, setUsedTokenCount] = useState<number>(0);
-
   const [classLenght, setClassLenght] = useState<number>(0);
   const [classLenghtInput, setClassLenghtInput] = useState<string>("");
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -54,6 +54,10 @@ const EnrollingClassDialog = (props: {
 
   const [availableDays, setAvailableDays] = useState<string[]>([]);
 
+  const searchParams = useSearchParams();
+  const wallId = searchParams.get("wallId");
+  const courseId = searchParams.get("courseId");
+
   const formatDate = (dateString?: string) => {
     if (!dateString) return;
     const [datePart, timePart] = dateString.split("T");
@@ -61,6 +65,13 @@ const EnrollingClassDialog = (props: {
     const time = timePart.slice(0, 5);
     const date = new Date(year, month - 1, day);
     return `${date.toLocaleDateString("hu-HU", { month: "short", day: "numeric" })} ${time}`;
+  };
+
+  const formatDateTime = (dateString?: string) => {
+    if (!dateString) return;
+    const [datePart, timePart] = dateString.split("T");
+    const time = timePart.slice(0, 5);
+    return `${time}`;
   };
 
   const formatDateMin = (dateString?: string) => {
@@ -109,8 +120,50 @@ const EnrollingClassDialog = (props: {
 
   const formatTime = (isoString: string) => isoString.split("T")[1].slice(0, 5);
 
+  const addHours = (isoString: string, hours: number) => {
+    const [datePart, timePart] = isoString.split("T");
+    const [year, month, day] = datePart.split("-").map(Number);
+    const [h, m] = timePart.slice(0, 5).split(":").map(Number);
+
+    const date = new Date(year, month - 1, day, h + hours, m);
+
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}:00Z`;
+  };
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  async function HandleCreate() {
+    const res = await fetchWithAuth("/api/scheduling/book-event", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        instanceId: wallId,
+        courseBaseId: courseId,
+        timeblock: {
+          start: available,
+          end: addHours(available || "", classLenght),
+        },
+        type: 1,
+      }),
+    });
+    if (res.ok) toast.success("Sikeres időpont foglalás");
+    else toast.error("Hiba történt");
+
+    console.log(res);
+
+    setAvailableDays([]);
+    setAvailableTimes([]);
+    setAvailable(undefined);
+    setClassLenghtInput("");
+    setClassLenght(0);
+    setIsOpen(false);
+  }
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
           className="text-xl mt-3 flex gap-2 h-10 border-2 border-secondary"
@@ -183,7 +236,11 @@ const EnrollingClassDialog = (props: {
               <h1>Válasszd ki az óra hosszát!</h1>
             ) : date ? (
               available ? (
-                <h1> {formatDate(available)}</h1>
+                <h1>
+                  {" "}
+                  {formatDate(available)} -{" "}
+                  {formatDateTime(addHours(available, classLenght))}
+                </h1>
               ) : (
                 <h1>
                   {formatDateMin(date.toISOString())} Válassz egy időpontot!
@@ -243,6 +300,7 @@ const EnrollingClassDialog = (props: {
             disabled={
               available === undefined || classLenght === 0 || date === undefined
             }
+            onClick={HandleCreate}
           >
             <Save className="size-7"></Save> Mentés
           </Button>
