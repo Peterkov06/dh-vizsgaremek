@@ -25,9 +25,6 @@ namespace backend.Modules.Tutoring.Services
         {
             var post = await _db.TutoringWallPosts
                 .Where(x => x.WallId == wallId && x.Id == postId)
-                .Include(x => x.Attachments).ThenInclude(x => x.Content)
-                .Include(x => x.TutoringWall).ThenInclude(x => x.CourseBase).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture)
-                .Include(x => x.Comments)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new TutoringWallPostDTO
                 {
@@ -36,6 +33,8 @@ namespace backend.Modules.Tutoring.Services
                     PosterId = x.TutoringWall.CourseBase.TeacherId ?? "",
                     PosterImg = x.TutoringWall.CourseBase.Teacher.User.ProfilePicture.FileName ?? "",
                     Text = x.Text,
+                    Title = x.HandIn.Title ?? null,
+                    DueDate = x.HandIn.DueDate ?? null,
                     HandInId = x.HandInId,
                     CreatedAt = x.CreatedAt,
                     UpdatedAt = x.UpdatedAt,
@@ -60,7 +59,7 @@ namespace backend.Modules.Tutoring.Services
         public async Task<ServiceResult<List<TutoringWallPostDTO>>> GetWallPosts(Guid wallId, CancellationToken ct)
         {
             var posts = await _db.TutoringWallPosts
-                .Where(x => x.WallId == wallId).Include(x => x.Attachments).ThenInclude(x => x.Content).Include(x => x.TutoringWall).ThenInclude(x => x.CourseBase).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Include(x => x.Comments).Include(x => x.HandIn)
+                .Where(x => x.WallId == wallId)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new TutoringWallPostDTO
                 {

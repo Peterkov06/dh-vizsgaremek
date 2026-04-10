@@ -9,6 +9,7 @@
         public string? Title { get; set; } = null; 
         public string? Text { get; set; } = null;
         public Guid? HandInId { get; set; } = null;
+        public DateTime? DueDate { get; set; } = null;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public List<string> AttachmentURLs { get; set; } = [];
