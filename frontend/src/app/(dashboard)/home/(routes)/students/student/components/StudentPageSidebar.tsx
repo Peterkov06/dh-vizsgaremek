@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   BrickWall,
@@ -11,13 +17,6 @@ import {
 import { redirect, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-type StudentType = {
-  id: string;
-  name: string;
-  nickname: string;
-  avatarUrl: string;
-};
-
 export interface StudentProfileType {
   id: string;
   fullName: string;
@@ -26,6 +25,15 @@ export interface StudentProfileType {
   profilePictureUrl: string;
   type: "Student" | "Teacher" | "Admin" | string;
   age: number;
+}
+
+export interface CourseWallLink {
+  courseName: string;
+  instanceId: string;
+}
+
+export interface WallListData {
+  walls: CourseWallLink[];
 }
 
 const StudentPageSidebar = () => {
@@ -40,6 +48,7 @@ const StudentPageSidebar = () => {
   const [isOpenFilter, setIsOpenFilter] = useState(false);
 
   const [student, setStudent] = useState<StudentProfileType>();
+  const [studentWalls, setStudentWalls] = useState<WallListData>();
 
   //   const [course, setCourse] = useState<CourseDetail>();
 
@@ -51,15 +60,24 @@ const StudentPageSidebar = () => {
     fetch(`/api/identity/profile/${studentId}`)
       .then((res) => res.json())
       .then((res) => setStudent(res));
+
+    fetch(`/api/tutoring/sidebar/${studentId}/walls`)
+      .then((res) => res.json())
+      .then((data) => {
+        setStudentWalls(data);
+      });
     setStudentIdEternal(studentId || "");
     setChatIdEternal(chatId || "");
     setWallIdEternal(wallId || "");
   }, []);
 
-  const HandleNavigate = (name: string) => {
-    if (!path.includes(name)) {
+  const HandleNavigate = (name: string, wallId?: string) => {
+    if (!path.includes(name) || wallId) {
+      if (wallId) {
+        setWallIdEternal(wallId);
+      }
       redirect(
-        `/home/students/student/${name}?studentId=${studentIdEternal}&wallId=${wallIdEternal}&chatId=${chatIdEternal}`,
+        `/home/students/student/${name}?studentId=${studentIdEternal}&wallId=${wallId || wallIdEternal}&chatId=${chatIdEternal}`,
       );
     }
   };
@@ -116,15 +134,28 @@ const StudentPageSidebar = () => {
             Üzenetek
           </div>
 
-          <div
-            className={`flex gap-2 bg-light-bg-gray px-2 py-1 cursor-pointer rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path.includes("wall") && "bg-primary text-background"}`}
-            onClick={() => {
-              HandleNavigate("wall");
-            }}
-          >
-            <BrickWall></BrickWall>
-            Kurzus fal
-          </div>
+          <Accordion type="single" collapsible defaultValue="wall">
+            <AccordionItem value="wall">
+              <AccordionTrigger className=" gap-2 items-center font-normal  bg-light-bg-gray text-base px-2 py-1">
+                <div className="flex gap-2">
+                  <BrickWall></BrickWall> Kurzus falak
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="flex flex-col gap-3 pt-2">
+                {studentWalls?.walls.map((w) => (
+                  <div
+                    className={`flex gap-2 bg-light-bg-gray px-2 py-1 cursor-pointer rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path.includes("wall") && wallId === w.instanceId && "bg-primary text-background"}`}
+                    onClick={() => {
+                      HandleNavigate("wall", w.instanceId);
+                    }}
+                    key={w.instanceId}
+                  >
+                    {w.courseName}
+                  </div>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
     </div>
