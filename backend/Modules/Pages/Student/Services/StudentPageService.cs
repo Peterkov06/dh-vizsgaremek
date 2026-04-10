@@ -27,7 +27,7 @@ namespace backend.Modules.Pages.Student.Services
                 .Include(x => x.TutoringWall).ThenInclude(x => x.CourseBase).Include(x => x.Enrollment)
                 .Where(x => (x.Enrollment != null && x.Enrollment.AttendantId == userId) || (x.TutoringWall != null && x.TutoringWall.StudentId == userId)).Where(x => x.StartTime > DateTime.UtcNow)
                 .OrderBy(x => x.StartTime).Take(5)
-                .Include(x => x.PathCourse).ToListAsync(ct);
+                .Include(x => x.CourseBase).ToListAsync(ct);
             var notifications = await _db.Notifications
                 .Where(x => x.RecipientId == userId && !x.IsRead)
                 .OrderByDescending(x => x.CreatedAt).ToListAsync(ct);
@@ -55,7 +55,7 @@ namespace backend.Modules.Pages.Student.Services
                 CourseType = "path",
                 Progress = CalculateCourseProgress(x),
                 ImageUrl = x.Course?.BannerImageId.ToString() ?? "",
-                UpcomingEvents = [.. upcomingEvents.Where(y => y.PathCourseId == x.CourseId).Select(MapToCourseCardUpcomingEventDTO)]
+                UpcomingEvents = [.. upcomingEvents.Where(y => y.CourseBaseId == x.CourseId).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
 
             var inactiveWalls = walls.Where(x => x.Status != EnrollmentStatus.Active).Select(x => new AttendedCourseDTO
@@ -94,7 +94,7 @@ namespace backend.Modules.Pages.Student.Services
                 Notifications = new()
                 {
                     UnreadNotificationNumber = notifications.Count,
-                    LastUnread = lastNotification is not null ? new LastUnreadNotificationDTO { FirstText = lastNotification.Type.ToString(), NotificationId = lastNotification.Id, ReferenceId = lastNotification.ReferenceId, SecondText = "" } : null,
+                    LastUnread = lastNotification is not null ? new LastUnreadNotificationDTO { FirstText = lastNotification.Type.ToString(), NotificationId = lastNotification.Id, ReferenceId = lastNotification.ReferenceId, SecondText = lastNotification.ReferenceText } : null,
                 },
                 PopularCourses = popularCourses.Select(x => new PopularCourseDTO
                 {
@@ -114,8 +114,9 @@ namespace backend.Modules.Pages.Student.Services
                 {
                     EventId = x.Id,
                     Title = x.Title,
-                    CourseName = x.PathCourse?.CourseName ?? x.TutoringWall?.CourseBase?.CourseName ?? "",
-                    TeacherName = x.PathCourse?.Teacher?.User?.FullName ?? x.TutoringWall?.CourseBase?.Teacher?.User?.FullName ?? "",
+                    CourseName = x.CourseBase?.CourseName ?? x.TutoringWall?.CourseBase?.CourseName ?? "",
+                    ParticipantName = x.CourseBase?.Teacher?.User?.FullName ?? x.TutoringWall?.CourseBase?.Teacher?.User?.FullName ?? "",
+                    ParticipantId = x.OrganiserId,
                     StartTime = TimeOnly.FromDateTime(x.StartTime),
                     StartDate = DateOnly.FromDateTime(x.StartTime),
                     EventType = x.Type,
@@ -128,7 +129,6 @@ namespace backend.Modules.Pages.Student.Services
                         EventType.Deadline => x.TutoringWallId ?? Guid.Empty,
                         _ => Guid.Empty,
                     },
-                    TeacherId = x.OrganiserId
                 }).ToList()
             });
         }

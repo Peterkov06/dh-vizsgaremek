@@ -10,6 +10,7 @@ namespace backend.Modules.Engagement.Models
         public string? Message { get; set; } = null;
         public NotificationType Type { get; set; }
         public Guid? ReferenceId { get; set; } = null;
+        public string? ReferenceText { get; set; } = null;
         public bool IsRead { get; set; }
         public DateTime? ReadAt { get; set; }
 

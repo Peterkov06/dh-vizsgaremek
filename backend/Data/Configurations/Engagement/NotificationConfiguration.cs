@@ -16,6 +16,7 @@ namespace backend.Data.Configurations.Engagement
             builder.Property(x => x.ReferenceId).IsRequired();
             builder.Property(x => x.IsRead).IsRequired();
             builder.Property(x => x.ReadAt).IsRequired(false);
+            builder.Property(x => x.ReferenceText).IsRequired(false);
 
             builder.HasOne(x => x.RecipientUser).WithMany().HasForeignKey(x => x.RecipientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(x => x.SenderUser).WithMany().HasForeignKey(x => x.SenderId).IsRequired(false).OnDelete(DeleteBehavior.SetNull);

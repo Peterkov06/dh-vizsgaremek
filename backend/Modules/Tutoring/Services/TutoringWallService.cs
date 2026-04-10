@@ -97,9 +97,9 @@ namespace backend.Modules.Tutoring.Services
             };
             _db.TutoringWallPosts.Add(newPost);
 
-            var studentId = await _db.TutoringWalls.Where(x => x.Id == postDTO.WallId).Select(x => x.StudentId).FirstAsync(ct);
+            var tutoringWall = await _db.TutoringWalls.Where(x => x.Id == postDTO.WallId).Include(x => x.CourseBase).AsNoTracking().FirstAsync(ct);
 
-            await _notificationService.NotifyAsync(studentId, NotificationType.WallPost, referenceId: postDTO.WallId, senderId: posterId);
+            await _notificationService.NotifyAsync(tutoringWall.StudentId, NotificationType.WallPost, postDTO.WallId, posterId, tutoringWall.CourseBase.CourseName);
 
             await _db.SaveChangesAsync(ct);
 
@@ -127,9 +127,9 @@ namespace backend.Modules.Tutoring.Services
             };
             _db.TutoringWallPosts.Add(newPost);
 
-            var studentId = await _db.TutoringWalls.Where(x => x.Id == handinDTO.WallId).Select(x => x.StudentId).FirstAsync(ct);
+            var tutoringWall = await _db.TutoringWalls.Where(x => x.Id == handinDTO.WallId).Include(x => x.CourseBase).AsNoTracking().FirstAsync(ct);
 
-            await _notificationService.NotifyAsync(studentId, NotificationType.NewHandIn, referenceId: handinDTO.WallId, senderId: posterId);
+            await _notificationService.NotifyAsync(tutoringWall.StudentId, NotificationType.WallPost, handinDTO.WallId, posterId, tutoringWall.CourseBase.CourseName);
 
             await _db.SaveChangesAsync(ct);
 
@@ -149,7 +149,8 @@ namespace backend.Modules.Tutoring.Services
             _db.WallPostComments.Add(newComment);
 
             var recipientId = await _db.TutoringWalls.Where(x => x.Id == commentCreationDTO.WallId).Select(x => x.StudentId == senderId ? x.TeacherId : x.StudentId).FirstAsync(ct);
-            await _notificationService.NotifyAsync(recipientId, NotificationType.WallPost, referenceId: commentCreationDTO.WallId, senderId: senderId);
+            var courseName = await _db.TutoringWalls.Where(x => x.Id == commentCreationDTO.WallId).Select(x => x.CourseBase.CourseName).FirstAsync(ct);
+            await _notificationService.NotifyAsync(recipientId, NotificationType.WallPost, commentCreationDTO.WallId, senderId, courseName);
 
             await _db.SaveChangesAsync(ct);
 

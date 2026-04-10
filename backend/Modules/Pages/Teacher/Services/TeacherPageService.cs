@@ -174,11 +174,12 @@ namespace backend.Modules.Pages.Teacher.Services
                     StartTime = TimeOnly.FromDateTime(e.StartTime),
                     StartDate = DateOnly.FromDateTime(e.StartTime),
                     EventType = e.Type,
-                    CourseName = e.PathCourse != null ? e.PathCourse.CourseName
-                                : e.TutoringWall != null ? e.TutoringWall.CourseBase.CourseName
+                    CourseName = e.CourseBase.CourseName ?? string.Empty,
+                    ParticipantName = e.Enrollment != null ? e.Enrollment.Attendant.User.FullName
+                                : e.TutoringWall != null ? e.TutoringWall.Student.User.FullName
                                 : string.Empty,
-                    TeacherName = e.PathCourse != null ? e.PathCourse.Teacher.User.FullName
-                                : e.TutoringWall != null ? e.TutoringWall.CourseBase.Teacher.User.FullName
+                    ParticipantId = e.Enrollment != null ? e.Enrollment.AttendantId
+                                : e.TutoringWall != null ? e.TutoringWall.StudentId
                                 : string.Empty,
                     EndTime = TimeOnly.FromDateTime(e.EndTime),
                     InstanceId =
@@ -186,7 +187,6 @@ namespace backend.Modules.Pages.Teacher.Services
                         e.Type == EventType.Consultation ? (e.PathEnrollmentId ?? Guid.Empty) :
                         e.Type == EventType.Deadline ? (e.TutoringWallId ?? Guid.Empty) : 
                         Guid.Empty,
-                    TeacherId = e.OrganiserId
                 })
                 .AsNoTracking()
                 .ToListAsync(ct);
@@ -200,7 +200,9 @@ namespace backend.Modules.Pages.Teacher.Services
                     Message = n.Message,
                     Type = n.Type,
                     CreatedAt = n.CreatedAt,
-                    ReferenceId = n.ReferenceId
+                    ReferenceId = n.ReferenceId,
+                    Sender = n.SenderUser.FullName,
+                    ReferenceText = n.ReferenceText
                 })
                 .AsNoTracking()
                 .ToListAsync(ct);

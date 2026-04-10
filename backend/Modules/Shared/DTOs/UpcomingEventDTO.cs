@@ -11,8 +11,8 @@ namespace backend.Modules.Shared.DTOs
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
         public string CourseName { get; set; } = string.Empty;
-        public string TeacherName { get; set; } = string.Empty;
-        public required string TeacherId { get; set; }
+        public string ParticipantName { get; set; } = string.Empty;
+        public required string ParticipantId { get; set; }
         public EventType EventType { get; set; } 
         public string Description { get; set; } = string.Empty;
     }

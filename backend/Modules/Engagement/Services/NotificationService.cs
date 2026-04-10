@@ -17,9 +17,9 @@ namespace backend.Modules.Engagement.Services
             _db = db;
         }
 
-        public async Task NotifyAsync(string recipientId, NotificationType type, string? message = null, Guid? referenceId = null, string? senderId = null)
+        public async Task NotifyAsync(string recipientId, NotificationType type, Guid? referenceId = null, string? senderId = null, string? referenceText = null, string? message = null)
         {
-            _db.Notifications.Add(new Notification {  RecipientId = recipientId, Type = type, Message = message, ReferenceId = referenceId, IsRead = false, ReadAt = null, SenderId = senderId});
+            _db.Notifications.Add(new Notification {  RecipientId = recipientId, Type = type, Message = message, ReferenceId = referenceId, IsRead = false, ReadAt = null, SenderId = senderId, ReferenceText = referenceText });
         }
 
         public async Task<ServiceResult<List<NotificationDTO>>> GetUserNotifications(string userId, CancellationToken ct = default)
@@ -63,6 +63,7 @@ namespace backend.Modules.Engagement.Services
                 ReferenceId = notification.ReferenceId,
                 Sender = notification.SenderUser.FullName ?? "[Deleted]",
                 Type = notification.Type,
+                ReferenceText = notification.ReferenceText ?? ""
             };
     }
 }

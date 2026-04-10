@@ -49,7 +49,7 @@ namespace backend.Modules.Engagement.Controllers
             }
 
             var res = await _notificationService.GetUserNotifications(user.Id, ct);
-            if (res.Succeded && res.Data.Any())
+            if (res.Succeded && res.Data.Count > 0)
             {
                 var unreadIDs = res.Data.Where(x => x.IsRead == false).Select(x => x.Id).ToList();
                 await _notificationService.SetNotificationsToRead(unreadIDs, ct);

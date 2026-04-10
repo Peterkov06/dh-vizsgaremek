@@ -88,6 +88,20 @@ namespace backend.Modules.Scheduling.Controllers
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
+        [HttpGet("get-events")]
+        public async Task<IActionResult> GetWeekEvents([FromQuery] DateTime searchDate, [FromQuery] SearchTimeLength searchLength, CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _schedulingService.GetEvents(user.Id, searchDate, searchLength, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
         [HttpDelete("week-free-timeblocks/{blockId}")]
         public async Task<IActionResult> DeleteTimeblock(Guid blockId, CancellationToken ct)
         {

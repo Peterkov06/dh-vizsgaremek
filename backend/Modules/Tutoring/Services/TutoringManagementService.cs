@@ -36,19 +36,19 @@ namespace backend.Modules.Tutoring.Services
                 return ServiceResult<TutoringWallEnrollmentDTO>.Failure("The course is not Tutoring");
             }
 
-            var teacherId = _db.CourseBases.Where(x => x.Id == enrollmentDTO.CourseId).Select(x => x.TeacherId).FirstOrDefault();
+            var course = _db.CourseBases.Where(x => x.Id == enrollmentDTO.CourseId).AsNoTracking().FirstOrDefault();
 
 
-            if (teacherId is null)
+            if (course is null)
             {
                 return ServiceResult<TutoringWallEnrollmentDTO>.NotFound("Course does not exist");
             }
 
-            var newEnrollment = new TutoringWall { CourseId =  enrollmentDTO.CourseId, Status = enrollmentDTO.Status, StudentId = userId, TokenCount = enrollmentDTO.TokenCount, TeacherId = teacherId };
+            var newEnrollment = new TutoringWall { CourseId =  enrollmentDTO.CourseId, Status = enrollmentDTO.Status, StudentId = userId, TokenCount = enrollmentDTO.TokenCount, TeacherId = course.TeacherId };
 
             _db.TutoringWalls.Add(newEnrollment);
 
-            await _notificationService.NotifyAsync(teacherId, NotificationType.PendingEnrollment, referenceId: enrollmentDTO.CourseId, senderId: userId);
+            await _notificationService.NotifyAsync(course.TeacherId, NotificationType.PendingEnrollment, enrollmentDTO.CourseId, userId,course.CourseName);
 
             await _db.SaveChangesAsync(ct);
             enrollmentDTO.Id = newEnrollment.Id;
@@ -77,7 +77,7 @@ namespace backend.Modules.Tutoring.Services
 
             _db.TutoringWalls.Update(tutoringWall);
 
-            await _notificationService.NotifyAsync(tutoringWall.StudentId, responseDTO.Accepted ? NotificationType.EnrollmentAcceptance : NotificationType.EnrollmentRefusal, referenceId: tutoringWall.Id, senderId: teacherId);
+            await _notificationService.NotifyAsync(tutoringWall.StudentId, responseDTO.Accepted ? NotificationType.EnrollmentAcceptance : NotificationType.EnrollmentRefusal, tutoringWall.Id, teacherId, tutoringWall.CourseBase.CourseName);
 
             await _notificationService.ClearReactedNotification(tutoringWall.StudentId, teacherId, NotificationType.PendingEnrollment, ct);
 

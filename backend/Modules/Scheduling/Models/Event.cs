@@ -13,14 +13,14 @@ namespace backend.Modules.Scheduling.Models
         public required EventType Type { get; set; }
         public required DateTime StartTime { get; set; }
         public required DateTime EndTime { get; set; }
-        public Guid? PathCourseId { get; set; } = null;
+        public required Guid CourseBaseId { get; set; }
         public Guid? TutoringWallId { get; set; } = null;
         public Guid? PathEnrollmentId { get; set; } = null;
         public string? Title { get; set; } = null;
         public string? Description { get; set; } = null;
 
         public Teacher? Organiser { get; set; }
-        public CourseBaseModel? PathCourse { get; set; }
+        public CourseBaseModel? CourseBase { get; set; }
         public TutoringWall? TutoringWall { get; set; }
         public PathEnrollment? Enrollment { get; set; }
     }

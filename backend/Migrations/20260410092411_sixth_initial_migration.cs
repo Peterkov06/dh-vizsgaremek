@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class fifth_initial_migration : Migration
+    public partial class sixth_initial_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -409,9 +409,10 @@ namespace backend.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     RecipientId = table.Column<string>(type: "text", nullable: false),
                     SenderId = table.Column<string>(type: "text", nullable: true),
-                    Message = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    Message = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     ReferenceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ReferenceText = table.Column<string>(type: "text", nullable: true),
                     IsRead = table.Column<bool>(type: "boolean", nullable: false),
                     ReadAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -959,8 +960,8 @@ namespace backend.Migrations
                     OrganiserId = table.Column<string>(type: "text", nullable: false),
                     Type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    PathCourseId = table.Column<Guid>(type: "uuid", nullable: true),
+                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CourseBaseId = table.Column<Guid>(type: "uuid", nullable: false),
                     TutoringWallId = table.Column<Guid>(type: "uuid", nullable: true),
                     PathEnrollmentId = table.Column<Guid>(type: "uuid", nullable: true),
                     Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
@@ -971,10 +972,10 @@ namespace backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_events", x => x.Id);
-                    table.CheckConstraint("CK_Events_SingleContext", "((\"PathCourseId\" IS NOT NULL)::int + (\"TutoringWallId\" IS NOT NULL)::int + (\"PathEnrollmentId\" IS NOT NULL)::int) = 1");
+                    table.CheckConstraint("CK_Events_SingleContext", "(\r\n                        \"CourseBaseId\" IS NOT NULL AND \r\n                        (\r\n                            (\"PathEnrollmentId\" IS NOT NULL AND \"TutoringWallId\" IS NULL) OR\r\n                            (\"TutoringWallId\" IS NOT NULL AND \"PathEnrollmentId\" IS NULL) OR\r\n                            (\"PathEnrollmentId\" IS NULL AND \"TutoringWallId\" IS NULL)\r\n                        )\r\n                    )");
                     table.ForeignKey(
-                        name: "FK_events_courses_base_PathCourseId",
-                        column: x => x.PathCourseId,
+                        name: "FK_events_courses_base_CourseBaseId",
+                        column: x => x.CourseBaseId,
                         principalTable: "courses_base",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
@@ -1519,14 +1520,19 @@ namespace backend.Migrations
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_events_OrganiserId",
+                name: "IX_events_CourseBaseId",
                 table: "events",
-                column: "OrganiserId");
+                column: "CourseBaseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_events_PathCourseId",
+                name: "IX_Events_OrganiserId_EndTime",
                 table: "events",
-                column: "PathCourseId");
+                columns: new[] { "OrganiserId", "EndTime" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_OrganiserId_StartTime",
+                table: "events",
+                columns: new[] { "OrganiserId", "StartTime" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_events_PathEnrollmentId",
@@ -1672,9 +1678,9 @@ namespace backend.Migrations
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_teacher_timeblocks_TeacherId",
+                name: "IX_TeacherTimeblocks_TeacherId_Start_End",
                 table: "teacher_timeblocks",
-                column: "TeacherId");
+                columns: new[] { "TeacherId", "Start", "End" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_test_module_answers_ModuleId",

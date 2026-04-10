@@ -754,6 +754,9 @@ namespace backend.Migrations
                     b.Property<Guid>("ReferenceId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("ReferenceText")
+                        .HasColumnType("text");
+
                     b.Property<string>("SenderId")
                         .HasColumnType("text");
 
@@ -1379,6 +1382,9 @@ namespace backend.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CourseBaseId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -1391,9 +1397,6 @@ namespace backend.Migrations
                     b.Property<string>("OrganiserId")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid?>("PathCourseId")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("PathEnrollmentId")
                         .HasColumnType("uuid");
@@ -1418,7 +1421,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PathCourseId");
+                    b.HasIndex("CourseBaseId");
 
                     b.HasIndex("PathEnrollmentId");
 
@@ -1432,7 +1435,7 @@ namespace backend.Migrations
 
                     b.ToTable("events", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Events_SingleContext", "((\"PathCourseId\" IS NOT NULL)::int + (\"TutoringWallId\" IS NOT NULL)::int) = 1");
+                            t.HasCheckConstraint("CK_Events_SingleContext", "(\r\n                        \"CourseBaseId\" IS NOT NULL AND \r\n                        (\r\n                            (\"PathEnrollmentId\" IS NOT NULL AND \"TutoringWallId\" IS NULL) OR\r\n                            (\"TutoringWallId\" IS NOT NULL AND \"PathEnrollmentId\" IS NULL) OR\r\n                            (\"PathEnrollmentId\" IS NULL AND \"TutoringWallId\" IS NULL)\r\n                        )\r\n                    )");
                         });
                 });
 
@@ -2235,16 +2238,17 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Modules.Scheduling.Models.Event", b =>
                 {
+                    b.HasOne("backend.Modules.CoursesBase.Models.CourseBaseModel", "CourseBase")
+                        .WithMany()
+                        .HasForeignKey("CourseBaseId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
                     b.HasOne("backend.Modules.Identity.Models.Teacher", "Organiser")
                         .WithMany()
                         .HasForeignKey("OrganiserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("backend.Modules.CoursesBase.Models.CourseBaseModel", "PathCourse")
-                        .WithMany()
-                        .HasForeignKey("PathCourseId")
-                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("backend.Modules.Progression.Models.PathEnrollment", "Enrollment")
                         .WithMany()
@@ -2256,11 +2260,11 @@ namespace backend.Migrations
                         .HasForeignKey("TutoringWallId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.Navigation("CourseBase");
+
                     b.Navigation("Enrollment");
 
                     b.Navigation("Organiser");
-
-                    b.Navigation("PathCourse");
 
                     b.Navigation("TutoringWall");
                 });

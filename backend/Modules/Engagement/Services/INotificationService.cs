@@ -6,7 +6,7 @@ namespace backend.Modules.Engagement.Services
 {
     public interface INotificationService
     {
-        Task NotifyAsync(string recipientId, NotificationType type, string? message = null, Guid? referenceId = null, string? senderId = null);
+        Task NotifyAsync(string recipientId, NotificationType type, Guid? referenceId = null, string? senderId = null, string? referenceText = null, string? message = null);
         Task<ServiceResult<List<NotificationDTO>>> GetUserNotifications(string userId, CancellationToken ct);
         Task SetNotificationsToRead(List<Guid> notificationIds, CancellationToken ct);
         Task ClearReactedNotification(string senderId, string recipientId, NotificationType type, CancellationToken ct);
