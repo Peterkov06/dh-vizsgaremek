@@ -164,9 +164,64 @@ namespace backend.Modules.Pages.Student.Services
             return ServiceResult<List<StudentMyCourseDTO>>.Success(courses);
         }
 
-        private static CourseCardUprocmingEventsDTO MapToCourseCardUpcomingEventDTO(Event e)
+        public async Task<ServiceResult<StudentTutoringWallDTO>> GetTutoringWallData(Guid wallId, string userId, CancellationToken ct = default)
         {
-            return new CourseCardUprocmingEventsDTO
+            var walldata = await _db.TutoringWalls.Where(x => x.Id == wallId)
+                .Select(x => new {
+                    teacherId = x.TeacherId,
+                    teacherName = x.Teacher.User.FullName,
+                    courseName = x.CourseBase.CourseName,
+                    courseBaseId = x.CourseId,
+                    bannerURL = x.CourseBase.BannerImage.StoragePath ?? "",
+                    iconURL = x.CourseBase.IconImage.StoragePath ?? "",
+                })
+                .SingleOrDefaultAsync(ct);
+
+            var nextHandins = await _db.Events
+                .Where(x => x.TutoringWallId == wallId && x.StartTime > DateTime.UtcNow && x.Type == EventType.Deadline)
+                .OrderBy(x => x.StartTime)
+                .Take(2)
+                .Select(x => new TutoringWallEventCardDTO
+                {
+                    Description = x.Description,
+                    StartDate = DateOnly.FromDateTime(x.StartTime),
+                    StartTime = TimeOnly.FromDateTime(x.StartTime),
+                    Title = x.Title,
+                })
+                .ToListAsync(ct);
+
+
+            var nextLessons = await _db.Events
+                .Where(x => x.TutoringWallId == wallId && x.StartTime > DateTime.UtcNow && x.Type == EventType.Lesson)
+                .OrderBy(x => x.StartTime)
+                .Take(2)
+                .Select(x => new TutoringWallEventCardDTO
+                {
+                    Description = x.Description,
+                    StartDate = DateOnly.FromDateTime(x.StartTime),
+                    StartTime = TimeOnly.FromDateTime(x.StartTime),
+                    Title = x.Title,
+                })
+                .ToListAsync(ct);
+
+            return ServiceResult<StudentTutoringWallDTO>.Success(new StudentTutoringWallDTO
+            {
+                CourseName = walldata.courseName,
+                TeacherId = walldata.teacherId,
+                TeacherName = walldata.teacherName,
+                BannerURL = walldata.bannerURL,
+                CourseBaseId = walldata.courseBaseId,
+                IconURL = walldata.iconURL,
+                InstanceId = wallId,
+                NextHandins = nextHandins,
+                NextLessons = nextLessons,
+                TokenCount = 0
+            });
+        }
+
+        private static CourseCardUpcomingEventsDTO MapToCourseCardUpcomingEventDTO(Event e)
+        {
+            return new CourseCardUpcomingEventsDTO
             {
                 EventId = e.Id,
                 Title = e.Title ?? "",

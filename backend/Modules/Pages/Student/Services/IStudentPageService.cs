@@ -7,5 +7,6 @@ namespace backend.Modules.Pages.Student.Services
     {
         Task<ServiceResult<StudentHomePageDTO>> GetStudentHomePageAsync(string userId, CancellationToken ct);
         Task<ServiceResult<List<StudentMyCourseDTO>>> GetStudentMyCoursesPageAsync(string userId, CancellationToken ct);
+        Task<ServiceResult<StudentTutoringWallDTO>> GetTutoringWallData(Guid wallId, string userId, CancellationToken ct);
     }
 }

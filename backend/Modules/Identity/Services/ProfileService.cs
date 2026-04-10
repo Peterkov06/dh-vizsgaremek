@@ -37,7 +37,8 @@ namespace backend.Modules.Identity.Services
                 Introduction = user.User.Introduction ?? "",
                 Nickname = user.User.Nickname,
                 ProfilePictureUrl = "",
-                Type = "Student"
+                Type = "Student",
+                Location = user.User.City,
             };
             return ServiceResult<StudentProfileDTO>.Success(profile);
         }

@@ -170,5 +170,18 @@ namespace backend.Modules.Tutoring.Services
 
             return ServiceResult<List<WallCommentDTO>>.Success(comments);
         }
+
+        public async Task<ServiceResult<StudentWallsDTO>> GetStudentWalls(string studentId, string teacherId, CancellationToken ct = default)
+        {
+            var walls = await _db.TutoringWalls.Where(x => x.TeacherId == teacherId && x.StudentId == studentId)
+                .Select(x => new StudentWallDTO
+                {
+                    CourseName = x.CourseBase.CourseName,
+                    InstanceId = x.Id
+                })
+                .ToListAsync(ct);
+
+            return ServiceResult<StudentWallsDTO>.Success(new StudentWallsDTO { Walls = walls });
+        }
     }
 }

@@ -150,5 +150,20 @@ namespace backend.Modules.Tutoring.Controllers
             var res = await _wallService.CommentOnPost(commentCreationDTO, user.Id, ct);
             return res.Succeded ? Created(string.Empty, res.Data) : StatusCode(res.StatusCode, res.Error);
         }
+
+        [Authorize(Roles = "Teacher")]
+        [HttpGet("{studentId}/walls")]
+        public async Task<IActionResult> GetStudentWalls(string studentId, CancellationToken ct) 
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _wallService.GetStudentWalls(studentId, user.Id, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
     }
 }

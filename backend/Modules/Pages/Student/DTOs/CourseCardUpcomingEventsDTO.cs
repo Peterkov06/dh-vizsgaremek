@@ -2,7 +2,7 @@
 
 namespace backend.Modules.Pages.Student.DTOs
 {
-    public class CourseCardUprocmingEventsDTO
+    public class CourseCardUpcomingEventsDTO
     {
         public Guid EventId { get; set; }
         public Guid InstanceId { get; set; }

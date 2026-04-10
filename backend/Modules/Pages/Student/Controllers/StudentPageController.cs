@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Modules.Pages.Student.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Student")]
     [ApiController]
     [Route("api/pages/student")]
     public class StudentPageController : ControllerBase
@@ -45,6 +45,20 @@ namespace backend.Modules.Pages.Student.Controllers
             }
 
             var res = await _studentPageService.GetStudentMyCoursesPageAsync(user.Id, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
+        [HttpGet("/walls/{wallId}")]
+        public async Task<IActionResult> GetWallPageData(Guid wallId, CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _studentPageService.GetTutoringWallData(wallId, user.Id, ct);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
     }

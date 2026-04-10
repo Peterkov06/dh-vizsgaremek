@@ -270,7 +270,12 @@ namespace backend.Modules.Scheduling.Services
                         await _notificationService.NotifyAsync(studentId, notificationType, dto.InstanceId, teacherId, courseName);
                         break;
                     case "Student":
-                        await _notificationService.NotifyAsync(teacherId, notificationType, dto.InstanceId, studentId, courseName);
+                        var studentName = await _db.Students.Where(x => x.UserId == studentId).Select(x => x.User.FullName).SingleOrDefaultAsync(ct);
+                        if (studentName is null)
+                        {
+                            return ServiceResult<Event>.NotFound("Student not found");
+                        }
+                        await _notificationService.NotifyAsync(teacherId, notificationType, dto.InstanceId, studentId, studentName);
                         break;
                     default:
                         break;

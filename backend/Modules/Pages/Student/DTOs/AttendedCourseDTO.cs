@@ -9,6 +9,6 @@
         public string ImageUrl { get; set; } = "";
         public string CourseType { get; set; } = "";
         public int Progress { get; set; }
-        public List<CourseCardUprocmingEventsDTO>? UpcomingEvents { get; set; } = null;
+        public List<CourseCardUpcomingEventsDTO>? UpcomingEvents { get; set; } = null;
     }
 }

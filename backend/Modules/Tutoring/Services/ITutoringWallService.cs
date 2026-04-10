@@ -11,5 +11,6 @@ namespace backend.Modules.Tutoring.Services
         Task<ServiceResult<Guid>> PostHandinOnWall(NewHandinDTO handinDTO, string posterId, CancellationToken ct);
         Task<ServiceResult<Guid>> CommentOnPost(PostCommentCreationDTO commentCreationDTO, string senderId, CancellationToken ct);
         Task<ServiceResult<List<WallCommentDTO>>> GetPostAllComments(Guid postId, CancellationToken ct);
+        Task<ServiceResult<StudentWallsDTO>> GetStudentWalls(string studentId, string teacherId, CancellationToken ct);
     }
 }
