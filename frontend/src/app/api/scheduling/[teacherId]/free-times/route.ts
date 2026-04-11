@@ -10,9 +10,10 @@ export async function GET(
     const cookies = request.headers.get("cookie") ?? "";
     const searchDate = request.nextUrl.searchParams.get("searchDate") ?? "";
     const LessonNumber = request.nextUrl.searchParams.get("LessonNumber") ?? "";
+    const courseId = request.nextUrl.searchParams.get("courseId") ?? "";
 
     const response = await fetch(
-      `${BASE_URL}/scheduling/${teacherId}/free-times?searchDate=${searchDate}&LessonNumber=${LessonNumber}`,
+      `${BASE_URL}/scheduling/${teacherId}/free-times?searchDate=${searchDate}&LessonNumber=${LessonNumber}&courseId=${courseId}`,
       {
         method: "GET",
         credentials: "include",

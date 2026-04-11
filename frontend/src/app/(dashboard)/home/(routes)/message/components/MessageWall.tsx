@@ -79,7 +79,7 @@ const MessageWall = () => {
       <div className="flex-1 flex flex-col-reverse gap-3 overflow-auto">
         {[...chatHistory].reverse().map((ch) => (
           <div
-            className={`relative flex gap-2 w-fit max-w-[70%] items-start bg-background p-2 rounded-2xl mr-2 ${ch.isOwn ? "ml-auto flex-row-reverse" : "mr-auto"}`}
+            className={`relative flex gap-2 w-fit max-w-[70%] items-start  p-2 rounded-2xl mr-2 ${ch.isOwn ? "ml-auto bg-secondary flex-row-reverse" : "mr-auto bg-background"}`}
             key={ch.sentTime}
           >
             <Avatar className="size-10">
@@ -106,11 +106,12 @@ const MessageWall = () => {
         <Input
           className="bg-background shadow-2xl"
           value={chatText}
+          placeholder="Üzenet..."
           onChange={(e) => {
             setChatText(e.target.value);
           }}
           onKeyDown={(e) => {
-            if (e.code === "Enter") {
+            if (e.code === "Enter" && chatText !== "") {
               HandleTextSend();
             }
           }}

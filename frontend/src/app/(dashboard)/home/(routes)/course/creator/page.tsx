@@ -144,7 +144,7 @@ const CourseCreator = () => {
   }, [tagInputValue]);
 
   useEffect(() => {
-    const searchQuery = locInputValue;
+    const searchQuery = locInputValue.trim();
     if (searchQuery.length < 1) {
       setAllLoc(["Online"]);
       return;

@@ -47,7 +47,7 @@ const EnrollingClassDialog = (props: {
 
   const [classLenght, setClassLenght] = useState<number>(0);
   const [classLenghtInput, setClassLenghtInput] = useState<string>("");
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(undefined);
 
   const [availableTimes, setAvailableTimes] = useState<TimeSlot[]>([]);
   const [available, setAvailable] = useState<string>();
@@ -98,7 +98,7 @@ const EnrollingClassDialog = (props: {
     if (date !== undefined && classLenght !== 0) {
       console.log("here");
       fetchWithAuth(
-        `/api/scheduling/${props.teacherId}/free-times?searchDate=${toLocalISO(date)}&LessonNumber=${classLenght}`,
+        `/api/scheduling/${props.teacherId}/free-times?searchDate=${toLocalISO(date)}&LessonNumber=${classLenght}&courseId=${courseId}`,
       )
         .then((res) => res.json())
         .then((data) => {

@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import WeeklyScheduleBuilder from "./WeeklyScheduleBuilder";
 import { Button } from "@/components/ui/button";
+import WeeklyScheduleBuilderSpecific from "./WeeklyScheduleBuilderSpecific";
 
 const AddTimeBlock = () => {
   return (
@@ -19,7 +20,7 @@ const AddTimeBlock = () => {
           <DialogTitle>Szabad időpontok</DialogTitle>
         </DialogHeader>
         <div>
-          <WeeklyScheduleBuilder></WeeklyScheduleBuilder>
+          <WeeklyScheduleBuilderSpecific></WeeklyScheduleBuilderSpecific>
         </div>
       </DialogContent>
     </Dialog>

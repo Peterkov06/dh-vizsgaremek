@@ -5,11 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
   ComboboxContent,
   ComboboxEmpty,
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
+  ComboboxValue,
 } from "@/components/ui/combobox";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -36,7 +40,7 @@ import {
   Search,
   SlidersHorizontalIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SearchCourseCard from "./components/SearchCourseCard";
 import SearchPagination from "./components/SearchPagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -49,6 +53,7 @@ import {
 import { CoursePage } from "@/lib/models/CourseWall";
 import { toast } from "sonner";
 import fetchWithAuth from "@/lib/api-client";
+import React from "react";
 
 type SortByType = {
   name: string;
@@ -74,6 +79,11 @@ const CourseSearchPage = () => {
 
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+
+  const [allLoc, setAllLoc] = useState<string[]>(["Online"]);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [locInputValue, setLocInputValue] = useState("");
+  const anchorLoc = useRef(null);
 
   const sortingCategories: SortByType[] = [
     { name: "Népszerű", value: "Popularity" },
@@ -140,36 +150,6 @@ const CourseSearchPage = () => {
     if (searchParams.toString().length > 0) toast.success("Sikeres szűrés");
   }, [searchParams]);
 
-  useEffect(() => {
-    const searchQuery = city;
-    if (searchQuery.length < 1) {
-      setCities([]);
-      return;
-    }
-
-    const delayDebounceFunction = setTimeout(async () => {
-      // setisLoadingCities(true);
-      try {
-        const response = await fetch(
-          BASE_URL + "/cities/search?city=" + searchQuery,
-          {
-            headers: {
-              Accept: "*/*",
-            },
-          },
-        );
-        const data = await response.json();
-        setCities(data);
-      } catch (error) {
-        console.error("Error fetching cities: ", error);
-      } finally {
-        // setisLoadingCities(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(delayDebounceFunction);
-  }, [city]);
-
   const handlePriceChange = (val: [number, number]) => {
     if (val[1] > maxPrice) val[1] = maxPrice;
     if (val[0] > maxPrice) val[0] = maxPrice;
@@ -199,6 +179,39 @@ const CourseSearchPage = () => {
     router.push(`${pathname}?${params.toString()}`);
   };
 
+  useEffect(() => {
+    const searchQuery = locInputValue.trim();
+    if (searchQuery.length < 1) {
+      setAllLoc(["Online"]);
+      return;
+    }
+    const delayDebounceFunction = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          BASE_URL + "/cities/search?city=" + searchQuery,
+          {
+            headers: {
+              Accept: "*/*",
+            },
+          },
+        );
+        const data = await response.json();
+        setAllLoc(data);
+        if ("online".includes(searchQuery.toLowerCase()))
+          setAllLoc((prev) => ["Online", ...prev]);
+      } catch (error) {
+        console.error("Error fetching cities: ", error);
+      } finally {
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFunction);
+  }, [locInputValue]);
+
+  useEffect(() => {
+    setLocInputValue("");
+  }, [selectedLocations]);
+
   const FilterToQuery = () => {
     const params = new URLSearchParams(searchParams);
 
@@ -207,6 +220,8 @@ const CourseSearchPage = () => {
 
     params.delete("Languages");
     selectedLanguages.forEach((l) => params.append("Languages", l));
+    params.delete("Locations");
+    selectedLocations.forEach((l) => params.append("Locations", l));
 
     params.set("minPrice", priceRange[0].toString());
     params.set("maxPrice", priceRange[1].toString());
@@ -327,20 +342,44 @@ const CourseSearchPage = () => {
               </h2>
               <div>
                 <Combobox
-                  items={cities}
-                  onValueChange={(e) => setCity(e?.toString() ?? "")}
-                  value={city}
+                  multiple
+                  autoHighlight
+                  items={allLoc}
+                  value={
+                    Array.isArray(selectedLocations) ? selectedLocations : []
+                  }
+                  onValueChange={(val) => {
+                    setSelectedLocations(val);
+                  }}
                 >
-                  <ComboboxInput
-                    placeholder="Város"
-                    className="border-2 border-border rounded-2xl py-5 text-sm w-full"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                  />
-                  <ComboboxContent>
-                    <ComboboxEmpty>Nem találtunk ilyen várost.</ComboboxEmpty>
+                  <ComboboxChips
+                    ref={anchorLoc}
+                    className={`w-full border-2 text-lg border-primary`}
+                  >
+                    <ComboboxValue>
+                      {(values) => (
+                        <React.Fragment>
+                          {values.map((value: string) => (
+                            <ComboboxChip key={value} className="text-lg">
+                              {value}
+                            </ComboboxChip>
+                          ))}
+                          <ComboboxChipsInput
+                            placeholder="Helyszín..."
+                            value={locInputValue}
+                            onChange={(e) => setLocInputValue(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === " ") e.stopPropagation();
+                            }}
+                          />
+                        </React.Fragment>
+                      )}
+                    </ComboboxValue>
+                  </ComboboxChips>
+                  <ComboboxContent anchor={anchorLoc} side="top">
+                    <ComboboxEmpty>Nincs ilyen helyszín</ComboboxEmpty>
                     <ComboboxList>
-                      {(item: any) => (
+                      {(item) => (
                         <ComboboxItem key={item} value={item}>
                           {item}
                         </ComboboxItem>

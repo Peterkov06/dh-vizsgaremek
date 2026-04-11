@@ -77,8 +77,9 @@ const MessageSidebar = () => {
             .map((u) => (
               <div
                 key={u.chatId}
-                className={`flex gap-3 items-center bg-light-bg-gray rounded-lg px-2 py-1 hover:bg-secondary transition-all duration-300 ${id === u.chatId && "bg-primary text-white"}`}
+                className={`flex gap-3 relative items-center bg-light-bg-gray rounded-lg px-2 py-1 hover:bg-secondary transition-all duration-300 ${id === u.chatId && "bg-primary text-white"}`}
                 onClick={() => {
+                  handleFetch();
                   updateQuery("chatId", u.chatId);
                 }}
               >
@@ -90,6 +91,9 @@ const MessageSidebar = () => {
                   ></AvatarImage>
                 </Avatar>
                 <h2 className="truncate max-w-56">{u.participantName}</h2>
+                {u.newMessage && (
+                  <div className="h-4 w-4 absolute -top-1 -right-1 rounded-[50%] bg-red-600"></div>
+                )}
               </div>
             ))}
         </div>

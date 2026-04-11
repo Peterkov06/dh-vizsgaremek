@@ -60,7 +60,9 @@ const NotificationPage = () => {
                   {n.sender}
                 </span>
               </div>
-              <div className="text-gray-500">{n.message || ""}</div>
+              <div className="text-gray-500 truncate max-w-[50em]">
+                {n.message || ""}
+              </div>
               <div className="mr-10">
                 {n.isRead ? (
                   <CircleCheckBig className="size-12 text-gray-500"></CircleCheckBig>
