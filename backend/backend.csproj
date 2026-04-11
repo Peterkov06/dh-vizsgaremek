@@ -53,7 +53,5 @@
     <Folder Include="Modules\Progression\DTOs\" />
     <Folder Include="Modules\Progression\Services\" />
     <Folder Include="Modules\Payment\Controllers\" />
-    <Folder Include="Modules\Payment\DTOs\" />
-    <Folder Include="Modules\Payment\Services\" />
   </ItemGroup>
 </Project>

@@ -281,7 +281,7 @@ namespace backend.Modules.Pages.Teacher.Services
 
         public async Task<ServiceResult<MyCoursesPageDTO>> GetMyCoursesPage(string userId, CancellationToken ct = default, string? searchText = null)
         {
-            var tutoringCoursesQuery = _db.CourseBases.Where(x => x.TeacherId == userId && x.Type == CourseType.Tutoring).AsQueryable();
+            var tutoringCoursesQuery = _db.CourseBases.Where(x => x.TeacherId == userId && x.Type == CourseType.Tutoring && x.Status == CourseStatus.Active).AsQueryable();
 
             if (searchText is not null)
             {
