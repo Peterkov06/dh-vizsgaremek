@@ -100,7 +100,7 @@ const WallPost = () => {
       <section className="p-4 gap-4 flex flex-col justify-between lg:w-[30em] bg-light-bg-gray mt-10 rounded-2xl">
         <h1 className="text-3xl text-primary">Kommentek</h1>
         <div className=" overflow-hidden flex-1 max-h-[25em]">
-          <div className="flex flex-col gap-2 overflow-auto max-h-[25em]">
+          <div className="flex flex-col-reverse gap-2 overflow-auto max-h-[25em]">
             {post && post?.comments.length < 1 && <h1>Nincs komment</h1>}
             {post?.comments.map((coms, i) => (
               <div

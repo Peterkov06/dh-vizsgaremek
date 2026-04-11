@@ -38,6 +38,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import fetchWithAuth from "@/lib/api-client";
+import { redirect } from "next/navigation";
+import { toast } from "sonner";
 
 const TeacherHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<TeacherDashboardModel>();
@@ -48,7 +51,7 @@ const TeacherHome = (props: { user: User }) => {
   const [formattedDate, setFormattedDate] = useState<string>("");
 
   async function fetchDashboard() {
-    const response = await fetch("mockup/teacherHome.json")
+    const response = await fetchWithAuth("/api/pages/teacher/homepage")
       .then((data) => data.json())
       .then((data) => {
         setDashboard(data);
@@ -68,39 +71,69 @@ const TeacherHome = (props: { user: User }) => {
     );
     setFormattedDate(capitalized);
   }, []);
+
+  const HandleAcceptance = async (id: string, accepted: boolean) => {
+    await fetchWithAuth("/api/tutoring/enrollment/react", {
+      method: "PATCH",
+      body: JSON.stringify({
+        enrollmentID: id,
+        accepted: accepted,
+      }),
+    }).then((res) => {
+      if (res.ok)
+        toast.success(
+          `Sikeres tanuló ${accepted ? "elfogadás" : "elutasítás"}`,
+        );
+      else toast.error("Hiba történt");
+    });
+  };
+
   return (
     <main className="flex flex-col lg:grid grid-rows-12 h-full">
       <section className="flex justify-between items-center">
         <h1 className="text-2xl lg:text-4xl font-bold text-primary">
           Üdv {props.user.nickname}!
         </h1>
-        <div className="relative p-1 bg-linear-to-br from-primary to-secondary rounded-2xl hidden lg:block">
+        <Link
+          href={"home/notifications"}
+          className="relative p-1 bg-linear-to-br from-primary to-secondary rounded-2xl hidden lg:block"
+        >
           <div className="w-[21em] relative flex items-center justify-between gap-3 p-2 bg-background rounded-xl">
             <h2 className="absolute top-[-16] bg-background pr-1 pl-1 font-bold text-primary">
               Értesítések
             </h2>
-            <p className="text-sm">
-              {dashboard?.notifications.lastUnread.courseName}-
-              {dashboard?.notifications.lastUnread.text}
-            </p>
+            <div className="text-sm">
+              {dashboard?.notifications.lastUnread ? (
+                <p>
+                  {dashboard?.notifications.lastUnread?.firstText}-
+                  {dashboard?.notifications.lastUnread?.secondText}
+                </p>
+              ) : (
+                <p>Nincs új értesítésed</p>
+              )}
+            </div>
             <div className="text-primary relative">
               <Bell size={35}></Bell>
               <div className="absolute top-[-5] right-[-5] flex justify-center items-center border-2 border-primary rounded-[100%] aspect-square">
                 <p className="flex justify-center items-center w-5 h-5 bg-background rounded-[100%] text-center text-[0.8em]">
-                  {dashboard?.notifications.unreadNotificationNumber}
+                  {dashboard?.notifications?.unreadNotificationNumber}
                 </p>
               </div>
             </div>
           </div>
-        </div>
-        <div className="text-primary relative block lg:hidden">
+        </Link>
+
+        <Link
+          href={"home/notifications"}
+          className="text-primary relative block lg:hidden"
+        >
           <Bell size={35}></Bell>
           <div className="absolute top-[-5] right-[-5] flex justify-center items-center border-2 border-primary rounded-[100%] aspect-square">
             <p className="flex justify-center items-center w-5 h-5 bg-background rounded-[100%] text-center text-[0.8em]">
               {dashboard?.notifications.unreadNotificationNumber}
             </p>
           </div>
-        </div>
+        </Link>
       </section>
       <section className="flex flex-col lg:grid grid-cols-4 gap-3 row-span-5">
         <section className="col-span-2 max-w-[48em]">
@@ -108,25 +141,29 @@ const TeacherHome = (props: { user: User }) => {
             <h1 className="text-xl lg:text-2xl font-bold">Kurzusok</h1>
           </div>
 
-          <Carousel
-            opts={{
-              align: "start",
-            }}
-            className="relative overflow-visible"
-          >
-            <CarouselContent className="ml-1 py-1">
-              {dashboard?.activeCourses.map((ac) => (
-                <CarouselItem
-                  key={ac.courseId}
-                  className="basis-1/2 lg:basis-1/3 p-1"
-                >
-                  <CourseCard course={ac}></CourseCard>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="absolute left-[-10] top-1/2 -translate-y-1/2 z-10" />
-            <CarouselNext className="absolute right-[-10] top-1/2 -translate-y-1/2 z-10" />
-          </Carousel>
+          {dashboard?.activeCourses && dashboard?.activeCourses.length > 0 ? (
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="relative overflow-visible"
+            >
+              <CarouselContent className="ml-1 py-1">
+                {dashboard?.activeCourses.map((ac) => (
+                  <CarouselItem
+                    key={ac.courseId}
+                    className="basis-1/2 lg:basis-1/3 p-1"
+                  >
+                    <CourseCard course={ac}></CourseCard>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="absolute left-[-10] top-1/2 -translate-y-1/2 z-10" />
+              <CarouselNext className="absolute right-[-10] top-1/2 -translate-y-1/2 z-10" />
+            </Carousel>
+          ) : (
+            <div>Még nincs kurzusod</div>
+          )}
         </section>
         <section className="col-start-3 border-4 border-light-bg-gray p-2 gap-2 rounded-2xl mt-7 grid grid-rows-6">
           <RadioGroup
@@ -191,7 +228,12 @@ const TeacherHome = (props: { user: User }) => {
                     <div className="flex gap-1">
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button className="h-10 w-10 bg-linear-to-tl from-primary to-[#7CB08C]">
+                          <Button
+                            className="h-10 w-10 bg-linear-to-tl from-primary to-[#7CB08C]"
+                            onClick={() => {
+                              HandleAcceptance(stud.userId, true);
+                            }}
+                          >
                             <Check className="size-8"></Check>
                           </Button>
                         </TooltipTrigger>
@@ -201,7 +243,12 @@ const TeacherHome = (props: { user: User }) => {
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button className="h-10 w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
+                          <Button
+                            className="h-10 w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]"
+                            onClick={() => {
+                              HandleAcceptance(stud.userId, false);
+                            }}
+                          >
                             <X className="size-8"></X>
                           </Button>
                         </TooltipTrigger>
@@ -218,7 +265,7 @@ const TeacherHome = (props: { user: User }) => {
           <div className="row-start-6 flex justify-center items-center">
             <Link href={"/home/students"}>
               <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
-                <p>Összes Kérés</p>
+                <p>Összes tanuló</p>
                 <ChevronRight className="size-5 m-0"></ChevronRight>
               </Button>
             </Link>
@@ -285,13 +332,15 @@ const TeacherHome = (props: { user: User }) => {
                           <h2 className="text-sm font-bold truncate max-w-46">
                             {stud.fullName}
                           </h2>
-                          <h3 className="text-xs truncate max-w-40">
-                            {stud.courseName}
-                          </h3>
                         </div>
                       </div>
                       <div className="flex gap-1">
-                        <Button className="bg-linear-to-tl from-primary to-[#7CB08C]">
+                        <Button
+                          className="bg-linear-to-tl from-primary to-[#7CB08C]"
+                          onClick={() => {
+                            redirect(`/home/message?chatId=${stud.chatId}`);
+                          }}
+                        >
                           Üzenet
                         </Button>
                       </div>
@@ -303,7 +352,7 @@ const TeacherHome = (props: { user: User }) => {
           <div className="flex justify-center items-center mt-3">
             <Link href={"home/message"}>
               <Button className="h-8 w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
-                <p>Összes tanuló</p>
+                <p>Összes Üzenet</p>
                 <ChevronRight className="size-5 m-0"></ChevronRight>
               </Button>
             </Link>

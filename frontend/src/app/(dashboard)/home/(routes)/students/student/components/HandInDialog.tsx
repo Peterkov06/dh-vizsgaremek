@@ -92,14 +92,14 @@ const HandInDialog = ({ onSuccess }: PostDialogProps) => {
           <Plus className="size-8"></Plus>Új beadandó létrehozása
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-fit max-w-none!">
+      <DialogContent className="lg:w-fit lg:max-w-none! overflow-hidden">
         <DialogHeader>
           <DialogTitle className="text-3xl">
             Új beadandó létrehozása
           </DialogTitle>
         </DialogHeader>
-        <div className="flex gap-10 px-6">
-          <div className="flex flex-col gap-3">
+        <div className="lg:flex-row flex-col flex gap-10 lg:px-6">
+          <div className="flex flex-col gap-3  min-w-0">
             <Input
               value={title}
               onChange={(e) => {
@@ -109,7 +109,7 @@ const HandInDialog = ({ onSuccess }: PostDialogProps) => {
               placeholder="Beadandó címe..."
             ></Input>
             <Textarea
-              className="h-[20em] w-[40em] resize-none text-xl! shadow-2xl border-secondary border-2"
+              className="h-[20em] lg:w-[40em] resize-none text-xl! shadow-2xl border-secondary border-2"
               placeholder="Beadandó szövege..."
               value={postText}
               onChange={(e) => {
@@ -120,7 +120,7 @@ const HandInDialog = ({ onSuccess }: PostDialogProps) => {
           <div className="flex flex-col gap-5">
             <DateTimePicker onChange={setDate}></DateTimePicker>
 
-            <input
+            {/* <input
               ref={inputRef}
               type="file"
               className="hidden"
@@ -168,16 +168,16 @@ const HandInDialog = ({ onSuccess }: PostDialogProps) => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div>*/}
           </div>
         </div>
         <DialogFooter className="flex justify-center! w-full items-center">
           <Button
-            className="text-2xl flex gap-1 h-12"
+            className="lg:text-2xl flex gap-1 h-12"
             disabled={postText === "" || title === "" || date === undefined}
             onClick={HandlePost}
           >
-            <Plus className="size-8"></Plus>Beadandó létrehozzása
+            <Plus className="lg:size-8"></Plus>Beadandó létrehozzása
           </Button>
         </DialogFooter>
       </DialogContent>

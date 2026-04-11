@@ -68,20 +68,22 @@ const PostDialog = ({ onSuccess }: PostDialogProps) => {
           <Plus className="size-8"></Plus>Új poszt létrehozása
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-fit max-w-none!">
+      <DialogContent className="w-fit lg:max-w-none!">
         <DialogHeader>
-          <DialogTitle className="text-3xl">Új poszt létrehozása</DialogTitle>
+          <DialogTitle className="text-xl lg:text-3xl">
+            Új poszt létrehozása
+          </DialogTitle>
         </DialogHeader>
-        <div className="flex gap-10 px-6">
+        <div className="flex gap-10 lg:px-6">
           <Textarea
-            className="h-[20em] w-[40em] resize-none text-xl! shadow-2xl border-secondary  border-2"
+            className="h-[20em] lg:w-[40em] resize-none text-xl! shadow-2xl border-secondary  border-2"
             placeholder="Poszt szövege..."
             value={postText}
             onChange={(e) => {
               setPostText(e.target.value);
             }}
           ></Textarea>
-          <div className="flex flex-col gap-5">
+          {/* <div className="flex flex-col gap-5">
             <input
               ref={inputRef}
               type="file"
@@ -131,7 +133,7 @@ const PostDialog = ({ onSuccess }: PostDialogProps) => {
                 ))}
               </ul>
             </div>
-          </div>
+          </div> */}
         </div>
         <DialogFooter className="flex justify-center! w-full items-center">
           <Button

@@ -1,5 +1,7 @@
 export type EventType = "deadline" | "lesson";
 
+// These three remain the same based on the JSON keys,
+// though they are currently empty arrays in your example.
 export interface ActiveCourse {
   courseId: string;
   courseName: string;
@@ -29,12 +31,15 @@ export interface GradingQueueItem {
   submittedDate: string;
 }
 
+// Updated: Added enrollmentId and profilePictureUrl
 export interface PendingEnrollment {
   courseId: string;
   courseName: string;
   userId: string;
   userName: string;
   enrollmentDate: string;
+  enrollmentId: string;
+  profilePictureUrl: string;
 }
 
 export interface PendingPayment {
@@ -49,26 +54,35 @@ export interface PendingPayment {
   paymentDate: string;
 }
 
+// UPDATED: Student now has a nested courses array and uses profilePictureUrl/chatId
+export interface StudentCourse {
+  id: string;
+  name: string;
+}
+
 export interface Student {
   userId: string;
   fullName: string;
   nickName: string;
-  courseId: string;
-  courseName: string;
-  chatUrl: string;
+  courses: StudentCourse[]; // Changed from flat courseId/courseName
+  chatId: string; // Changed from chatUrl
+  profilePictureUrl: string;
 }
 
+// UPDATED: Notification structure changed field names
 export interface LastUnreadNotification {
   notificationId: string;
-  eventUrl: string;
-  courseName: string;
-  text: string;
-}
-export interface Notifications {
-  unreadNotificationNumber: number;
-  lastUnread: LastUnreadNotification;
+  referenceId: string; // New field
+  firstText: string; // New field
+  secondText: string; // New field
 }
 
+export interface Notifications {
+  unreadNotificationNumber: number;
+  lastUnread: LastUnreadNotification | null;
+}
+
+// Main Wrapper
 export interface TeacherDashboardModel {
   activeCourses: ActiveCourse[];
   upcomingEvents: UpcomingEvent[];

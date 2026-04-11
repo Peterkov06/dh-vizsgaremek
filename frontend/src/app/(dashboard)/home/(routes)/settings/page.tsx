@@ -333,12 +333,12 @@ const Settings = () => {
       </section>
       <section className="mx-3 row-start-2 col-span-4 row-span-6 border-4 border-light-bg-gray rounded-2xl flex flex-col px-2 py-1 my-8 gap-3 items-stretch">
         <RadioGroup
-          className="grid grid-cols-2 gap-0"
+          className="grid grid-cols-1 gap-0"
           value={allTabs}
           onValueChange={setAllTabs}
         >
           <div
-            className={`border-6 border-light-bg-gray rounded-l-xl py-2 ${allTabs === "introduction" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
+            className={`border-6 border-light-bg-gray rounded-xl py-2 ${allTabs === "introduction" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
           >
             <RadioGroupItem
               value="introduction"
@@ -352,7 +352,7 @@ const Settings = () => {
               Bemutatkozás
             </Label>
           </div>
-          <div
+          {/* <div
             className={`border-6 border-light-bg-gray rounded-r-xl ${allTabs === "qualification" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
           >
             <RadioGroupItem
@@ -367,7 +367,7 @@ const Settings = () => {
             >
               Végzettségek
             </Label>
-          </div>
+          </div> */}
         </RadioGroup>
 
         <Textarea

@@ -3,11 +3,13 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import fetchWithAuth from "@/lib/api-client";
 import { Post, WallPostType } from "@/lib/models/CourseWall";
 import { ArrowRight, File } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const WallPost = (props: { post: WallPostType }) => {
   const [comment, setComment] = useState<string>("");
@@ -25,10 +27,30 @@ const WallPost = (props: { post: WallPostType }) => {
       minute: "2-digit",
     });
   };
+  async function handleComment(postId: string) {
+    const res = await fetchWithAuth("/api/tutoring/wall/post/comment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        wallId,
+        postId,
+        text: comment,
+      }),
+    });
+
+    if (res.ok) {
+      setComment("");
+    } else {
+      toast.error("Hiba történt");
+    }
+  }
 
   return (
     <div
-      className="bg-light-bg-gray relative  rounded-2xl flex flex-col gap-4 p-6 hover:scale-103 transition-all duration-300"
+      className="bg-light-bg-gray relative  rounded-2xl flex flex-col gap-4 p-3 lg:p-6 hover:scale-103 transition-all duration-300"
       onClick={() => {
         router.push(
           `wall/${props.post.handInId === null ? "post" : "handin"}?wallId=${wallId}&postId=${props.post.id}`,
@@ -49,16 +71,18 @@ const WallPost = (props: { post: WallPostType }) => {
           <h1 className="text-primary text-2xl">{props.post.posterName}</h1>
         ) : (
           <div>
-            <h2 className="text-lg">{props.post.posterName}</h2>
-            <h1 className="text-primary text-2xl">{props.post.title}</h1>
+            <h2 className=" lg:text-lg">{props.post.posterName}</h2>
+            <h1 className="text-primary text-xl lg:text-2xl">
+              {props.post.title}
+            </h1>
           </div>
         )}
       </div>
-      <div className="flex gap-3">
-        <div className="overflow-hidden max-h-[23em]">
-          <p className="text-xl overflow-auto h-full">{props.post.text}</p>
+      <div className="flex gap-3 min-w-0">
+        <div className="overflow-hidden max-h-[23em] min-w-0 flex-1">
+          <p className="text-xl wrap-break-word">{props.post.text}</p>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 shrink-0">
           {props.post.handInId === null ? (
             props.post.attachmentURLs.map((a, id) => (
               <div
@@ -77,7 +101,10 @@ const WallPost = (props: { post: WallPostType }) => {
         </div>
       </div>
       {props.post.handInId === null && (
-        <div className="flex gap-3 mt-5" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="flex gap-3 mt-2 lg:mt-5"
+          onClick={(e) => e.stopPropagation()}
+        >
           <Input
             value={comment}
             className="border-2 border-primary"
@@ -86,7 +113,12 @@ const WallPost = (props: { post: WallPostType }) => {
             }}
             placeholder="Komment..."
           ></Input>
-          <Button>
+          <Button
+            onClick={() => {
+              handleComment(props.post.id);
+            }}
+            disabled={comment === ""}
+          >
             <ArrowRight></ArrowRight>
           </Button>
         </div>

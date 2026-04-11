@@ -11,6 +11,7 @@ import HandInDialog from "../components/HandInDialog";
 import fetchWithAuth from "@/lib/api-client";
 import { useSearchParams } from "next/navigation";
 import { CourseBrief } from "../../../course/wall/page";
+import { CourseDetail } from "@/lib/models/CourseSearchModel";
 
 const TeacherCourseWallPage = () => {
   const [posts, setPosts] = useState<WallPostType[]>();
@@ -18,8 +19,11 @@ const TeacherCourseWallPage = () => {
   const searchParams = useSearchParams();
 
   const wallId = searchParams.get("wallId");
+  const courseId = searchParams.get("courseId");
 
   const [page, setPage] = useState<CourseBrief>();
+
+  const [course, setCourse] = useState<CourseDetail>();
 
   const handleFetch = async () => {
     // await fetchWithAuth(`/api/walls/${wallId}`)
@@ -33,6 +37,12 @@ const TeacherCourseWallPage = () => {
         console.log(data);
         setPosts(data);
       });
+    // await fetch(`/api/courses/${courseId}`)
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //     setCourse(data);
+    //   });
   };
 
   useEffect(() => {
@@ -44,20 +54,20 @@ const TeacherCourseWallPage = () => {
       <section className="flex items-end py-2 relative bg-linear-to-br from-primary to-secondary h-46 rounded-2xl w-full text-primary-foreground">
         <Avatar className="absolute size-30 -bottom-8 left-5">
           <AvatarImage
-            src={page?.iconURL || "/defaults/default_avatar.jpg"}
+            src={course?.teacherImage || "/defaults/default_avatar.jpg"}
           ></AvatarImage>
         </Avatar>
         <div className="flex flex-col gap-3 ml-40">
-          <h1 className="text-3xl font-bold">{page?.courseName}</h1>
+          <h1 className="text-3xl font-bold">{course?.courseName}</h1>
           <p className="flex gap-2 ml-10 text-lg">
             <User className="size-8 "></User>
-            {page?.teacherName}
+            {course?.teacherName}
           </p>
         </div>
       </section>
-      <section className="flex mt-10 gap-7">
-        <section className="flex flex-1  flex-col gap-5">
-          <div className="flex justify-evenly">
+      <section className="flex mt-10 gap-7 min-w-0">
+        <section className="flex flex-1 flex-col gap-5 min-w-0">
+          <div className="flex justify-evenly lg:flex-row flex-col gap-4">
             <PostDialog onSuccess={handleFetch}></PostDialog>
             <HandInDialog onSuccess={handleFetch}></HandInDialog>
           </div>
