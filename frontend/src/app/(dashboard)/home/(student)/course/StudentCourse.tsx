@@ -32,7 +32,7 @@ const StudentCourse = (props: { user: User }) => {
     <main>
       <h1 className="text-4xl font-bold text-primary">Kurzusaim</h1>
       <section className="mt-5">
-        <RadioGroup
+        {/* <RadioGroup
           className="grid grid-cols-2 gap-0 w-[30em]"
           value={courseStatus}
           onValueChange={setCourseStatus}
@@ -67,7 +67,7 @@ const StudentCourse = (props: { user: User }) => {
               Archivált
             </Label>
           </div>
-        </RadioGroup>
+        </RadioGroup> */}
 
         <section className="flex flex-col gap-10 mt-5">
           {studentCourses.length === 0 && (

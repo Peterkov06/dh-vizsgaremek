@@ -51,7 +51,7 @@ const CourseOverView = () => {
   };
   return (
     <main className="lg:flex gap-2 h-full w-full">
-      <section className="flex flex-col gap-2 h-full lg:w-[55em]">
+      <section className="flex flex-col gap-2 lg:h-full lg:w-[55em]">
         <div className="relative">
           <img
             src={course?.bannerImage || "/defaults/default_course.jpg"}
