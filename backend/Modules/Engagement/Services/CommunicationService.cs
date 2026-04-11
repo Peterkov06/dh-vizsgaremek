@@ -5,6 +5,7 @@ using backend.Modules.Engagement.Models;
 using backend.Modules.Shared.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace backend.Modules.Engagement.Services
 {
@@ -88,18 +89,20 @@ namespace backend.Modules.Engagement.Services
             };
 
             _db.ChatMessages.Add(newMessage);
+            int maxLength = 500;
+            var notificationText = dto.Text.Length <= maxLength ? dto.Text : dto.Text[..maxLength];
 
             switch (role)
             {
                 case "Teacher":
                     var studentId = await _db.ChatRooms.Where(x => x.Id == chatId).Select(x => x.StudentId).FirstOrDefaultAsync(ct);
                     var teacherName = await _db.Users.Where(x => x.Id == userId).Select(x => x.FullName).FirstOrDefaultAsync(ct);
-                    await _notificationService.NotifyAsync(studentId, NotificationType.Message, chatId, userId, teacherName, dto.Text);
+                    await _notificationService.NotifyAsync(studentId, NotificationType.Message, chatId, userId, teacherName, notificationText);
                     break;
                 case "Student":
                     var teacherId = await _db.ChatRooms.Where(x => x.Id == chatId).Select(x => x.TeacherId).FirstOrDefaultAsync(ct);
                     var studentName = await _db.Users.Where(x => x.Id == userId).Select(x => x.FullName).FirstOrDefaultAsync(ct);
-                    await _notificationService.NotifyAsync(teacherId, NotificationType.Message, chatId, userId, studentName, dto.Text);
+                    await _notificationService.NotifyAsync(teacherId, NotificationType.Message, chatId, userId, studentName, notificationText);
                     break;
                 default:
                     break;

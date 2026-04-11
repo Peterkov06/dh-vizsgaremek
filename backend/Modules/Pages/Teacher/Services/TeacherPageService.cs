@@ -238,7 +238,7 @@ namespace backend.Modules.Pages.Teacher.Services
             searchText = searchText?.ToLower();
             var students = await _db.Students
                 .Where(s => _db.TutoringWalls
-                    .Any(w => w.StudentId == s.UserId && w.TeacherId == userId))
+                    .Any(w => w.StudentId == s.UserId && w.TeacherId == userId && w.Status == EnrollmentStatus.Active))
                 .Where(s => searchText == null
                     || s.User.FullName.ToLower().Contains(searchText)
                     || (s.User.Nickname != null && s.User.Nickname.ToLower().Contains(searchText)))

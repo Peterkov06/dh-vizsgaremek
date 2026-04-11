@@ -58,7 +58,7 @@ namespace backend.Modules.Scheduling.Services
                 : ServiceResult.Failure("No records were saved to the database.");
         }
 
-        public async Task<ServiceResult<Dictionary<DateOnly,List<TimeblockWithIdDTO>>>> GetCurrentTimeBlocks(string teacherId, DateTime searchDate, CancellationToken ct = default)
+        public async Task<ServiceResult<List<DailyTimeblocksDTO>>> GetCurrentTimeBlocks(string teacherId, DateTime searchDate, CancellationToken ct = default)
         {
             int diff = (7 + (searchDate.DayOfWeek - DayOfWeek.Monday)) % 7;
             DateTime startOfWeek = searchDate.AddDays(-1 * diff).Date;
@@ -75,27 +75,30 @@ namespace backend.Modules.Scheduling.Services
                 .AsNoTracking()
                 .ToListAsync(ct);
 
-            var blocksByDay = timeBlocksOfTheWeek
+            var availebleDays = timeBlocksOfTheWeek
                 .GroupBy(x => DateOnly.FromDateTime(x.Start.Date))
-                .ToDictionary(g => g.Key, g => g.ToList());
+                .Select(x => new DailyTimeblocksDTO
+                {
+                    Day = x.Key,
+                    Timeblocks = x.ToList()
+                }).ToList();
 
-            return ServiceResult<Dictionary<DateOnly, List<TimeblockWithIdDTO>>>.Success(blocksByDay);
+            return ServiceResult<List<DailyTimeblocksDTO>>.Success(availebleDays);
         }
 
         public async Task<ServiceResult<AvailableDaysDTO>> GetAvailableDays(string teacherId, DateTime searchDate, CancellationToken ct = default)
         {
-            var firstDayOfMonth = searchDate.Date;
+            var firstDayOfMonth = new DateTime(searchDate.Year, searchDate.Month, 1, 0, 0, 0, DateTimeKind.Utc);
             var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddTicks(-1);
 
-            firstDayOfMonth = DateTime.SpecifyKind(firstDayOfMonth, DateTimeKind.Utc);
-            lastDayOfMonth = DateTime.SpecifyKind(lastDayOfMonth, DateTimeKind.Utc);
+            var now = DateTime.UtcNow;
 
             var availableStarts = await _db.TeacherTimeblocks
-                .Where(x => x.TeacherId == teacherId && x.Start <= lastDayOfMonth && x.End >= firstDayOfMonth && x.Start >= DateTime.UtcNow)
-                .OrderBy(x => x.Start.Date)
+                .Where(x => x.TeacherId == teacherId && x.Start <= lastDayOfMonth && x.End >= firstDayOfMonth && x.Start >= now)
                 .AsNoTracking()
                 .Select(x => x.Start.Date)
                 .Distinct()
+                .OrderBy(x => x)
                 .ToListAsync(ct);
 
             var availableDays = new AvailableDaysDTO
@@ -123,9 +126,10 @@ namespace backend.Modules.Scheduling.Services
 
             firstTime = DateTime.SpecifyKind(firstTime, DateTimeKind.Utc);
             lastTime = DateTime.SpecifyKind(lastTime, DateTimeKind.Utc);
+            var now = DateTime.UtcNow;
 
-            var originalTimeBlocks = await _db.TeacherTimeblocks.Where( x => x.TeacherId == teacherId && x.Start < lastTime && x.Start >= firstTime && x.End > firstTime && x.End <= lastTime && x.Start >= DateTime.UtcNow).OrderBy(x => x.Start).AsNoTracking().ToListAsync(ct);
-            var bookedLessons = await _db.Events.Where(x => x.OrganiserId == teacherId && x.StartTime >= firstTime && x.StartTime < lastTime && x.StartTime >= DateTime.UtcNow).OrderBy(x => x.StartTime).AsNoTracking().ToListAsync(ct);
+            var originalTimeBlocks = await _db.TeacherTimeblocks.Where( x => x.TeacherId == teacherId && x.Start < lastTime && x.Start >= firstTime && x.End > firstTime && x.End <= lastTime && x.Start >= now).OrderBy(x => x.Start).AsNoTracking().ToListAsync(ct);
+            var bookedLessons = await _db.Events.Where(x => x.OrganiserId == teacherId && x.StartTime >= firstTime && x.StartTime < lastTime && x.StartTime >= now).OrderBy(x => x.StartTime).AsNoTracking().ToListAsync(ct);
 
             List<TimeblockDTO> timeBlocks = [];
 
