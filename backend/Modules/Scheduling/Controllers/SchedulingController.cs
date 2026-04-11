@@ -48,12 +48,11 @@ namespace backend.Modules.Scheduling.Controllers
                 return NotFound();
             }
             var userRoles = await _userManager.GetRolesAsync(user);
-            var userRole = userRoles.SingleOrDefault();
-
-            if (userRole == null) {
+            if (userRoles.Count != 1)
+            {
                 return NotFound("Invalid user");
             }
-
+            var userRole = userRoles.Single();
 
             var res = await _schedulingService.BookEvent(user.Id, userRole, dto, ct);
 
@@ -119,12 +118,13 @@ namespace backend.Modules.Scheduling.Controllers
                 return NotFound();
             }
             var userRoles = await _userManager.GetRolesAsync(user);
-            var userRole = userRoles.SingleOrDefault();
 
-            if (userRole == null)
+            if (userRoles.Count != 1)
             {
                 return NotFound("Invalid user");
             }
+
+            var userRole = userRoles.Single();
 
 
             var res = await _schedulingService.DeleteBookedEvent(user.Id, userRole, eventId, ct);

@@ -56,5 +56,64 @@ namespace backend.Modules.Engagement.Controllers
             }
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
+
+        [HttpPost("chats/{chatId}")]
+        public async Task<IActionResult> WriteMessage(Guid chatId, WriteMessageDTO dto, CancellationToken ct) 
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (userRoles.Count != 1)
+            {
+                return NotFound("Invalid user");
+            }
+            var userRole = userRoles.Single();
+
+            var res = await _communicationService.WriteMessage(user.Id, userRole, chatId, dto, ct);
+
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
+        [HttpGet("chats/{chatId}")]
+        public async Task<IActionResult> GetChatMessages(Guid chatId, CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _communicationService.GetChatMessages(chatId, user.Id, ct);
+
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
+        [HttpGet("chats")]
+        public async Task<IActionResult> GetChats(CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (userRoles.Count != 1)
+            {
+                return NotFound("Invalid user");
+            }
+            var userRole = userRoles.Single();
+
+            var res = await _communicationService.GetChatsContacts(user.Id, userRole, ct);
+
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
     }
 }
