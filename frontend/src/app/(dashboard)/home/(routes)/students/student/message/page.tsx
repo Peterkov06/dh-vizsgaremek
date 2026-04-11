@@ -9,7 +9,9 @@ const MessageStudentPage = () => {
   const id = searchParams.get("chatId");
 
   return (
-    <main className="h-full">{id && <MessageWall id={id}></MessageWall>}</main>
+    <main className="h-[calc(100dvh-4rem)]">
+      {id && <MessageWall></MessageWall>}
+    </main>
   );
 };
 
