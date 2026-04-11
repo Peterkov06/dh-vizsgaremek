@@ -79,10 +79,10 @@ const MessageWall = () => {
       <div className="flex-1 flex flex-col-reverse gap-3 overflow-auto">
         {[...chatHistory].reverse().map((ch) => (
           <div
-            className={`relative flex gap-2 w-fit max-w-[70%] items-start  p-2 rounded-2xl mr-2 ${ch.isOwn ? "ml-auto bg-secondary flex-row-reverse" : "mr-auto bg-background"}`}
+            className={`relative flex gap-2 w-fit max-w-[85%] lg:max-w-[70%] items-start  p-2 rounded-2xl mr-2 ${ch.isOwn ? "ml-auto bg-secondary flex-row-reverse" : "mr-auto bg-background"}`}
             key={ch.sentTime}
           >
-            <Avatar className="size-10">
+            <Avatar className="size-7 lg:size-10">
               <AvatarImage
                 src={ch.senderImage || "/defaults/default_avatar.jpg"}
               ></AvatarImage>
@@ -92,12 +92,12 @@ const MessageWall = () => {
               <h3
                 className={`text-sm flex items-center gap-3 ${ch.isOwn && "flex-row-reverse"}`}
               >
-                <span>{ch.senderName}</span>
+                <span className="lg:text-base text-xs">{ch.senderName}</span>
                 <span className="text-xs text-gray-500">
                   {formatDateComment(ch.sentTime)}
                 </span>
               </h3>
-              <h1 className="text-lg">{ch.text}</h1>
+              <h1 className="text-lg wrap-break-all">{ch.text}</h1>
             </div>
           </div>
         ))}

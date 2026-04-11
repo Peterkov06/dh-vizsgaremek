@@ -230,7 +230,7 @@ const CourseCreator = () => {
         lessonLenght: data.classLenght,
         firstConsultationFree: data.firstFree === "Ingyenes",
         priceCurrencyId: data.currency || null,
-        status: 1,
+        status: "Active",
         iconImageId: null,
         bannerImageId: null,
         tags: data.tags.filter(Boolean),

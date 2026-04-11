@@ -12,7 +12,7 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
   return (
     <div className="rounded-lg w-fit flex flex-col text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
       <img
-        className="rounded-t-lg h-[8em] lg:h-[10em] w-[14em] lg:w-[22em]"
+        className="rounded-t-lg h-[8em] lg:h-[10em] w-[14em] lg:w-[18em]"
         src={
           props.course.imageUrl === ""
             ? "defaults/default_course.jpg"
@@ -20,7 +20,7 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
         }
         alt="course img"
       />
-      <div className="bg-linear-to-br flex-1 justify-between from-primary to-secondary py-3 lg:py-6 px-3 rounded-b-lg flex flex-col gap-2 w-[14em] lg:w-[22em]">
+      <div className="bg-linear-to-br flex-1 justify-between from-primary to-secondary py-3 lg:py-6 px-3 rounded-b-lg flex flex-col gap-2 w-[14em] lg:w-[18em]">
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-2 lg:gap-5">
             <h1 className="lg:text-2xl">{props.course.courseName}</h1>

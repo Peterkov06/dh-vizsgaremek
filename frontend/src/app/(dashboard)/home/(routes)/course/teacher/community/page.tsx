@@ -68,29 +68,23 @@ const CourseOverView = () => {
           )}
           <div className="absolute bottom-5 left-3 flex items-end justify-between gap-5 w-full pr-5">
             <div className="flex gap-2 items-end">
-              <Link
-                href={`teacher?id=${course?.teacherId}`}
-                className="hover:scale-110 transition-all duration-300"
-              >
+              <div className="hover:scale-110 transition-all duration-300">
                 <Avatar className="size-20 lg:size-40 border-2 border-light-bg-gray">
                   <AvatarImage
                     src={course?.teacherImage || "/defaults/default_avatar.jpg"}
                   ></AvatarImage>
                 </Avatar>
-              </Link>
+              </div>
               <div className="">
                 <h1 className="font-bold text-lg lg:text-2xl text-primary max-w-[17em]">
                   {course?.courseName}
                 </h1>
-                <Link
-                  href={`teacher?id=${course?.teacherId}`}
-                  className="hover:text-primary transition-all duration-500"
-                >
+                <div className="hover:text-primary transition-all duration-500">
                   <h2 className="flex gap-1 items-center text-base lg:text-xl">
                     <User></User>
                     {course?.teacherName}
                   </h2>
-                </Link>
+                </div>
               </div>
             </div>
             <Button

@@ -22,7 +22,14 @@ export interface CourseBrief {
   iconURL: string;
   tokenCount: number;
   nextHandins: any[];
-  nextLessons: any[];
+  nextLessons: NextLessonType[];
+}
+
+interface NextLessonType {
+  title: string | null;
+  description: string | null;
+  startDate: string;
+  startTime: string;
 }
 
 const CourseWall = () => {
@@ -119,10 +126,10 @@ const CourseWall = () => {
                   <h1 className="text-white">Nincs közelgő órád</h1>
                 )}
                 {page &&
-                  page?.nextLessons.map((nl) => (
+                  page?.nextLessons.map((nl, i) => (
                     <div
-                      className="flex gap-0! bg-background text-primary rounded-lg px-3 py-1 shadow-2xl justify-between"
-                      key={nl.id}
+                      className={`flex gap-0! bg-background text-primary rounded-lg px-3 py-1 shadow-2xl ${nl.title ? "justify-between" : "justify-center"}`}
+                      key={i}
                     >
                       <div className="flex justify-center items-center min-w-0">
                         <h2 className="font-bold text-lg min-w-0  flex-1">
@@ -130,8 +137,8 @@ const CourseWall = () => {
                         </h2>
                       </div>
                       <div className="flex flex-col justify-end items-end ">
-                        <p className="text-md shrink-0">{nl.date}</p>
-                        <p className="text-lg font-bold">{nl.time}</p>
+                        <p className="text-md shrink-0">{nl.startDate}</p>
+                        <p className="text-lg font-bold">{nl.startTime}</p>
                       </div>
                     </div>
                   ))}

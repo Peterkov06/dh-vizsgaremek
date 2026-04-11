@@ -92,7 +92,7 @@ const StudentHome = (props: { user: User }) => {
         </Link>
       </section>
       <section className="flex justify-between gap-10 flex-col flex-1 h-fit lg:flex-row">
-        <section className="w-fit lg:w-full flex gap-2 flex-col">
+        <section className="w-fit flex-1 flex gap-2 flex-col">
           <div className="flex justify-between items-center w-fit lg:w-full gap-5">
             <h1 className="text-xl lg:text-2xl font-bold">Felvett kurzusok</h1>
             <div className="flex gap-3">
@@ -110,28 +110,36 @@ const StudentHome = (props: { user: User }) => {
                   setIsActive((prev) => !prev);
                 }}
               >
-                Teljesített
+                Függőben
               </Button>
             </div>
           </div>
-          <div className="hidden lg:flex gap-5 lg:h-full">
-            {!isActive ? (
-              dashboard?.attendedCourses.active.length > 0 ? (
-                dashboard?.attendedCourses.active.map((c) => (
-                  <CourseCard course={c} key={c.courseId}></CourseCard>
-                ))
+          <div className="overflow-x-hidden">
+            <div className="hidden lg:flex justify-between gap-5 lg:h-full overflow-auto p-5">
+              {!isActive ? (
+                dashboard?.attendedCourses.active.length > 0 ? (
+                  dashboard?.attendedCourses.active
+                    .slice(0, 3)
+                    .map((c) => (
+                      <CourseCard course={c} key={c.courseId}></CourseCard>
+                    ))
+                ) : (
+                  <p className="text-2xl text-primary">
+                    Nincs felvett kurzusod
+                  </p>
+                )
+              ) : dashboard?.attendedCourses.inactive.length > 0 ? (
+                dashboard?.attendedCourses.inactive
+                  .slice(0, 3)
+                  .map((c) => (
+                    <CourseCard course={c} key={c.courseId}></CourseCard>
+                  ))
               ) : (
-                <p className="text-2xl text-primary">Nincs felvett kurzusod</p>
-              )
-            ) : dashboard?.attendedCourses.inactive.length > 0 ? (
-              dashboard?.attendedCourses.inactive.map((c) => (
-                <CourseCard course={c} key={c.courseId}></CourseCard>
-              ))
-            ) : (
-              <p className="text-2xl text-primary">
-                Nincs teljesített kurzusod
-              </p>
-            )}
+                <p className="text-2xl text-primary">
+                  Nincs teljesített kurzusod
+                </p>
+              )}
+            </div>
           </div>
           <Carousel
             className="block lg:hidden m-auto w-60"
@@ -151,7 +159,7 @@ const StudentHome = (props: { user: User }) => {
             <CarouselNext></CarouselNext>
           </Carousel>
         </section>
-        <section className="w-full lg:w-[35em] flex flex-col gap-5">
+        <section className="w-[23em] lg:w-[35em] flex flex-col gap-5">
           <h1 className="text-2xl font-bold">Közelgő események</h1>
           <div className="flex flex-col gap-5">
             {dashboard?.upcomingEvents.length > 0 ? (
@@ -209,8 +217,8 @@ const StudentHome = (props: { user: User }) => {
                       ></img>
                       <div className="absolute rounded-2xl inset-0 bg-linear-to-b from-30% from-transparent to-[#E5E3E3] p-1" />
                     </div>
-                    <div className="absolute z-20 text-primary bottom-3  flex text-sm justify-between w-full px-3 transition-all duration-300 group-hover:-translate-y-28 group-hover:text-white">
-                      <p className="truncate max-w-[7em] lg:max-w-[20em]">
+                    <div className="absolute z-20 text-primary bottom-3  flex text-sm justify-between w-full px-3 transition-all duration-300 group-hover:-translate-y-25 group-hover:text-white">
+                      <p className="truncate max-w-[7em] lg:max-w-[18em]">
                         {pc.courseName}
                       </p>
                       <p>{pc.lessonPrice.amount} FT</p>

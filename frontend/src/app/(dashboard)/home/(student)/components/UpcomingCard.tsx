@@ -9,10 +9,12 @@ const UpcomingCard = (props: { event: UpcomingEvent }) => {
   return (
     <HoverCard openDelay={10} closeDelay={100}>
       <HoverCardTrigger asChild>
-        <div className="bg-linear-to-b text-xl from-primary to-secondary rounded-lg pl-1 hover:scale-105 transition-all duration-200">
+        <div className="bg-linear-to-b w-full text-xl from-primary to-secondary rounded-lg pl-1 hover:scale-105 transition-all duration-200">
           <div className="flex flex-col bg-background text-primary rounded-lg px-3 py-1 shadow-2xl">
             <div className="flex justify-between items-end">
-              <h2 className="font-bold text-md">{props.event.courseName}</h2>
+              <h2 className="font-bold truncate max-w-[10em] lg:max-w-[20em]">
+                {props.event.courseName}
+              </h2>
               <p className="text-sm">{props.event.startDate}</p>
             </div>
             <div className="flex justify-between items-start">
@@ -22,9 +24,11 @@ const UpcomingCard = (props: { event: UpcomingEvent }) => {
           </div>
         </div>
       </HoverCardTrigger>
-      <HoverCardContent>
-        <div>{props.event.description}</div>
-      </HoverCardContent>
+      {props.event.description && (
+        <HoverCardContent>
+          <div>{props.event.description}</div>
+        </HoverCardContent>
+      )}
     </HoverCard>
   );
 };

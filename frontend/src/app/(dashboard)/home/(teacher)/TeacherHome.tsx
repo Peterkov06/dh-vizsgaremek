@@ -193,6 +193,7 @@ const TeacherHome = (props: { user: User }) => {
                 value="money"
                 className="hidden"
                 id="money"
+                disabled
               ></RadioGroupItem>
               <Label
                 htmlFor="money"

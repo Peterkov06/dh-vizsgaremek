@@ -12,16 +12,17 @@ export interface ActiveCourse {
 
 export interface UpcomingEvent {
   eventId: string;
-  eventUrl: string;
+  instanceId: string;
   title: string;
   startDate: string;
   startTime: string;
+  endTime: string;
   courseName: string;
-  studentName: string;
-  eventType: EventType;
+  participantName: string;
+  participantId: string;
+  eventType: string;
   description: string;
 }
-
 export interface GradingQueueItem {
   submissionId: string;
   courseId: string;

@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { ActiveCourse } from "@/lib/models/teacherHome";
-import { ChevronRightCircle } from "lucide-react";
+import { ChevronRightCircle, Users } from "lucide-react";
 import Link from "next/link";
 
 const CourseCard = (props: { course: ActiveCourse }) => {
   return (
-    <div className="rounded-lg h-[12em] w-[10em] lg:w-[15em] lg:h-[18em] bg-linear-to-br from-primary to-secondary flex flex-col  text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
+    <div className="rounded-lg h-[15em] w-[10em] lg:w-[15em] lg:h-[18em] bg-linear-to-br from-primary to-secondary flex flex-col  text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
       <img
-        className="rounded-t-lg h-[50%]"
+        className="rounded-t-lg h-[30%] lg:h-[40%]"
         src={
           props.course.imageUrl === ""
             ? "defaults/default_course.jpg"
@@ -15,15 +15,18 @@ const CourseCard = (props: { course: ActiveCourse }) => {
         }
         alt="course img"
       />
-      <div className="py-2 px-3 rounded-b-lg flex flex-col justify-between flex-1 gap-2">
+      <div className="py-2 px-3 rounded-b-lg flex flex-col justify-between flex-1 gap-4">
         <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-xl">{props.course.courseName}</h1>
-            <h2 className="text-sm">{props.course.enrolledStudents}</h2>
+          <div className="flex flex-col gap-2">
+            <h1 className="text-base lg:text-xl">{props.course.courseName}</h1>
+            <h2 className="text-sm flex gap-1 items-center">
+              <Users></Users>
+              {props.course.enrolledStudents}
+            </h2>
           </div>
         </div>
 
-        <div className={`w-full hidden lg:flex justify-end`}>
+        <div className={`w-full flex justify-end`}>
           <Link
             href={`/home/course/teacher/modify?id=${props.course.courseId}`}
           >

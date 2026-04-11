@@ -8,7 +8,7 @@ const MessagePage = () => {
   const id = searchParams.get("chatId");
 
   return (
-    <main className="w-full h-full">
+    <main className="w-full h-[calc(100dvh-10rem)] lg:h-[calc(100dvh-3rem)]">
       {id ? (
         <MessageWall></MessageWall>
       ) : (

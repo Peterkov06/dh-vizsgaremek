@@ -94,7 +94,6 @@ const EnrollingClassDialog = (props: {
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
   useEffect(() => {
-    console.log(date?.toISOString());
     if (date !== undefined && classLenght !== 0) {
       console.log("here");
       fetchWithAuth(
@@ -115,7 +114,6 @@ const EnrollingClassDialog = (props: {
       setCourses([props.course as string]);
       setSelectedCourse(props.course);
     }
-    console.log(availableDays);
   }, []);
 
   const formatTime = (isoString: string) => isoString.split("T")[1].slice(0, 5);
@@ -133,6 +131,7 @@ const EnrollingClassDialog = (props: {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   async function HandleCreate() {
+    console.log(available);
     const res = await fetchWithAuth("/api/scheduling/book-event", {
       method: "POST",
       headers: {
@@ -146,13 +145,17 @@ const EnrollingClassDialog = (props: {
           start: available,
           end: addHours(available || "", classLenght),
         },
-        type: 1,
+        type: 0,
+        title: null,
+        description: null,
       }),
     });
     if (res.ok) toast.success("Sikeres időpont foglalás");
-    else toast.error("Hiba történt");
-
-    console.log(res);
+    else {
+      const errorText = await res.text();
+      console.error("Error response:", errorText);
+      toast.error("Hiba történt - " + errorText);
+    }
 
     setAvailableDays([]);
     setAvailableTimes([]);

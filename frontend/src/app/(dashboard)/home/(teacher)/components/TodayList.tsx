@@ -22,10 +22,10 @@ const TodayList = (props: {
                   <p className="flex justify-center">{ue.startTime}</p>
                   <div className="flex justify-between py-1 lg:py-2 px-2 lg:px-3 w-full rounded-xl text-white bg-linear-to-tl from-secondary to-primary">
                     <p className="text-sm lg:text-xl max-w-[12em] truncate">
-                      {ue.title}
+                      {ue.eventType}
                     </p>
                     <p className="truncate max-w-[5em] text-sm lg:text-lg">
-                      {ue.studentName}
+                      {ue.participantName}
                     </p>
                   </div>
                 </div>
