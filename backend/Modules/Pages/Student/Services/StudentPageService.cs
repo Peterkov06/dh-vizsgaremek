@@ -139,18 +139,20 @@ namespace backend.Modules.Pages.Student.Services
             var attendedPathCourses = await _db.PathEnrollments.Where(x => x.AttendantId == userId).Include(x => x.Course).ThenInclude(x => x.Teacher).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
 
 
-            var courses = attendedTutoringCourses.Select(x => new StudentMyCourseDTO
-            {
-                CourseBaseId = x.CourseBase?.Id ?? Guid.Empty,
-                InstanceId = x.Id,
-                CourseName = x.CourseBase.CourseName ?? string.Empty,
-                TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
-                TeacherId = x.CourseBase?.TeacherId ?? "",
-                CourseIconURL = "",
-                CourseBannerURL = x.CourseBase?.BannerImageId.ToString() ?? "",
-                Status = x.Status
-            }).ToList();
-            courses.AddRange(attendedPathCourses.Select(x => new StudentMyCourseDTO
+            var courses = attendedTutoringCourses
+                .OrderBy(x => x.CreatedAt)
+                .Select(x => new StudentMyCourseDTO
+                {
+                    CourseBaseId = x.CourseBase?.Id ?? Guid.Empty,
+                    InstanceId = x.Id,
+                    CourseName = x.CourseBase.CourseName ?? string.Empty,
+                    TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
+                    TeacherId = x.CourseBase?.TeacherId ?? "",
+                    CourseIconURL = "",
+                    CourseBannerURL = x.CourseBase?.BannerImageId.ToString() ?? "",
+                    Status = x.Status
+                }).ToList();
+            courses.AddRange(attendedPathCourses.OrderBy(x => x.CreatedAt).Select(x => new StudentMyCourseDTO
             {
                 CourseBaseId = x.Course?.Id ?? Guid.Empty,
                 InstanceId = x.Id,

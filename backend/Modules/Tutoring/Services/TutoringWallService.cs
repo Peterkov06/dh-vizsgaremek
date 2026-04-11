@@ -159,14 +159,16 @@ namespace backend.Modules.Tutoring.Services
 
         public async Task<ServiceResult<List<WallCommentDTO>>> GetPostAllComments(Guid postId, CancellationToken ct)
         {
-            var comments = await _db.WallPostComments.Where(x => x.PostId == postId).Include(x => x.Sender).ThenInclude(x => x.ProfilePicture).Select(x => new WallCommentDTO
-            {
-                SenderId=x.SenderId,
-                SenderImg = x.Sender.ProfilePicture.StoragePath ?? "",
-                SenderName = x.Sender.FullName,
-                SentTime = x.CreatedAt,
-                Text = x.Text
-            }).ToListAsync(ct);
+            var comments = await _db.WallPostComments.Where(x => x.PostId == postId)
+                .OrderBy(x => x.CreatedAt)
+                .Select(x => new WallCommentDTO
+                {
+                    SenderId=x.SenderId,
+                    SenderImg = x.Sender.ProfilePicture.StoragePath ?? "",
+                    SenderName = x.Sender.FullName,
+                    SentTime = x.CreatedAt,
+                    Text = x.Text
+                }).ToListAsync(ct);
 
             return ServiceResult<List<WallCommentDTO>>.Success(comments);
         }
@@ -174,6 +176,7 @@ namespace backend.Modules.Tutoring.Services
         public async Task<ServiceResult<StudentWallsDTO>> GetStudentWalls(string studentId, string teacherId, CancellationToken ct = default)
         {
             var walls = await _db.TutoringWalls.Where(x => x.TeacherId == teacherId && x.StudentId == studentId)
+                .OrderBy(x => x.CreatedAt)
                 .Select(x => new StudentWallDTO
                 {
                     CourseName = x.CourseBase.CourseName,

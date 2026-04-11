@@ -100,6 +100,7 @@ namespace backend.Modules.Pages.Teacher.Services
                 .Where(i => i.Status == PaymentStatus.Pending
                     && (i.Wall != null && i.Wall.TeacherId == userId
                      || i.Enrollment != null && i.Enrollment.Course.TeacherId == userId))
+                .OrderByDescending(x => x.CreatedAt)
                 .Select(i => new PaymentItemDTO
                 {
                     CourseId = i.Enrollment != null ? i.Enrollment.CourseId : Guid.Empty,
@@ -123,6 +124,7 @@ namespace backend.Modules.Pages.Teacher.Services
                         && w.TeacherId == userId && w.Status == EnrollmentStatus.Active)
                  || _db.PathEnrollments.Any(e => e.AttendantId == s.UserId
                         && e.Course.TeacherId == userId && e.Status == EnrollmentStatus.Active))
+                .OrderBy(x => x.User.FullName)
                 .Select(s => new StudentItemDTO
                 {
                     UserId = s.UserId,
@@ -147,6 +149,7 @@ namespace backend.Modules.Pages.Teacher.Services
 
             var pendingSubmissions = await _db.Submissions
                 .Where(s => s.TeacherId == userId && s.Feedback == null)
+                .OrderByDescending(x => x.CreatedAt)
                 .Select(s => new GradingItemDTO
                 {
                     SubmissionId = s.Id,
@@ -239,6 +242,7 @@ namespace backend.Modules.Pages.Teacher.Services
                 .Where(s => searchText == null
                     || s.User.FullName.ToLower().Contains(searchText)
                     || (s.User.Nickname != null && s.User.Nickname.ToLower().Contains(searchText)))
+                .OrderBy(x => x.User.FullName)
                 .Select(s => new MyStudentCardDTO
                 {
                     StudentId = s.UserId,
@@ -263,8 +267,8 @@ namespace backend.Modules.Pages.Teacher.Services
                         .OrderByDescending(w => w.CreatedAt)
                         .Select(w => w.Id)
                         .FirstOrDefault()
-        })
-        .ToListAsync(ct);
+                })
+                .ToListAsync(ct);
 
             return ServiceResult<MyStudentsPageDTO>.Success(
                 new MyStudentsPageDTO
@@ -286,6 +290,7 @@ namespace backend.Modules.Pages.Teacher.Services
             }
 
             var tutoringCourses = await tutoringCoursesQuery
+                .OrderBy(x => x.CourseName)
                 .Select(x => new MyCoursesCourseCardDTO
                 {
                     CourseId = x.Id,
@@ -304,6 +309,7 @@ namespace backend.Modules.Pages.Teacher.Services
 
 
             var draftCourses = await _db.CourseBases.Where(x => x.TeacherId == userId && x.Status == CourseStatus.Draft)
+                .OrderBy(x => x.CreatedAt)
                 .Select(x => new DraftCourseDTO
                 {
                     CourseId = x.Id,

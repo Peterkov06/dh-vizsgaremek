@@ -92,6 +92,7 @@ namespace backend.Modules.Scheduling.Services
 
             var availableStarts = await _db.TeacherTimeblocks
                 .Where(x => x.TeacherId == teacherId && x.Start <= lastDayOfMonth && x.End >= firstDayOfMonth && x.Start >= DateTime.UtcNow)
+                .OrderBy(x => x.Start.Date)
                 .AsNoTracking()
                 .Select(x => x.Start.Date)
                 .Distinct()

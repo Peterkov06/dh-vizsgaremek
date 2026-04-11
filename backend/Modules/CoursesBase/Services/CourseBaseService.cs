@@ -243,7 +243,7 @@ namespace backend.Modules.CoursesBase.Services
                 CourseName = model.CourseName,
                 Type = model.Type,
                 Description = model.Description,
-                Reviews = model.Reviews.Select(x => new CourseReviewDTO { Text = x.Text, CourseId = x.CourseId, Id = x.Id, Recommended = x.Recommended, ReviewerImage = "", ReviewerName = x.Reviewer.User.FullName, ReviewScore = x.ReviewScore }).ToList(),
+                Reviews = model.Reviews.OrderByDescending(x => x.CreatedAt).Select(x => new CourseReviewDTO { Text = x.Text, CourseId = x.CourseId, Id = x.Id, Recommended = x.Recommended, ReviewerImage = "", ReviewerName = x.Reviewer.User.FullName, ReviewScore = x.ReviewScore }).ToList(),
                 CourseDomain = new LookUpDTO { Name = model.CourseDomain.Name, Id = model.CourseDomainId },
                 CourseLevel = new LookUpDTO { Name = model.CourseLevel.Name, Id = model.CourseLevelId },
                 Price = model.Price,
@@ -251,8 +251,8 @@ namespace backend.Modules.CoursesBase.Services
                 Currency = new CurrencyDTO() { Id = model.PriceCurrencyId, CurrencyCode = model.Currency.CurrencyCode, CurrencySymbol = model.Currency.CurrencySymbol, Name = model.Currency.Name },
                 IconImage = "",
                 BannerImage = "",
-                Tags = model.CourseToTags.Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name }).ToList(),
-                Languages = model.CourseToLanguages.Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name }).ToList(),
+                Tags = model.CourseToTags.OrderBy(x => x.Tag.Name).Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name }).ToList(),
+                Languages = model.CourseToLanguages.OrderBy(x => x.Language.Name).Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name }).ToList(),
                 RatingAverage = model.Reviews.Average(x => (float?)x.ReviewScore) ?? 0f,
                 TeacherIntroduction = model.Teacher.User.Introduction ?? ""
             };
