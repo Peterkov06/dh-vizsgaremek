@@ -242,9 +242,27 @@ body {
   border-color: #93c5fd !important;
 }
 
+.sx-react-calendar-wrapper {
+  z-index: auto !important;
+  isolation: auto !important;
+}
 
-/* .sx__background-event.my-custom-color {
-  background-color: hsl(var(--secondary)) !important;
-  border-radius: 0 !important; 
-  opacity: 0.8; 
-} */
+.sx__calendar-header {
+  position: relative !important;
+  z-index: 40 !important; 
+}
+
+.sx__view-selection-items,
+.sx__date-picker-popup {
+  position: absolute !important;
+  z-index: 100 !important; 
+}
+
+.sx__view-container {
+  position: relative !important;
+  z-index: 1 !important; /* Low */
+}
+
+[data-radix-portal] {
+  z-index: 99999 !important;
+}
