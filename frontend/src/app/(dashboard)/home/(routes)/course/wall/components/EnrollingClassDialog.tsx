@@ -175,12 +175,12 @@ const EnrollingClassDialog = (props: {
           <CirclePlus className="size-6"></CirclePlus> Új óra felvétele
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-none! w-[30%]">
+      <DialogContent className="lg:max-w-none! lg:w-[30%]">
         <DialogHeader>
           <DialogTitle className="text-3xl">Új óra felvétele</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-7">
-          <div className="flex justify-between items-center">
+          <div className="flex lg:flex-row flex-col justify-between items-center">
             <div>
               <h2>Kurzus:</h2>
               <Select
@@ -190,7 +190,7 @@ const EnrollingClassDialog = (props: {
                 }}
                 disabled={props.course !== undefined}
               >
-                <SelectTrigger className=" shadow-2xl">
+                <SelectTrigger className="shadow-2xl">
                   <SelectValue placeholder="Válassz egy kurzust..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -208,7 +208,7 @@ const EnrollingClassDialog = (props: {
 
             <p className="text-xl">Tokenek: {props.token}</p>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex lg:flex-row flex-col justify-between items-center">
             <div>
               <h2>Órák száma:</h2>
               <Input
@@ -234,7 +234,7 @@ const EnrollingClassDialog = (props: {
               Felhasznált tokenek <br></br>száma: {classLenght}
             </p>
           </div>
-          <div className="w-full flex justify-center text-xl">
+          <div className="w-full lg:flex-row flex-col flex justify-center text-xl">
             {classLenght === 0 ? (
               <h1>Válasszd ki az óra hosszát!</h1>
             ) : date ? (
@@ -253,7 +253,7 @@ const EnrollingClassDialog = (props: {
               <h1>Válassz egy dátumot!</h1>
             )}
           </div>
-          <div className="flex justify-between">
+          <div className="flex lg:flex-row flex-col justify-between">
             <div>
               <Calendar
                 mode="single"

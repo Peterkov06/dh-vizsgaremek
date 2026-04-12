@@ -70,7 +70,7 @@ const ReviewCourseDialog = () => {
           <span className="hidden lg:block">Adj értékelést!</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-none! w-[40%]">
+      <DialogContent className="lg:max-w-none! lg:w-[40%]">
         <DialogHeader>
           <DialogTitle className="text-3xl">Értékelés</DialogTitle>
         </DialogHeader>
@@ -90,7 +90,7 @@ const ReviewCourseDialog = () => {
               ></RadioGroupItem>
               <Label
                 htmlFor="studs"
-                className="h-full w-full flex justify-center items-center text-2xl"
+                className="h-full w-full flex justify-center items-center lg:text-2xl"
               >
                 <ThumbsUp></ThumbsUp>
                 Ajánlom
@@ -106,7 +106,7 @@ const ReviewCourseDialog = () => {
               ></RadioGroupItem>
               <Label
                 htmlFor="money"
-                className="h-full w-full flex justify-center items-center text-2xl"
+                className="h-full w-full flex justify-center items-center lg:text-2xl"
               >
                 <ThumbsDown></ThumbsDown>
                 Nem ajánlom

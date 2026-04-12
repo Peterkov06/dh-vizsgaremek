@@ -84,7 +84,7 @@ const BuyingTokenDialog = (props: {
           <span className="lg:block hidden">Token vásárlása</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-none! w-[30%]">
+      <DialogContent className="lg:max-w-none! lg:w-[30%]">
         <DialogHeader>
           <DialogTitle className="text-3xl">Token vásárlása</DialogTitle>
         </DialogHeader>
@@ -113,7 +113,7 @@ const BuyingTokenDialog = (props: {
               </SelectContent>
             </Select>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex lg:flex-row flex-col justify-between items-center">
             <div className="flex flex-col gap-1">
               <h2>Token mennyisége:</h2>
               <Input
@@ -136,13 +136,13 @@ const BuyingTokenDialog = (props: {
               <p>1 őra = {props.classLength} perc</p>
             </div>
           </div>
-          <div className="flex justify-between text-xl mt-4">
+          <div className="flex lg:flex-row flex-col justify-between text-xl mt-4">
             <p>Jelenlegi egyenleg: {props.tokenCount}</p>
             <p>Új egyenleg: {props.tokenCount + tokenCount}</p>
           </div>
 
           <div className="mt-40 flex flex-col gap-3">
-            <div className="flex justify-between items-end">
+            <div className="flex lg:flex-row flex-col justify-between items-center lg:items-end">
               <p className="truncate max-w-70">{selectedCourse} Token</p>
               <div className="flex gap-5 text-lg">
                 <div>
@@ -156,7 +156,7 @@ const BuyingTokenDialog = (props: {
               </div>
             </div>
             <hr className="border-2 border-primary" />
-            <div className="flex justify-between px-6">
+            <div className="flex  justify-between px-6">
               <h2 className="text-2xl">Fizetendő:</h2>
               <h2 className="text-2xl">{price * tokenCount} Ft</h2>
             </div>
