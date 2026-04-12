@@ -206,6 +206,8 @@ namespace backend.Modules.Pages.Student.Services
                 })
                 .ToListAsync(ct);
 
+            var hasReview = await _db.CourseReviews.Where(x => x.WallId == wallId && x.ReviewerId == userId).AnyAsync(ct);
+
             return ServiceResult<StudentTutoringWallDTO>.Success(new StudentTutoringWallDTO
             {
                 CourseName = walldata.courseName,
@@ -217,7 +219,8 @@ namespace backend.Modules.Pages.Student.Services
                 InstanceId = wallId,
                 NextHandins = nextHandins,
                 NextLessons = nextLessons,
-                TokenCount = 0
+                TokenCount = 0,
+                WroteReview = hasReview,
             });
         }
 

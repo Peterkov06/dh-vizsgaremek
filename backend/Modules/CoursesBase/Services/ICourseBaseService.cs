@@ -11,7 +11,7 @@ namespace backend.Modules.CoursesBase.Services
         Task<ServiceResult<CourseBaseListResultDTO>> GetCoursesPage(CourseFiltersDTO filtersDTO, CancellationToken ct);
         Task<ServiceResult<CourseBaseCreationDTO>> CreateCourseBaseAsync(CourseBaseCreationDTO newCourse, string teacherId, CancellationToken ct);
         Task<ServiceResult<CourseBaseDTO>> GetOneCourse(Guid id, CancellationToken ct);
-        Task<ServiceResult<CourseBaseCreationDTO>> UpdateCourseBaseAsync(CancellationToken ct);
+        Task<ServiceResult> UpdateCourseBaseAsync(CourseBaseCreationDTO dto, CancellationToken ct);
         Task<ServiceResult> DeleteCourseBaseAsync(CancellationToken ct);
     }
 }

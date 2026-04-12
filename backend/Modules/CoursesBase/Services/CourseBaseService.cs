@@ -198,14 +198,64 @@ namespace backend.Modules.CoursesBase.Services
             return ServiceResult<CourseBaseDTO>.Success(course);
         }
 
-        public Task<ServiceResult<CourseBaseCreationDTO>> UpdateCourseBaseAsync(CancellationToken ct)
+        public async Task<ServiceResult> UpdateCourseBaseAsync(CourseBaseCreationDTO dto, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            if (dto.Id is null)
+            {
+                return ServiceResult.NotFound("No course was found");
+            }
+
+            var course = await _db.CourseBases.Where(x => x.Id == dto.Id).FirstOrDefaultAsync(ct);
+
+            if (course is null)
+            {
+                return ServiceResult.NotFound("No course was found");
+            }
+
+            course = MapFromDto(course, dto);
+
+            _db.CourseBases.Update(course);
+
+            try
+            {
+                await _db.SaveChangesAsync(ct);
+                return ServiceResult.Success();
+            }
+            catch (Exception)
+            {
+                return ServiceResult.Failure("Update failed");
+            }
+
+
         }
 
         public Task<ServiceResult> DeleteCourseBaseAsync(CancellationToken ct)
         {
             throw new NotImplementedException();
+        }
+
+        public CourseBaseModel MapFromDto(CourseBaseModel model, CourseBaseCreationDTO dto)
+        {
+            model.CourseName = dto.CourseName;
+            model.Description = dto.Description;
+            model.Type = dto.Type;
+            model.CourseDomainId = dto.CourseDomainId;
+            model.CourseLevelId = dto.CourseLevelId;
+            model.TokenMinuteValue = dto.LessonLenght; 
+            model.Price = dto.Price;
+            model.FirstConsultationFree = dto.FirstConsultationFree;
+            model.PriceCurrencyId = dto.PriceCurrencyId;
+
+            if (dto.Status.HasValue)
+                model.Status = dto.Status.Value;
+
+            if (dto.IconImageId.HasValue)
+                model.IconImageId = dto.IconImageId;
+
+            if (dto.BannerImageId.HasValue)
+                model.BannerImageId = dto.BannerImageId;
+
+            return model;
         }
 
         public static Expression<Func<CourseBaseModel, CourseBaseExplorerDTO>> ToExploreDto =>

@@ -7,6 +7,7 @@ namespace backend.Modules.CoursesBase.DTOs
         public Guid? Id { get; set; } = null;
         public required string CourseName { get; set; }
         public required string Description { get; set; }
+        public string? TeacherId { get; set; } = null;
         public required CourseType Type { get; set; } = CourseType.Tutoring;
         public required Guid CourseDomainId { get; set; }
         public required Guid CourseLevelId { get; set; }

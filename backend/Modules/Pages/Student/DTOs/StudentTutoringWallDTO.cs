@@ -10,6 +10,7 @@
         public string? BannerURL { get; set; } = null;
         public string? IconURL { get; set; } = null;
         public int TokenCount { get; set; } = 0;
+        public required bool WroteReview { get; set; } = false;
         public List<TutoringWallEventCardDTO> NextHandins { get; set; } = [];
         public List<TutoringWallEventCardDTO> NextLessons { get; set; } = [];
 

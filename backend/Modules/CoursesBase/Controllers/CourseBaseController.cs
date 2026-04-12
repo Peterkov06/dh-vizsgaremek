@@ -35,6 +35,24 @@ namespace backend.Modules.CoursesBase.Controllers
             return res.Succeded ? CreatedAtAction(nameof(GetAllCourses), res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
+        [Authorize(Roles = "Teacher")]
+        [HttpPatch("{courseId}")]
+        public async Task<IActionResult> UpdateCourse(Guid courseId, CourseBaseCreationDTO newCourse, CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            newCourse.Id = courseId;
+            newCourse.TeacherId = user.Id;
+
+            var res = await _courseBaseService.UpdateCourseBaseAsync(newCourse, ct);
+            return res.Succeded ? Ok() : StatusCode(res.StatusCode, res.Error);
+        }
+
         [HttpGet("all")]
         public async Task<IActionResult> GetAllCourses(CancellationToken ct)
         {
