@@ -25,6 +25,7 @@ namespace backend.Data.Configurations.Payment
             builder.HasOne(x => x.Enrollment).WithMany().HasForeignKey(x => x.EnrollmentId).IsRequired(false).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.Currency).WithMany().HasForeignKey(x => x.CurrencyId).IsRequired().OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Teacher).WithMany().HasForeignKey(x => x.TeacherId).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

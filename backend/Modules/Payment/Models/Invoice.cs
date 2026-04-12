@@ -15,10 +15,12 @@ namespace backend.Modules.Payment.Models
         public decimal PaidPrice { get; set; }
         public required Guid CurrencyId { get; set; }
         public required string UserId { get; set; }
+        public required string TeacherId { get; set; }
 
         public TutoringWall? Wall { get; set; }
         public PathEnrollment? Enrollment { get; set; }
         public Currency? Currency { get; set; }
         public ApplicationUser? User { get; set; }
+        public ApplicationUser? Teacher { get; set; }
     }
 }

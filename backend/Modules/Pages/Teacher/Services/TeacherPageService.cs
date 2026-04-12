@@ -9,6 +9,7 @@ using backend.Modules.Pages.Shared.DTOs;
 using backend.Modules.Pages.Student.DTOs;
 using backend.Modules.Pages.Teacher.DTOs;
 using backend.Modules.Payment.Models;
+using backend.Modules.Payment.Services;
 using backend.Modules.Resources.Models;
 using backend.Modules.Scheduling.Models;
 using backend.Modules.Shared.DTOs;
@@ -26,14 +27,14 @@ namespace backend.Modules.Pages.Teacher.Services
     {
         private readonly ILookUpService _lookUpService;
         private readonly ICourseMetadataService _courseMetadataService;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IPaymentService _paymentService;
         private readonly AppDbContext _db;
 
-        public TeacherPageService(ILookUpService lookUpService, ICourseMetadataService courseMetadataService, UserManager<ApplicationUser> userManager, AppDbContext db)
+        public TeacherPageService(ILookUpService lookUpService, ICourseMetadataService courseMetadataService, IPaymentService paymentService, AppDbContext db)
         {
             _lookUpService = lookUpService;
             _courseMetadataService = courseMetadataService;
-            _userManager = userManager;
+            _paymentService = paymentService;
             _db = db;
         }
 
@@ -104,8 +105,8 @@ namespace backend.Modules.Pages.Teacher.Services
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(i => new PaymentItemDTO
                 {
-                    CourseId = i.Enrollment != null ? i.Enrollment.CourseId : Guid.Empty,
-                    InstanceId = i.Enrollment != null ? i.Enrollment.Id : Guid.Empty,
+                    CourseId = i.Wall != null ? (Guid)i.Wall.CourseId : i.Enrollment != null ? (Guid)i.Enrollment.CourseId : Guid.Empty,
+                    InstanceId = i.WallId != null ? (Guid)i.WallId : i.EnrollmentId != null ? (Guid)i.EnrollmentId : Guid.Empty,
                     CourseName = i.Enrollment != null ? i.Enrollment.Course.CourseName
                                     : i.Wall != null ? i.Wall.CourseBase.CourseName : string.Empty,
                     UserId = i.UserId,
@@ -446,6 +447,32 @@ namespace backend.Modules.Pages.Teacher.Services
                 NextHandins = nextHandins,
                 NextLessons = nextLessons,
                 TokenCount = walldata.tokens,
+            });
+        }
+
+        public async Task<ServiceResult<InvoicesPageDTO>> GetInvoicesPage(string userId, CancellationToken ct)
+        {
+            var now = DateTime.UtcNow;
+            var monthStart = new DateTime(now.Year, now.Month, 1, 0,0,0, DateTimeKind.Utc);
+            var monthEnd = monthStart.AddMonths(1);
+            var yearStart = new DateTime(now.Year, 1, 1, 0,0,0, DateTimeKind.Utc);
+            var yearEnd = monthStart.AddYears(1);
+
+            var allInvoices = await _paymentService.GetTeacherInvoices(userId, ct);
+            var pendingInvoices = allInvoices.Data.Where(x => x.Status == PaymentStatus.Pending).OrderByDescending(x => x.CreatedAt).ToList();
+            var invoices = allInvoices.Data.Where(x => x.Status != PaymentStatus.Pending).OrderByDescending(x => x.CreatedAt).ToList();
+
+            var totalIncome = allInvoices.Data.Sum(x => x.PaidPrice);
+            var totalMonthIncome = allInvoices.Data.Where(x => monthStart <= x.CreatedAt && x.CreatedAt < monthEnd).Sum(x => x.PaidPrice);
+            var totalYearIncome = allInvoices.Data.Where(x => yearStart <= x.CreatedAt && x.CreatedAt < yearEnd).Sum(x => x.PaidPrice);
+
+            return ServiceResult<InvoicesPageDTO>.Success(new InvoicesPageDTO
+            {
+                PendingInvoices = pendingInvoices,
+                CompletedInvoices = invoices,
+                TotalIncome = totalIncome,
+                MonthIncome = totalMonthIncome,
+                YearIncome = totalYearIncome,
             });
         }
     }

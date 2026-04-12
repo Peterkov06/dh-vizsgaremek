@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Modules.Payment.Services
 {
-    public class PaymentService
+    public class PaymentService: IPaymentService
     {
         private readonly AppDbContext _db;
         private readonly INotificationService _notificationService;
@@ -20,7 +20,7 @@ namespace backend.Modules.Payment.Services
             _notificationService = notificationService;
         }
 
-        public async Task<ServiceResult<Guid>> CreatePayment(string userId, PaymentDTO dto, CancellationToken ct)
+        public async Task<ServiceResult<Guid>> CreatePayment(string userId, PaymentDTO dto, CancellationToken ct = default)
         {
             var course = await _db.CourseBases.Where(x => x.Id == dto.CourseBaseId).Select(x => new {x.Type, x.PriceCurrencyId, x.TeacherId}).FirstOrDefaultAsync(ct);
 
@@ -38,6 +38,7 @@ namespace backend.Modules.Payment.Services
                 Status = PaymentStatus.Pending,
                 WallId = course.Type == CourseType.Tutoring ? dto.InstanceId : null,
                 EnrollmentId = course.Type == CourseType.LearningPath ? dto.InstanceId : null,
+                TeacherId = course.TeacherId,
             };
 
             _db.Invoices.Add(newInvoice);
@@ -55,7 +56,7 @@ namespace backend.Modules.Payment.Services
             return ServiceResult<Guid>.Success(newInvoice.Id);
         }
 
-        public async Task<ServiceResult> ReactToPayment(PaymentReactionDTO dto, CancellationToken ct)
+        public async Task<ServiceResult> ReactToPayment(PaymentReactionDTO dto, CancellationToken ct = default)
         {
             var invoice = await _db.Invoices.Where(x => x.Id == dto.InvoiceId).FirstOrDefaultAsync(ct);
 
@@ -116,6 +117,30 @@ namespace backend.Modules.Payment.Services
             await _db.SaveChangesAsync(ct);
 
             return ServiceResult.Success();
+        }
+
+        public async Task<ServiceResult<List<InvoiceDTO>>> GetTeacherInvoices(string userId, CancellationToken ct = default)
+        {
+            var payments = await _db.Invoices.Where(x => x.TeacherId == userId)
+                .Select(x => new InvoiceDTO
+                {
+                    CourseName = x.Wall.CourseBase.CourseName ?? x.Enrollment.Course.CourseName,
+                    UserName = x.User.FullName,
+                    InvoiceId = x.Id,
+                    InstanceId = x.WallId != null ? (Guid)x.WallId : x.EnrollmentId != null ? (Guid)x.EnrollmentId : Guid.Empty,
+                    CreatedAt = x.CreatedAt,
+                    Currency = x.Currency,
+                    TokenCount = x.TokenCount,
+                    UserId = x.UserId,
+                    OneTokenPrice = x.Wall != null ? x.Wall.CourseBase.TokenMinuteValue : x.Enrollment != null ? x.Enrollment.Course.TokenMinuteValue : 0,
+                    PaidPrice = x.PaidPrice,
+                    Status = x.Status,
+                    UserImageURL = x.User.ProfilePicture.StoragePath ?? "",
+                })
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(ct);
+
+            return ServiceResult<List<InvoiceDTO>>.Success(payments);
         }
     }
 }
