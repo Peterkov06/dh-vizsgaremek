@@ -1,10 +1,12 @@
 ﻿using backend.Models;
 using backend.Modules.Pages.Teacher.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Modules.Pages.Teacher.Controllers
 {
+    [Authorize(Roles = "Teacher")]
     [ApiController]
     [Route("api/pages/teacher")]
     public class TeacherPageController: ControllerBase
@@ -78,6 +80,20 @@ namespace backend.Modules.Pages.Teacher.Controllers
             }
 
             var res = await _teacherPageService.GetTutoringStudents(user.Id, courseId, searchText, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
+        [HttpGet("walls/{wallId}")]
+        public async Task<IActionResult> GetWallData(Guid wallId, CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _teacherPageService.GetTutoringWallData(wallId, ct);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 

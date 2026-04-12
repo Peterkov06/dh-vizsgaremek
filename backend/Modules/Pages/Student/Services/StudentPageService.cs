@@ -21,11 +21,12 @@ namespace backend.Modules.Pages.Student.Services
 
         public async Task<ServiceResult<StudentHomePageDTO>> GetStudentHomePageAsync(string userId, CancellationToken ct)
         {
+            var now = DateTime.UtcNow;
             var walls = await _db.TutoringWalls.Where(x => x.StudentId == userId).Include(x => x.CourseBase).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
             var paths = await _db.PathEnrollments.Where(x => x.AttendantId == userId).Include(x => x.Course).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
             var upcomingEvents = await _db.Events
                 .Include(x => x.TutoringWall).ThenInclude(x => x.CourseBase).Include(x => x.Enrollment)
-                .Where(x => (x.Enrollment != null && x.Enrollment.AttendantId == userId) || (x.TutoringWall != null && x.TutoringWall.StudentId == userId)).Where(x => x.StartTime > DateTime.UtcNow)
+                .Where(x => (x.Enrollment != null && x.Enrollment.AttendantId == userId) || (x.TutoringWall != null && x.TutoringWall.StudentId == userId)).Where(x => x.StartTime > now)
                 .OrderBy(x => x.StartTime)
                 .Include(x => x.CourseBase).AsNoTracking().ToListAsync(ct);
             var notifications = await _db.Notifications
@@ -179,8 +180,10 @@ namespace backend.Modules.Pages.Student.Services
                 })
                 .SingleOrDefaultAsync(ct);
 
+            var now = DateTime.UtcNow;
+
             var nextHandins = await _db.Events
-                .Where(x => x.TutoringWallId == wallId && x.StartTime > DateTime.UtcNow && x.Type == EventType.Deadline)
+                .Where(x => x.TutoringWallId == wallId && x.StartTime > now && x.Type == EventType.Deadline)
                 .OrderBy(x => x.StartTime)
                 .Take(2)
                 .Select(x => new TutoringWallEventCardDTO
@@ -194,7 +197,7 @@ namespace backend.Modules.Pages.Student.Services
 
 
             var nextLessons = await _db.Events
-                .Where(x => x.TutoringWallId == wallId && x.StartTime > DateTime.UtcNow && x.Type == EventType.Lesson)
+                .Where(x => x.TutoringWallId == wallId && x.StartTime > now && x.Type == EventType.Lesson)
                 .OrderBy(x => x.StartTime)
                 .Take(2)
                 .Select(x => new TutoringWallEventCardDTO

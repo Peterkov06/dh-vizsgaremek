@@ -10,5 +10,6 @@ namespace backend.Modules.Pages.Teacher.Services
         Task<ServiceResult<MyStudentsPageDTO>> GetStudentsPage(string userId, CancellationToken ct, string? searchText = null);
         Task<ServiceResult<MyCoursesPageDTO>> GetMyCoursesPage(string userId, CancellationToken ct, string? searchText = null);
         Task<ServiceResult<CourseStudentsPageDTO>> GetTutoringStudents(string userId, Guid courseId, string? searchText = null, CancellationToken ct = default);
+        Task<ServiceResult<TeacherTutoringWallDTO>> GetTutoringWallData(Guid wallId, CancellationToken ct = default);
     }
 }
