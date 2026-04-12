@@ -3,6 +3,8 @@ using backend.Models;
 using backend.Modules.Engagement.Models;
 using backend.Modules.Engagement.Services;
 using backend.Modules.Identity.Models;
+using backend.Modules.Payment.Models;
+using backend.Modules.Payment.Services;
 using backend.Modules.Scheduling.DTOs;
 using backend.Modules.Scheduling.Models;
 using backend.Modules.Shared.DTOs;
@@ -16,11 +18,13 @@ namespace backend.Modules.Scheduling.Services
     {
         private readonly AppDbContext _db;
         private readonly INotificationService _notificationService;
+        private readonly IPaymentService _paymentService;
 
-        public SchedulingService(AppDbContext db, INotificationService notificationService)
+        public SchedulingService(AppDbContext db, INotificationService notificationService, IPaymentService paymentService)
         {
             _db = db;
             _notificationService = notificationService;
+            _paymentService = paymentService;
         }
 
         public async Task<ServiceResult> CreateAvailableBlocks(string userId, AvailableTimeblockCreationDTO dto, CancellationToken ct = default)
@@ -247,12 +251,16 @@ namespace backend.Modules.Scheduling.Services
             };
 
             NotificationType notificationType = NotificationType.NewLesson;
-            string courseName = await _db.CourseBases.Where(x => x.Id == dto.CourseBaseId).Select(x => x.CourseName).AsNoTracking().FirstOrDefaultAsync(ct) ?? "";
+            var course = await _db.CourseBases.Where(x => x.Id == dto.CourseBaseId).Select(x => new {x.CourseName, x.TokenMinuteValue}).FirstOrDefaultAsync(ct);
+            var tokensRequired = Convert.ToInt32(Math.Ceiling((dto.Timeblock.End - dto.Timeblock.Start).TotalMinutes / (double)course.TokenMinuteValue));
+
+            ServiceResult? transactionRes = null;
 
             switch (dto.Type)
             {
                 case EventType.Lesson:
                     newEvent.TutoringWallId = dto.InstanceId;
+                    transactionRes = await _paymentService.CreateWallTokenTransaction(TransactionType.LessonSpent, dto.InstanceId, null, tokensRequired, ct);
                     break;
                 case EventType.Deadline:
                     newEvent.TutoringWallId = dto.InstanceId;
@@ -261,9 +269,18 @@ namespace backend.Modules.Scheduling.Services
                 case EventType.Consultation:
                     newEvent.PathEnrollmentId = dto.InstanceId;
                     notificationType = NotificationType.NewConsultation;
+
+                    var enrollment = await _db.PathEnrollments.Where(x => x.Id == dto.InstanceId).FirstAsync(ct);
+
+                    transactionRes = await _paymentService.CreateEnrollmentTokenTransaction(TransactionType.LessonSpent, dto.InstanceId, null, tokensRequired, ct);
                     break;
                 default:
                     return ServiceResult<Event>.Failure("Unrecognised type");
+            }
+
+            if (transactionRes is not null && !transactionRes.Succeded)
+            {
+                return ServiceResult<Event>.Failure(transactionRes.Error ?? "", transactionRes.StatusCode);
             }
 
             try
@@ -272,7 +289,7 @@ namespace backend.Modules.Scheduling.Services
                 switch (role)
                 {
                     case "Teacher":
-                        await _notificationService.NotifyAsync(studentId, notificationType, dto.InstanceId, teacherId, courseName);
+                        await _notificationService.NotifyAsync(studentId, notificationType, dto.InstanceId, teacherId, course.CourseName);
                         break;
                     case "Student":
                         var studentName = await _db.Students.Where(x => x.UserId == studentId).Select(x => x.User.FullName).SingleOrDefaultAsync(ct);
@@ -381,18 +398,23 @@ namespace backend.Modules.Scheduling.Services
             string teacherId = lesson.OrganiserId;
             string? studentId = null;
             NotificationType notificationType = NotificationType.DeletedLesson;
-            string courseName = await _db.CourseBases.Where(x => x.Id == lesson.CourseBaseId).Select(x => x.CourseName).AsNoTracking().FirstOrDefaultAsync(ct) ?? "";
+            var course = await _db.CourseBases.Where(x => x.Id == lesson.CourseBaseId).Select(x => new {x.CourseName, x.TokenMinuteValue}).AsNoTracking().FirstOrDefaultAsync(ct);
+
+            var tokens = Convert.ToInt32(Math.Ceiling((lesson.EndTime - lesson.StartTime).TotalMinutes / course.TokenMinuteValue));
+            ServiceResult? transactionRes = null;
 
             switch (lesson.Type)
             {
                 case EventType.Lesson:
                     studentId = lesson.TutoringWall?.StudentId;
                     instanceId = lesson.TutoringWallId;
+                    transactionRes = await _paymentService.CreateWallTokenTransaction(TransactionType.Refound, (Guid)instanceId, null, tokens, ct);
                     break;
                 case EventType.Consultation:
                     studentId = lesson.Enrollment?.AttendantId;
                     notificationType = NotificationType.DeletedConsultation;
                     instanceId = lesson.PathEnrollmentId;
+                    transactionRes = await _paymentService.CreateEnrollmentTokenTransaction(TransactionType.Refound, (Guid)instanceId, null, tokens, ct);
                     break;
                 case EventType.Deadline:
                     studentId = lesson.TutoringWall?.StudentId;
@@ -401,6 +423,11 @@ namespace backend.Modules.Scheduling.Services
                     break;
                 default:
                     break;
+            }
+
+            if (transactionRes is not null && !transactionRes.Succeded)
+            {
+                return ServiceResult<Event>.Failure(transactionRes.Error ?? "", transactionRes.StatusCode);
             }
 
             if (studentId is null)
@@ -413,10 +440,11 @@ namespace backend.Modules.Scheduling.Services
             switch (role)
             {
                 case "Teacher":
-                    await _notificationService.NotifyAsync(studentId, notificationType, instanceId, teacherId, courseName);
+                    await _notificationService.NotifyAsync(studentId, notificationType, instanceId, teacherId, course.CourseName);
                     break;
                 case "Student":
-                    await _notificationService.NotifyAsync(teacherId, notificationType, instanceId, studentId, courseName);
+                    var studentName = await _db.Users.Where(x => x.Id == studentId).Select(x => x.FullName).FirstAsync();
+                    await _notificationService.NotifyAsync(teacherId, notificationType, instanceId, studentId, studentName);
                     break;
                 default:
                     break;

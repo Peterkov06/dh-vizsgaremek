@@ -10,7 +10,7 @@ namespace backend.Modules.Payment.Models
         public int TokenCount { get; set; }
         public Guid? WallId { get; set; } = null;
         public Guid? EnrollmentId { get; set; } = null;
-        public required Guid InvoiceId { get; set; }
+        public Guid? InvoiceId { get; set; } = null;
         public required TransactionType Type { get; set; }
 
         public TutoringWall? Wall { get; set; }

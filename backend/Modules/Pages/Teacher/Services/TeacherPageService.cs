@@ -462,9 +462,10 @@ namespace backend.Modules.Pages.Teacher.Services
             var pendingInvoices = allInvoices.Data.Where(x => x.Status == PaymentStatus.Pending).OrderByDescending(x => x.CreatedAt).ToList();
             var invoices = allInvoices.Data.Where(x => x.Status != PaymentStatus.Pending).OrderByDescending(x => x.CreatedAt).ToList();
 
-            var totalIncome = allInvoices.Data.Sum(x => x.PaidPrice);
-            var totalMonthIncome = allInvoices.Data.Where(x => monthStart <= x.CreatedAt && x.CreatedAt < monthEnd).Sum(x => x.PaidPrice);
-            var totalYearIncome = allInvoices.Data.Where(x => yearStart <= x.CreatedAt && x.CreatedAt < yearEnd).Sum(x => x.PaidPrice);
+            var successfulInvoices = invoices.Where(x => x.Status == PaymentStatus.Accepted).ToList();
+            var totalIncome = successfulInvoices.Sum(x => x.PaidPrice);
+            var totalMonthIncome = successfulInvoices.Where(x => monthStart <= x.CreatedAt && x.CreatedAt < monthEnd).Sum(x => x.PaidPrice);
+            var totalYearIncome = successfulInvoices.Where(x => yearStart <= x.CreatedAt && x.CreatedAt < yearEnd).Sum(x => x.PaidPrice);
 
             return ServiceResult<InvoicesPageDTO>.Success(new InvoicesPageDTO
             {

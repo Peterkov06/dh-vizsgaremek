@@ -97,5 +97,19 @@ namespace backend.Modules.Pages.Teacher.Controllers
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
 
+        [HttpGet("invoices")]
+        public async Task<IActionResult> GetInvoicesPageData(CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _teacherPageService.GetInvoicesPage(user.Id, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
     }
 }

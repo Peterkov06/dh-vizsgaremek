@@ -9,6 +9,8 @@ namespace backend.Modules.Payment.Services
         Task<ServiceResult<List<InvoiceDTO>>> GetTeacherInvoices(string userId, CancellationToken ct = default);
         Task<ServiceResult<Guid>> CreatePayment(string userId, PaymentDTO dto, CancellationToken ct);
         Task<ServiceResult> ReactToPayment(PaymentReactionDTO dto, CancellationToken ct);
+        Task<ServiceResult> CreateWallTokenTransaction(TransactionType transactionType, Guid instanceId, Guid? invoiceId, int tokenCount, CancellationToken ct);
+        Task<ServiceResult> CreateEnrollmentTokenTransaction(TransactionType transactionType, Guid instanceId, Guid? invoiceId, int tokenCount, CancellationToken ct);
 
     }
 }

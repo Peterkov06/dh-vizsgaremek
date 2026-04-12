@@ -115,7 +115,7 @@ namespace backend.Modules.Engagement.Services
         public async Task<ServiceResult<List<ChatMessageDTO>>> GetChatMessages(Guid chatId, string userId, CancellationToken ct = default)
         {
             var unreadChatNotifications = await _db.Notifications
-                .Where(x => x.Type == NotificationType.Message && x.RecipientId == userId && x.IsRead == false)
+                .Where(x => x.Type == NotificationType.Message && x.RecipientId == userId && x.IsRead == false && x.ReferenceId == chatId)
                 .Select(x => x.Id).ToListAsync(ct);
 
             await _notificationService.SetNotificationsToRead(unreadChatNotifications, ct);

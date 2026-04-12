@@ -177,6 +177,7 @@ namespace backend.Modules.Pages.Student.Services
                     courseBaseId = x.CourseId,
                     bannerURL = x.CourseBase.BannerImage.StoragePath ?? "",
                     iconURL = x.CourseBase.IconImage.StoragePath ?? "",
+                    tokens = x.TokenCount,
                 })
                 .SingleOrDefaultAsync(ct);
 
@@ -222,7 +223,7 @@ namespace backend.Modules.Pages.Student.Services
                 InstanceId = wallId,
                 NextHandins = nextHandins,
                 NextLessons = nextLessons,
-                TokenCount = 0,
+                TokenCount = walldata.tokens,
                 WroteReview = hasReview,
             });
         }
