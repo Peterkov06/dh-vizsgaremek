@@ -133,6 +133,7 @@ const RegistrationContextManager = (props: { children: ReactNode }) => {
       postal_code: data.postalCode,
       city: data.cityName,
       date_of_birth: data.dateOfBirth.toISOString(),
+      introduction: data.introduction,
       full_name: data.fullname,
       url: null,
     };
