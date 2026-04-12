@@ -66,5 +66,20 @@ namespace backend.Modules.Pages.Teacher.Controllers
             var res = await _teacherPageService.GetMyCoursesPage(user.Id, ct, searchText);
             return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
         }
+
+        [HttpGet("courses/{courseId}/students")]
+        public async Task<IActionResult> GetCoursesAsync(Guid courseId, CancellationToken ct, [FromQuery] string? searchText = null)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _teacherPageService.GetTutoringStudents(user.Id, courseId, searchText, ct);
+            return res.Succeded ? Ok(res.Data) : StatusCode(res.StatusCode, res.Error);
+        }
+
     }
 }

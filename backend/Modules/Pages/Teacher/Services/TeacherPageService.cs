@@ -329,5 +329,65 @@ namespace backend.Modules.Pages.Teacher.Services
             });
 
         }
+
+        public async Task<ServiceResult<CourseStudentsPageDTO>> GetTutoringStudents(string userId, Guid courseId, string? searchText = null, CancellationToken ct = default)
+        {
+            searchText = searchText?.ToLower();
+            var students = await _db.TutoringWalls
+                .Where(x => x.CourseId == courseId && x.Status == EnrollmentStatus.Active)
+                .Select(x => x.Student)
+                .Where(s => searchText == null
+                    || s.User.FullName.ToLower().Contains(searchText)
+                    || (s.User.Nickname != null && s.User.Nickname.ToLower().Contains(searchText)))
+                .OrderBy(x => x.User.FullName)
+                .Select(s => new MyStudentCardDTO
+                {
+                    StudentId = s.UserId,
+                    Name = s.User.FullName,
+                    Nickname = s.User.Nickname ?? string.Empty,
+                    CourseNumber = _db.TutoringWalls
+                        .Count(w => w.StudentId == s.UserId && w.TeacherId == userId),
+
+                    OngoingHandins = _db.TutoringWalls
+                        .Where(w => w.StudentId == s.UserId && w.TeacherId == userId)
+                        .SelectMany(w => w.WallPosts)
+                        .Count(post => post.HandIn != null
+                            && post.HandIn.Submissions.Any(sub => sub.Feedback == null)),
+
+                    ChatId = _db.ChatRooms
+                        .Where(c => c.StudentId == s.UserId && c.TeacherId == userId)
+                        .Select(c => (Guid?)c.Id)
+                        .FirstOrDefault() ?? Guid.Empty,
+
+                    WallId = _db.TutoringWalls
+                        .Where(w => w.StudentId == s.UserId && w.TeacherId == userId)
+                        .OrderByDescending(w => w.CreatedAt)
+                        .Select(w => w.Id)
+                        .FirstOrDefault()
+                })
+                .ToListAsync(ct);
+
+            var pendingStudents = await _db.TutoringWalls
+                .Where(w => w.CourseId == courseId && w.Status == EnrollmentStatus.Pending)
+                .Select(w => new EnrollmentItemDTO
+                {
+                    CourseId = w.CourseId,
+                    CourseName = w.CourseBase.CourseName,
+                    EnrollmentDate = w.CreatedAt,
+                    EnrollmentId = w.Id,
+                    UserId = w.StudentId,
+                    UserName = w.Student.User.FullName,
+                    ProfilePictureUrl = w.Student.User.ProfilePicture != null
+                        ? w.Student.User.ProfilePicture.StoragePath : string.Empty,
+                })
+                .AsNoTracking()
+                .ToListAsync(ct);
+
+            return ServiceResult<CourseStudentsPageDTO>.Success(new CourseStudentsPageDTO
+            {
+                PendingEnrollments = pendingStudents,
+                Students = students,
+            });
+        }
     }
 }
