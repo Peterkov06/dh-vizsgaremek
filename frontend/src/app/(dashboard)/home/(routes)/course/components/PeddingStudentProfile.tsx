@@ -93,7 +93,7 @@ const PeddingStudentProfile = (props: { id: string }) => {
                 <div className="flex justify-between items-center">
                   <h2 className="lg:text-xl text-primary">Lakhely:</h2>
                   <h2 className="lg:text-xl text-primary font-bold text-end">
-                    {student?.type}
+                    {student?.location}
                   </h2>
                 </div>
                 {/* <div className="flex justify-between gap-3">
