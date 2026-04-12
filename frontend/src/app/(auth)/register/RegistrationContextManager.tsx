@@ -28,7 +28,7 @@ export const fullRegistrationData = z.object({
     .regex(/[^\p{L}\p{N}]/u, {
       error: "A jelszónak tartalmazinia kell legalább egy speciális karaktert",
     }),
-  role: z.enum(["student", "teacher", "parent"]),
+  role: z.enum(["Student", "Teacher", "Parent"]),
   introduction: z
     .string({
       error: "Kérjük írjon egy rövid bemutatkozó szöveget!",

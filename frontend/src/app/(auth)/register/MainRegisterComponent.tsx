@@ -43,7 +43,7 @@ const MainRegisterComponent = () => {
         error:
           "A jelszónak tartalmazinia kell legalább egy speciális karaktert",
       }),
-    role: z.enum(["student", "teacher", "parent"]),
+    role: z.enum(["Student", "Teacher", "Parent"]),
     accceptedTerms: z.boolean().refine(
       (val) => val,
       "Kérjük, elfogadja a felhasználási feltételeket!",
@@ -57,7 +57,7 @@ const MainRegisterComponent = () => {
     defaultValues: {
       email: "",
       password: "",
-      role: "student",
+      role: "Student",
       accceptedTerms: false,
     },
     mode: "onTouched",
@@ -107,7 +107,7 @@ const MainRegisterComponent = () => {
                         <FieldTitle>Tanuló</FieldTitle>
                       </FieldContent>
                       <RadioGroupItem
-                        value="student"
+                        value="Student"
                         id="student"
                         className="peer sr-only"
                       />
