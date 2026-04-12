@@ -13,7 +13,7 @@ const AddTimeBlock = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Szabad időpontok beállítása</Button>
+        <Button className="w-full">Szabad időpontok beállítása</Button>
       </DialogTrigger>
       <DialogContent className="max-w-none! w-[70%]">
         <DialogHeader>

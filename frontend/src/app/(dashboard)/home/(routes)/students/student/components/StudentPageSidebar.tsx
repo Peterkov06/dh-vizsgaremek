@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 
 export interface StudentProfileType {
   id: string;
+  location: string;
   fullName: string;
   nickname: string;
   introduction: string;

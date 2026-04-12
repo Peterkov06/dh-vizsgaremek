@@ -163,9 +163,11 @@ const StudentHome = (props: { user: User }) => {
           <h1 className="text-2xl font-bold">Közelgő események</h1>
           <div className="flex flex-col gap-5">
             {dashboard?.upcomingEvents.length > 0 ? (
-              dashboard?.upcomingEvents.map((ue, i) => (
-                <UpcomingCard key={i} event={ue}></UpcomingCard>
-              ))
+              dashboard?.upcomingEvents
+                .slice(0, 7)
+                .map((ue, i) => (
+                  <UpcomingCard key={i} event={ue}></UpcomingCard>
+                ))
             ) : (
               <p className="text-2xl text-primary">Nincs közelgő esemény</p>
             )}

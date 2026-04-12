@@ -46,7 +46,7 @@ const StudentProfile = () => {
         <div className="flex justify-between items-center">
           <h2 className="text-xl lg:text-2xl text-primary">Lakhely:</h2>
           <h2 className="text-xl lg:text-2xl text-primary font-bold text-end">
-            {student?.type}
+            {student?.location}
           </h2>
         </div>
         {/* <div className="flex lg:flex-col gap-3">
