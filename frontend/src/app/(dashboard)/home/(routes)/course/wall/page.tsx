@@ -78,7 +78,11 @@ const CourseWall = () => {
         <div className="absolute bottom-5 right-0 lg:right-5 lg:bottom-5 flex-col lg:flex-row flex gap-3">
           <ReviewCourseDialog></ReviewCourseDialog>
           {page && (
-            <BuyingTokenDialog course={page.courseName}></BuyingTokenDialog>
+            <BuyingTokenDialog
+              course={page.courseName}
+              classLength={60}
+              tokenCount={page.tokenCount}
+            ></BuyingTokenDialog>
           )}
         </div>
       </section>
@@ -147,7 +151,7 @@ const CourseWall = () => {
           </div>
           {page && (
             <EnrollingClassDialog
-              token={2} //kell
+              token={page.tokenCount} //kell
               teacherId={page.teacherId}
               course={page?.courseName}
             ></EnrollingClassDialog>

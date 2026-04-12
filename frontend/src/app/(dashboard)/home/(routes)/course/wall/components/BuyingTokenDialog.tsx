@@ -19,18 +19,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import fetchWithAuth from "@/lib/api-client";
 import { CircleDollarSign, ShoppingCart } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-const BuyingTokenDialog = (props: { course?: string }) => {
+const BuyingTokenDialog = (props: {
+  course?: string;
+  classLength: number;
+  tokenCount: number;
+}) => {
+  const searchParams = useSearchParams();
+
+  const courseId = searchParams.get("courseId");
+  const wallId = searchParams.get("wallId");
+
   const [courses, setCourses] = useState<string[]>(["Kurzus neve"]);
   const [selectedCourse, setSelectedCourse] = useState<string>("");
   const [tokenCount, setTokenCount] = useState<number>(0);
-  const [currentTokenCount, setCurrentTokenCount] = useState<number>(0);
   const [tokenCountInput, setTokenCountInput] = useState<string>("");
-  const [classLenght, setClassLenght] = useState<number>(45);
 
   const [price, setPrice] = useState<number>(2500);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleBuy = async () => {
+    const res = await fetchWithAuth("/api/payment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        tokenCount: tokenCount,
+        instanceId: wallId,
+        courseBaseId: courseId,
+      }),
+    });
+
+    if (res.ok) toast.success("Sikeres vásárlás");
+    else toast.error("Hiba történt");
+
+    setTokenCount(0);
+    setTokenCountInput("");
+
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     if (props.course !== undefined) {
@@ -39,7 +74,7 @@ const BuyingTokenDialog = (props: { course?: string }) => {
     }
   }, []);
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
           className="text-lg border-2 border-secondary flex gap-2 text-black"
@@ -98,12 +133,12 @@ const BuyingTokenDialog = (props: { course?: string }) => {
             </div>
             <div className="text-xl">
               <p>1 token = 1 óra</p>
-              <p>1 őra = {classLenght} perc</p>
+              <p>1 őra = {props.classLength} perc</p>
             </div>
           </div>
           <div className="flex justify-between text-xl mt-4">
-            <p>Jelenlegi egyenleg: {currentTokenCount}</p>
-            <p>Új egyenleg: {currentTokenCount + tokenCount}</p>
+            <p>Jelenlegi egyenleg: {props.tokenCount}</p>
+            <p>Új egyenleg: {props.tokenCount + tokenCount}</p>
           </div>
 
           <div className="mt-40 flex flex-col gap-3">
@@ -131,6 +166,7 @@ const BuyingTokenDialog = (props: { course?: string }) => {
           <Button
             className="flex gap-1 text-2xl w-50 h-10"
             disabled={tokenCount === 0}
+            onClick={handleBuy}
           >
             <CircleDollarSign className="size-7"></CircleDollarSign> Fizetés
           </Button>
