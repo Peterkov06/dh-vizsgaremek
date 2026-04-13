@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ActiveCourse, InactiveCourse } from "@/lib/models/homeModel";
-import { ChevronRightCircle, User } from "lucide-react";
+import { ChevronRightCircle, CircleStar, User } from "lucide-react";
 import Link from "next/link";
 
 const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
@@ -30,8 +30,9 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
             </h2>
           </div>
         </div>
-        <div className="bg-background text-primary flex justify-center px-3 py-1 lg:text-2xl rounded-2xl">
-          {props.course.progress}%
+        <div className="bg-background text-primary flex justify-center items-center px-3 py-1 lg:text-2xl rounded-2xl">
+          {props.course.progress}
+          <CircleStar></CircleStar>
         </div>
         {/* {isActive(props.course) && props.course.upcomingEvents.length > 0 && (
           <div className="flex flex-col gap-0">

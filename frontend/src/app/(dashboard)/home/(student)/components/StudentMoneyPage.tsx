@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import fetchWithAuth from "@/lib/api-client";
-import { Check, X } from "lucide-react";
+import { Check, CircleStar, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -55,7 +55,7 @@ const StudentMoneyPage = () => {
 
     return new Date(dateString).toLocaleDateString("hu-HU", {
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
@@ -91,18 +91,47 @@ const StudentMoneyPage = () => {
           <div className="flex flex-col gap-3">
             {page.invoices.map((pi) => (
               <div
-                className={`flex gap-2  rounded-2xl px-5 py-2 justify-between items-center text-lg ${pi.status === "Accepted" ? "bg-secondary" : "bg-light-bg-gray"}`}
+                className={`flex  rounded-2xl py-2  text-lg ${pi.status === "Accepted" ? "bg-secondary" : "bg-light-bg-gray"}`}
                 key={pi.invoiceId}
               >
-                <h1>{pi.userName}</h1>
-                <h2>{pi.courseName}</h2>
-                <h2>{formatDate(pi.createdAt)}</h2>
-                <h2>{pi.tokenCount}</h2>
-                <h2>
-                  {pi.paidPrice}
-                  {pi.currency.currencySymbol}
-                </h2>
-                <h2>{pi.status === "Accepted" ? "Elfogadott" : "Függőben"}</h2>
+                <div className="flex flex-col gap-2 lg:hidden w-full px-2">
+                  <div className="flex justify-between">
+                    <div>
+                      <h2 className="text-2xl">{pi.courseName}</h2>
+                      <h1 className="italic">{pi.userName}</h1>
+                    </div>
+                    <h2>{formatDate(pi.createdAt)}</h2>
+                  </div>
+                  <div className="flex justify-between">
+                    <h2 className="flex gap-1 items-center">
+                      {pi.tokenCount} <CircleStar></CircleStar>
+                    </h2>
+                    <h2>
+                      {pi.paidPrice}
+                      {pi.currency.currencySymbol}
+                    </h2>
+                  </div>
+                  <h2>
+                    {pi.status === "Accepted" ? "Elfogadott" : "Függőben"}
+                  </h2>
+                </div>
+                <div className="lg:flex hidden justify-between items-center w-full px-5">
+                  <h2 className="text-2xl">{pi.courseName}</h2>
+                  <h1 className="italic">{pi.userName}</h1>
+
+                  <h2>{formatDate(pi.createdAt)}</h2>
+
+                  <h2 className="flex gap-1 items-center">
+                    {pi.tokenCount} <CircleStar></CircleStar>
+                  </h2>
+                  <h2>
+                    {pi.paidPrice}
+                    {pi.currency.currencySymbol}
+                  </h2>
+                  <h2>
+                    {pi.status === "Accepted" ? "Elfogadott" : "Függőben"}
+                  </h2>
+                </div>
               </div>
             ))}
           </div>

@@ -136,8 +136,8 @@ const TeacherHome = (props: { user: User }) => {
           </div>
         </Link>
       </section>
-      <section className="flex flex-col lg:grid grid-cols-3 gap-3 row-span-5">
-        <section className="col-span-2 max-w-[60em]">
+      <section className="flex flex-col lg:grid grid-cols-4 gap-3 row-span-5">
+        <section className="col-span-3 max-w-[70em]">
           <div className="flex justify-between items-center w-fit lg:w-full gap-5">
             <h1 className="text-xl lg:text-2xl font-bold">Kurzusok</h1>
           </div>
@@ -166,7 +166,7 @@ const TeacherHome = (props: { user: User }) => {
             <div>Még nincs kurzusod</div>
           )}
         </section>
-        <section className="col-start-3 border-4 border-light-bg-gray p-2 gap-2 rounded-2xl mt-7 grid grid-rows-6">
+        <section className="col-start-4 border-4 border-light-bg-gray p-2 gap-2 rounded-2xl mt-7 grid grid-rows-6">
           <RadioGroup
             className="grid grid-cols-2 gap-0"
             value={selectedTabQueue}
