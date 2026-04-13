@@ -67,7 +67,6 @@ const IntroductionComponent = () => {
 
   const onSubmit = async (data: IntroductionType) => {
     updateData(data)
-    console.log(data)
     const res = await submitRegistration(data);
 
     if (res.success) {

@@ -14,6 +14,8 @@ namespace backend.Data.Configurations.Resources
             builder.Property(x => x.FileName).IsRequired();
             builder.Property(x => x.MimeType).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Size).IsRequired();
+
+            builder.HasOne(x => x.Owner).WithMany().HasForeignKey(x => x.OwnerId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

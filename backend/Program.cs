@@ -6,6 +6,7 @@ using backend.Modules.Engagement;
 using backend.Modules.Identity;
 using backend.Modules.Pages;
 using backend.Modules.Payment;
+using backend.Modules.Resources;
 using backend.Modules.Scheduling;
 using backend.Modules.Shared;
 using backend.Modules.Tutoring;
@@ -117,6 +118,7 @@ namespace backend
             builder.Services.AddIdentityServices();
             builder.Services.AddSchedulingServices();
             builder.Services.AddPaymentServices();
+            builder.Services.AddResourcesServices();
 
             var app = builder.Build();
 
