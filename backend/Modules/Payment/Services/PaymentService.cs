@@ -115,19 +115,19 @@ namespace backend.Modules.Payment.Services
             return ServiceResult.Success();
         }
 
-        public async Task<ServiceResult<List<InvoiceDTO>>> GetTeacherInvoices(string userId, CancellationToken ct = default)
+        public async Task<ServiceResult<List<InvoiceDTO>>> GetUserInvoices(string userId, CancellationToken ct = default)
         {
-            var payments = await _db.Invoices.Where(x => x.TeacherId == userId)
+            var payments = await _db.Invoices.Where(x => x.TeacherId == userId || x.UserId == userId)
                 .Select(x => new InvoiceDTO
                 {
                     CourseName = x.Wall.CourseBase.CourseName ?? x.Enrollment.Course.CourseName,
-                    UserName = x.User.FullName,
+                    UserName = x.TeacherId == userId ? x.User.FullName : x.Teacher.FullName,
                     InvoiceId = x.Id,
                     InstanceId = x.WallId != null ? (Guid)x.WallId : x.EnrollmentId != null ? (Guid)x.EnrollmentId : Guid.Empty,
                     CreatedAt = x.CreatedAt,
                     Currency = x.Currency,
                     TokenCount = x.TokenCount,
-                    UserId = x.UserId,
+                    UserId = x.TeacherId == userId ? x.UserId : x.TeacherId,
                     OneTokenPrice = x.Wall != null ? x.Wall.CourseBase.TokenMinuteValue : x.Enrollment != null ? x.Enrollment.Course.TokenMinuteValue : 0,
                     PaidPrice = x.PaidPrice,
                     Status = x.Status,

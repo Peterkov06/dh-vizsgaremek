@@ -2,7 +2,7 @@
 
 namespace backend.Modules.Pages.Teacher.DTOs
 {
-    public class InvoicesPageDTO
+    public class TeacherInvoicesPageDTO
     {
         public decimal TotalIncome { get; set; }
         public decimal MonthIncome { get; set; }

@@ -1,4 +1,6 @@
-﻿namespace backend.Modules.Pages.Student.DTOs
+﻿using backend.Modules.Shared.DTOs;
+
+namespace backend.Modules.Pages.Student.DTOs
 {
     public class StudentTutoringWallDTO
     {
@@ -10,6 +12,9 @@
         public string? BannerURL { get; set; } = null;
         public string? IconURL { get; set; } = null;
         public int TokenCount { get; set; } = 0;
+        public required int LessonLength { get; set; } = 0;
+        public required decimal TokenPrice { get; set; } = 0;
+        public required CurrencyDTO Currency { get; set; }
         public required bool WroteReview { get; set; } = false;
         public List<TutoringWallEventCardDTO> NextHandins { get; set; } = [];
         public List<TutoringWallEventCardDTO> NextLessons { get; set; } = [];

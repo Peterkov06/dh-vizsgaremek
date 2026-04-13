@@ -450,7 +450,7 @@ namespace backend.Modules.Pages.Teacher.Services
             });
         }
 
-        public async Task<ServiceResult<InvoicesPageDTO>> GetInvoicesPage(string userId, CancellationToken ct)
+        public async Task<ServiceResult<TeacherInvoicesPageDTO>> GetInvoicesPage(string userId, CancellationToken ct)
         {
             var now = DateTime.UtcNow;
             var monthStart = new DateTime(now.Year, now.Month, 1, 0,0,0, DateTimeKind.Utc);
@@ -458,7 +458,7 @@ namespace backend.Modules.Pages.Teacher.Services
             var yearStart = new DateTime(now.Year, 1, 1, 0,0,0, DateTimeKind.Utc);
             var yearEnd = monthStart.AddYears(1);
 
-            var allInvoices = await _paymentService.GetTeacherInvoices(userId, ct);
+            var allInvoices = await _paymentService.GetUserInvoices(userId, ct);
             var pendingInvoices = allInvoices.Data.Where(x => x.Status == PaymentStatus.Pending).OrderByDescending(x => x.CreatedAt).ToList();
             var invoices = allInvoices.Data.Where(x => x.Status != PaymentStatus.Pending).OrderByDescending(x => x.CreatedAt).ToList();
 
@@ -467,7 +467,7 @@ namespace backend.Modules.Pages.Teacher.Services
             var totalMonthIncome = successfulInvoices.Where(x => monthStart <= x.CreatedAt && x.CreatedAt < monthEnd).Sum(x => x.PaidPrice);
             var totalYearIncome = successfulInvoices.Where(x => yearStart <= x.CreatedAt && x.CreatedAt < yearEnd).Sum(x => x.PaidPrice);
 
-            return ServiceResult<InvoicesPageDTO>.Success(new InvoicesPageDTO
+            return ServiceResult<TeacherInvoicesPageDTO>.Success(new TeacherInvoicesPageDTO
             {
                 PendingInvoices = pendingInvoices,
                 CompletedInvoices = invoices,

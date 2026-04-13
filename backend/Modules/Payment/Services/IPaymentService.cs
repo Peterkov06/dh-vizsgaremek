@@ -6,7 +6,7 @@ namespace backend.Modules.Payment.Services
 {
     public interface IPaymentService
     {
-        Task<ServiceResult<List<InvoiceDTO>>> GetTeacherInvoices(string userId, CancellationToken ct = default);
+        Task<ServiceResult<List<InvoiceDTO>>> GetUserInvoices(string userId, CancellationToken ct = default);
         Task<ServiceResult<Guid>> CreatePayment(string userId, PaymentDTO dto, CancellationToken ct);
         Task<ServiceResult> ReactToPayment(PaymentReactionDTO dto, CancellationToken ct);
         Task<ServiceResult> CreateWallTokenTransaction(TransactionType transactionType, Guid instanceId, Guid? invoiceId, int tokenCount, CancellationToken ct);

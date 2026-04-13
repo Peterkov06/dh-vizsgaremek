@@ -1,22 +1,28 @@
 ﻿using backend.Data;
 using backend.Modules.CoursesBase.Models;
+using backend.Modules.Pages.Shared.DTOs;
 using backend.Modules.Pages.Student.DTOs;
+using backend.Modules.Pages.Teacher.DTOs;
+using backend.Modules.Payment.Models;
+using backend.Modules.Payment.Services;
 using backend.Modules.Progression.Models;
 using backend.Modules.Scheduling.Models;
-using backend.Modules.Shared.Results;
-using backend.Modules.Shared.Models;
-using backend.Modules.Pages.Shared.DTOs;
-using Microsoft.EntityFrameworkCore;
 using backend.Modules.Shared.DTOs;
+using backend.Modules.Shared.Models;
+using backend.Modules.Shared.Results;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Modules.Pages.Student.Services
 {
     public class StudentPageService : IStudentPageService
     {
         private readonly AppDbContext _db;
-        public StudentPageService(AppDbContext db)
+        private readonly IPaymentService _paymentService;
+
+        public StudentPageService(AppDbContext db, IPaymentService paymentService)
         {
             _db = db;
+            _paymentService = paymentService;
         }
 
         public async Task<ServiceResult<StudentHomePageDTO>> GetStudentHomePageAsync(string userId, CancellationToken ct)
@@ -42,7 +48,7 @@ namespace backend.Modules.Pages.Student.Services
                 CourseName = x.CourseBase?.CourseName ?? "",
                 TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
                 CourseType = "tutoring",
-                Progress = 5,
+                Progress = x.TokenCount,
                 ImageUrl = x.CourseBase?.BannerImageId.ToString() ?? "",
                 UpcomingEvents = [.. upcomingEvents.Where(y => y.TutoringWallId == x.Id).Take(2).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
@@ -178,6 +184,9 @@ namespace backend.Modules.Pages.Student.Services
                     bannerURL = x.CourseBase.BannerImage.StoragePath ?? "",
                     iconURL = x.CourseBase.IconImage.StoragePath ?? "",
                     tokens = x.TokenCount,
+                    tokenPrice = x.CourseBase.Price,
+                    currency = x.CourseBase.Currency,
+                    lessonLength = x.CourseBase.TokenMinuteValue
                 })
                 .SingleOrDefaultAsync(ct);
 
@@ -211,6 +220,13 @@ namespace backend.Modules.Pages.Student.Services
                 .ToListAsync(ct);
 
             var hasReview = await _db.CourseReviews.Where(x => x.WallId == wallId && x.ReviewerId == userId).AnyAsync(ct);
+            var currency = new CurrencyDTO
+            {
+                Id = walldata.currency.Id,
+                CurrencyCode = walldata.currency.CurrencyCode,
+                CurrencySymbol = walldata.currency.CurrencySymbol,
+                Name = walldata.currency.Name,
+            };
 
             return ServiceResult<StudentTutoringWallDTO>.Success(new StudentTutoringWallDTO
             {
@@ -225,6 +241,34 @@ namespace backend.Modules.Pages.Student.Services
                 NextLessons = nextLessons,
                 TokenCount = walldata.tokens,
                 WroteReview = hasReview,
+                Currency = currency,
+                LessonLength = walldata.lessonLength,
+                TokenPrice = walldata.tokenPrice,
+            });
+        }
+
+        public async Task<ServiceResult<StudentInvoicesPageDTO>> GetInvoicesPage(string userId, CancellationToken ct)
+        {
+            var now = DateTime.UtcNow;
+            var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+            var monthEnd = monthStart.AddMonths(1);
+            var yearStart = new DateTime(now.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var yearEnd = monthStart.AddYears(1);
+
+            var allInvoices = await _paymentService.GetUserInvoices(userId, ct);
+            var invoices = allInvoices.Data.OrderByDescending(x => x.CreatedAt).ToList();
+
+            var successfulInvoices = invoices.Where(x => x.Status == PaymentStatus.Accepted).ToList();
+            var totalSpending = successfulInvoices.Sum(x => x.PaidPrice);
+            var totalMonthSpending = successfulInvoices.Where(x => monthStart <= x.CreatedAt && x.CreatedAt < monthEnd).Sum(x => x.PaidPrice);
+            var totalYearSpending = successfulInvoices.Where(x => yearStart <= x.CreatedAt && x.CreatedAt < yearEnd).Sum(x => x.PaidPrice);
+
+            return ServiceResult<StudentInvoicesPageDTO>.Success(new StudentInvoicesPageDTO
+            {
+                Invoices = invoices,
+                TotalSpending = totalSpending,
+                MonthSpending = totalMonthSpending,
+                YearSpending = totalYearSpending,
             });
         }
 
