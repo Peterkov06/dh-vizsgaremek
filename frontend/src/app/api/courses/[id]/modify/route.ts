@@ -1,22 +1,27 @@
 import { BASE_URL } from "@/app/api/auth/register/route";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(
+if (process.env.NODE_ENV === "development") {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
+
+export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ chatId: string }> },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { chatId } = await params;
-    const body = await request.json();
+    const { id } = await params;
     const cookies = request.headers.get("cookie") ?? "";
-    const response = await fetch(`${BASE_URL}/communication/chats/${chatId}`, {
-      method: "POST",
+    const body = await request.json();
+    const response = await fetch(`${BASE_URL}/courses/${id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         cookie: cookies,
       },
-      credentials: "include",
+
       body: JSON.stringify(body),
+      credentials: "include",
     });
 
     return response;

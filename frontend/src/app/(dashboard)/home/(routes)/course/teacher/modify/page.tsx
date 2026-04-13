@@ -34,6 +34,7 @@ import {
   ChartArea,
   CircleDollarSignIcon,
   CirclePlus,
+  Clock,
   Globe,
   MapPin,
   Pen,
@@ -73,6 +74,9 @@ const ModifyTeacherCourse = () => {
     price: z
       .number({ message: "Ár megadása kötelező" })
       .min(1, { message: "Az ár nem lehet 1-nél kevesebb" }),
+    classLenght: z
+      .number({ message: "Óra hossz megadása kötelező" })
+      .min(1, { message: "Az óra hossza nem lehet 1-nél kevesebb" }),
   });
   type CourseCreatorFormData = z.infer<typeof formSchema>;
 
@@ -89,6 +93,7 @@ const ModifyTeacherCourse = () => {
       firstFree: "Ingyenes",
       price: 0,
       currency: "",
+      classLenght: 0,
     },
     mode: "onTouched",
   });
@@ -110,6 +115,7 @@ const ModifyTeacherCourse = () => {
   const [allCurrency, setAllCurrency] = useState<Currency[]>([]);
 
   const [priceInput, setPriceInput] = useState("");
+  const [classLenghtInput, setClassLenghtInput] = useState("");
 
   const searchParams = useSearchParams();
 
@@ -127,7 +133,7 @@ const ModifyTeacherCourse = () => {
             description: data.description,
             tags: data.tags.map((t) => t.name),
             languages: data.languages.map((l) => l.name),
-            location: [],
+            location: [data.teacherLocation],
             level: data.courseLevel.id,
             subject: data.courseDomain.id,
             firstFree: data.firstConsultationFree ? "Ingyenes" : "Fizetős",
@@ -239,36 +245,40 @@ const ModifyTeacherCourse = () => {
     getEverything();
   }, []);
 
+  const courseId = searchParams.get("id");
+
   const onSubmit = async (data: CourseCreatorFormData) => {
-    // const res = await fetchWithAuth("/api/courses/modify", {
-    //   method: "PATCH",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     courseName: data.courseName,
-    //     description: data.description,
-    //     type: 1,
-    //     courseDomainId: data.subject || null,
-    //     courseLevelId: data.level || null,
-    //     price: data.price,
-    //     firstConsultationFree: data.firstFree === "Ingyenes",
-    //     priceCurrencyId: data.currency || null,
-    //     status: 1,
-    //     iconImageId: null,
-    //     bannerImageId: null,
-    //     tags: data.tags.filter(Boolean),
-    //     languages: data.languages.filter(Boolean),
-    //   }),
-    // });
-    // console.log(res);
-    // if (!res.ok) {
-    //   const error = await res.json();
-    //   console.error("API error:", error);
-    //   toast.error("Hiba történt");
-    //   return;
-    // }
-    // if (res.ok) toast.success("Sikeres kurzus létrehozzás");
+    const res = await fetchWithAuth(`/api/courses/${courseId}/modify`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        courseName: data.courseName,
+        description: data.description,
+        type: 0,
+        status: "Active",
+        classLenght: data.classLenght,
+        courseDomainId: data.subject || null,
+        courseLevelId: data.level || null,
+        price: data.price,
+        firstConsultationFree: data.firstFree === "Ingyenes",
+        priceCurrencyId: data.currency || null,
+        location: data.location,
+        iconImageId: null,
+        bannerImageId: null,
+        tags: data.tags.filter(Boolean),
+        languages: data.languages.filter(Boolean),
+      }),
+    });
+    console.log(res);
+    if (!res.ok) {
+      const error = await res.json();
+      console.error("API error:", error);
+      toast.error("Hiba történt");
+      return;
+    }
+    if (res.ok) toast.success("Sikeres kurzus módosítás");
     // form.reset();
   };
 
@@ -727,6 +737,39 @@ const ModifyTeacherCourse = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+            <div className="flex flex-col gap-2 w-full">
+              <div className="flex">
+                <Clock className="text-primary size-7"></Clock>
+                <h2 className="text-xl text-primary">Óra hossza</h2>
+              </div>
+              <Controller
+                name="classLenght"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <Input
+                      type="number"
+                      min={0}
+                      className={`border-2 text-xl! ${
+                        fieldState.invalid ? "border-red-500" : "border-primary"
+                      }`}
+                      placeholder="Óra hossza (perc)..."
+                      value={classLenghtInput}
+                      onChange={(e) => {
+                        setClassLenghtInput(e.target.value);
+                        const num = Number(e.target.value);
+                        field.onChange(e.target.value === "" ? undefined : num);
+                      }}
+                      onBlur={field.onBlur}
+                    />
+
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}

@@ -14,6 +14,7 @@ import { TeacherDashboardModel } from "@/lib/models/teacherHome";
 import {
   BadgeCheck,
   Bell,
+  Calendar,
   Check,
   ChevronRight,
   Folder,
@@ -135,8 +136,8 @@ const TeacherHome = (props: { user: User }) => {
           </div>
         </Link>
       </section>
-      <section className="flex flex-col lg:grid grid-cols-4 gap-3 row-span-5">
-        <section className="col-span-2 max-w-[48em]">
+      <section className="flex flex-col lg:grid grid-cols-3 gap-3 row-span-5">
+        <section className="col-span-2 max-w-[60em]">
           <div className="flex justify-between items-center w-fit lg:w-full gap-5">
             <h1 className="text-xl lg:text-2xl font-bold">Kurzusok</h1>
           </div>
@@ -152,7 +153,7 @@ const TeacherHome = (props: { user: User }) => {
                 {dashboard?.activeCourses.map((ac) => (
                   <CarouselItem
                     key={ac.courseId}
-                    className="basis-1/2 lg:basis-1/3 p-1"
+                    className="basis-1/2 lg:basis-1/4 p-1"
                   >
                     <CourseCard course={ac}></CourseCard>
                   </CarouselItem>
@@ -272,7 +273,7 @@ const TeacherHome = (props: { user: User }) => {
             </Link>
           </div>
         </section>
-        <section className="col-start-4 grid grid-rows-5 p-2 border-4 border-light-bg-gray rounded-2xl mt-7">
+        {/* <section className="col-start-4 grid grid-rows-5 p-2 border-4 border-light-bg-gray rounded-2xl mt-7">
           <div className="flex bg-light-bg-gray items-center gap-3 px-4 py-2 rounded-xl">
             <Folder className="size-7 text-primary"></Folder>
             <h1 className="text-xl font-bold">Munkák</h1>
@@ -292,7 +293,7 @@ const TeacherHome = (props: { user: User }) => {
               <ChevronRight className="size-5 m-0"></ChevronRight>
             </Button>
           </div>
-        </section>
+        </section>*/}
       </section>
       <section className="flex flex-col lg:grid grid-cols-12 gap-4 h-max row-span-5 mt-2">
         <section className=" border-4 border-light-bg-gray rounded-2xl col-span-3 p-2 flex flex-col gap-2">
@@ -361,64 +362,24 @@ const TeacherHome = (props: { user: User }) => {
         </section>
         <section className=" border-4 border-light-bg-gray rounded-2xl col-span-5 p-2 flex flex-col gap-2">
           <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-light-bg-gray">
-            <BadgeCheck className="text-primary"></BadgeCheck>
-            <h1 className="text-xl font-bold">Teendők</h1>
+            <Calendar className="text-primary"></Calendar>
+            <h1 className="text-xl font-bold">Naptár</h1>
           </div>
-          <div className="overflow-hidden h-[12em]">
-            <div className="overflow-y-auto h-full flex flex-col gap-2">
-              {dashboard?.gradingQueue.map((gq) => (
-                <div
-                  className="flex items-center justify-between px-5"
-                  key={gq.courseId}
-                >
-                  <div className="flex items-center gap-3">
-                    <Checkbox className="border-2 border-gray-400 size-5"></Checkbox>
-                    <div>
-                      <p className="truncate max-w-[14em] text-sm lg:max-w-[24em] lg:text-lg">
-                        {gq.studentName} - {gq.handInTitle}
-                      </p>
-                      <p className="text-xs">{gq.courseName}</p>
-                    </div>
-                  </div>
-                  <p>{gq.submittedDate}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center justify-evenly mt-3">
-            <Button className="h-8 w-32 lg:w-40 flex gap-1 bg-linear-to-tl from-foreground to-[#868686]">
-              <p className="text-xs lg:text-md">Összes teendő</p>
-              <ChevronRight className="size-5 m-0"></ChevronRight>
-            </Button>
-            <Button className="h-8 w-32 lg:w-40 flex gap-1 bg-linear-to-tl from-primary to-secondary">
-              <Plus className="size-5 m-0"></Plus>
-              <p className="text-xs lg:text-md">Új teendő</p>
-            </Button>
+          <div className="flex justify-center mt-3">
+            <EventCalendar
+              key={"fsjknjkfvnbjkfn"}
+              upcomingEvents={dashboard?.upcomingEvents}
+            ></EventCalendar>
           </div>
         </section>
         <section className="border-4 border-light-bg-gray rounded-2xl p-2 col-span-4">
           <RadioGroup
-            className="grid grid-cols-3 gap-0 "
+            className="grid grid-cols-2 gap-0"
             value={selectedTabDate}
             onValueChange={setSelectedTabDate}
           >
             <div
-              className={`border-4 border-light-bg-gray rounded-l-xl py-1  ${selectedTabDate === "calendar" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
-            >
-              <RadioGroupItem
-                value="calendar"
-                className="hidden"
-                id="calendar"
-              ></RadioGroupItem>
-              <Label
-                htmlFor="calendar"
-                className="h-full w-full flex justify-center items-center text-lg"
-              >
-                Naptár
-              </Label>
-            </div>
-            <div
-              className={`border-4 border-light-bg-gray ${selectedTabDate === "day" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
+              className={`border-4 border-light-bg-gray rounded-l-2xl ${selectedTabDate === "day" ? "bg-background text-primary font-bold" : "bg-light-bg-gray text-[#898989]"}`}
             >
               <RadioGroupItem
                 value="day"
@@ -449,14 +410,7 @@ const TeacherHome = (props: { user: User }) => {
             </div>
           </RadioGroup>
           <div className="flex flex-col gap-3">
-            {selectedTabDate === "calendar" ? (
-              <div className="flex justify-center mt-3">
-                <EventCalendar
-                  key={"fsjknjkfvnbjkfn"}
-                  upcomingEvents={dashboard?.upcomingEvents}
-                ></EventCalendar>
-              </div>
-            ) : selectedTabDate === "day" ? (
+            {selectedTabDate === "day" ? (
               <TodayList
                 key={"fsjknjkfvnbjksdojsdnvuinjfn"}
                 date={formattedDate}

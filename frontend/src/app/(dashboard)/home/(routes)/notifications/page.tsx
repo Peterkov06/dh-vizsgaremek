@@ -49,22 +49,24 @@ const NotificationPage = () => {
               key={n.id}
               className={`relative flex items-center justify-between p-3 rounded-2xl ${n.isRead ? "bg-light-bg-gray" : "bg-secondary"}`}
             >
-              <h2 className="absolute bg-background px-2 py-1 rounded-xl right-0 -top-5">
-                {new Date(n.createdAt).toLocaleDateString("hu-HU")}
-              </h2>
-              <div>
-                <h1 className="text-lg lg:text-2xl flex items-center gap-3">
-                  {/* {n.type === "EnrollmentAcceptance" &&
-                    "Jelentkezésedet elfogadták"} */}
-                  {n.type}
-                </h1>
-                <span className="flex gap-2 lg:text-lg text-gray-500">
-                  <User className="text-primary"></User>
-                  {n.sender}
-                </span>
-              </div>
-              <div className="text-gray-500 truncate max-w-[5em] lg:max-w-[50em]">
-                {n.message || ""}
+              <div className="flex gap-5 items-center">
+                <h2 className="absolute bg-background px-2 py-1 rounded-xl right-0 -top-5">
+                  {new Date(n.createdAt).toLocaleDateString("hu-HU")}
+                </h2>
+                <div>
+                  <h1 className="text-lg lg:text-2xl flex items-center gap-3">
+                    {/* {n.type === "EnrollmentAcceptance" &&
+                      "Jelentkezésedet elfogadták"} */}
+                    {n.type}
+                  </h1>
+                  <span className="flex gap-2 lg:text-lg text-gray-500">
+                    <User className="text-primary"></User>
+                    {n.sender}
+                  </span>
+                </div>
+                <div className="text-gray-500 truncate max-w-[5em] lg:max-w-[60em]">
+                  {n.message || ""}
+                </div>
               </div>
               <div className="mr-10">
                 {n.isRead ? (

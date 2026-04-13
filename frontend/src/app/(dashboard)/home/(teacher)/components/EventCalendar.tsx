@@ -11,29 +11,20 @@ const EventCalendar = (props: { upcomingEvents?: UpcomingEvent[] }) => {
   });
 
   return (
-    <div>
-      <button
-        onClick={() => {
-          console.log(dates);
-        }}
-      >
-        szaros
-      </button>
-      <Calendar
-        className="rounded-md border"
-        mode="multiple"
-        selected={dates}
-        onSelect={() => {}}
-        classNames={{
-          day: "h-5 w-7 text-sm",
-          head_cell: "w-7 text-xs",
-          cell: "h-5 w-7",
-          caption: "text-sm",
-          nav_button: "h-6 w-6",
-          today: "",
-        }}
-      />
-    </div>
+    <Calendar
+      className="rounded-md border"
+      mode="multiple"
+      selected={dates}
+      onSelect={() => {}}
+      classNames={{
+        day: "h-5 w-7 text-sm",
+        head_cell: "w-7 text-xs",
+        cell: "h-5 w-7",
+        caption: "text-sm",
+        nav_button: "h-6 w-6",
+        today: "",
+      }}
+    />
   );
 };
 

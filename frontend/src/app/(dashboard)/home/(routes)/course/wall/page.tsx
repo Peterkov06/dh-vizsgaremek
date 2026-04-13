@@ -19,6 +19,7 @@ export interface CourseBrief {
   teacherName: string;
   teacherId: string;
   bannerURL: string;
+  wroteReview: boolean;
   iconURL: string;
   tokenCount: number;
   nextHandins: any[];
@@ -76,7 +77,9 @@ const CourseWall = () => {
           </p>
         </div>
         <div className="absolute bottom-5 right-0 lg:right-5 lg:bottom-5 flex-col lg:flex-row flex gap-3">
-          <ReviewCourseDialog></ReviewCourseDialog>
+          {page && !page.wroteReview && (
+            <ReviewCourseDialog></ReviewCourseDialog>
+          )}
           {page && (
             <BuyingTokenDialog
               course={page.courseName}
@@ -129,7 +132,7 @@ const CourseWall = () => {
                 {page?.nextLessons.length === 0 && (
                   <h1 className="text-white">Nincs közelgő órád</h1>
                 )}
-                {page &&
+                {/* {page &&
                   page?.nextLessons.map((nl, i) => (
                     <div
                       className={`flex gap-0! bg-background text-primary rounded-lg px-3 py-1 shadow-2xl ${nl.title ? "justify-between" : "justify-center"}`}
@@ -144,8 +147,7 @@ const CourseWall = () => {
                         <p className="text-md shrink-0">{nl.startDate}</p>
                         <p className="text-lg font-bold">{nl.startTime}</p>
                       </div>
-                    </div>
-                  ))}
+                    </div> */}
               </div>
             </div>
           </div>

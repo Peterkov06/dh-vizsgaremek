@@ -3,7 +3,7 @@ import { BASE_URL } from "../../auth/register/route";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -11,7 +11,7 @@ export async function GET(
     const response = await fetch(`${BASE_URL}/courses/${id}`);
 
     if (!response.ok) {
-      return response.status;
+      return new Response(null, { status: response.status });
     }
 
     return response;
