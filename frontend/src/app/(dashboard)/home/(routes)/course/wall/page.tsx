@@ -105,7 +105,7 @@ const CourseWall = () => {
                 {page?.nextHandins.length === 0 && (
                   <h1 className="text-white">Nincs közelgő beadandód</h1>
                 )}
-                {page?.nextHandins &&
+                {/* {page?.nextHandins &&
                   page?.nextHandins.map((uc) => (
                     <div
                       className="flex gap-0! bg-background text-primary rounded-lg px-3 py-1 shadow-2xl justify-between"
@@ -121,7 +121,7 @@ const CourseWall = () => {
                         <p className="text-lg font-bold">{uc.time}</p>
                       </div>
                     </div>
-                  ))}
+                  ))} */}
               </div>
             </div>
           </div>
@@ -132,7 +132,7 @@ const CourseWall = () => {
                 {page?.nextLessons.length === 0 && (
                   <h1 className="text-white">Nincs közelgő órád</h1>
                 )}
-                {/* {page &&
+                {page &&
                   page?.nextLessons.map((nl, i) => (
                     <div
                       className={`flex gap-0! bg-background text-primary rounded-lg px-3 py-1 shadow-2xl ${nl.title ? "justify-between" : "justify-center"}`}
@@ -147,7 +147,8 @@ const CourseWall = () => {
                         <p className="text-md shrink-0">{nl.startDate}</p>
                         <p className="text-lg font-bold">{nl.startTime}</p>
                       </div>
-                    </div> */}
+                    </div>
+                  ))}
               </div>
             </div>
           </div>

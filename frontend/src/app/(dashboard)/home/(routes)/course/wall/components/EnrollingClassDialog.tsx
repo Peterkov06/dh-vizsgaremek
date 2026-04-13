@@ -288,11 +288,11 @@ const EnrollingClassDialog = (props: {
             {props.token === 0 && (
               <div className="flex gap-3 items-center justify-center">
                 <p className="text-lg text-red-600">
-                  Nincs elég tokened a foglaláshoz:
+                  Nincs elég tokened a foglaláshoz!
                 </p>
-                <Button className="flex gap-1">
+                {/* <Button className="flex gap-1">
                   <ShoppingBag></ShoppingBag> Vásárlás
-                </Button>
+                </Button> */}
               </div>
             )}
           </div>

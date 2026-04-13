@@ -1,5 +1,6 @@
 import getCurrentUser from "@/lib/auth";
 import TeacherMoneyPage from "../../(teacher)/components/TeacherMoneyPage";
+import StudentMoneyPage from "../../(student)/components/StudentMoneyPage";
 
 const MoneyPage = async () => {
   const user = await getCurrentUser();
@@ -7,7 +8,7 @@ const MoneyPage = async () => {
   return user?.role === "Teacher" ? (
     <TeacherMoneyPage></TeacherMoneyPage>
   ) : (
-    <></>
+    <StudentMoneyPage></StudentMoneyPage>
   );
 };
 
