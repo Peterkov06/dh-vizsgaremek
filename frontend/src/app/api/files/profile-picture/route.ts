@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BASE_URL } from "../../auth/register/route";
+import { debuglog } from "util";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.formData();
+    const cookies = request.headers.get("cookie") ?? "";
     const response = await fetch(`${BASE_URL}/files/profile-picture`, {
       method: "POST",
       body: body,
+      headers: {
+        cookie: cookies,
+      },
       credentials: "include",
     });
 

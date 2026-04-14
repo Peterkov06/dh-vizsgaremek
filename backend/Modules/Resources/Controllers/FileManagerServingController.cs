@@ -30,9 +30,11 @@ namespace backend.Modules.Resources.Controllers
                    result.Data.MimeType.StartsWith("video/") ||
                    result.Data.MimeType.StartsWith("audio/");
 
+            var encodedFileName = Uri.EscapeDataString(result.Data.OriginalFileName);
+
             var contentDisposition = isInline
-                ? $"inline; filename=\"{result.Data.OriginalFileName}\""
-                : $"attachment; filename=\"{result.Data.OriginalFileName}\"";
+                ? $"inline; filename=\"file\"; filename*=UTF-8''{encodedFileName}"
+                : $"attachment; filename=\"file\"; filename*=UTF-8''{encodedFileName}";
 
             Response.Headers.ContentDisposition = contentDisposition;
 

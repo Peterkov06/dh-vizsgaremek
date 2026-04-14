@@ -12,7 +12,7 @@ export default async function fetchWithAuth(
   });
 
   if (response.status === 401) {
-    const refreshResponse = await fetch(`api/auth/refresh`, {
+    const refreshResponse = await fetch(`/api/auth/refresh`, {
       method: "GET",
       credentials: "include",
     });
