@@ -96,6 +96,11 @@ namespace backend.Data
                 .HasOne(up => up.Preference)
                 .WithMany()
                 .HasForeignKey(up => up.PreferenceId);
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(x => x.ProfilePicture).WithMany()
+                .HasForeignKey(x => x.ProfilePictureId)
+                .IsRequired(false)
 ;
 
 

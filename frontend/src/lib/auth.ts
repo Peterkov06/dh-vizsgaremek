@@ -29,7 +29,9 @@ export default async function getCurrentUser(): Promise<User | null> {
     if (!response.ok) {
       return null;
     }
-    return await response.json();
+    const data = await response.json();
+    console.log(data);
+    return data;
   } catch (error) {
     console.error("Hibás access token: ", error);
     return null;

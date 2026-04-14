@@ -2,6 +2,8 @@
 using backend.Models;
 using backend.Models.Cities;
 using backend.Modules.Identity.Models;
+using backend.Modules.Resources.DTOs;
+using backend.Modules.Resources.Services;
 using backend.Services.JwtServices;
 using backend.Services.SendEmail;
 using MailKit.Net.Smtp;
@@ -25,10 +27,12 @@ namespace backend.Controllers.Login
         private readonly JwtGenerator _jwtGenerator;
         //private readonly EmailSender _emailSender;
         private readonly AppDbContext _context;
+        private readonly IFileManagerService _fileManagerService;
         
         public AuthController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             JwtGenerator jwtGenerator,
+            IFileManagerService fileManagerService,
             //EmailSender emailSender,
             AppDbContext context)
         {
@@ -37,12 +41,14 @@ namespace backend.Controllers.Login
             _jwtGenerator = jwtGenerator;
             //_emailSender = emailSender;
             _context = context;
+            _fileManagerService = fileManagerService;
         }
 
-        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address,string City, string Postal_code, DateTime Date_of_birth, string? Nickname, string? Introduction);
+        public record RegisterDTO(string Email, string Password, string Role, string Full_name, string Address,string City, string Postal_code, DateTime Date_of_birth, string? Nickname, string? Introduction, IFormFile Profile_picture);
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromBody]RegisterDTO register) {
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> RegisterUser([FromForm]RegisterDTO register, CancellationToken ct) {
 
             var newUser = new ApplicationUser()
             {
@@ -83,8 +89,19 @@ namespace backend.Controllers.Login
                     default:
                         break;
                 }
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(ct);
             }
+
+            var profilePictureFile = await _fileManagerService.UploadFile(register.Profile_picture, newUser.Id, "profile_pictures", UploadType.Image, ct);
+
+            if (!profilePictureFile.Succeded || profilePictureFile.Data is null)
+                return StatusCode(profilePictureFile.StatusCode, profilePictureFile.Error);
+
+            newUser.ProfilePictureId = profilePictureFile.Data.FileId;
+
+            _context.Users.Update(newUser);
+            await _context.SaveChangesAsync(ct);
+
 
             return Created();
         }
@@ -273,14 +290,14 @@ namespace backend.Controllers.Login
 
         [Authorize]
         [HttpGet("me")]
-        public async Task<IActionResult> UserProfile() {
+        public async Task<IActionResult> UserProfile(CancellationToken ct) {
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
             if (userId == null)
                 return Unauthorized();
 
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _context.Users.Include(x => x.ProfilePicture).Where(x => x.Id == userId).SingleAsync(ct);
 
             if (user == null)
                 return BadRequest();
@@ -289,8 +306,9 @@ namespace backend.Controllers.Login
                 return BadRequest();
             }
             var role = roleList[0];
+            string? profilePicUrl = user.ProfilePicture != null ? $"https://localhost:7261/files/{user.ProfilePicture.StoragePath}" : null;
 
-            return Ok(new { user.Email, role,user.FullName, user.ProfilePictureId, user.Nickname});
+            return Ok(new { user.Email, role,user.FullName, profilePicUrl, user.Nickname});
         }
 
         [Authorize]
@@ -303,13 +321,15 @@ namespace backend.Controllers.Login
             if (userId == null)
                 return Unauthorized();
 
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _context.Users.Include(x =>x.ProfilePicture).Where(x => x.Id == userId).FirstOrDefaultAsync();
 
             if (user == null)
                 return BadRequest();
-            
 
-            return Ok(new { user.FullName, user.Nickname, user.Address, user.City, user.PostalCode, user.Introduction, user.ProfilePicture});
+            string? profilePicUrl = user.ProfilePicture != null ? $"https://localhost:7261/files/{user.ProfilePicture.StoragePath}" : null;
+
+
+            return Ok(new { user.FullName, user.Nickname, user.Address, user.City, user.PostalCode, user.Introduction, profilePicUrl });
         }
 
         [Authorize]

@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-
-if (process.env.NODE_ENV === "development") {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-}
-
-export const BASE_URL = "https://localhost:7261/api";
+import { BASE_URL } from "../../auth/register/route";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.formData();
-    const response = await fetch(`${BASE_URL}/auth/register`, {
+    const response = await fetch(`${BASE_URL}/files/profile-picture`, {
       method: "POST",
       body: body,
       credentials: "include",
@@ -29,9 +24,9 @@ export async function POST(request: NextRequest) {
         : {},
     });
   } catch (error) {
-    console.error("Registration error: ", error);
+    console.error("Upload error: ", error);
     return NextResponse.json(
-      { message: "A regisztráció során hiba történt" },
+      { message: "A kép feltöltése során hiba történt" },
       { status: 500 },
     );
   }

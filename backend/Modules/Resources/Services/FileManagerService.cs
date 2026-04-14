@@ -2,6 +2,7 @@
 using backend.Modules.Resources.DTOs;
 using backend.Modules.Resources.Models;
 using backend.Modules.Shared.Results;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Ocsp;
 using static System.Net.Mime.MediaTypeNames;
@@ -56,7 +57,7 @@ namespace backend.Modules.Resources.Services
         public FileManagerService(IConfiguration config, AppDbContext db)
         {
             _db = db;
-            _basePath = config["FILES_BASE_PATH"] ?? "./files";
+            _basePath = config["FILES_BASE_PATH"] ?? "./wwwroot/files";
         }
 
         public async Task<ServiceResult<UploadResultDTO>> UploadFile(IFormFile file, string ownerId, string subFolder, UploadType type, CancellationToken ct = default)
@@ -76,15 +77,16 @@ namespace backend.Modules.Resources.Services
                 if (string.IsNullOrEmpty(fileExtension) || !allowedExtensions.Contains(fileExtension))
                     return ServiceResult<UploadResultDTO>.Failure("Invalid file format");
 
+
                 var uniqueFilename = $"{Guid.NewGuid()}{fileExtension}";
-                var uploadPath = Path.Combine(_basePath, subFolder);
+                var uploadPath = $"{_basePath}/{subFolder}";
                 Directory.CreateDirectory(uploadPath);
-                var fullPath = Path.Combine(uploadPath, uniqueFilename);
+                var fullPath = $"{uploadPath}/{uniqueFilename}";
 
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                     await file.CopyToAsync(stream, ct);
 
-                var storagePath = Path.Combine(subFolder, uniqueFilename);
+                var storagePath = $"{subFolder}/{uniqueFilename}";
 
                 var physicalFile = new PhysicalFile
                 {
@@ -107,6 +109,112 @@ namespace backend.Modules.Resources.Services
             catch (Exception ex)
             {
                 return ServiceResult<UploadResultDTO>.Failure(ex.Message);
+            }
+        }
+
+        public async Task<ServiceResult<FileServeDTO>> ServeFile(string storagePath, CancellationToken ct = default)
+        {
+            try
+            {
+                var physicalFile = await _db.PhysicalFiles
+                    .FirstOrDefaultAsync(f => f.StoragePath == storagePath, ct);
+
+                if (physicalFile is null)
+                    return ServiceResult<FileServeDTO>.Failure("File not found", 404);
+
+                var fullPath = $"{_basePath}/{physicalFile.StoragePath}";
+
+                if (!File.Exists(fullPath))
+                    return ServiceResult<FileServeDTO>.Failure("File not found on disk", 404);
+
+                var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read,
+                    bufferSize: 4096, useAsync: true);
+
+                return ServiceResult<FileServeDTO>.Success(new FileServeDTO
+                {
+                    Stream = stream,
+                    MimeType = physicalFile.MimeType,
+                    OriginalFileName = physicalFile.FileName
+                });
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<FileServeDTO>.Failure(ex.Message);
+            }
+        }
+
+        public async Task<ServiceResult> DeleteFile(string userId, Guid fileId, CancellationToken ct = default)
+        {
+            try
+            {
+                var fileRecord = await _db.PhysicalFiles.Where(x => x.Id == fileId).FirstOrDefaultAsync(ct);
+
+                if (fileRecord is null)
+                    return ServiceResult<FileServeDTO>.Failure("File not found");
+
+                if (fileRecord.OwnerId != userId)
+                    return ServiceResult.Failure("Unauthorized");
+
+                var fullPath = $"{_basePath}/{fileRecord.StoragePath}";
+
+                if (File.Exists(fullPath))
+                {
+                    File.Delete(fullPath);
+                }
+
+                _db.PhysicalFiles.Remove(fileRecord);
+                await _db.SaveChangesAsync(ct);
+
+                return ServiceResult.Success();
+
+            }
+            catch (IOException ex)
+            {
+                return ServiceResult.Failure($"IO Error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.Failure($"Delete failed: {ex.Message}");
+            }
+
+        }
+
+        public async Task<ServiceResult> ChangeProfilePicture(string userId, IFormFile file, CancellationToken ct = default)
+        {
+            try
+            {
+                var user = await _db.Users.Where(x => x.Id == userId).FirstOrDefaultAsync(ct);
+
+                if (user is null)
+                {
+                    return ServiceResult.NotFound($"User not found");
+                }
+
+                if (user.ProfilePictureId is not null)
+                {
+                    var res = await DeleteFile(userId, user.ProfilePictureId.Value, ct);
+                    if (!res.Succeded)
+                    {
+                        return ServiceResult.Failure($"Failed to delete profile picture");
+                    }
+                }
+
+                var newPicture = await UploadFile(file, userId, "profile_pictures", UploadType.Image, ct);
+                if (!newPicture.Succeded || newPicture.Data is null)
+                {
+                    return ServiceResult.Failure(newPicture.Error ?? "", newPicture.StatusCode);
+                }
+
+                user.ProfilePictureId = newPicture.Data.FileId;
+
+                _db.Users.Update(user);
+                await _db.SaveChangesAsync(ct);
+
+                return ServiceResult.Success();
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.Failure(ex.Message);
             }
         }
     }

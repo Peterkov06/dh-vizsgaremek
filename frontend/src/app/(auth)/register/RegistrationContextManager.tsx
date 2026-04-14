@@ -91,13 +91,10 @@ const RegistrationContextManager = (props: { children: ReactNode }) => {
     try {
       const mergedData = { ...data, ...finalStepData };
       const validatedData = await fullRegistrationData.parseAsync(mergedData);
-      const backendData = convertToBackendData(validatedData);
+      const backendData = convertToBackendFormData(validatedData);
       const response = await fetch("/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(backendData),
+        body: backendData,
       });
       const result = response.headers
         .get("content-type")
@@ -137,6 +134,27 @@ const RegistrationContextManager = (props: { children: ReactNode }) => {
       full_name: data.fullname,
       url: null,
     };
+  };
+
+  const convertToBackendFormData = (data: RegistrationData): FormData => {
+    const formData = new FormData();
+
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("role", data.role);
+    formData.append("nickname", data.nickname || "");
+    formData.append("address", data.homeAddress);
+    formData.append("postal_code", data.postalCode);
+    formData.append("city", data.cityName);
+    formData.append("date_of_birth", data.dateOfBirth.toISOString());
+    formData.append("introduction", data.introduction || "");
+    formData.append("full_name", data.fullname);
+
+    if (data.profilePicture) {
+      formData.append("profile_picture", data.profilePicture);
+    }
+    console.log(formData);
+    return formData;
   };
 
   return (

@@ -43,7 +43,6 @@
     <Folder Include="Modules\Cities\DTOs\" />
     <Folder Include="Modules\Cities\Models\" />
     <Folder Include="Modules\Cities\Services\" />
-    <Folder Include="Modules\Resources\Controllers\" />
     <Folder Include="Modules\LearningPathTemplate\Controllers\" />
     <Folder Include="Modules\LearningPathTemplate\DTOs\" />
     <Folder Include="Modules\LearningPathTemplate\Services\" />

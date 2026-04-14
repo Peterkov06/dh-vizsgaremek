@@ -52,6 +52,9 @@ const Settings = () => {
   const [activitySwitch, setActivitySwitch] = useState<boolean>(false);
   const [peddingSwitch, setPeddingSwitch] = useState<boolean>(false);
   const [marketingSwitch, setMarketingSwitch] = useState<boolean>(false);
+  const [profilePicture, setProfilePicture] = useState<string>(
+    "https://i.redd.it/o9srxpsm8rm01.png",
+  );
 
   const router = useRouter();
 
@@ -65,6 +68,7 @@ const Settings = () => {
         setPostalCode(data.postalCode);
         setAddress(data.address);
         setIntroduction(data.introduction || "");
+        setProfilePicture(data.profilePicUrl);
       });
   }, []);
 
@@ -228,9 +232,18 @@ const Settings = () => {
     await fetchWithAuth("api/auth/logout");
     router.push("/login");
   }
-  const [profilePicture, setProfilePicture] = useState<string>(
-    "https://i.redd.it/o9srxpsm8rm01.png",
-  );
+
+  async function ChangeProfilePicture(File: File) {
+    const formData = new FormData();
+    formData.append("picture", File);
+    const res = await fetchWithAuth("/api/files/profile-picture", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (res.ok) toast.success("Sikeres módosítás");
+    else toast.error("Hiba történt");
+  }
 
   return (
     <main className="flex flex-col lg:grid grid-cols-10 grid-rows-12 h-full w-full">
@@ -425,9 +438,8 @@ const Settings = () => {
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) {
-              // form.setValue("profilePicture", file);
-              // onChange(file);
               setProfilePicture(URL.createObjectURL(file));
+              ChangeProfilePicture(file);
             }
           }}
         />

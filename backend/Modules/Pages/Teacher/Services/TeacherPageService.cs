@@ -249,6 +249,7 @@ namespace backend.Modules.Pages.Teacher.Services
                 {
                     StudentId = s.UserId,
                     Name = s.User.FullName,
+                    StudentImageURL = s.User.ProfilePicture.StoragePath ?? "",
                     Nickname = s.User.Nickname ?? string.Empty,
                     CourseNumber = _db.TutoringWalls
                         .Count(w => w.StudentId == s.UserId && w.TeacherId == userId),
@@ -345,6 +346,7 @@ namespace backend.Modules.Pages.Teacher.Services
                 .Select(s => new MyStudentCardDTO
                 {
                     StudentId = s.UserId,
+                    StudentImageURL = s.User.ProfilePicture.StoragePath ?? "",
                     Name = s.User.FullName,
                     Nickname = s.User.Nickname ?? string.Empty,
                     CourseNumber = _db.TutoringWalls
