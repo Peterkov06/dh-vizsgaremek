@@ -32,7 +32,7 @@ import {
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navItems = [
@@ -51,14 +51,18 @@ const StudentSideBar = (props: { user: User }) => {
 
   const OnLogout = async () => {
     await fetchWithAuth("api/auth/logout");
-    router.push("/login"); //Gány megoldás
+    redirect("/login"); //Gány megoldás
   };
 
   return (
     <Sidebar className="text-white" collapsible="icon">
       <SidebarHeader>
-        <span className="truncate font-bold group-data-[collapsible=icon]:hidden">
-          Vizsga Remek
+        <span className="flex justify-center items-center">
+          <img
+            src="/imgs/JustHoldingLogoHQ.png"
+            className="size-30 group-data-[collapsible=icon]:size-6"
+            alt=""
+          />
         </span>
         <div className="flex items-center gap-2 text-2xl m-auto mt-5">
           <Avatar className="size-10 group-data-[collapsible=icon]:size-6">

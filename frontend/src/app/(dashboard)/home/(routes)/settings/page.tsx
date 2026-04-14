@@ -34,6 +34,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
+import { Controller } from "react-hook-form";
+import { Field } from "@/components/ui/field";
 
 const Settings = () => {
   const [fullName, setFullName] = useState<string>("");
@@ -226,6 +228,9 @@ const Settings = () => {
     await fetchWithAuth("api/auth/logout");
     router.push("/login");
   }
+  const [profilePicture, setProfilePicture] = useState<string>(
+    "https://i.redd.it/o9srxpsm8rm01.png",
+  );
 
   return (
     <main className="flex flex-col lg:grid grid-cols-10 grid-rows-12 h-full w-full">
@@ -402,20 +407,38 @@ const Settings = () => {
           <User className="text-primary size-10"></User>
           <h1 className="text-2xl font-bold">Profilkép</h1>
         </div>
-        <div className="flex justify-center">
-          <Avatar className="size-40 lg:size-50">
-            <AvatarImage src={"/defaults/default_avatar.jpg"}></AvatarImage>
+        <div className="w-full min-h-48 md:h-full flex flex-row md:justify-center items-center">
+          <Avatar className=" h-52 w-52">
+            <AvatarImage
+              className="aspect-square"
+              alt="avatar"
+              src={profilePicture}
+            />
           </Avatar>
         </div>
-        <div className="flex gap-3 items-center justify-center">
-          <Button className="h-8 lg:h-10 w-40 lg:w-50 text-lg bg-linear-to-tl from-primary to-[#7CB08C]">
-            <Pencil className="size-4 lg:size-6"></Pencil>
-            Módosítás
-          </Button>
-          <Button className="h-8 w-8 lg:h-10 lg:w-10 bg-linear-to-tl from-[#B02929] to-[#BD6060]">
-            <Trash className="size-5 lg:size-6"></Trash>
-          </Button>
-        </div>
+
+        <Input
+          type="file"
+          id="profile-picture-upload"
+          accept="image/png, image/jpeg"
+          className="sr-only"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              // form.setValue("profilePicture", file);
+              // onChange(file);
+              setProfilePicture(URL.createObjectURL(file));
+            }
+          }}
+        />
+        <label
+          htmlFor="profile-picture-upload"
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-2xl text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-foreground text-primary-foreground hover:bg-foreground/90 h-10 px-4 py-6 md:text-lg w-full cursor-pointer"
+        >
+          {profilePicture !== "https://i.redd.it/o9srxpsm8rm01.png"
+            ? "Kép módosítása"
+            : "Profilkép feltöltése"}
+        </label>
       </section>
 
       <section className="mx-3 px-1 py-1 mt-4 row-start-9 col-span-3 row-span-3 border-4 border-light-bg-gray rounded-2xl flex flex-col items-center ">

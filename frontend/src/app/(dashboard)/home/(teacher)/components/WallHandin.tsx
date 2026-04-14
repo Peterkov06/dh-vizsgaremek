@@ -93,7 +93,7 @@ const WallHandin = () => {
         <section className="p-4 gap-4 flex flex-col justify-between lg:w-[30em] bg-light-bg-gray mt-10 rounded-2xl">
           <h1 className="text-3xl text-primary">Beadási határidő</h1>
           <h2 className="text-xl">{formatDateComment(post?.dueDate)}</h2>
-          <Button>Leadás</Button>
+          {/* <Button>Leadás</Button> */}
         </section>
         <section className="p-4 gap-4 flex flex-col justify-between lg:w-[30em] bg-light-bg-gray rounded-2xl">
           <h1 className="text-3xl text-primary">Kommentek</h1>
