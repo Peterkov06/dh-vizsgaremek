@@ -20,9 +20,7 @@ const StudentProfile = () => {
       <section className="flex-1 flex flex-col gap-5 lg:gap-10">
         <div className="bg-secondary rounded-2xl w-full lg:h-50 flex items-end px-5 py-3 gap-5">
           <Avatar className="size-26 lg:size-40 bg-background">
-            <AvatarImage
-              src={student?.profilePictureUrl || "/defaults/default_avatar.jpg"}
-            ></AvatarImage>
+            <AvatarImage src={student?.profilePictureUrl}></AvatarImage>
           </Avatar>
           <div className="mb-4">
             <h1 className="text-2xl lg:text-3xl text-primary font-bold">

@@ -28,10 +28,12 @@ import PeddingStudentProfile from "../course/components/PeddingStudentProfile";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import fetchWithAuth from "@/lib/api-client";
 import { toast } from "sonner";
+import AppImage from "../../(teacher)/components/AppImg";
 
 export interface TutoringStudent {
   studentId: string;
   name: string;
+  studentImageURL: string;
   nickname: string;
   courseNumber: number;
   ongoingHandins: number;
@@ -207,8 +209,8 @@ const StudentPage = () => {
               {/* <h2 className="absolute -top-5 right-6 bg-background py-0 px-1 lg:px-2 lg:py-1 text-xs lg:text-lg rounded-2xl">
                 {as.courseName}
               </h2> */}
-              <img
-                src={"/defaults/default_avatar.jpg"}
+              <AppImage
+                src={as.studentImageURL}
                 alt=""
                 className="h-24 w-24 lg:w-30 lg:h-30 rounded-l-2xl"
               />

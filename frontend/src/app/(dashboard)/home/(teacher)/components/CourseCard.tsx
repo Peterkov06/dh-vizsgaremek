@@ -9,11 +9,7 @@ const CourseCard = (props: { course: ActiveCourse }) => {
     <div className="rounded-lg h-[15em] w-[10em] lg:w-[15em] lg:h-[18em] bg-linear-to-br from-primary to-secondary flex flex-col  text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
       <AppImage
         className="rounded-t-lg h-[30%] lg:h-[40%]"
-        src={
-          props.course.imageUrl === ""
-            ? "defaults/default_course.jpg"
-            : props.course.imageUrl
-        }
+        src={props.course.imageUrl}
         alt="course img"
       />
       <div className="py-2 px-3 rounded-b-lg flex flex-col justify-between flex-1 gap-4">

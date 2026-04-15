@@ -60,9 +60,7 @@ const WallPost = (props: { post: WallPostType }) => {
       <div className="flex items-center gap-2">
         {props.post.handInId === null ? (
           <Avatar>
-            <AvatarImage
-              src={props.post.posterImg || "/defaults/default_avatar.jpg"}
-            ></AvatarImage>
+            <AvatarImage src={props.post.posterImg}></AvatarImage>
           </Avatar>
         ) : (
           <File className="size-10 text-primary"></File>

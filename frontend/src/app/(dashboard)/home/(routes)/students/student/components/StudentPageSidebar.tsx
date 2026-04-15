@@ -117,7 +117,7 @@ const StudentPageSidebar = () => {
       >
         <div className="flex flex-col gap-5 bg-background rounded-2xl py-5 px-2">
           <div
-            className={`flex gap-2 bg-light-bg-gray cursor-pointer px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path.includes("profile") && "bg-primary text-background"}`}
+            className={`flex items-center gap-2 bg-light-bg-gray cursor-pointer px-2 py-1 rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path.includes("profile") && "bg-primary text-background"}`}
             onClick={() => {
               HandleNavigate("profile");
             }}
@@ -126,7 +126,7 @@ const StudentPageSidebar = () => {
             Profil
           </div>
           <div
-            className={`flex gap-2 bg-light-bg-gray px-2 py-1 cursor-pointer rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path.includes("message") && "bg-primary text-background"}`}
+            className={`flex items-center gap-2 bg-light-bg-gray px-2 py-1 cursor-pointer rounded-lg hover:bg-secondary transition-all duration-300 hover:text-black ${path.includes("message") && "bg-primary text-background"}`}
             onClick={() => {
               HandleNavigate("message");
             }}
@@ -138,7 +138,7 @@ const StudentPageSidebar = () => {
           <Accordion type="single" collapsible defaultValue="wall">
             <AccordionItem value="wall">
               <AccordionTrigger className=" gap-2 items-center font-normal  bg-light-bg-gray text-base px-2 py-1">
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
                   <BrickWall></BrickWall> Kurzus falak
                 </div>
               </AccordionTrigger>

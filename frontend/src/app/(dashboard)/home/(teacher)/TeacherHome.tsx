@@ -18,6 +18,7 @@ import {
   Check,
   ChevronRight,
   Folder,
+  MessageCircle,
   Plus,
   Search,
   Users,
@@ -171,7 +172,7 @@ const TeacherHome = (props: { user: User }) => {
           )}
         </section>
         <section className="col-start-4 border-4 border-light-bg-gray p-2 gap-2 rounded-2xl mt-7 grid grid-rows-6">
-          <RadioGroup
+          {/* <RadioGroup
             className="grid grid-cols-2 gap-0"
             value={selectedTabQueue}
             onValueChange={setSelectedTabQueue}
@@ -207,7 +208,11 @@ const TeacherHome = (props: { user: User }) => {
                 Pénzügyek
               </Label>
             </div>
-          </RadioGroup>
+          </RadioGroup> */}
+          <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-light-bg-gray">
+            <Users className="text-primary"></Users>
+            <h1 className="text-xl font-bold">Tanulók</h1>
+          </div>
           <div className="row-span-4 row-start-2 flex flex-col justify-between">
             <h1 className="font-bold text-md">Függőben</h1>
             <div className="overflow-hidden h-[10em]">
@@ -219,10 +224,7 @@ const TeacherHome = (props: { user: User }) => {
                   >
                     <div className="flex items-center gap-1">
                       <Avatar key={i}>
-                        <AvatarImage
-                          src="/defaults/default_avatar.jpg"
-                          alt=""
-                        />
+                        <AvatarImage src={stud.profilePictureUrl} alt="" />
                       </Avatar>
                       <div>
                         <h2 className="text-sm font-bold truncate max-w-46">
@@ -302,8 +304,8 @@ const TeacherHome = (props: { user: User }) => {
       <section className="flex flex-col lg:grid grid-cols-12 gap-4 h-max row-span-5 mt-2">
         <section className=" border-4 border-light-bg-gray rounded-2xl col-span-3 p-2 flex flex-col gap-2">
           <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-light-bg-gray">
-            <Users className="text-primary"></Users>
-            <h1 className="text-xl font-bold">Tanulók</h1>
+            <MessageCircle className="text-primary"></MessageCircle>
+            <h1 className="text-xl font-bold">Üzenetek</h1>
           </div>
           <div className="flex items-center gap-1 bg-light-bg-gray p-1 rounded-lg">
             <Search size={20}></Search>
@@ -329,10 +331,7 @@ const TeacherHome = (props: { user: User }) => {
                     >
                       <div className="flex items-center gap-1">
                         <Avatar key={i}>
-                          <AvatarImage
-                            src="/defaults/default_avatar.jpg"
-                            alt=""
-                          />
+                          <AvatarImage src={stud.profilePictureUrl} alt="" />
                         </Avatar>
                         <div>
                           <h2 className="text-sm font-bold truncate max-w-46">

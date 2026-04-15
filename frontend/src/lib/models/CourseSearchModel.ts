@@ -66,6 +66,7 @@ export type CourseDetail = {
   courseName: string;
   description: string;
   type: string;
+  classLenght: number;
   courseDomain: IdName;
   courseLevel: IdName;
   price: number;
@@ -74,6 +75,7 @@ export type CourseDetail = {
   status: string;
   ratingAverage: number;
   iconImage: string;
+  location: IdName[];
   bannerImage: string;
   tags: IdName[];
   languages: IdName[];

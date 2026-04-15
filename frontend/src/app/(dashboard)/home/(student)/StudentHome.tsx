@@ -215,12 +215,8 @@ const StudentHome = (props: { user: User }) => {
                   <div className="relative flex group">
                     <div className="relative rounded-2xl">
                       <AppImage
-                        className="w-full h-[7em] lg:h-[9em] rounded-2xl"
-                        src={
-                          pc.courseBannerURL === ""
-                            ? "/defaults/default_course.jpg"
-                            : pc.courseBannerURL
-                        }
+                        className=" h-[7em] lg:h-[9em] w-[23em] rounded-2xl"
+                        src={pc.courseBannerURL}
                       ></AppImage>
                       <div className="absolute rounded-2xl inset-0 bg-linear-to-b from-30% from-transparent to-[#E5E3E3] p-1" />
                     </div>

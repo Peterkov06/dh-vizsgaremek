@@ -106,11 +106,7 @@ const MessageSidebar = () => {
                   }}
                 >
                   <Avatar>
-                    <AvatarImage
-                      src={
-                        u.participantImageURL || "/defaults/default_avatar.jpg"
-                      }
-                    ></AvatarImage>
+                    <AvatarImage src={u.participantImageURL}></AvatarImage>
                   </Avatar>
                   <h2 className="truncate max-w-56">{u.participantName}</h2>
                   {u.newMessage && (

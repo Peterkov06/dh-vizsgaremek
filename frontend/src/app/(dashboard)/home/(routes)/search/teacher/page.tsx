@@ -35,9 +35,7 @@ const TeacherProfile = () => {
       <section className="flex-1 flex flex-col gap-10 lg:gap-16">
         <section className="flex items-end py-2 relative bg-linear-to-br from-primary to-secondary h-30 lg:h-46 rounded-2xl w-full text-primary-foreground">
           <Avatar className="absolute size-20 lg:size-30 -bottom-8 left-5 border-2 border-light-bg-gray">
-            <AvatarImage
-              src={teacher?.profilePictureUrl || "/defaults/default_avatar.jpg"}
-            ></AvatarImage>
+            <AvatarImage src={teacher?.profilePictureUrl}></AvatarImage>
           </Avatar>
           <div className="flex flex-col gap-3 m-auto lg:ml-40">
             <h1 className="text-3xl lg:text-5xl font-bold">
@@ -54,8 +52,9 @@ const TeacherProfile = () => {
             <SearchCourseCard card={c} key={id}></SearchCourseCard>
           ))}
         </section>
+        <div className="h-1"></div>
       </section>
-      <section className="border-4 border-light-bg-gray rounded-2xl lg:w-[35em] h-fit p-3 flex flex-col gap-5">
+      <section className="border-4 border-light-bg-gray rounded-2xl lg:w-[27em] h-fit p-3 flex flex-col gap-5">
         <div>
           <div className="flex text-2xl lg:text-3xl font-bold text-primary items-center gap-3">
             <Captions className="size-8 lg:size-10"></Captions>

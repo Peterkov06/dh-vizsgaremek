@@ -18,7 +18,7 @@ const SearchCourseCard = (props: { card: Course }) => {
       <div className="relative">
         <AppImage
           className="w-[20em] h-[12em] rounded-t-xl"
-          src={props.card.bannerImage || "/defaults/default_course.jpg"}
+          src={props.card.bannerImage}
           alt="Course banner"
         />
 
@@ -29,9 +29,7 @@ const SearchCourseCard = (props: { card: Course }) => {
             e.stopPropagation();
           }}
         >
-          <AvatarImage
-            src={props.card.iconImage || "/defaults/default_avatar.jpg"}
-          ></AvatarImage>
+          <AvatarImage src={props.card.iconImage}></AvatarImage>
         </Avatar>
       </div>
       <div className="px-2 py-3 flex flex-col gap-2">

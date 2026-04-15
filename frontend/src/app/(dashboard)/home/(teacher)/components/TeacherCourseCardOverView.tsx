@@ -25,15 +25,13 @@ const TeacherCourseCardOverView = (props: { data: EnrolledCourse }) => {
     <div className="lg:flex-row flex-col flex hover:scale-105 transition-all duration-300 cursor-pointer will-change-transform">
       <div className="relative">
         <AppImage
-          src={props.data.courseBannerURL || "/defaults/default_course.jpg"}
+          src={props.data.courseBannerURL}
           alt=""
           className="w-full h-[12em] lg:w-[20em] lg:h-[10em] rounded-t-2xl lg:rounded-r-none lg:rounded-l-2xl"
         />
         <div className="absolute inset-0 bg-linear-to-b lg:bg-linear-to-r from-60% from-transparent to-light-bg-gray p-1" />
         <Avatar className="size-20 absolute -bottom-7 -right-3 lg:-bottom-5 lg:-right-10 border-2 border-light-bg-gray">
-          <AvatarImage
-            src={props.data.coursePictureURL || "/defaults/default_avatar.jpg"}
-          ></AvatarImage>
+          <AvatarImage src={props.data.coursePictureURL}></AvatarImage>
         </Avatar>
       </div>
       <div className="bg-light-bg-gray flex-1  flex justify-between items-center px-3 py-3 lg:px-5 rounded-r-2xl">
@@ -42,17 +40,17 @@ const TeacherCourseCardOverView = (props: { data: EnrolledCourse }) => {
             {props.data.courseName}
           </h1>
           <div className="flex gap-1 lg:gap-5">
-            <div className="flex gap-2 bg-background border-2 border-primary rounded-md w-fit px-2 py-1">
+            <div className="flex gap-2 items-center bg-background border-2 border-primary rounded-md w-fit px-2 py-1">
               <User></User>
               <p className="hidden lg:block">Tanulók:</p>
               <p className="font-bold">{props.data.enrolledStudents}</p>
             </div>
-            <div className="flex gap-2 bg-background border-2 border-primary rounded-md w-fit px-2 py-1">
+            <div className="flex gap-2 items-center bg-background border-2 border-primary rounded-md w-fit px-2 py-1">
               <HandHelping></HandHelping>
               <p className="hidden lg:block">Beadandók:</p>
               <p className="font-bold">{props.data.ongoingAssignments}</p>
             </div>
-            <div className="flex gap-2 bg-background border-2 border-primary rounded-md w-fit px-2 py-1">
+            <div className="flex gap-2 items-center bg-background border-2 border-primary rounded-md w-fit px-2 py-1">
               <p className="font-bold">{props.data.courseRating}</p>
               <Star className="text-yellow-500"></Star>
             </div>

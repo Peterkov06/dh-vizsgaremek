@@ -434,7 +434,7 @@ const Settings = () => {
           type="file"
           id="profile-picture-upload"
           accept="image/png, image/jpeg"
-          className="sr-only"
+          className=""
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) {

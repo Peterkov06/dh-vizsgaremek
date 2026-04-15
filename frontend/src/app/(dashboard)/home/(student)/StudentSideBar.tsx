@@ -66,9 +66,7 @@ const StudentSideBar = (props: { user: User }) => {
         </span>
         <div className="flex items-center gap-2 text-2xl m-auto mt-5">
           <Avatar className="size-10 group-data-[collapsible=icon]:size-6">
-            <AvatarImage
-              src={props.user.profilePicUrl || "/defaults/default_avatar.jpg"}
-            ></AvatarImage>
+            <AvatarImage src={props.user.profilePicUrl}></AvatarImage>
           </Avatar>
           <p className="turncate group-data-[collapsible=icon]:hidden transition-all duration-500">
             {props.user.fullName}

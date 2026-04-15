@@ -78,11 +78,12 @@ const ModifyTeacherCourse = () => {
       .number({ message: "Óra hossz megadása kötelező" })
       .min(1, { message: "Az óra hossza nem lehet 1-nél kevesebb" }),
     bannerPicture: z
-      .instanceof(File, { error: "Kérjük töltsön fel egy kurzus ikont!" })
+      .instanceof(File)
       .refine(
         (file) => file.size > 0 && file.type.startsWith("image/"),
         "Kérjük töltsön fel egy kép formátumú fájlt!",
-      ),
+      )
+      .optional(),
   });
   type CourseCreatorFormData = z.infer<typeof formSchema>;
 
@@ -121,6 +122,8 @@ const ModifyTeacherCourse = () => {
   const [allSubjects, setAllSubjects] = useState<IdName[]>([]);
   const [allCurrency, setAllCurrency] = useState<Currency[]>([]);
 
+  const [imgUrl, setImgUrl] = useState<string>();
+
   const [priceInput, setPriceInput] = useState("");
   const [classLenghtInput, setClassLenghtInput] = useState("");
 
@@ -140,14 +143,15 @@ const ModifyTeacherCourse = () => {
             description: data.description,
             tags: data.tags.map((t) => t.name),
             languages: data.languages.map((l) => l.name),
-            location: [data.teacherLocation],
+            location: data.location.map((l) => l.name),
             level: data.courseLevel.id,
+            classLenght: data.classLenght,
             subject: data.courseDomain.id,
             firstFree: data.firstConsultationFree ? "Ingyenes" : "Fizetős",
             price: data.price,
             currency: data.currency.id,
           });
-
+          setImgUrl(data.bannerImage);
           setPriceInput(data.price.toString());
           console.log(data);
         });
@@ -272,7 +276,6 @@ const ModifyTeacherCourse = () => {
         firstConsultationFree: data.firstFree === "Ingyenes",
         priceCurrencyId: data.currency || null,
         location: data.location,
-        iconImageId: null,
         bannerImageId: null,
         tags: data.tags.filter(Boolean),
         languages: data.languages.filter(Boolean),
@@ -286,17 +289,19 @@ const ModifyTeacherCourse = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("picture", data.bannerPicture);
-    const imgRes = await fetchWithAuth(
-      `/api/files/course-banner-picture/${courseId}`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+    if (data.bannerPicture) {
+      const formData = new FormData();
+      formData.append("picture", data.bannerPicture);
+      const imgRes = await fetchWithAuth(
+        `/api/files/course-banner-picture/${courseId}`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+      if (res.ok && imgRes.ok) toast.success("Sikeres kurzus módosítás");
+    }
 
-    if (res.ok && imgRes.ok) toast.success("Sikeres kurzus módosítás");
     // form.reset();
   };
 
@@ -311,7 +316,10 @@ const ModifyTeacherCourse = () => {
           control={form.control}
           render={({ field, fieldState }) => (
             <>
-              <ImageUploader onChange={(file) => field.onChange(file)} />
+              <ImageUploader
+                onChange={(file) => field.onChange(file)}
+                initialSrc={imgUrl}
+              />
               {fieldState.invalid && (
                 <p className="text-red-500 text-sm">
                   {fieldState.error?.message}

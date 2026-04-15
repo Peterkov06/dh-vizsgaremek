@@ -83,9 +83,7 @@ const MessageWall = () => {
             key={ch.sentTime}
           >
             <Avatar className="size-7 lg:size-10">
-              <AvatarImage
-                src={ch.senderImage || "/defaults/default_avatar.jpg"}
-              ></AvatarImage>
+              <AvatarImage src={ch.senderImage}></AvatarImage>
             </Avatar>
 
             <div className={`flex flex-col ${ch.isOwn && "items-end"}`}>

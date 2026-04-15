@@ -56,12 +56,7 @@ const PeddingStudentProfile = (props: { id: string }) => {
               <section className="w-fit flex flex-col gap-5">
                 <div className="bg-secondary rounded-2xl w-full lg:h-30 flex items-center py-2 px-2 lg:px-5 gap-5">
                   <Avatar className="size-16 lg:size-24 bg-background">
-                    <AvatarImage
-                      src={
-                        student?.profilePictureUrl ||
-                        "/defaults/default_avatar.jpg"
-                      }
-                    ></AvatarImage>
+                    <AvatarImage src={student?.profilePictureUrl}></AvatarImage>
                   </Avatar>
                   <div>
                     <h1 className="text-xl lg:text-3xl text-primary font-bold">

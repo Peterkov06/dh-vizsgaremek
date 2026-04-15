@@ -65,9 +65,7 @@ const CourseWall = () => {
     <main>
       <section className="flex items-center lg:items-end py-2 relative bg-linear-to-br from-primary to-secondary h-30 lg:h-46 rounded-2xl w-full text-primary-foreground">
         <Avatar className="lg:absolute size-12 lg:size-30 lg:-bottom-8 lg:left-5">
-          <AvatarImage
-            src={page?.iconURL || "/defaults/default_avatar.jpg"}
-          ></AvatarImage>
+          <AvatarImage src={page?.iconURL}></AvatarImage>
         </Avatar>
         <div className="flex flex-col lg:gap-3 lg:ml-40">
           <h1 className="text-lg lg:text-3xl font-bold">{page?.courseName}</h1>

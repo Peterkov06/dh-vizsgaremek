@@ -6,9 +6,7 @@ const CourseReviewCard = (props: { review: CourseReview }) => {
   return (
     <div className="flex bg-light-bg-gray gap-2 border-2 border-primary rounded-2xl p-2">
       <Avatar className="size-10">
-        <AvatarImage
-          src={props.review.reviewerImage || "/defaults/default_avatar.jpg"}
-        ></AvatarImage>
+        <AvatarImage src={props.review.reviewerImage}></AvatarImage>
       </Avatar>
       <div className="flex flex-col">
         <div className="flex gap-2 items-center">

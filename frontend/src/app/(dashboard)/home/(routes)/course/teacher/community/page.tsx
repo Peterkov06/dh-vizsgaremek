@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import fetchWithAuth from "@/lib/api-client";
 import CourseReviewCard from "../../../search/components/CourseReviewCard";
+import AppImage from "@/app/(dashboard)/home/(teacher)/components/AppImg";
 
 const CourseOverView = () => {
   const searchParams = useSearchParams();
@@ -53,8 +54,8 @@ const CourseOverView = () => {
     <main className="lg:flex gap-2 h-full w-full">
       <section className="flex flex-col gap-2 h-full lg:w-[55em]">
         <div className="relative">
-          <img
-            src={course?.bannerImage || "/defaults/default_course.jpg"}
+          <AppImage
+            src={course?.bannerImage}
             alt="Kurzus borító"
             className="h-[14em] lg:w-[55em] lg:h-[30em] rounded-2xl"
           />
@@ -70,9 +71,7 @@ const CourseOverView = () => {
             <div className="flex gap-2 items-end">
               <div className="hover:scale-110 transition-all duration-300">
                 <Avatar className="size-20 lg:size-40 border-2 border-light-bg-gray">
-                  <AvatarImage
-                    src={course?.teacherImage || "/defaults/default_avatar.jpg"}
-                  ></AvatarImage>
+                  <AvatarImage src={course?.teacherImage}></AvatarImage>
                 </Avatar>
               </div>
               <div className="">

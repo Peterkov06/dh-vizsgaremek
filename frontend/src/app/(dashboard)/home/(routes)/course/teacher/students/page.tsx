@@ -133,9 +133,7 @@ const StudentsPage = () => {
                 className="flex gap-3 bg-light-bg-gray px-1 py-3 lg:px-3 lg:py-5 rounded-2xl border-2 border-secondary hover:border-primary transition-all duration-300"
               >
                 <Avatar className="size-14 lg:size-20 bg-background">
-                  <AvatarImage
-                    src={ps.profilePictureUrl || "/defaults/default_avatar.jpg"}
-                  ></AvatarImage>
+                  <AvatarImage src={ps.profilePictureUrl}></AvatarImage>
                 </Avatar>
                 <div className="flex flex-col justify-between">
                   <h2 className="text-xl lg:text-2xl">{ps.userName}</h2>

@@ -55,7 +55,7 @@ const CourseOverView = () => {
       <section className="flex flex-col gap-2 lg:h-full lg:w-[55em]">
         <div className="relative">
           <AppImage
-            src={course?.bannerImage || "/defaults/default_course.jpg"}
+            src={course?.bannerImage}
             alt="Kurzus borító"
             className="h-[14em] lg:w-[55em] lg:h-[30em] rounded-2xl"
           />
@@ -74,9 +74,7 @@ const CourseOverView = () => {
                 className="hover:scale-110 transition-all duration-300"
               >
                 <Avatar className="size-20 lg:size-40 border-2 border-light-bg-gray">
-                  <AvatarImage
-                    src={course?.teacherImage || "/defaults/default_avatar.jpg"}
-                  ></AvatarImage>
+                  <AvatarImage src={course?.teacherImage}></AvatarImage>
                 </Avatar>
               </Link>
               <div className="">

@@ -108,9 +108,7 @@ const WallPost = () => {
                 key={i}
               >
                 <Avatar className="size-10 mt-3">
-                  <AvatarImage
-                    src={coms.senderImg || "/defaults/default_avatar.jpg"}
-                  ></AvatarImage>
+                  <AvatarImage src={coms.senderImg}></AvatarImage>
                 </Avatar>
                 <div className="absolute top-0 right-3 text-sm">
                   {formatDateComment(coms.sentTime)}

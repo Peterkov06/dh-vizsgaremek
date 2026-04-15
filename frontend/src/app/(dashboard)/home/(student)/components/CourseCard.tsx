@@ -14,11 +14,7 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
     <div className="rounded-lg w-fit flex flex-col text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
       <AppImage
         className="rounded-t-lg h-[8em] lg:h-[10em] w-[14em] lg:w-[18em]"
-        src={
-          props.course.courseBannerURL === ""
-            ? "defaults/default_course.jpg"
-            : props.course.courseBannerURL
-        }
+        src={props.course.courseBannerURL}
         alt="course img"
       />
       <div className="bg-linear-to-br flex-1 justify-between from-primary to-secondary py-3 lg:py-6 px-3 rounded-b-lg flex flex-col gap-2 w-[14em] lg:w-[18em]">
@@ -31,7 +27,7 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
             </h2>
           </div>
         </div>
-        <div className="bg-background text-primary flex justify-center items-center px-3 py-1 lg:text-2xl rounded-2xl">
+        <div className="bg-background text-primary flex gap-2 justify-center items-center px-3 py-1 lg:text-2xl rounded-2xl">
           {props.course.progress}
           <CircleStar></CircleStar>
         </div>

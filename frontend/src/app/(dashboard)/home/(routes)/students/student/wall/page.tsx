@@ -63,9 +63,7 @@ const TeacherCourseWallPage = () => {
     <main>
       <section className="flex items-end py-2 relative bg-linear-to-br from-primary to-secondary h-46 rounded-2xl w-full text-primary-foreground">
         <Avatar className="absolute size-30 -bottom-8 left-5">
-          <AvatarImage
-            src={page?.iconURL || "/defaults/default_avatar.jpg"}
-          ></AvatarImage>
+          <AvatarImage src={page?.iconURL}></AvatarImage>
         </Avatar>
         <div className="flex flex-col gap-3 ml-40">
           <h1 className="text-3xl font-bold">{page?.courseName}</h1>
