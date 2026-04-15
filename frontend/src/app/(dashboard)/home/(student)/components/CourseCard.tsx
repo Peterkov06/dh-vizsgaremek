@@ -15,9 +15,9 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
       <AppImage
         className="rounded-t-lg h-[8em] lg:h-[10em] w-[14em] lg:w-[18em]"
         src={
-          props.course.imageUrl === ""
+          props.course.courseBannerURL === ""
             ? "defaults/default_course.jpg"
-            : props.course.imageUrl
+            : props.course.courseBannerURL
         }
         alt="course img"
       />

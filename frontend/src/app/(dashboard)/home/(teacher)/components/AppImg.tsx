@@ -1,13 +1,15 @@
-import Image from "next/image";
-
 const BASE_URL = "https://localhost:7261/files/";
 
-type AppImageProps = Omit<React.ComponentProps<typeof Image>, "src"> & {
+type AppImageProps = React.ComponentProps<"img"> & {
   src?: string | null;
 };
 
-export default function AppImage({ src, ...props }: AppImageProps) {
+export default function AppImage({ src, className, ...props }: AppImageProps) {
   return (
-    <img src={src ? `${BASE_URL}${src}` : "/placeholder.png"} {...props} />
+    <img
+      src={src ? `${BASE_URL}${src}` : "/defaults/default_course.jpg"}
+      className={className}
+      {...props}
+    />
   );
 }

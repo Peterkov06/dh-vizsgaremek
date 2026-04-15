@@ -18,6 +18,7 @@ import fetchWithAuth from "@/lib/api-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { NotificationType } from "../(routes)/notifications/page";
+import AppImage from "../(teacher)/components/AppImg";
 
 const StudentHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<DashboardModel>();
@@ -213,14 +214,14 @@ const StudentHome = (props: { user: User }) => {
                 <Link href={`home/search/course?id=${pc.courseId}`}>
                   <div className="relative flex group">
                     <div className="relative rounded-2xl">
-                      <img
+                      <AppImage
                         className="w-full h-[7em] lg:h-[9em] rounded-2xl"
                         src={
-                          pc.imageUrl === ""
+                          pc.courseBannerURL === ""
                             ? "/defaults/default_course.jpg"
-                            : pc.imageUrl
+                            : pc.courseBannerURL
                         }
-                      ></img>
+                      ></AppImage>
                       <div className="absolute rounded-2xl inset-0 bg-linear-to-b from-30% from-transparent to-[#E5E3E3] p-1" />
                     </div>
                     <div className="absolute z-20 text-primary bottom-3  flex text-sm justify-between w-full px-3 transition-all duration-300 group-hover:-translate-y-25 group-hover:text-white">

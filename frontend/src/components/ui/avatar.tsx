@@ -34,7 +34,11 @@ function AvatarImage({
     <AvatarPrimitive.Image
       data-slot="avatar-image"
       className={cn("aspect-square h-full w-full object-cover", className)}
-      src={src ? `https://localhost:7261/files/${src}` : undefined}
+      src={
+        src
+          ? `https://localhost:7261/files/${src}`
+          : "/defaults/default_avatar.jpg"
+      }
       {...props}
     />
   );

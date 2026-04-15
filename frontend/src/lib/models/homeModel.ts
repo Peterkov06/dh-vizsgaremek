@@ -16,7 +16,7 @@ export interface ActiveCourse {
   courseId: string;
   instanceId: string;
   courseName: string;
-  imageUrl: string;
+  courseBannerURL: string;
   teacherName: string;
   courseType: CourseType;
   progress: number;
@@ -27,7 +27,7 @@ export interface InactiveCourse {
   courseId: string;
   instanceId: string;
   courseName: string;
-  imageUrl: string;
+  courseBannerURL: string;
   teacherName: string;
   courseType: CourseType;
   progress: number;
@@ -59,7 +59,7 @@ export interface PopularCourse {
   courseId: string;
   instanceId: string;
   courseName: string;
-  imageUrl: string;
+  courseBannerURL: string;
   teacherName: string;
   lessonPrice: LessonPrice;
   description: string;

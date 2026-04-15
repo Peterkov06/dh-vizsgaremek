@@ -301,19 +301,10 @@ const ModifyTeacherCourse = () => {
   };
 
   return (
-    <main className="flex w-full flex-col gap-10">
-      <section className="relative">
-        {/* <div className="flex justify-center items-center w-full h-30 bg-linear-to-tr from-primary to-secondary rounded-2xl">
-          <Plus className="size-20 text-primary-foreground"></Plus>
-        </div> */}
-        {/* <div className="flex justify-center items-center absolute w-24 h-24 bg-black -bottom-7 left-5 rounded-[50%]">
-          {/* <Avatar></Avatar>
-          <Plus className="size-20 text-primary-foreground"></Plus>
-        </div> */}
-      </section>
+    <main>
       <form
+        className="flex w-full flex-col gap-10"
         onSubmit={form.handleSubmit(onSubmit)}
-        className="lg:grid grid-cols-2 w-full gap-5"
       >
         <Controller
           name="bannerPicture"
@@ -329,401 +320,127 @@ const ModifyTeacherCourse = () => {
             </>
           )}
         />
-        <section className="flex-1 flex flex-col gap-3">
-          <div className="flex flex-col gap-2">
-            <div className="flex">
-              <Pen className="text-primary size-7"></Pen>
-              <h2 className="text-xl text-primary">Cím</h2>
-            </div>
-            <Controller
-              name="courseName"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field className="w-full" data-invalid={fieldState.invalid}>
-                  <Input
-                    className="border-2 border-primary text-xl!"
-                    {...field}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Kurzus neve..."
-                  ></Input>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex">
-              <Captions className="text-primary size-7"></Captions>
-              <h2 className="text-xl text-primary">Leírás</h2>
-            </div>
-
-            <Controller
-              name="description"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field className="w-full" data-invalid={fieldState.invalid}>
-                  <Textarea
-                    className="border-2 resize-none text-xl! border-primary h-52"
-                    placeholder="Kurzus leírása..."
-                    {...field}
-                    aria-invalid={fieldState.invalid}
-                  ></Textarea>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex">
-              <Tags className="text-primary size-7"></Tags>
-              <h2 className="text-xl text-primary">Címkék</h2>
-            </div>
-            <Controller
-              name="tags"
-              control={form.control}
-              defaultValue={[]}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Combobox
-                    multiple
-                    autoHighlight
-                    items={allTags}
-                    value={field.value}
-                    onValueChange={(val) => {
-                      field.onChange(val);
-                      field.onBlur();
-                    }}
-                  >
-                    <ComboboxChips
-                      ref={anchorTag}
-                      className={`w-full border-2 text-lg ${
-                        fieldState.invalid ? "border-red-500" : "border-primary"
-                      }`}
-                    >
-                      <ComboboxValue>
-                        {(values) => (
-                          <React.Fragment>
-                            {values.map((value: string) => (
-                              <ComboboxChip key={value} className="text-lg">
-                                {value}
-                              </ComboboxChip>
-                            ))}
-                            <ComboboxChipsInput
-                              value={tagInputValue}
-                              onChange={(e) => setTagInputValue(e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter" && tagInputValue.trim()) {
-                                  const trimmed = tagInputValue.trim();
-                                  if (!allTags.includes(trimmed))
-                                    setAllTags((prev) => [...prev, trimmed]);
-                                  if (!field.value.includes(trimmed))
-                                    field.onChange([...field.value, trimmed]);
-                                  setTagInputValue("");
-                                  e.preventDefault();
-                                }
-                              }}
-                            />
-                          </React.Fragment>
-                        )}
-                      </ComboboxValue>
-                    </ComboboxChips>
-                    <ComboboxContent anchor={anchorTag}>
-                      <ComboboxEmpty>Új címke hozzáadása</ComboboxEmpty>
-                      <ComboboxList>
-                        {(item) => (
-                          <ComboboxItem key={item} value={item}>
-                            {item}
-                          </ComboboxItem>
-                        )}
-                      </ComboboxList>
-                    </ComboboxContent>
-                  </Combobox>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <div className="flex">
-              <Globe className="text-primary size-7"></Globe>
-              <h2 className="text-xl text-primary">Nyelvek</h2>
-            </div>
-            <Controller
-              name="languages"
-              control={form.control}
-              defaultValue={[]}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Combobox
-                    multiple
-                    autoHighlight
-                    items={allLang}
-                    value={field.value}
-                    onValueChange={(val) => {
-                      field.onChange(val);
-                      field.onBlur();
-                    }}
-                  >
-                    <ComboboxChips
-                      ref={anchorLang}
-                      className={`w-full border-2 text-lg ${
-                        fieldState.invalid ? "border-red-500" : "border-primary"
-                      }`}
-                    >
-                      <ComboboxValue>
-                        {(values) => (
-                          <React.Fragment>
-                            {values.map((value: string) => (
-                              <ComboboxChip key={value} className="text-lg">
-                                {value}
-                              </ComboboxChip>
-                            ))}
-                            <ComboboxChipsInput
-                              value={langInputValue}
-                              onChange={(e) =>
-                                setLangInputValue(e.target.value)
-                              }
-                            />
-                          </React.Fragment>
-                        )}
-                      </ComboboxValue>
-                    </ComboboxChips>
-                    <ComboboxContent anchor={anchorLang}>
-                      <ComboboxEmpty>Nincs ilyen nyelv</ComboboxEmpty>
-                      <ComboboxList>
-                        {(item) => (
-                          <ComboboxItem key={item} value={item}>
-                            {item}
-                          </ComboboxItem>
-                        )}
-                      </ComboboxList>
-                    </ComboboxContent>
-                  </Combobox>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-        </section>
-        <section className="flex flex-col gap-5">
-          <div className="flex flex-col gap-2">
-            <div className="flex">
-              <h2 className="text-xl text-primary">Kurzus típusa</h2>
-            </div>
-            <RadioGroup className="grid grid-cols-2 gap-0">
-              <div
-                className={`border-6 border-light-bg-gray rounded-l-xl py-2  bg-background text-primary font-bold`}
-              >
-                <RadioGroupItem
-                  value="introduction"
-                  className="hidden"
-                  id="studs"
-                ></RadioGroupItem>
-                <Label
-                  htmlFor="studs"
-                  className="h-full w-full flex justify-center items-center text-lg"
-                >
-                  Magántanári
-                </Label>
-              </div>
-              <div
-                className={`border-6 border-light-bg-gray rounded-r-xl  bg-light-bg-gray text-[#898989]`}
-              >
-                <RadioGroupItem
-                  value="qualification"
-                  className="hidden"
-                  id="money"
-                  disabled
-                ></RadioGroupItem>
-                <Label
-                  htmlFor="money"
-                  className="h-full w-full flex justify-center items-center text-lg"
-                >
-                  Tanulói ösvény
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex">
-              <ChartArea className="text-primary size-7"></ChartArea>
-              <h2 className="text-xl text-primary">Szint</h2>
-            </div>
-            <Controller
-              name="level"
-              control={form.control}
-              defaultValue=""
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Select
-                    value={field.value}
-                    onValueChange={(val) => {
-                      field.onChange(val);
-                      field.onBlur();
-                    }}
-                  >
-                    <SelectTrigger
-                      className={`w-full border-2 text-lg ${
-                        fieldState.invalid ? "border-red-500" : "border-primary"
-                      }`}
-                    >
-                      <SelectValue placeholder="Válassz szintet..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {allLevels.map((level) => (
-                        <SelectItem key={level.id} value={level.id}>
-                          {level.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex">
-              <Book className="text-primary size-7"></Book>
-              <h2 className="text-xl text-primary">Tantárgy</h2>
-            </div>
-            <Controller
-              name="subject"
-              control={form.control}
-              defaultValue=""
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Select
-                    value={field.value}
-                    onValueChange={(val) => {
-                      field.onChange(val);
-                      field.onBlur();
-                    }}
-                  >
-                    <SelectTrigger
-                      className={`w-full border-2 text-lg ${
-                        fieldState.invalid ? "border-red-500" : "border-primary"
-                      }`}
-                    >
-                      <SelectValue placeholder="Válassz tantárgyat..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {allSubjects.map((level) => (
-                        <SelectItem key={level.id} value={level.id}>
-                          {level.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <div className="flex">
-              <h2 className="text-xl text-primary">Első konzultációs óra</h2>
-            </div>
-            <Controller
-              name="firstFree"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <RadioGroup
-                    value={field.value}
-                    onValueChange={(val) => {
-                      field.onChange(val);
-                      field.onBlur();
-                    }}
-                    className="grid grid-cols-2 gap-0"
-                  >
-                    <div
-                      className={`border-6 rounded-l-xl py-2 ${
-                        field.value === "Ingyenes"
-                          ? "bg-background border-light-bg-gray text-primary font-bold"
-                          : "border-light-bg-gray bg-light-bg-gray text-[#898989]"
-                      }`}
-                    >
-                      <RadioGroupItem
-                        value="Ingyenes"
-                        className="hidden"
-                        id="free"
-                      />
-                      <Label
-                        htmlFor="free"
-                        className="h-full w-full flex justify-center items-center text-lg cursor-pointer"
-                      >
-                        Ingyenes
-                      </Label>
-                    </div>
-                    <div
-                      className={`border-6 rounded-r-xl py-2  ${
-                        field.value === "Fizetős"
-                          ? "bg-background text-primary  border-light-bg-gray font-bold"
-                          : "border-light-bg-gray bg-light-bg-gray text-[#898989]"
-                      }`}
-                    >
-                      <RadioGroupItem
-                        value="Fizetős"
-                        className="hidden"
-                        id="paid"
-                      />
-                      <Label
-                        htmlFor="paid"
-                        className="h-full w-full flex justify-center items-center text-lg cursor-pointer"
-                      >
-                        Fizetős
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-          <div className="flex gap-5 w-full">
-            <div className="flex flex-col gap-2 w-full">
+        <div className="lg:grid grid-cols-2 w-full gap-5">
+          <section className="flex-1 flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <div className="flex">
-                <PiggyBank className="text-primary size-7"></PiggyBank>
-                <h2 className="text-xl text-primary">Ár</h2>
+                <Pen className="text-primary size-7"></Pen>
+                <h2 className="text-xl text-primary">Cím</h2>
               </div>
               <Controller
-                name="price"
+                name="courseName"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
+                  <Field className="w-full" data-invalid={fieldState.invalid}>
                     <Input
-                      type="number"
-                      min={0}
-                      className={`border-2 text-xl! ${
-                        fieldState.invalid ? "border-red-500" : "border-primary"
-                      }`}
-                      placeholder="Kurzus ára..."
-                      value={priceInput}
-                      onChange={(e) => {
-                        setPriceInput(e.target.value);
-                        const num = Number(e.target.value);
-                        field.onChange(e.target.value === "" ? undefined : num);
-                      }}
-                      onBlur={field.onBlur}
-                    />
+                      className="border-2 border-primary text-xl!"
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Kurzus neve..."
+                    ></Input>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex">
+                <Captions className="text-primary size-7"></Captions>
+                <h2 className="text-xl text-primary">Leírás</h2>
+              </div>
 
+              <Controller
+                name="description"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="w-full" data-invalid={fieldState.invalid}>
+                    <Textarea
+                      className="border-2 resize-none text-xl! border-primary h-52"
+                      placeholder="Kurzus leírása..."
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                    ></Textarea>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex">
+                <Tags className="text-primary size-7"></Tags>
+                <h2 className="text-xl text-primary">Címkék</h2>
+              </div>
+              <Controller
+                name="tags"
+                control={form.control}
+                defaultValue={[]}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <Combobox
+                      multiple
+                      autoHighlight
+                      items={allTags}
+                      value={field.value}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        field.onBlur();
+                      }}
+                    >
+                      <ComboboxChips
+                        ref={anchorTag}
+                        className={`w-full border-2 text-lg ${
+                          fieldState.invalid
+                            ? "border-red-500"
+                            : "border-primary"
+                        }`}
+                      >
+                        <ComboboxValue>
+                          {(values) => (
+                            <React.Fragment>
+                              {values.map((value: string) => (
+                                <ComboboxChip key={value} className="text-lg">
+                                  {value}
+                                </ComboboxChip>
+                              ))}
+                              <ComboboxChipsInput
+                                value={tagInputValue}
+                                onChange={(e) =>
+                                  setTagInputValue(e.target.value)
+                                }
+                                onKeyDown={(e) => {
+                                  if (
+                                    e.key === "Enter" &&
+                                    tagInputValue.trim()
+                                  ) {
+                                    const trimmed = tagInputValue.trim();
+                                    if (!allTags.includes(trimmed))
+                                      setAllTags((prev) => [...prev, trimmed]);
+                                    if (!field.value.includes(trimmed))
+                                      field.onChange([...field.value, trimmed]);
+                                    setTagInputValue("");
+                                    e.preventDefault();
+                                  }
+                                }}
+                              />
+                            </React.Fragment>
+                          )}
+                        </ComboboxValue>
+                      </ComboboxChips>
+                      <ComboboxContent anchor={anchorTag}>
+                        <ComboboxEmpty>Új címke hozzáadása</ComboboxEmpty>
+                        <ComboboxList>
+                          {(item) => (
+                            <ComboboxItem key={item} value={item}>
+                              {item}
+                            </ComboboxItem>
+                          )}
+                        </ComboboxList>
+                      </ComboboxContent>
+                    </Combobox>
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -734,11 +451,116 @@ const ModifyTeacherCourse = () => {
 
             <div className="flex flex-col gap-2">
               <div className="flex">
-                <CircleDollarSignIcon className="text-primary size-7"></CircleDollarSignIcon>
-                <h2 className="text-xl text-primary">Árfolyam</h2>
+                <Globe className="text-primary size-7"></Globe>
+                <h2 className="text-xl text-primary">Nyelvek</h2>
               </div>
               <Controller
-                name="currency"
+                name="languages"
+                control={form.control}
+                defaultValue={[]}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <Combobox
+                      multiple
+                      autoHighlight
+                      items={allLang}
+                      value={field.value}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        field.onBlur();
+                      }}
+                    >
+                      <ComboboxChips
+                        ref={anchorLang}
+                        className={`w-full border-2 text-lg ${
+                          fieldState.invalid
+                            ? "border-red-500"
+                            : "border-primary"
+                        }`}
+                      >
+                        <ComboboxValue>
+                          {(values) => (
+                            <React.Fragment>
+                              {values.map((value: string) => (
+                                <ComboboxChip key={value} className="text-lg">
+                                  {value}
+                                </ComboboxChip>
+                              ))}
+                              <ComboboxChipsInput
+                                value={langInputValue}
+                                onChange={(e) =>
+                                  setLangInputValue(e.target.value)
+                                }
+                              />
+                            </React.Fragment>
+                          )}
+                        </ComboboxValue>
+                      </ComboboxChips>
+                      <ComboboxContent anchor={anchorLang}>
+                        <ComboboxEmpty>Nincs ilyen nyelv</ComboboxEmpty>
+                        <ComboboxList>
+                          {(item) => (
+                            <ComboboxItem key={item} value={item}>
+                              {item}
+                            </ComboboxItem>
+                          )}
+                        </ComboboxList>
+                      </ComboboxContent>
+                    </Combobox>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+          </section>
+          <section className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <div className="flex">
+                <h2 className="text-xl text-primary">Kurzus típusa</h2>
+              </div>
+              <RadioGroup className="grid grid-cols-2 gap-0">
+                <div
+                  className={`border-6 border-light-bg-gray rounded-l-xl py-2  bg-background text-primary font-bold`}
+                >
+                  <RadioGroupItem
+                    value="introduction"
+                    className="hidden"
+                    id="studs"
+                  ></RadioGroupItem>
+                  <Label
+                    htmlFor="studs"
+                    className="h-full w-full flex justify-center items-center text-lg"
+                  >
+                    Magántanári
+                  </Label>
+                </div>
+                <div
+                  className={`border-6 border-light-bg-gray rounded-r-xl  bg-light-bg-gray text-[#898989]`}
+                >
+                  <RadioGroupItem
+                    value="qualification"
+                    className="hidden"
+                    id="money"
+                    disabled
+                  ></RadioGroupItem>
+                  <Label
+                    htmlFor="money"
+                    className="h-full w-full flex justify-center items-center text-lg"
+                  >
+                    Tanulói ösvény
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex">
+                <ChartArea className="text-primary size-7"></ChartArea>
+                <h2 className="text-xl text-primary">Szint</h2>
+              </div>
+              <Controller
+                name="level"
                 control={form.control}
                 defaultValue=""
                 render={({ field, fieldState }) => (
@@ -757,12 +579,12 @@ const ModifyTeacherCourse = () => {
                             : "border-primary"
                         }`}
                       >
-                        <SelectValue />
+                        <SelectValue placeholder="Válassz szintet..." />
                       </SelectTrigger>
                       <SelectContent>
-                        {allCurrency.map((level) => (
+                        {allLevels.map((level) => (
                           <SelectItem key={level.id} value={level.id}>
-                            {level.currencyCode}
+                            {level.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -774,32 +596,41 @@ const ModifyTeacherCourse = () => {
                 )}
               />
             </div>
-            <div className="flex flex-col gap-2 w-full">
+            <div className="flex flex-col gap-2">
               <div className="flex">
-                <Clock className="text-primary size-7"></Clock>
-                <h2 className="text-xl text-primary">Óra hossza</h2>
+                <Book className="text-primary size-7"></Book>
+                <h2 className="text-xl text-primary">Tantárgy</h2>
               </div>
               <Controller
-                name="classLenght"
+                name="subject"
                 control={form.control}
+                defaultValue=""
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <Input
-                      type="number"
-                      min={0}
-                      className={`border-2 text-xl! ${
-                        fieldState.invalid ? "border-red-500" : "border-primary"
-                      }`}
-                      placeholder="Óra hossza (perc)..."
-                      value={classLenghtInput}
-                      onChange={(e) => {
-                        setClassLenghtInput(e.target.value);
-                        const num = Number(e.target.value);
-                        field.onChange(e.target.value === "" ? undefined : num);
+                    <Select
+                      value={field.value}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        field.onBlur();
                       }}
-                      onBlur={field.onBlur}
-                    />
-
+                    >
+                      <SelectTrigger
+                        className={`w-full border-2 text-lg ${
+                          fieldState.invalid
+                            ? "border-red-500"
+                            : "border-primary"
+                        }`}
+                      >
+                        <SelectValue placeholder="Válassz tantárgyat..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {allSubjects.map((level) => (
+                          <SelectItem key={level.id} value={level.id}>
+                            {level.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -807,72 +638,259 @@ const ModifyTeacherCourse = () => {
                 )}
               />
             </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex">
-              <MapPin className="text-primary size-7"></MapPin>
-              <h2 className="text-xl text-primary">Helyszín</h2>
-            </div>
-            <Controller
-              name="location"
-              control={form.control}
-              defaultValue={[]}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Combobox
-                    multiple
-                    autoHighlight
-                    items={allLoc}
-                    value={Array.isArray(field.value) ? field.value : []}
-                    onValueChange={(val) => {
-                      field.onChange(val);
-                      field.onBlur();
-                    }}
-                  >
-                    <ComboboxChips
-                      ref={anchorLoc}
-                      className={`w-full border-2 text-lg ${
-                        fieldState.invalid ? "border-red-500" : "border-primary"
-                      }`}
+
+            <div className="flex flex-col gap-2">
+              <div className="flex">
+                <h2 className="text-xl text-primary">Első konzultációs óra</h2>
+              </div>
+              <Controller
+                name="firstFree"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <RadioGroup
+                      value={field.value}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        field.onBlur();
+                      }}
+                      className="grid grid-cols-2 gap-0"
                     >
-                      <ComboboxValue>
-                        {(values) => (
-                          <React.Fragment>
-                            {values.map((value: string) => (
-                              <ComboboxChip key={value} className="text-lg">
-                                {value}
-                              </ComboboxChip>
-                            ))}
-                            <ComboboxChipsInput
-                              value={locInputValue}
-                              onChange={(e) => setLocInputValue(e.target.value)}
-                            />
-                          </React.Fragment>
-                        )}
-                      </ComboboxValue>
-                    </ComboboxChips>
-                    <ComboboxContent anchor={anchorLoc} side="top">
-                      <ComboboxEmpty>Nincs ilyen helyszín</ComboboxEmpty>
-                      <ComboboxList>
-                        {(item) => (
-                          <ComboboxItem key={item} value={item}>
-                            {item}
-                          </ComboboxItem>
-                        )}
-                      </ComboboxList>
-                    </ComboboxContent>
-                  </Combobox>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                      <div
+                        className={`border-6 rounded-l-xl py-2 ${
+                          field.value === "Ingyenes"
+                            ? "bg-background border-light-bg-gray text-primary font-bold"
+                            : "border-light-bg-gray bg-light-bg-gray text-[#898989]"
+                        }`}
+                      >
+                        <RadioGroupItem
+                          value="Ingyenes"
+                          className="hidden"
+                          id="free"
+                        />
+                        <Label
+                          htmlFor="free"
+                          className="h-full w-full flex justify-center items-center text-lg cursor-pointer"
+                        >
+                          Ingyenes
+                        </Label>
+                      </div>
+                      <div
+                        className={`border-6 rounded-r-xl py-2  ${
+                          field.value === "Fizetős"
+                            ? "bg-background text-primary  border-light-bg-gray font-bold"
+                            : "border-light-bg-gray bg-light-bg-gray text-[#898989]"
+                        }`}
+                      >
+                        <RadioGroupItem
+                          value="Fizetős"
+                          className="hidden"
+                          id="paid"
+                        />
+                        <Label
+                          htmlFor="paid"
+                          className="h-full w-full flex justify-center items-center text-lg cursor-pointer"
+                        >
+                          Fizetős
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+            <div className="flex gap-5 w-full">
+              <div className="flex flex-col gap-2 w-full">
+                <div className="flex">
+                  <PiggyBank className="text-primary size-7"></PiggyBank>
+                  <h2 className="text-xl text-primary">Ár</h2>
+                </div>
+                <Controller
+                  name="price"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <Input
+                        type="number"
+                        min={0}
+                        className={`border-2 text-xl! ${
+                          fieldState.invalid
+                            ? "border-red-500"
+                            : "border-primary"
+                        }`}
+                        placeholder="Kurzus ára..."
+                        value={priceInput}
+                        onChange={(e) => {
+                          setPriceInput(e.target.value);
+                          const num = Number(e.target.value);
+                          field.onChange(
+                            e.target.value === "" ? undefined : num,
+                          );
+                        }}
+                        onBlur={field.onBlur}
+                      />
+
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
                   )}
-                </Field>
-              )}
-            />
-          </div>
-          <Button type="submit" className="text-xl">
-            <Pen className="size-5"></Pen>Módosítás
-          </Button>
-        </section>
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <div className="flex">
+                  <CircleDollarSignIcon className="text-primary size-7"></CircleDollarSignIcon>
+                  <h2 className="text-xl text-primary">Árfolyam</h2>
+                </div>
+                <Controller
+                  name="currency"
+                  control={form.control}
+                  defaultValue=""
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <Select
+                        value={field.value}
+                        onValueChange={(val) => {
+                          field.onChange(val);
+                          field.onBlur();
+                        }}
+                      >
+                        <SelectTrigger
+                          className={`w-full border-2 text-lg ${
+                            fieldState.invalid
+                              ? "border-red-500"
+                              : "border-primary"
+                          }`}
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {allCurrency.map((level) => (
+                            <SelectItem key={level.id} value={level.id}>
+                              {level.currencyCode}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+              <div className="flex flex-col gap-2 w-full">
+                <div className="flex">
+                  <Clock className="text-primary size-7"></Clock>
+                  <h2 className="text-xl text-primary">Óra hossza</h2>
+                </div>
+                <Controller
+                  name="classLenght"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <Input
+                        type="number"
+                        min={0}
+                        className={`border-2 text-xl! ${
+                          fieldState.invalid
+                            ? "border-red-500"
+                            : "border-primary"
+                        }`}
+                        placeholder="Óra hossza (perc)..."
+                        value={classLenghtInput}
+                        onChange={(e) => {
+                          setClassLenghtInput(e.target.value);
+                          const num = Number(e.target.value);
+                          field.onChange(
+                            e.target.value === "" ? undefined : num,
+                          );
+                        }}
+                        onBlur={field.onBlur}
+                      />
+
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex">
+                <MapPin className="text-primary size-7"></MapPin>
+                <h2 className="text-xl text-primary">Helyszín</h2>
+              </div>
+              <Controller
+                name="location"
+                control={form.control}
+                defaultValue={[]}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <Combobox
+                      multiple
+                      autoHighlight
+                      items={allLoc}
+                      value={Array.isArray(field.value) ? field.value : []}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        field.onBlur();
+                      }}
+                    >
+                      <ComboboxChips
+                        ref={anchorLoc}
+                        className={`w-full border-2 text-lg ${
+                          fieldState.invalid
+                            ? "border-red-500"
+                            : "border-primary"
+                        }`}
+                      >
+                        <ComboboxValue>
+                          {(values) => (
+                            <React.Fragment>
+                              {values.map((value: string) => (
+                                <ComboboxChip key={value} className="text-lg">
+                                  {value}
+                                </ComboboxChip>
+                              ))}
+                              <ComboboxChipsInput
+                                value={locInputValue}
+                                onChange={(e) =>
+                                  setLocInputValue(e.target.value)
+                                }
+                              />
+                            </React.Fragment>
+                          )}
+                        </ComboboxValue>
+                      </ComboboxChips>
+                      <ComboboxContent anchor={anchorLoc} side="top">
+                        <ComboboxEmpty>Nincs ilyen helyszín</ComboboxEmpty>
+                        <ComboboxList>
+                          {(item) => (
+                            <ComboboxItem key={item} value={item}>
+                              {item}
+                            </ComboboxItem>
+                          )}
+                        </ComboboxList>
+                      </ComboboxContent>
+                    </Combobox>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+            <Button type="submit" className="text-xl">
+              <Pen className="size-5"></Pen>Módosítás
+            </Button>
+          </section>
+        </div>
       </form>
     </main>
   );
