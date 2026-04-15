@@ -6,6 +6,7 @@ import { EnrolledCourse } from "@/lib/models/teacherSettingsModel";
 import { ArrowRightFromLine, HandHelping, Star, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
+import AppImage from "./AppImg";
 
 export type TeacherCourseType = {
   id: string;
@@ -23,7 +24,7 @@ const TeacherCourseCardOverView = (props: { data: EnrolledCourse }) => {
   return (
     <div className="lg:flex-row flex-col flex hover:scale-105 transition-all duration-300 cursor-pointer will-change-transform">
       <div className="relative">
-        <img
+        <AppImage
           src={props.data.courseBannerURL || "/defaults/default_course.jpg"}
           alt=""
           className="w-full h-[12em] lg:w-[20em] lg:h-[10em] rounded-t-2xl lg:rounded-r-none lg:rounded-l-2xl"

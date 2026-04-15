@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ActiveCourse, InactiveCourse } from "@/lib/models/homeModel";
 import { ChevronRightCircle, CircleStar, User } from "lucide-react";
 import Link from "next/link";
+import AppImage from "../../(teacher)/components/AppImg";
 
 const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
   const isActive = (
@@ -11,7 +12,7 @@ const CourseCard = (props: { course: ActiveCourse | InactiveCourse }) => {
   };
   return (
     <div className="rounded-lg w-fit flex flex-col text-background overflow-hidden shadow-2xl shadow-primary hover:scale-105 transition-all duration-300">
-      <img
+      <AppImage
         className="rounded-t-lg h-[8em] lg:h-[10em] w-[14em] lg:w-[18em]"
         src={
           props.course.imageUrl === ""

@@ -3,6 +3,7 @@ import { Course } from "@/lib/models/CourseSearchModel";
 import { MapPin, Pin, Star, User } from "lucide-react";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
+import AppImage from "../../../(teacher)/components/AppImg";
 
 const SearchCourseCard = (props: { card: Course }) => {
   const router = useRouter();
@@ -15,7 +16,7 @@ const SearchCourseCard = (props: { card: Course }) => {
       }}
     >
       <div className="relative">
-        <img
+        <AppImage
           className="w-[20em] h-[12em] rounded-t-xl"
           src={props.card.bannerImage || "/defaults/default_course.jpg"}
           alt="Course banner"

@@ -10,6 +10,7 @@ import {
   User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import AppImage from "../../(teacher)/components/AppImg";
 
 const StudentCourseCard = (props: { data: StudentsCourse }) => {
   const router = useRouter();
@@ -17,7 +18,7 @@ const StudentCourseCard = (props: { data: StudentsCourse }) => {
   return (
     <div className="lg:flex-row flex-col rounded-2xl flex hover:scale-105 transition-all duration-300 cursor-pointer will-change-transform">
       <div className="relative">
-        <img
+        <AppImage
           src={props.data.courseBannerURL || "/defaults/default_course.jpg"}
           alt=""
           className="w-[35em] h-[10em] rounded-t-2xl lg:rounded-l-2xl"
