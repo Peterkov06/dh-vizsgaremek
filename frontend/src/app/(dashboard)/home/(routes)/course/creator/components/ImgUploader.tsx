@@ -4,7 +4,11 @@ import { Plus } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
-export default function ImageUploader() {
+interface ImageUploaderProps {
+  onChange?: (file: File) => void;
+}
+
+export default function ImageUploader({ onChange }: ImageUploaderProps) {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -18,8 +22,8 @@ export default function ImageUploader() {
 
     const url = URL.createObjectURL(file);
     setImageSrc(url);
+    onChange?.(file); // ← added
 
-    // Reset input so the same file can be re-selected
     e.target.value = "";
   };
 
@@ -45,7 +49,6 @@ export default function ImageUploader() {
               fill
               className="object-cover rounded-2xl"
             />
-            {/* Hover overlay to re-select */}
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
               <Plus className="size-20 text-white" />
             </div>
