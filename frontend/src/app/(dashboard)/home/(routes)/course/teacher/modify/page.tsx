@@ -77,6 +77,12 @@ const ModifyTeacherCourse = () => {
     classLenght: z
       .number({ message: "Óra hossz megadása kötelező" })
       .min(1, { message: "Az óra hossza nem lehet 1-nél kevesebb" }),
+    bannerPicture: z
+      .instanceof(File, { error: "Kérjük töltsön fel egy kurzus ikont!" })
+      .refine(
+        (file) => file.size > 0 && file.type.startsWith("image/"),
+        "Kérjük töltsön fel egy kép formátumú fájlt!",
+      ),
   });
   type CourseCreatorFormData = z.infer<typeof formSchema>;
 
@@ -94,6 +100,7 @@ const ModifyTeacherCourse = () => {
       price: 0,
       currency: "",
       classLenght: 0,
+      bannerPicture: undefined,
     },
     mode: "onTouched",
   });
@@ -278,7 +285,18 @@ const ModifyTeacherCourse = () => {
       toast.error("Hiba történt");
       return;
     }
-    if (res.ok) toast.success("Sikeres kurzus módosítás");
+
+    const formData = new FormData();
+    formData.append("picture", data.bannerPicture);
+    const imgRes = await fetchWithAuth(
+      `/api/files/course-banner-picture/${courseId}`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+
+    if (res.ok && imgRes.ok) toast.success("Sikeres kurzus módosítás");
     // form.reset();
   };
 
@@ -288,17 +306,29 @@ const ModifyTeacherCourse = () => {
         {/* <div className="flex justify-center items-center w-full h-30 bg-linear-to-tr from-primary to-secondary rounded-2xl">
           <Plus className="size-20 text-primary-foreground"></Plus>
         </div> */}
-        <ImageUploader></ImageUploader>
         {/* <div className="flex justify-center items-center absolute w-24 h-24 bg-black -bottom-7 left-5 rounded-[50%]">
           {/* <Avatar></Avatar>
           <Plus className="size-20 text-primary-foreground"></Plus>
         </div> */}
-        <AvatarUploader></AvatarUploader>
       </section>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="lg:grid grid-cols-2 w-full gap-5"
       >
+        <Controller
+          name="bannerPicture"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <>
+              <ImageUploader onChange={(file) => field.onChange(file)} />
+              {fieldState.invalid && (
+                <p className="text-red-500 text-sm">
+                  {fieldState.error?.message}
+                </p>
+              )}
+            </>
+          )}
+        />
         <section className="flex-1 flex flex-col gap-3">
           <div className="flex flex-col gap-2">
             <div className="flex">

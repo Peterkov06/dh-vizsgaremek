@@ -76,7 +76,7 @@ const CourseCreator = () => {
     classLenght: z
       .number({ message: "Óra hossz megadása kötelező" })
       .min(1, { message: "Az óra hossza nem lehet 1-nél kevesebb" }),
-    profilePicture: z
+    bannerPicture: z
       .instanceof(File, { error: "Kérjük töltsön fel egy kurzus ikont!" })
       .refine(
         (file) => file.size > 0 && file.type.startsWith("image/"),
@@ -99,13 +99,10 @@ const CourseCreator = () => {
       price: 0,
       classLenght: 0,
       currency: "",
-      profilePicture: undefined,
+      bannerPicture: undefined,
     },
     mode: "onTouched",
   });
-
-  /*form.setValue("profilePicture", file);
-                          onChange(file);*/
 
   const [allTags, setAllTags] = useState<string[]>([]);
   const [tagInputValue, setTagInputValue] = useState("");
@@ -248,16 +245,27 @@ const CourseCreator = () => {
       }),
     });
 
-    console.log(res);
-
     if (!res.ok) {
       const error = await res.json();
       console.error("API error:", error);
       toast.error("Hiba történt");
       return;
     }
-    if (res.ok) toast.success("Sikeres kurzus létrehozzás");
 
+    const resData = await res.json();
+
+    const formData = new FormData();
+    formData.append("picture", data.bannerPicture);
+    const imgRes = await fetchWithAuth(
+      `/api/files/course-banner-picture/${resData.id}`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+
+    if (res.ok && imgRes.ok) toast.success("Sikeres kurzus létrehozás");
+    else toast.error("Hiba történt");
     form.reset();
     setPriceInput("");
     setClassLenghtInput("");
@@ -279,7 +287,7 @@ const CourseCreator = () => {
         className="flex w-full flex-col gap-10"
       >
         <Controller
-          name="profilePicture"
+          name="bannerPicture"
           control={form.control}
           render={({ field, fieldState }) => (
             <>
