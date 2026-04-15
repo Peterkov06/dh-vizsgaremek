@@ -301,7 +301,7 @@ namespace backend.Modules.Pages.Teacher.Services
                     CourseName = x.CourseName,
                     Type = CourseType.Tutoring,
                     CourseBannerURL = x.BannerImage.StoragePath ?? null,
-                    CoursePictureURL = x.IconImage.StoragePath ?? null,
+                    CoursePictureURL = x.Teacher.User.ProfilePicture.StoragePath ?? null,
                     Status = x.Status,
                     EnrolledStudents = _db.Students.Where(s => s.TutoringWalls.Where(t => t.CourseId == x.Id && t.Status == EnrollmentStatus.Active).Any()).Count(),
                     CourseRating = _db.CourseReviews.Where(cr => cr.CourseId == x.Id).Average(x => (int?)x.ReviewScore) ?? 0,

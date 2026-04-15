@@ -112,7 +112,7 @@ namespace backend.Modules.Pages.Student.Services
                     CourseId = x.Id,
                     CourseName = x.CourseName,
                     TeacherName = x.Teacher?.User?.FullName ?? "",
-                    ImageUrl = x.BannerImage?.StoragePath ?? null,
+                    CourseBannerURL = x.BannerImage?.StoragePath ?? null,
                     LessonPrice = new()
                     {
                         Amount = x.Price,

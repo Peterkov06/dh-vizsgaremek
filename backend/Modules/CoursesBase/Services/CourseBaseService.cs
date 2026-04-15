@@ -289,11 +289,11 @@ namespace backend.Modules.CoursesBase.Services
                 TeacherId = model.TeacherId,
                 TeacherImage = model.Teacher.User.ProfilePicture.StoragePath ?? null,
                 TeacherName = model.Teacher.User.FullName,
-                TeacherLocation = model.Teacher.User.City,
+                Locations = model.CourseToPlaces.Select(x => new LookUpDTO { Id = x.PlaceId, Name = x.City.CityName ?? "Online" }).ToList(),
                 CourseName = model.CourseName,
                 Type = model.Type,
                 Description = model.Description,
-                Reviews = model.Reviews.OrderByDescending(x => x.CreatedAt).Select(x => new CourseReviewDTO { Text = x.Text, CourseId = x.CourseId, Id = x.Id, Recommended = x.Recommended, ReviewerImage = "", ReviewerName = x.Reviewer.User.FullName, ReviewScore = x.ReviewScore }).ToList(),
+                Reviews = model.Reviews.OrderByDescending(x => x.CreatedAt).Select(x => new CourseReviewDTO { Text = x.Text, CourseId = x.CourseId, Id = x.Id, Recommended = x.Recommended, ReviewerImage = x.Reviewer.User.ProfilePicture.StoragePath ?? null, ReviewerName = x.Reviewer.User.FullName, ReviewScore = x.ReviewScore }).ToList(),
                 CourseDomain = new LookUpDTO { Name = model.CourseDomain.Name, Id = model.CourseDomainId },
                 CourseLevel = new LookUpDTO { Name = model.CourseLevel.Name, Id = model.CourseLevelId },
                 Price = model.Price,
@@ -304,7 +304,8 @@ namespace backend.Modules.CoursesBase.Services
                  Tags = model.CourseToTags.OrderBy(x => x.Tag.Name).Select(x => new LookUpDTO { Id = x.TagId, Name = x.Tag.Name }).ToList(),
                 Languages = model.CourseToLanguages.OrderBy(x => x.Language.Name).Select(x => new LookUpDTO { Id = x.LanguageId, Name = x.Language.Name }).ToList(),
                 RatingAverage = model.Reviews.Average(x => (float?)x.ReviewScore) ?? 0f,
-                TeacherIntroduction = model.Teacher.User.Introduction ?? ""
+                TeacherIntroduction = model.Teacher.User.Introduction ?? "",
+                ClassLenght = model.TokenMinuteValue
             };
 
         public static IEnumerable<CourseToTag> MapToCourseTags(Guid courseId, List<Guid> tagIds)
@@ -339,7 +340,7 @@ namespace backend.Modules.CoursesBase.Services
                 Id = model.Id,
                 CourseId = model.CourseId,
                 ReviewerName = model.Reviewer.User.FullName ?? "Anonymous",
-                ReviewerImage = model.Reviewer.User.ProfilePicture.StoragePath ?? "",
+                ReviewerImage = model.Reviewer.User.ProfilePicture.StoragePath ?? null,
                 Recommended = model.Recommended,
                 Text = model.Text,
                 ReviewScore = model.ReviewScore

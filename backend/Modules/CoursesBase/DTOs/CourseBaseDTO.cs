@@ -10,7 +10,6 @@ namespace backend.Modules.CoursesBase.DTOs
         public required string TeacherId { get; set; }
         public required string TeacherName { get; set; }
         public string? TeacherImage { get; set; } = null;
-        public required string TeacherLocation { get; set; }
         public required string CourseName { get; set; }
         public required string Description { get; set; }
         public required CourseType Type { get; set; }
@@ -23,9 +22,11 @@ namespace backend.Modules.CoursesBase.DTOs
         public string? BannerImage { get; set; } = null;
         public float RatingAverage { get; set; } = 0f;
         public string TeacherIntroduction { get; set; } = string.Empty;
+        public int ClassLenght { get; set; } = 0;
 
         public List<LookUpDTO> Tags { get; set; } = [];
         public List<LookUpDTO> Languages { get; set; } = [];
+        public List<LookUpDTO> Locations { get; set; } = [];
         public List<CourseReviewDTO> Reviews { get; set; } = [];
     }
 }
