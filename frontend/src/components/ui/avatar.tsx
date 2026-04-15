@@ -27,17 +27,18 @@ function Avatar({
 
 function AvatarImage({
   className,
+  src,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
       className={cn("aspect-square h-full w-full object-cover", className)}
+      src={src ? `https://localhost:7261/files/${src}` : undefined}
       {...props}
     />
   );
 }
-
 function AvatarFallback({
   className,
   ...props
