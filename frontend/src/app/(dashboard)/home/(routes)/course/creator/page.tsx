@@ -76,6 +76,12 @@ const CourseCreator = () => {
     classLenght: z
       .number({ message: "Óra hossz megadása kötelező" })
       .min(1, { message: "Az óra hossza nem lehet 1-nél kevesebb" }),
+    profilePicture: z
+      .instanceof(File, { error: "Kérjük töltsön fel egy kurzus ikont!" })
+      .refine(
+        (file) => file.size > 0 && file.type.startsWith("image/"),
+        "Kérjük töltsön fel egy kép formátumú fájlt!",
+      ),
   });
   type CourseCreatorFormData = z.infer<typeof formSchema>;
 
@@ -93,9 +99,13 @@ const CourseCreator = () => {
       price: 0,
       classLenght: 0,
       currency: "",
+      profilePicture: undefined,
     },
     mode: "onTouched",
   });
+
+  /*form.setValue("profilePicture", file);
+                          onChange(file);*/
 
   const [allTags, setAllTags] = useState<string[]>([]);
   const [tagInputValue, setTagInputValue] = useState("");

@@ -217,5 +217,83 @@ namespace backend.Modules.Resources.Services
                 return ServiceResult.Failure(ex.Message);
             }
         }
+
+        public async Task<ServiceResult> ChangeCourseIconPicture(string userId, Guid courseId, IFormFile file, CancellationToken ct = default)
+        {
+            try
+            {
+                var course = await _db.CourseBases.Where(x => x.Id == courseId).FirstOrDefaultAsync(ct);
+
+                if (course is null)
+                {
+                    return ServiceResult.NotFound($"Course not found");
+                }
+
+                if (course.IconImageId is not null)
+                {
+                    var res = await DeleteFile(userId, course.IconImageId.Value, ct);
+                    if (!res.Succeded)
+                    {
+                        return ServiceResult.Failure($"Failed to delete course icon picture");
+                    }
+                }
+
+                var newPicture = await UploadFile(file, userId, "course_icon_pictures", UploadType.Image, ct);
+                if (!newPicture.Succeded || newPicture.Data is null)
+                {
+                    return ServiceResult.Failure(newPicture.Error ?? "", newPicture.StatusCode);
+                }
+
+                course.IconImageId = newPicture.Data.FileId;
+
+                _db.CourseBases.Update(course);
+                await _db.SaveChangesAsync(ct);
+
+                return ServiceResult.Success();
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.Failure(ex.Message);
+            }
+        }
+
+        public async Task<ServiceResult> ChangeCourseBannerPicture(string userId, Guid courseId, IFormFile file, CancellationToken ct = default)
+        {
+            try
+            {
+                var course = await _db.CourseBases.Where(x => x.Id == courseId).FirstOrDefaultAsync(ct);
+
+                if (course is null)
+                {
+                    return ServiceResult.NotFound($"Course not found");
+                }
+
+                if (course.BannerImageId is not null)
+                {
+                    var res = await DeleteFile(userId, course.BannerImageId.Value, ct);
+                    if (!res.Succeded)
+                    {
+                        return ServiceResult.Failure($"Failed to delete course banner picture");
+                    }
+                }
+
+                var newPicture = await UploadFile(file, userId, "course_banner_pictures", UploadType.Image, ct);
+                if (!newPicture.Succeded || newPicture.Data is null)
+                {
+                    return ServiceResult.Failure(newPicture.Error ?? "", newPicture.StatusCode);
+                }
+
+                course.BannerImageId = newPicture.Data.FileId;
+
+                _db.CourseBases.Update(course);
+                await _db.SaveChangesAsync(ct);
+
+                return ServiceResult.Success();
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult.Failure(ex.Message);
+            }
+        }
     }
 }

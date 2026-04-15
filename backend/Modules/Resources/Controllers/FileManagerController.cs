@@ -33,5 +33,35 @@ namespace backend.Modules.Resources.Controllers
             var res = await _fileManagerService.ChangeProfilePicture(user.Id, picture, ct);
             return res.Succeded ? Ok() : StatusCode(res.StatusCode, res.Error);
         }
+
+        [HttpPost("course-icon-picture/{courseId}")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadCourseIconPicture([FromForm] IFormFile picture, Guid courseId, CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _fileManagerService.ChangeCourseIconPicture(user.Id, courseId, picture, ct);
+            return res.Succeded ? Ok() : StatusCode(res.StatusCode, res.Error);
+        }
+
+        [HttpPost("course-banner-picture/{courseId}")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadCourseBannerPicture([FromForm] IFormFile picture, Guid courseId, CancellationToken ct)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var res = await _fileManagerService.ChangeCourseBannerPicture(user.Id, courseId, picture, ct);
+            return res.Succeded ? Ok() : StatusCode(res.StatusCode, res.Error);
+        }
     }
 }
