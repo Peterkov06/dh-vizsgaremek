@@ -9,6 +9,6 @@ namespace backend.Modules.Pages.Teacher.DTOs
         public string NickName { get; set; } = string.Empty;
         public List<LookUpDTO> Courses { get; set; } = [];
         public Guid ChatId { get; set; }
-        public string ProfilePictureUrl { get; set; } = string.Empty;
+        public string? ProfilePictureUrl { get; set; } = null;
     }
 }

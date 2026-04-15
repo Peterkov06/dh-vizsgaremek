@@ -9,7 +9,7 @@ namespace backend.Modules.CoursesBase.DTOs
         public Guid? Id { get; set; } = null;
         public required string TeacherId { get; set; }
         public required string TeacherName { get; set; }
-        public string TeacherImage { get; set; } = string.Empty;
+        public string? TeacherImage { get; set; } = null;
         public required string TeacherLocation { get; set; }
         public required string CourseName { get; set; }
         public required string Description { get; set; }
@@ -19,8 +19,8 @@ namespace backend.Modules.CoursesBase.DTOs
         public decimal Price { get; set; }
         public required bool FirstConsultationFree { get; set; }
         public CurrencyDTO Currency { get; set; }
-        public string IconImage { get; set; } = string.Empty;
-        public string BannerImage { get; set; } = string.Empty;
+        public string? IconImage { get; set; } = null;
+        public string? BannerImage { get; set; } = null;
         public float RatingAverage { get; set; } = 0f;
         public string TeacherIntroduction { get; set; } = string.Empty;
 

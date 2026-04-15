@@ -18,8 +18,8 @@ namespace backend.Modules.Pages.Teacher.DTOs
         public int EnrolledStudents { get; set; } = 0;
         public int OngoingAssignments { get; set; } = 0;
         public double CourseRating { get; set; } = 0;
-        public string CoursePictureURL { get; set; } = string.Empty;
-        public string CourseBannerURL { get; set; } = string.Empty;
+        public string? CoursePictureURL { get; set; } = null;
+        public string? CourseBannerURL { get; set; } = null;
     }
 
     public class DraftCourseDTO
@@ -27,7 +27,7 @@ namespace backend.Modules.Pages.Teacher.DTOs
         public required string CourseName { get; set; }
         public Guid CourseId { get; set; }
         public CourseType Type { get; set; } = CourseType.Tutoring;
-        public string CoursePictureURL { get; set; } = string.Empty;
-        public string CourseBannerURL { get; set; } = string.Empty;
+        public string? CoursePictureURL { get; set; } = null;
+        public string? CourseBannerURL { get; set; } = null;
     }
 }

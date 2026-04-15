@@ -74,7 +74,7 @@ namespace backend.Modules.Pages.Teacher.Services
                 {
                     CourseId = c.Id,
                     CourseName = c.CourseName,
-                    ImageUrl = c.BannerImage != null ? c.BannerImage.StoragePath : string.Empty,
+                    ImageUrl = c.BannerImage != null ? c.BannerImage.StoragePath : null,
                     CourseType = c.Type.ToString(),
                     EnrolledStudents = _db.TutoringWalls.Count(w => w.CourseId == c.Id && w.Status == EnrollmentStatus.Active)
                                         + _db.PathEnrollments.Count(e => e.CourseId == c.Id && e.Status == EnrollmentStatus.Active)
@@ -93,7 +93,7 @@ namespace backend.Modules.Pages.Teacher.Services
                     UserId = w.StudentId,
                     UserName = w.Student.User.FullName,
                     ProfilePictureUrl = w.Student.User.ProfilePicture != null
-                        ? w.Student.User.ProfilePicture.StoragePath : string.Empty,
+                        ? w.Student.User.ProfilePicture.StoragePath : null,
                 })
                 .AsNoTracking()
                 .ToListAsync(ct);
@@ -115,7 +115,8 @@ namespace backend.Modules.Pages.Teacher.Services
                     PaymentCurrency = i.Currency.CurrencySymbol,
                     TokenCount = i.TokenCount,
                     PaymentDate = i.CreatedAt,
-                    InvoiceId = i.Id
+                    InvoiceId = i.Id,
+                    ProfilePictureUrl = i.User.ProfilePicture.StoragePath ?? null
                 })
                 .AsNoTracking()
                 .ToListAsync(ct);
@@ -133,7 +134,7 @@ namespace backend.Modules.Pages.Teacher.Services
                     FullName = s.User.FullName,
                     NickName = s.User.Nickname ?? string.Empty,
                     ProfilePictureUrl = s.User.ProfilePicture != null
-                        ? s.User.ProfilePicture.StoragePath : string.Empty,
+                        ? s.User.ProfilePicture.StoragePath : null,
 
                     Courses = _db.TutoringWalls
                         .Where(w => w.StudentId == s.UserId && w.TeacherId == userId
@@ -249,7 +250,7 @@ namespace backend.Modules.Pages.Teacher.Services
                 {
                     StudentId = s.UserId,
                     Name = s.User.FullName,
-                    StudentImageURL = s.User.ProfilePicture.StoragePath ?? "",
+                    StudentImageURL = s.User.ProfilePicture.StoragePath ?? null,
                     Nickname = s.User.Nickname ?? string.Empty,
                     CourseNumber = _db.TutoringWalls
                         .Count(w => w.StudentId == s.UserId && w.TeacherId == userId),
@@ -299,8 +300,8 @@ namespace backend.Modules.Pages.Teacher.Services
                     CourseId = x.Id,
                     CourseName = x.CourseName,
                     Type = CourseType.Tutoring,
-                    CourseBannerURL = x.BannerImage.StoragePath ?? "",
-                    CoursePictureURL = x.IconImage.StoragePath ?? "",
+                    CourseBannerURL = x.BannerImage.StoragePath ?? null,
+                    CoursePictureURL = x.IconImage.StoragePath ?? null,
                     Status = x.Status,
                     EnrolledStudents = _db.Students.Where(s => s.TutoringWalls.Where(t => t.CourseId == x.Id && t.Status == EnrollmentStatus.Active).Any()).Count(),
                     CourseRating = _db.CourseReviews.Where(cr => cr.CourseId == x.Id).Average(x => (int?)x.ReviewScore) ?? 0,
@@ -317,8 +318,8 @@ namespace backend.Modules.Pages.Teacher.Services
                 {
                     CourseId = x.Id,
                     CourseName = x.CourseName,
-                    CourseBannerURL = x.BannerImage.StoragePath ?? "",
-                    CoursePictureURL = x.IconImage.StoragePath ?? "",
+                    CourseBannerURL = x.BannerImage.StoragePath ?? null,
+                    CoursePictureURL = x.IconImage.StoragePath ?? null,
                     Type = x.Type
                 })
                 .AsNoTracking()
@@ -346,7 +347,7 @@ namespace backend.Modules.Pages.Teacher.Services
                 .Select(s => new MyStudentCardDTO
                 {
                     StudentId = s.UserId,
-                    StudentImageURL = s.User.ProfilePicture.StoragePath ?? "",
+                    StudentImageURL = s.User.ProfilePicture.StoragePath ?? null,
                     Name = s.User.FullName,
                     Nickname = s.User.Nickname ?? string.Empty,
                     CourseNumber = _db.TutoringWalls
@@ -382,7 +383,7 @@ namespace backend.Modules.Pages.Teacher.Services
                     UserId = w.StudentId,
                     UserName = w.Student.User.FullName,
                     ProfilePictureUrl = w.Student.User.ProfilePicture != null
-                        ? w.Student.User.ProfilePicture.StoragePath : string.Empty,
+                        ? w.Student.User.ProfilePicture.StoragePath : null,
                 })
                 .AsNoTracking()
                 .ToListAsync(ct);
@@ -402,8 +403,8 @@ namespace backend.Modules.Pages.Teacher.Services
                     studentName = x.Student.User.FullName,
                     courseName = x.CourseBase.CourseName,
                     courseBaseId = x.CourseId,
-                    bannerURL = x.CourseBase.BannerImage.StoragePath ?? "",
-                    iconURL = x.CourseBase.IconImage.StoragePath ?? "",
+                    bannerURL = x.CourseBase.BannerImage.StoragePath ?? null,
+                    iconURL = x.CourseBase.IconImage.StoragePath ?? null,
                     tokens = x.TokenCount
                 })
                 .SingleOrDefaultAsync(ct);

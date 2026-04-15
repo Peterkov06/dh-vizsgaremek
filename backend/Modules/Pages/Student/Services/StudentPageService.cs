@@ -28,8 +28,8 @@ namespace backend.Modules.Pages.Student.Services
         public async Task<ServiceResult<StudentHomePageDTO>> GetStudentHomePageAsync(string userId, CancellationToken ct)
         {
             var now = DateTime.UtcNow;
-            var walls = await _db.TutoringWalls.Where(x => x.StudentId == userId).Include(x => x.CourseBase).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
-            var paths = await _db.PathEnrollments.Where(x => x.AttendantId == userId).Include(x => x.Course).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
+            var walls = await _db.TutoringWalls.Where(x => x.StudentId == userId).Include(x => x.CourseBase).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Include(x => x.CourseBase).ThenInclude(x => x.BannerImage).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
+            var paths = await _db.PathEnrollments.Where(x => x.AttendantId == userId).Include(x => x.Course).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Include(x => x.Course).ThenInclude(x => x.BannerImage).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
             var upcomingEvents = await _db.Events
                 .Include(x => x.TutoringWall).ThenInclude(x => x.CourseBase).Include(x => x.Enrollment)
                 .Where(x => (x.Enrollment != null && x.Enrollment.AttendantId == userId) || (x.TutoringWall != null && x.TutoringWall.StudentId == userId)).Where(x => x.StartTime > now)
@@ -38,7 +38,7 @@ namespace backend.Modules.Pages.Student.Services
             var notifications = await _db.Notifications
                 .Where(x => x.RecipientId == userId && !x.IsRead)
                 .OrderByDescending(x => x.CreatedAt).AsNoTracking().ToListAsync(ct);
-            var popularCourses = await _db.CourseBases.Where(x => x.Status == CourseStatus.Active).Include(x => x.Teacher).ThenInclude(x => x.User).Include(x => x.Currency).OrderByDescending(x => x.CreatedAt).Take(10).AsNoTracking().ToListAsync(ct);
+            var popularCourses = await _db.CourseBases.Where(x => x.Status == CourseStatus.Active).Include(x => x.Teacher).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Include(x => x.Currency).Include(x => x.BannerImage).OrderByDescending(x => x.CreatedAt).Take(10).AsNoTracking().ToListAsync(ct);
 
 
             var activeWalls = walls.Where(x => x.Status == EnrollmentStatus.Active).Select(x => new AttendedCourseDTO
@@ -49,7 +49,8 @@ namespace backend.Modules.Pages.Student.Services
                 TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
                 CourseType = "tutoring",
                 Progress = x.TokenCount,
-                ImageUrl = x.CourseBase?.BannerImage?.StoragePath ?? "",
+                CourseBannerURL = x.CourseBase?.BannerImage?.StoragePath ?? null,
+                CourseIconURL = x.CourseBase?.Teacher?.User?.ProfilePicture?.StoragePath ?? null,
                 UpcomingEvents = [.. upcomingEvents.Where(y => y.TutoringWallId == x.Id).Take(2).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
             
@@ -61,7 +62,8 @@ namespace backend.Modules.Pages.Student.Services
                 TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
                 CourseType = "path",
                 Progress = CalculateCourseProgress(x),
-                ImageUrl = x.Course?.BannerImage?.StoragePath ?? "",
+                CourseBannerURL = x.Course?.BannerImage?.StoragePath ?? null,
+                CourseIconURL = x.Course?.Teacher?.User?.ProfilePicture?.StoragePath ?? null,
                 UpcomingEvents = [.. upcomingEvents.Where(y => y.CourseBaseId == x.CourseId).Take(2).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
 
@@ -73,7 +75,8 @@ namespace backend.Modules.Pages.Student.Services
                 TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
                 CourseType = "tutoring",
                 Progress = 0,
-                ImageUrl = x.CourseBase?.BannerImage?.StoragePath ?? "",
+                CourseBannerURL = x.CourseBase?.BannerImage?.StoragePath ?? null,
+                CourseIconURL = x.CourseBase?.Teacher?.User?.ProfilePicture?.StoragePath ?? null,
                 UpcomingEvents = null
             }).ToList();
 
@@ -85,7 +88,8 @@ namespace backend.Modules.Pages.Student.Services
                 TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
                 CourseType = "path",
                 Progress = CalculateCourseProgress(x),
-                ImageUrl = x.Course?.BannerImage?.StoragePath ?? "",
+                CourseBannerURL = x.Course?.BannerImage?.StoragePath ?? null,
+                CourseIconURL = x.Course?.Teacher?.User?.ProfilePicture?.StoragePath ?? null,
                 UpcomingEvents = null
             }).ToList();
 
@@ -108,7 +112,7 @@ namespace backend.Modules.Pages.Student.Services
                     CourseId = x.Id,
                     CourseName = x.CourseName,
                     TeacherName = x.Teacher?.User?.FullName ?? "",
-                    ImageUrl = x.BannerImage?.StoragePath ?? "",
+                    ImageUrl = x.BannerImage?.StoragePath ?? null,
                     LessonPrice = new()
                     {
                         Amount = x.Price,
@@ -142,8 +146,8 @@ namespace backend.Modules.Pages.Student.Services
 
         public async Task<ServiceResult<List<StudentMyCourseDTO>>> GetStudentMyCoursesPageAsync(string userId, CancellationToken ct)
         {
-            var attendedTutoringCourses = await _db.TutoringWalls.Where(x => x.StudentId == userId).Include(x => x.CourseBase).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
-            var attendedPathCourses = await _db.PathEnrollments.Where(x => x.AttendantId == userId).Include(x => x.Course).ThenInclude(x => x.Teacher).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
+            var attendedTutoringCourses = await _db.TutoringWalls.Where(x => x.StudentId == userId).Include(x => x.CourseBase).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Include(x => x.CourseBase).ThenInclude(x => x.BannerImage).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
+            var attendedPathCourses = await _db.PathEnrollments.Where(x => x.AttendantId == userId).Include(x => x.Course).ThenInclude(x => x.Teacher).ThenInclude(x => x.User).ThenInclude(x => x.ProfilePicture).Include(x => x.Course).ThenInclude(x => x.BannerImage).OrderBy(x => x.UpdatedAt).AsNoTracking().ToListAsync(ct);
 
 
             var courses = attendedTutoringCourses
@@ -155,20 +159,23 @@ namespace backend.Modules.Pages.Student.Services
                     CourseName = x.CourseBase.CourseName ?? string.Empty,
                     TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
                     TeacherId = x.CourseBase?.TeacherId ?? "",
-                    CourseIconURL = x.CourseBase?.Teacher?.User?.ProfilePicture?.StoragePath ?? "",
-                    CourseBannerURL = x.CourseBase?.BannerImage?.StoragePath ?? "",
-                    Status = x.Status
+                    CourseIconURL = x.CourseBase?.Teacher?.User?.ProfilePicture?.StoragePath ?? null,
+                    CourseBannerURL = x.CourseBase?.BannerImage?.StoragePath ?? null,
+                    Status = x.Status,
+                    TeacherProfilePictureURL = x.CourseBase?.Teacher?.User?.ProfilePicture?.StoragePath ?? null,
+
                 }).ToList();
             courses.AddRange(attendedPathCourses.OrderBy(x => x.CreatedAt).Select(x => new StudentMyCourseDTO
             {
                 CourseBaseId = x.Course?.Id ?? Guid.Empty,
                 InstanceId = x.Id,
-                CourseName = x.Course.CourseName ?? string.Empty,
+                CourseName = x.Course?.CourseName ?? string.Empty,
                 TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
                 TeacherId = x.Course?.TeacherId ?? "",
-                CourseIconURL = x.Course?.Teacher?.User?.ProfilePicture?.StoragePath ?? "",
-                CourseBannerURL = x.Course?.BannerImage?.StoragePath ?? "",
-                Status = x.Status
+                CourseIconURL = x.Course?.Teacher?.User?.ProfilePicture?.StoragePath ?? null,
+                CourseBannerURL = x.Course?.BannerImage?.StoragePath ?? null,
+                Status = x.Status,
+                TeacherProfilePictureURL = x.Course?.Teacher?.User?.ProfilePicture?.StoragePath ?? null,
             }));
             return ServiceResult<List<StudentMyCourseDTO>>.Success(courses);
         }
@@ -181,8 +188,8 @@ namespace backend.Modules.Pages.Student.Services
                     teacherName = x.Teacher.User.FullName,
                     courseName = x.CourseBase.CourseName,
                     courseBaseId = x.CourseId,
-                    bannerURL = x.CourseBase.BannerImage.StoragePath ?? "",
-                    iconURL = x.CourseBase.Teacher.User.ProfilePicture.StoragePath ?? "",
+                    bannerURL = x.CourseBase.BannerImage.StoragePath ?? null,
+                    iconURL = x.CourseBase.Teacher.User.ProfilePicture.StoragePath ?? null,
                     tokens = x.TokenCount,
                     tokenPrice = x.CourseBase.Price,
                     currency = x.CourseBase.Currency,

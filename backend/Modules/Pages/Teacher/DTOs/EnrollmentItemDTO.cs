@@ -8,6 +8,6 @@
         public string UserName { get; set; } = "";
         public DateTime EnrollmentDate { get; set; }
         public Guid EnrollmentId { get; set; }
-        public string ProfilePictureUrl { get; set; } = "";
+        public string? ProfilePictureUrl { get; set; } = null;
     }
 }
