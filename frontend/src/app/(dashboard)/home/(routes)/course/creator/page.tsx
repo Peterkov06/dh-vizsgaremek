@@ -265,15 +265,6 @@ const CourseCreator = () => {
 
   return (
     <main>
-      {/* <div className="flex justify-center items-center w-full h-30 bg-linear-to-tr from-primary to-secondary rounded-2xl">
-          <Plus className="size-20 text-primary-foreground"></Plus>
-        </div> */}
-
-      {/* <div className="flex justify-center items-center absolute w-24 h-24 bg-black -bottom-7 left-5 rounded-[50%]">
-          {/* <Avatar></Avatar>
-          <Plus className="size-20 text-primary-foreground"></Plus>
-        </div> */}
-
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex w-full flex-col gap-10"

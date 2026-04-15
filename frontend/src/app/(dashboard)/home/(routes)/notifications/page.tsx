@@ -15,6 +15,29 @@ export interface SystemNotification {
   isRead: boolean;
 }
 
+export enum NotificationType {
+  PendingEnrollment = "Új jelentkezés",
+  EnrollmentAcceptance = "Jelentkezés elfogadása",
+  EnrollmentRefusal = "Jelentkezés elutasítása",
+  PendingInvoice = "Új befizetés",
+  PaymentAcceptance = "Fizetés elfogadva",
+  PaymentRefusal = "Fizetés elutasítáva",
+  Message = "Új üzenet",
+  WallPost = "Új bejegyzés",
+  NewHandIn = "Új beadandó",
+  DeletedHandin = "Törölt beadandó",
+  SubmissionGraded = "Beadandó értékelve",
+  PendingSubmission = "Várakozó beadandó",
+  SubmissionRefusal = "Beadandó elutasítása",
+  System = "Rendszer",
+  NewLesson = "Új óra",
+  NewConsultation = "Új konzultáció",
+  NewCommunityEvent = "Új közösségi esemény",
+  DeletedLesson = "Törölt óra",
+  DeletedConsultation = "Törölt konzultáció",
+  DeletedCommunityEvent = "Törölt közösségi esemény",
+}
+
 const NotificationPage = () => {
   const [notifications, setNotifications] = useState<SystemNotification[]>();
   const [once, setOnce] = useState<boolean>(true);
@@ -57,7 +80,9 @@ const NotificationPage = () => {
                   <h1 className="text-lg lg:text-2xl flex items-center gap-3">
                     {/* {n.type === "EnrollmentAcceptance" &&
                       "Jelentkezésedet elfogadták"} */}
-                    {n.type}
+                    {NotificationType[
+                      n.type as keyof typeof NotificationType
+                    ] ?? n.type}
                   </h1>
                   <span className="flex gap-2 lg:text-lg text-gray-500">
                     <User className="text-primary"></User>

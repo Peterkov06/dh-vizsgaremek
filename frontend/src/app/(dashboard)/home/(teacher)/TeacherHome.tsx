@@ -42,6 +42,7 @@ import {
 import fetchWithAuth from "@/lib/api-client";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
+import { NotificationType } from "../(routes)/notifications/page";
 
 const TeacherHome = (props: { user: User }) => {
   const [dashboard, setDashboard] = useState<TeacherDashboardModel>();
@@ -106,8 +107,11 @@ const TeacherHome = (props: { user: User }) => {
             <div className="text-sm">
               {dashboard?.notifications.lastUnread ? (
                 <p>
-                  {dashboard?.notifications.lastUnread?.firstText}-
-                  {dashboard?.notifications.lastUnread?.secondText}
+                  {NotificationType[
+                    dashboard?.notifications.lastUnread
+                      ?.firstText as keyof typeof NotificationType
+                  ] ?? dashboard?.notifications.lastUnread?.firstText}
+                  -{dashboard?.notifications.lastUnread?.secondText}
                 </p>
               ) : (
                 <p>Nincs új értesítésed</p>
