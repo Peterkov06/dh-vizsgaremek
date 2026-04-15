@@ -74,7 +74,7 @@ namespace backend.Modules.Pages.Teacher.Services
                 {
                     CourseId = c.Id,
                     CourseName = c.CourseName,
-                    ImageUrl = c.IconImage != null ? c.IconImage.StoragePath : string.Empty,
+                    ImageUrl = c.BannerImage != null ? c.BannerImage.StoragePath : string.Empty,
                     CourseType = c.Type.ToString(),
                     EnrolledStudents = _db.TutoringWalls.Count(w => w.CourseId == c.Id && w.Status == EnrollmentStatus.Active)
                                         + _db.PathEnrollments.Count(e => e.CourseId == c.Id && e.Status == EnrollmentStatus.Active)
@@ -299,8 +299,8 @@ namespace backend.Modules.Pages.Teacher.Services
                     CourseId = x.Id,
                     CourseName = x.CourseName,
                     Type = CourseType.Tutoring,
-                    CourseBannerURL = "",
-                    CoursePictureURL = "",
+                    CourseBannerURL = x.BannerImage.StoragePath ?? "",
+                    CoursePictureURL = x.IconImage.StoragePath ?? "",
                     Status = x.Status,
                     EnrolledStudents = _db.Students.Where(s => s.TutoringWalls.Where(t => t.CourseId == x.Id && t.Status == EnrollmentStatus.Active).Any()).Count(),
                     CourseRating = _db.CourseReviews.Where(cr => cr.CourseId == x.Id).Average(x => (int?)x.ReviewScore) ?? 0,
@@ -317,8 +317,8 @@ namespace backend.Modules.Pages.Teacher.Services
                 {
                     CourseId = x.Id,
                     CourseName = x.CourseName,
-                    CourseBannerURL = "",
-                    CoursePictureURL = "",
+                    CourseBannerURL = x.BannerImage.StoragePath ?? "",
+                    CoursePictureURL = x.IconImage.StoragePath ?? "",
                     Type = x.Type
                 })
                 .AsNoTracking()

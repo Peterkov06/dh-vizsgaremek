@@ -36,7 +36,7 @@ namespace backend.Modules.Identity.Services
                 Id = userId,
                 Introduction = user.User.Introduction ?? "",
                 Nickname = user.User.Nickname,
-                ProfilePictureUrl = "",
+                ProfilePictureUrl = user?.User?.ProfilePicture?.StoragePath ?? "",
                 Type = "Student",
                 Location = user.User.City,
             };
@@ -77,7 +77,7 @@ namespace backend.Modules.Identity.Services
                 Id = userId,
                 FullName = user.User.FullName ?? string.Empty,
                 Introduction = user.User.Introduction ?? string.Empty,
-                ProfilePictureUrl = "",
+                ProfilePictureUrl = user.User.ProfilePicture.StoragePath ?? "",
                 RatingAverage = courseReviews,
                 TotalCourses = totalCourses,
                 TotalStudents = totalStudents,

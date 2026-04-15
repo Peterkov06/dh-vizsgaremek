@@ -49,7 +49,7 @@ namespace backend.Modules.Pages.Student.Services
                 TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
                 CourseType = "tutoring",
                 Progress = x.TokenCount,
-                ImageUrl = x.CourseBase?.BannerImageId.ToString() ?? "",
+                ImageUrl = x.CourseBase?.BannerImage?.StoragePath ?? "",
                 UpcomingEvents = [.. upcomingEvents.Where(y => y.TutoringWallId == x.Id).Take(2).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
             
@@ -61,7 +61,7 @@ namespace backend.Modules.Pages.Student.Services
                 TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
                 CourseType = "path",
                 Progress = CalculateCourseProgress(x),
-                ImageUrl = x.Course?.BannerImageId.ToString() ?? "",
+                ImageUrl = x.Course?.BannerImage?.StoragePath ?? "",
                 UpcomingEvents = [.. upcomingEvents.Where(y => y.CourseBaseId == x.CourseId).Take(2).Select(MapToCourseCardUpcomingEventDTO)]
             }).ToList();
 
@@ -73,7 +73,7 @@ namespace backend.Modules.Pages.Student.Services
                 TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
                 CourseType = "tutoring",
                 Progress = 0,
-                ImageUrl = x.CourseBase?.BannerImageId.ToString() ?? "",
+                ImageUrl = x.CourseBase?.BannerImage?.StoragePath ?? "",
                 UpcomingEvents = null
             }).ToList();
 
@@ -85,7 +85,7 @@ namespace backend.Modules.Pages.Student.Services
                 TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
                 CourseType = "path",
                 Progress = CalculateCourseProgress(x),
-                ImageUrl = x.Course?.BannerImageId.ToString() ?? "",
+                ImageUrl = x.Course?.BannerImage?.StoragePath ?? "",
                 UpcomingEvents = null
             }).ToList();
 
@@ -108,7 +108,7 @@ namespace backend.Modules.Pages.Student.Services
                     CourseId = x.Id,
                     CourseName = x.CourseName,
                     TeacherName = x.Teacher?.User?.FullName ?? "",
-                    ImageUrl = "",
+                    ImageUrl = x.BannerImage?.StoragePath ?? "",
                     LessonPrice = new()
                     {
                         Amount = x.Price,
@@ -155,8 +155,8 @@ namespace backend.Modules.Pages.Student.Services
                     CourseName = x.CourseBase.CourseName ?? string.Empty,
                     TeacherName = x.CourseBase?.Teacher?.User?.FullName ?? "",
                     TeacherId = x.CourseBase?.TeacherId ?? "",
-                    CourseIconURL = "",
-                    CourseBannerURL = x.CourseBase?.BannerImageId.ToString() ?? "",
+                    CourseIconURL = x.CourseBase?.Teacher?.User?.ProfilePicture?.StoragePath ?? "",
+                    CourseBannerURL = x.CourseBase?.BannerImage?.StoragePath ?? "",
                     Status = x.Status
                 }).ToList();
             courses.AddRange(attendedPathCourses.OrderBy(x => x.CreatedAt).Select(x => new StudentMyCourseDTO
@@ -166,8 +166,8 @@ namespace backend.Modules.Pages.Student.Services
                 CourseName = x.Course.CourseName ?? string.Empty,
                 TeacherName = x.Course?.Teacher?.User?.FullName ?? "",
                 TeacherId = x.Course?.TeacherId ?? "",
-                CourseIconURL = "",
-                CourseBannerURL = x.Course?.BannerImageId.ToString() ?? "",
+                CourseIconURL = x.Course?.Teacher?.User?.ProfilePicture?.StoragePath ?? "",
+                CourseBannerURL = x.Course?.BannerImage?.StoragePath ?? "",
                 Status = x.Status
             }));
             return ServiceResult<List<StudentMyCourseDTO>>.Success(courses);
@@ -182,7 +182,7 @@ namespace backend.Modules.Pages.Student.Services
                     courseName = x.CourseBase.CourseName,
                     courseBaseId = x.CourseId,
                     bannerURL = x.CourseBase.BannerImage.StoragePath ?? "",
-                    iconURL = x.CourseBase.IconImage.StoragePath ?? "",
+                    iconURL = x.CourseBase.Teacher.User.ProfilePicture.StoragePath ?? "",
                     tokens = x.TokenCount,
                     tokenPrice = x.CourseBase.Price,
                     currency = x.CourseBase.Currency,

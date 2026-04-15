@@ -306,7 +306,7 @@ namespace backend.Controllers.Login
                 return BadRequest();
             }
             var role = roleList[0];
-            string? profilePicUrl = user.ProfilePicture != null ? $"https://localhost:7261/files/{user.ProfilePicture.StoragePath}" : null;
+            string? profilePicUrl = user.ProfilePicture?.StoragePath;
 
             return Ok(new { user.Email, role,user.FullName, profilePicUrl, user.Nickname});
         }
@@ -326,7 +326,7 @@ namespace backend.Controllers.Login
             if (user == null)
                 return BadRequest();
 
-            string? profilePicUrl = user.ProfilePicture != null ? $"https://localhost:7261/files/{user.ProfilePicture.StoragePath}" : null;
+            string? profilePicUrl = user.ProfilePicture?.StoragePath;
 
 
             return Ok(new { user.FullName, user.Nickname, user.Address, user.City, user.PostalCode, user.Introduction, profilePicUrl });

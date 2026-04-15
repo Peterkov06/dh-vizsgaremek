@@ -69,7 +69,7 @@ namespace backend.Modules.Engagement.Services
                     ParticipantName = isTeacher ? x.Student.User.FullName : x.Teacher.User.FullName,
                     ParticipantNickname = isTeacher ? x.Student.User.Nickname : null,
                     CourseNumber = isTeacher ? _db.TutoringWalls.Where(tw => tw.TeacherId == userId && tw.StudentId == x.StudentId).Count() : null,
-                    ParticipantImageURL = "",
+                    ParticipantImageURL = (isTeacher ? x.Student.User.ProfilePicture.StoragePath : x.Teacher.User.ProfilePicture.StoragePath) ?? "",
                     NewMessage = x.Messages.Where(m => m.SenderId != userId)
                         .OrderByDescending(m => m.CreatedAt)
                         .Any(m => m.ReadAt == null),
@@ -130,7 +130,7 @@ namespace backend.Modules.Engagement.Services
                     Text = x.Text,
                     IsOwn = x.SenderId == userId,
                     IsRead = x.ReadAt != null,
-                    SenderImage = "",
+                    SenderImage = x.User.ProfilePicture.StoragePath ?? "",
                     SentTime = x.CreatedAt,
                 })
                 .ToListAsync(ct);
