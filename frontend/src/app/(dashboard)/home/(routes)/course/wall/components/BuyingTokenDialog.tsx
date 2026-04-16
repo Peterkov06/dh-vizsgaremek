@@ -37,8 +37,8 @@ const BuyingTokenDialog = (props: {
 
   const [courses, setCourses] = useState<string[]>(["Kurzus neve"]);
   const [selectedCourse, setSelectedCourse] = useState<string>("");
-  const [tokenCount, setTokenCount] = useState<number>(0);
-  const [tokenCountInput, setTokenCountInput] = useState<string>("");
+  const [tokenCount, setTokenCount] = useState<number>(1);
+  const [tokenCountInput, setTokenCountInput] = useState<string>("1");
 
   const [price, setPrice] = useState<number>(2500);
 
@@ -123,7 +123,11 @@ const BuyingTokenDialog = (props: {
                 className="shadow-2xl w-60"
                 value={tokenCountInput}
                 onChange={(e) => {
-                  if (parseInt(e.target.value) && parseInt(e.target.value) > 0)
+                  if (
+                    parseInt(e.target.value) &&
+                    parseInt(e.target.value) > 0 &&
+                    parseInt(e.target.value) <= 20
+                  )
                     setTokenCount(parseInt(e.target.value));
                   else setTokenCount(0);
                   setTokenCountInput(e.target.value);

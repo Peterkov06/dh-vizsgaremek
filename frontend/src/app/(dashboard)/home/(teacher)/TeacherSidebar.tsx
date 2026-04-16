@@ -61,13 +61,13 @@ const TeacherSidebar = (props: { user: User }) => {
   return (
     <Sidebar className="text-white" collapsible="icon">
       <SidebarHeader>
-        <span className="flex justify-center items-center">
+        <Link href={"/home"} className="flex justify-center items-center">
           <img
             src="/imgs/JustHoldingLogoHQ.png"
             className="size-30 group-data-[collapsible=icon]:size-6"
             alt=""
           />
-        </span>
+        </Link>
         <div className="flex items-center gap-2 text-2xl m-auto">
           <Avatar className="size-10 group-data-[collapsible=icon]:size-6">
             <AvatarImage src={props.user.profilePicUrl}></AvatarImage>

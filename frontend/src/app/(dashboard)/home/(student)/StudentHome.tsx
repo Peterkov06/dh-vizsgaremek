@@ -221,7 +221,7 @@ const StudentHome = (props: { user: User }) => {
                       <div className="absolute rounded-2xl inset-0 bg-linear-to-b from-30% from-transparent to-[#E5E3E3] p-1" />
                     </div>
                     <div className="absolute z-20 text-primary bottom-3  flex text-sm justify-between w-full px-3 transition-all duration-300 group-hover:-translate-y-25 group-hover:text-white">
-                      <p className="truncate max-w-[7em] lg:max-w-[18em]">
+                      <p className="truncate max-w-[7em] lg:max-w-[17em]">
                         {pc.courseName}
                       </p>
                       <p>{pc.lessonPrice.amount} FT</p>

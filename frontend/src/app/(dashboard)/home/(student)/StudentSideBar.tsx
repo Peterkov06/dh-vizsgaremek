@@ -61,13 +61,13 @@ const StudentSideBar = (props: { user: User }) => {
   return (
     <Sidebar className="text-white" collapsible="icon">
       <SidebarHeader>
-        <span className="flex justify-center items-center">
+        <Link href={"/home"} className="flex justify-center items-center">
           <img
             src="/imgs/JustHoldingLogoHQ.png"
             className="size-30 group-data-[collapsible=icon]:size-6"
             alt=""
           />
-        </span>
+        </Link>
         <div className="flex items-center gap-2 text-2xl m-auto mt-5">
           <Avatar className="size-10 group-data-[collapsible=icon]:size-6">
             <AvatarImage src={props.user.profilePicUrl}></AvatarImage>
@@ -117,7 +117,7 @@ const StudentSideBar = (props: { user: User }) => {
       <SidebarRail></SidebarRail>
       <SidebarFooter>
         <div className="flex w-full justify-between p-10 group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:flex-col group-data-[collapsible=icon]:gap-4">
-          <Link href={"/home/settings"}>
+          <Link href={"/home/settings"} className="cursor-pointer">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Cog className="size-10 group-data-[collapsible=icon]:size-6"></Cog>
@@ -127,7 +127,7 @@ const StudentSideBar = (props: { user: User }) => {
               </TooltipContent>
             </Tooltip>
           </Link>
-          <div onClick={OnLogout}>
+          <div onClick={OnLogout} className="cursor-pointer">
             <Tooltip>
               <TooltipTrigger asChild>
                 <LogOut className="size-10 group-data-[collapsible=icon]:size-6"></LogOut>

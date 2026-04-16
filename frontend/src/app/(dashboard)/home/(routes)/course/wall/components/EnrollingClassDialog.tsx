@@ -45,8 +45,8 @@ const EnrollingClassDialog = (props: {
   const [courses, setCourses] = useState<string[]>(["Kurzus neve"]);
   const [selectedCourse, setSelectedCourse] = useState<string>("");
 
-  const [classLenght, setClassLenght] = useState<number>(0);
-  const [classLenghtInput, setClassLenghtInput] = useState<string>("");
+  const [classLenght, setClassLenght] = useState<number>(1);
+  const [classLenghtInput, setClassLenghtInput] = useState<string>("1");
   const [date, setDate] = useState<Date | undefined>(undefined);
 
   const [availableTimes, setAvailableTimes] = useState<TimeSlot[]>([]);
@@ -221,10 +221,11 @@ const EnrollingClassDialog = (props: {
                   if (
                     parseInt(e.target.value) &&
                     parseInt(e.target.value) > 0 &&
-                    parseInt(e.target.value) <= props.token
-                  )
+                    parseInt(e.target.value) <= props.token &&
+                    parseInt(e.target.value) < 20
+                  ) {
                     setClassLenght(parseInt(e.target.value));
-                  else setClassLenght(0);
+                  } else setClassLenght(0);
                   setClassLenghtInput(e.target.value);
                 }}
                 placeholder="Órák száma..."
