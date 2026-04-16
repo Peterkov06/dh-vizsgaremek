@@ -19,6 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import * as z from "zod";
 import { useState } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 type ForgetPasswordType = {
   email: string;
@@ -52,6 +53,7 @@ const page = () => {
     console.log(data);
     let response = await SendForgotPassword(data);
     if (response.ok) setIsSent(true);
+    else toast.error("Nincs ilyen e-mail cím");
   };
 
   const [isSent, setIsSent] = useState<boolean>(false);
