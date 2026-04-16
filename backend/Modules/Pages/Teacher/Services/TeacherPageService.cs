@@ -250,7 +250,7 @@ namespace backend.Modules.Pages.Teacher.Services
                 {
                     StudentId = s.UserId,
                     Name = s.User.FullName,
-                    StudentImageURL = s.User.ProfilePicture.StoragePath ?? null,
+                    ProfilePictureURL = s.User.ProfilePicture.StoragePath ?? null,
                     Nickname = s.User.Nickname ?? string.Empty,
                     CourseNumber = _db.TutoringWalls
                         .Count(w => w.StudentId == s.UserId && w.TeacherId == userId),

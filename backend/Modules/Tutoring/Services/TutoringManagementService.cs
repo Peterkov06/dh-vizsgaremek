@@ -87,7 +87,7 @@ namespace backend.Modules.Tutoring.Services
         }
         public async Task<ServiceResult<List<TutoringWallEnrollmentTeacherDTO>>> GetTeacherEnrollments(string teacherId, CancellationToken ct)
         {
-            var enrollments = await _db.TutoringWalls.Where(x => x.CourseBase.TeacherId == teacherId && x.Status == EnrollmentStatus.Pending).Select(x => new TutoringWallEnrollmentTeacherDTO { CourseId = x.CourseId, StudentId = x.StudentId, Id = x.Id, StudentName = x.Student.User.FullName, CourseName = x.CourseBase.CourseName}).AsNoTracking().ToListAsync(ct);
+            var enrollments = await _db.TutoringWalls.Where(x => x.CourseBase.TeacherId == teacherId && x.Status == EnrollmentStatus.Pending).Select(x => new TutoringWallEnrollmentTeacherDTO { CourseId = x.CourseId, StudentId = x.StudentId, Id = x.Id, StudentName = x.Student.User.FullName, CourseName = x.CourseBase.CourseName, ProfilePictureURL = x.Student.User.ProfilePicture.StoragePath}).AsNoTracking().ToListAsync(ct);
             return ServiceResult<List<TutoringWallEnrollmentTeacherDTO>>.Success(enrollments);
         }
     }
