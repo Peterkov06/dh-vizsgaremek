@@ -242,6 +242,7 @@ const CourseCreator = () => {
         bannerImageId: null,
         tags: data.tags.filter(Boolean),
         languages: data.languages.filter(Boolean),
+        locations: data.location.filter(Boolean),
       }),
     });
 

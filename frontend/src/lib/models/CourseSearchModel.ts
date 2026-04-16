@@ -75,7 +75,7 @@ export type CourseDetail = {
   status: string;
   ratingAverage: number;
   iconImage: string;
-  location: IdName[];
+  locations: IdName[];
   bannerImage: string;
   tags: IdName[];
   languages: IdName[];

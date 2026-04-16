@@ -143,7 +143,7 @@ const ModifyTeacherCourse = () => {
             description: data.description,
             tags: data.tags.map((t) => t.name),
             languages: data.languages.map((l) => l.name),
-            location: data.location.map((l) => l.name),
+            location: data.locations.map((l) => l.name),
             level: data.courseLevel.id,
             classLenght: data.classLenght,
             subject: data.courseDomain.id,
@@ -152,6 +152,7 @@ const ModifyTeacherCourse = () => {
             currency: data.currency.id,
           });
           setImgUrl(data.bannerImage);
+          setClassLenghtInput(data.classLenght.toString());
           setPriceInput(data.price.toString());
           console.log(data);
         });
