@@ -404,7 +404,7 @@ namespace backend.Modules.Pages.Teacher.Services
                     courseName = x.CourseBase.CourseName,
                     courseBaseId = x.CourseId,
                     bannerURL = x.CourseBase.BannerImage.StoragePath ?? null,
-                    iconURL = x.CourseBase.IconImage.StoragePath ?? null,
+                    iconURL = x.Student.User.ProfilePicture.StoragePath ?? null,
                     tokens = x.TokenCount
                 })
                 .SingleOrDefaultAsync(ct);
