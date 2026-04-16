@@ -20,8 +20,14 @@ import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useRegistrationContext } from "./RegistrationContextManager";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import AppImage from "@/app/(dashboard)/home/(teacher)/components/AppImg";
 
 const MainRegisterComponent = () => {
   const formSchema = z.object({
@@ -44,10 +50,9 @@ const MainRegisterComponent = () => {
           "A jelszónak tartalmazinia kell legalább egy speciális karaktert",
       }),
     role: z.enum(["Student", "Teacher", "Parent"]),
-    accceptedTerms: z.boolean().refine(
-      (val) => val,
-      "Kérjük, elfogadja a felhasználási feltételeket!",
-    ),
+    accceptedTerms: z
+      .boolean()
+      .refine((val) => val, "Kérjük, elfogadja a felhasználási feltételeket!"),
   });
 
   type MainFormData = z.infer<typeof formSchema>;
@@ -137,6 +142,7 @@ const MainRegisterComponent = () => {
                         <FieldTitle className="w-fit">Szülő</FieldTitle>
                       </FieldContent>
                       <RadioGroupItem
+                        disabled
                         value="parent"
                         id="parent"
                         className="peer sr-only"
@@ -178,13 +184,15 @@ const MainRegisterComponent = () => {
                         placeholder="Jelszó"
                         aria-invalid={fieldState.invalid}
                         onChange={field.onChange}
-                        
                       />
                       <InputGroupAddon align={"inline-end"}>
-                        <InputGroupButton variant={"ghost"} size={"icon-sm"} type="button" onClick={() => setShowPassword(prev => !prev)}>
-                          <EyeIcon
-                            className={showPassword ? "" : "hidden"}
-                          />
+                        <InputGroupButton
+                          variant={"ghost"}
+                          size={"icon-sm"}
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                        >
+                          <EyeIcon className={showPassword ? "" : "hidden"} />
                           <EyeOffIcon
                             className={showPassword ? "hidden" : ""}
                           />
@@ -199,25 +207,29 @@ const MainRegisterComponent = () => {
               />
             </FieldSet>
             <FieldGroup>
-              <Controller control={form.control} name="accceptedTerms" render={({field, fieldState}) => (
-                <Field orientation={"horizontal"} className="">
-                <Checkbox
-                  id="terms-and-conditions"
-                  className="border-2 border-border"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <FieldLabel
-                  htmlFor="terms-and-conditions"
-                  className="font-normal"
-                >
-                  Elolvastam és elfogadom a felhasználási feltételeket
-                </FieldLabel>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-              </Field>
-              )} />
+              <Controller
+                control={form.control}
+                name="accceptedTerms"
+                render={({ field, fieldState }) => (
+                  <Field orientation={"horizontal"} className="">
+                    <Checkbox
+                      id="terms-and-conditions"
+                      className="border-2 border-border"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                    <FieldLabel
+                      htmlFor="terms-and-conditions"
+                      className="font-normal"
+                    >
+                      Elolvastam és elfogadom a felhasználási feltételeket
+                    </FieldLabel>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
             </FieldGroup>
             <Button
               variant={"default"}
@@ -237,9 +249,18 @@ const MainRegisterComponent = () => {
               <FieldSeparator className="w-full"></FieldSeparator>
             </div>
             <FieldSet className="flex-row justify-center">
-              <Button>A</Button>
-              <Button>B</Button>
-              <Button>C</Button>
+              <Button className="h-fit w-fit" variant={"ghost"} disabled>
+                <img src={"/imgs/Google_logo.png"} className="w-10 h-10"></img>
+              </Button>
+              <Button className="h-fit w-fit" variant={"ghost"} disabled>
+                <img
+                  src={"/imgs/Facebook_icon.png"}
+                  className="w-10 h-10"
+                ></img>
+              </Button>
+              <Button className="h-fit w-fit" variant={"ghost"} disabled>
+                <img src={"/imgs/Steam_logo.png"} className="w-10 h-10"></img>
+              </Button>
             </FieldSet>
           </FieldGroup>
         </form>

@@ -106,7 +106,7 @@ const LoginComponent = () => {
     }
   };
 
-  const [stayLoggedIn, setstayLoggedIn] = useState<boolean>(false);
+  const [stayLoggedIn, setstayLoggedIn] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
@@ -186,7 +186,7 @@ const LoginComponent = () => {
                   id="stay-logged-in"
                   className="border-2 border-border"
                   checked={stayLoggedIn}
-                  onCheckedChange={() => setstayLoggedIn((prev) => !prev)}
+                  onCheckedChange={() => setstayLoggedIn((prev) => prev)}
                 />
                 <FieldLabel htmlFor="stay-logged-in" className="font-normal">
                   Maradjon bejelentkezve
@@ -218,9 +218,18 @@ const LoginComponent = () => {
               <FieldSeparator className="w-full"></FieldSeparator>
             </div>
             <FieldSet className="flex-row justify-center">
-              <Button>A</Button>
-              <Button>B</Button>
-              <Button>C</Button>
+              <Button className="h-fit w-fit" variant={"ghost"} disabled>
+                <img src={"/imgs/Google_logo.png"} className="w-10 h-10"></img>
+              </Button>
+              <Button className="h-fit w-fit" variant={"ghost"} disabled>
+                <img
+                  src={"/imgs/Facebook_icon.png"}
+                  className="w-10 h-10"
+                ></img>
+              </Button>
+              <Button className="h-fit w-fit" variant={"ghost"} disabled>
+                <img src={"/imgs/Steam_logo.png"} className="w-10 h-10"></img>
+              </Button>
             </FieldSet>
             <div className="flex flex-col justify-center items-center">
               <p className="text-xs text-sidebar-border">Még nincs fiókod?</p>

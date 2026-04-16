@@ -91,9 +91,7 @@ const StudentPageSidebar = () => {
       >
         <div className="flex items-center gap-3">
           <Avatar className="size-10">
-            <AvatarImage
-              src={student?.profilePictureUrl || "/defaults/default_avatar.jpg"}
-            ></AvatarImage>
+            <AvatarImage src={student?.profilePictureUrl}></AvatarImage>
           </Avatar>
           <div>
             <h1 className="text-xl text-primary font-bold">

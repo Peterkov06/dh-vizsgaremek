@@ -24,7 +24,7 @@ const TodayList = (props: {
                     <p className="text-sm lg:text-xl max-w-[12em] truncate">
                       {ue.eventType}
                     </p>
-                    <p className="truncate max-w-[5em] text-sm lg:text-lg">
+                    <p className="truncate max-w-[10em] text-sm lg:text-lg">
                       {ue.participantName}
                     </p>
                   </div>
