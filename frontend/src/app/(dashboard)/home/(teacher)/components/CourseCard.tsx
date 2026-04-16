@@ -15,7 +15,9 @@ const CourseCard = (props: { course: ActiveCourse }) => {
       <div className="py-2 px-3 rounded-b-lg flex flex-col justify-between flex-1 gap-4">
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-2">
-            <h1 className="text-base lg:text-xl">{props.course.courseName}</h1>
+            <h1 className="text-base lg:text-xl truncate max-w-[9em]">
+              {props.course.courseName}
+            </h1>
             <h2 className="text-sm flex gap-1 items-center">
               <Users></Users>
               {props.course.enrolledStudents}

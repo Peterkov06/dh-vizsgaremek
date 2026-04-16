@@ -161,14 +161,20 @@ const CourseOverView = () => {
           <div className="border-4 border-light-bg-gray rounded-2xl w-full pt-4 px-2 pb-2">
             <div className="overflow-y-auto max-h-[4em]">
               <div className="flex flex-wrap content-start gap-2 w-full pr-1">
-                {course?.locations.map((t) => (
-                  <p
-                    className="px-3 py-1 rounded-full bg-linear-to-tr text-white w-fit from-primary to-secondary whitespace-nowrap text-sm"
-                    key={t.id}
-                  >
-                    {t.name}
-                  </p>
-                ))}
+                {course?.locations
+                  .filter((t) => t.name)
+                  .filter(
+                    (value, index, self) =>
+                      index === self.findIndex((t) => t.name === value.name),
+                  )
+                  .map((t) => (
+                    <p
+                      className="px-3 py-1 rounded-full bg-linear-to-tr text-white w-fit from-primary to-secondary whitespace-nowrap text-sm"
+                      key={t.id}
+                    >
+                      {t.name}
+                    </p>
+                  ))}
               </div>
             </div>
           </div>

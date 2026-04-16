@@ -99,7 +99,7 @@ const MessageSidebar = () => {
               .map((u) => (
                 <div
                   key={u.chatId}
-                  className={`flex gap-3 relative items-center bg-light-bg-gray rounded-lg px-2 py-1 hover:bg-secondary transition-all duration-300 ${id === u.chatId && "bg-primary text-white"}`}
+                  className={`flex gap-3 relative cursor-pointer items-center bg-light-bg-gray rounded-lg px-2 py-1 hover:bg-secondary transition-all duration-300 ${id === u.chatId && "bg-primary text-white"}`}
                   onClick={() => {
                     handleFetch();
                     updateQuery("chatId", u.chatId);
