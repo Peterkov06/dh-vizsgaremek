@@ -145,17 +145,33 @@ const CourseOverView = () => {
         </div>
 
         <div className="text-xl flex gap-1">
-          <MapPin className="text-primary"></MapPin>
-          <p>Helyszín:</p>
-          {course?.teacherLocation}
-        </div>
-        <div className="text-xl flex gap-1">
           <UserStar className="text-primary"></UserStar>
           <p>Értékelés:</p>
           {/* <p
             className={`${course? > 70 ? "text-green-400" : course.rating > 40 ? "text-yellow-300" : "text-red-500"}`}
           > */}
           <p>{course?.ratingAverage}</p>
+        </div>
+
+        <div className="relative min-h-0">
+          <div className="absolute -top-3 right-3 flex gap-1 bg-background px-2 z-10 text-sm">
+            <MapPin className="size-4 text-primary" />
+            Helyszínek
+          </div>
+          <div className="border-4 border-light-bg-gray rounded-2xl w-full pt-4 px-2 pb-2">
+            <div className="overflow-y-auto max-h-[4em]">
+              <div className="flex flex-wrap content-start gap-2 w-full pr-1">
+                {course?.locations.map((t) => (
+                  <p
+                    className="px-3 py-1 rounded-full bg-linear-to-tr text-white w-fit from-primary to-secondary whitespace-nowrap text-sm"
+                    key={t.id}
+                  >
+                    {t.name}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="relative min-h-0">

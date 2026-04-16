@@ -33,7 +33,7 @@ import AppImage from "../../(teacher)/components/AppImg";
 export interface TutoringStudent {
   studentId: string;
   name: string;
-  studentImageURL: string;
+  profilePictureURL: string;
   nickname: string;
   courseNumber: number;
   ongoingHandins: number;
@@ -49,6 +49,7 @@ export interface MyStudents {
 export interface PeddingStudentType {
   id: string;
   studentName: string;
+  profilePictureURL: string;
   studentId: string;
   courseName: string;
   courseId: string;
@@ -123,9 +124,7 @@ const StudentPage = () => {
                     className="flex items-center gap-3 bg-light-bg-gray px-1 py-2 lg:px-3 lg:py-5 rounded-2xl border-2 border-secondary hover:border-primary transition-all duration-300"
                   >
                     <Avatar className="size-14 lg:size-20 bg-background">
-                      <AvatarImage
-                        src={"/defaults/default_avatar.jpg"}
-                      ></AvatarImage>
+                      <AvatarImage src={ps.profilePictureURL}></AvatarImage>
                     </Avatar>
                     <div className="flex flex-col justify-between">
                       <h2 className="text-xl lg:text-2xl">{ps.studentName}</h2>
@@ -210,7 +209,7 @@ const StudentPage = () => {
                 {as.courseName}
               </h2> */}
               <AppImage
-                src={as.studentImageURL}
+                src={as.profilePictureURL}
                 alt=""
                 className="h-24 w-24 lg:w-30 lg:h-30 rounded-l-2xl"
               />

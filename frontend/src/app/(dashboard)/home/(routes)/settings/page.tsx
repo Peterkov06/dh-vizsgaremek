@@ -52,9 +52,7 @@ const Settings = () => {
   const [activitySwitch, setActivitySwitch] = useState<boolean>(false);
   const [peddingSwitch, setPeddingSwitch] = useState<boolean>(false);
   const [marketingSwitch, setMarketingSwitch] = useState<boolean>(false);
-  const [profilePicture, setProfilePicture] = useState<string>(
-    "https://i.redd.it/o9srxpsm8rm01.png",
-  );
+  const [profilePicture, setProfilePicture] = useState<string>();
 
   const router = useRouter();
 

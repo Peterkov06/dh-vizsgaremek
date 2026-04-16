@@ -18,12 +18,25 @@ export async function GET(request: NextRequest) {
 
     console.log(response.ok);
 
+    // const res = NextResponse.redirect(new URL("/login", request.url));
+    // res.cookies.delete("access_token");
+    // res.cookies.delete("refresh_token");
+    // return res;
     if (response.ok) {
-      const res = NextResponse.redirect(new URL("/login", request.url));
-      res.cookies.delete("access_token");
-      res.cookies.delete("refresh_token");
+      const res = NextResponse.json({ message: "Sikeres kijelentkezés" });
+
+      res.cookies.set("access_token", "", {
+        path: "/",
+        expires: new Date(0),
+      });
+      res.cookies.set("refresh_token", "", {
+        path: "/",
+        expires: new Date(0),
+      });
+
       return res;
     }
+
     return new NextResponse(null, {
       status: response.status,
     });

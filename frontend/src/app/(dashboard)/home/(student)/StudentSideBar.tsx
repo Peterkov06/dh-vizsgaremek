@@ -50,8 +50,12 @@ const StudentSideBar = (props: { user: User }) => {
   const router = useRouter();
 
   const OnLogout = async () => {
-    await fetchWithAuth("api/auth/logout");
-    redirect("/login"); //Gány megoldás
+    const res = await fetchWithAuth("/api/auth/logout");
+
+    if (res.ok) {
+      router.push("/login");
+      router.refresh();
+    }
   };
 
   return (
@@ -123,7 +127,7 @@ const StudentSideBar = (props: { user: User }) => {
               </TooltipContent>
             </Tooltip>
           </Link>
-          <Link href={"login"} onClick={OnLogout}>
+          <div onClick={OnLogout}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <LogOut className="size-10 group-data-[collapsible=icon]:size-6"></LogOut>
@@ -132,7 +136,7 @@ const StudentSideBar = (props: { user: User }) => {
                 <p className="text-lg">Kijelentkezés</p>
               </TooltipContent>
             </Tooltip>
-          </Link>
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>
