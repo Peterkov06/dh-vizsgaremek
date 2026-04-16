@@ -127,7 +127,7 @@ const MainRegisterComponent = () => {
                         <FieldTitle>Tanár</FieldTitle>
                       </FieldContent>
                       <RadioGroupItem
-                        value="teacher"
+                        value="Teacher"
                         id="teacher"
                         className="peer sr-only"
                       />
@@ -143,7 +143,7 @@ const MainRegisterComponent = () => {
                       </FieldContent>
                       <RadioGroupItem
                         disabled
-                        value="parent"
+                        value="Parent"
                         id="parent"
                         className="peer sr-only"
                       />
