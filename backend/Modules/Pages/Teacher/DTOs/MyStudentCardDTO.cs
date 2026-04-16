@@ -5,7 +5,7 @@
         public required string StudentId { get; set; }
         public required string Name { get; set; }
         public string? Nickname { get; set; } = null;
-        public string? StudentImageURL { get; set; } = null;
+        public string? ProfilePictureURL { get; set; } = null;
         public int CourseNumber { get; set; } = 0;
         public int OngoingHandins { get; set; } = 0;
         public Guid ChatId { get; set; }

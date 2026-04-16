@@ -347,7 +347,7 @@ namespace backend.Modules.Pages.Teacher.Services
                 .Select(s => new MyStudentCardDTO
                 {
                     StudentId = s.UserId,
-                    StudentImageURL = s.User.ProfilePicture.StoragePath ?? null,
+                    ProfilePictureURL = s.User.ProfilePicture.StoragePath ?? null,
                     Name = s.User.FullName,
                     Nickname = s.User.Nickname ?? string.Empty,
                     CourseNumber = _db.TutoringWalls
