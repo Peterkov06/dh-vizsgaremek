@@ -4,7 +4,11 @@ if (process.env.NODE_ENV === "development") {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
-export const BASE_URL = "https://localhost:7261/api";
+const isServer = typeof window === "undefined";
+
+export const BASE_URL = isServer
+  ? "http://backend:8080/api"
+  : "http://localhost:7261/api";
 
 export async function POST(request: NextRequest) {
   try {

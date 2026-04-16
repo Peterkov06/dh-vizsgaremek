@@ -370,7 +370,8 @@ namespace backend.Controllers.Login
         {
             try
             {
-                string _smtpHost = "localhost";
+                var smtpHost = Environment.GetEnvironmentVariable("SMTP__Host");
+                string _smtpHost = smtpHost ?? "localhost";
                 int _smtpPort = 1025;
                 var emailMessage = new MimeMessage();
                 emailMessage.From.Add(new MailboxAddress("MyApp", "uzlettiember@gmail.com"));

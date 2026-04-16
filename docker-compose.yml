@@ -1,0 +1,57 @@
+services:
+  app:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  db:
+    image: postgres:18-alpine
+    container_name: app_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: oiJKde45.RE
+      POSTGRES_DB: db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # SEEDING: Files in this folder are executed in alphabetical order on first run
+      - ./init-db:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: app_mail
+    ports:
+      - "1025:1025" # SMTP port
+      - "8025:8025" # Web UI
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: app_backend
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Database=db;Username=postgres;Password=oiJKde45.RE
+      - FILES_BASE_PATH=/app/wwwroot/files
+      - SMTP__Host=mailhog
+      - SMTP__Port=1025
+    volumes:
+      - ./uploads:/app/wwwroot/files
+    depends_on:
+      - db
+      - mailhog
+    ports:
+      - "7261:8080" # Maps local 7261 to container 8080
+
+volumes:
+  postgres_data:

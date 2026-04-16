@@ -36,7 +36,7 @@ function AvatarImage({
       className={cn("aspect-square h-full w-full object-cover", className)}
       src={
         src
-          ? `https://localhost:7261/files/${src}`
+          ? `http://localhost:7261/files/${src}`
           : "/defaults/default_avatar.jpg"
       }
       {...props}

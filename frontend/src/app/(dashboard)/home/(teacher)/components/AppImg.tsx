@@ -1,4 +1,4 @@
-const BASE_URL = "https://localhost:7261/files/";
+const BASE_URL = "http://localhost:7261/files/";
 
 type AppImageProps = React.ComponentProps<"img"> & {
   src?: string | null;
