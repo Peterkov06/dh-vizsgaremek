@@ -91,7 +91,7 @@ const StudentMoneyPage = () => {
           <div className="flex flex-col gap-3">
             {page.invoices.map((pi) => (
               <div
-                className={`flex  rounded-2xl py-2  text-lg ${pi.status === "Accepted" ? "bg-secondary" : "bg-light-bg-gray"}`}
+                className={`flex  rounded-2xl py-2  text-lg ${pi.status === "Accepted" ? "bg-secondary" : pi.status === "Failed" ? "bg-red-400" : "bg-light-bg-gray"}`}
                 key={pi.invoiceId}
               >
                 <div className="flex flex-col gap-2 lg:hidden w-full px-2">
@@ -112,7 +112,11 @@ const StudentMoneyPage = () => {
                     </h2>
                   </div>
                   <h2>
-                    {pi.status === "Accepted" ? "Elfogadott" : "Függőben"}
+                    {pi.status === "Accepted"
+                      ? "Elfogadott"
+                      : pi.status === "Failed"
+                        ? "Elutasított"
+                        : "Függőben"}
                   </h2>
                 </div>
                 <div className="lg:flex hidden justify-between items-center w-full px-5">
