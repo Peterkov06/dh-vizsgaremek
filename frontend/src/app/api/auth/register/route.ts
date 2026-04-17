@@ -9,6 +9,7 @@ const isServer = typeof window === "undefined";
 export const BASE_URL = isServer
   ? "http://backend:8080/api"
   : "http://localhost:7261/api";
+// export const BASE_URL = "http://localhost:7261/api";
 
 export async function POST(request: NextRequest) {
   try {
