@@ -212,9 +212,35 @@ namespace backend.Modules.CoursesBase.Services
                 return ServiceResult.NotFound("No course was found");
             }
 
-            course = MapFromDto(course, dto);
+            MapFromDto(ref course, dto);
 
-            _db.CourseBases.Update(course);
+            var oldLocations = await _db.CoursesToPlaces.Where(x => x.CourseId == dto.Id).ToListAsync(ct);
+            var oldTags = await _db.CoursesToTags.Where(x => x.CourseId == dto.Id).ToListAsync(ct);
+            var oldLanguages = await _db.CoursesToLanguages.Where(x => x.CourseId == dto.Id).ToListAsync(ct);
+
+            _db.CoursesToPlaces.RemoveRange(oldLocations);
+            _db.CoursesToTags.RemoveRange(oldTags);
+            _db.CoursesToLanguages.RemoveRange(oldLanguages);
+
+            await _db.SaveChangesAsync(ct);
+
+            if (dto.Locations.Contains("Online"))
+            {
+                _db.CoursesToPlaces.Add(new CourseToPlace { Online = true, CourseId = course.Id, PlaceId = null });
+                dto.Locations.Remove("Online");
+            }
+
+            var tags = await _courseMetadataService.CreateOrGetTagsAsync(dto.Tags, ct);
+            var languageIds = await _lookupService.GetLanguagesFromList(dto.Languages, ct);
+            var locationIds = await _lookupService.GetCititesFromList(dto.Locations, ct);
+
+            var tagConnections = MapToCourseTags(course.Id, tags.Data);
+            var languageConnections = MapToCourseLanguages(course.Id, languageIds.Data);
+            var cityConnections = MapToPlaces(course.Id, locationIds.Data);
+
+            _db.CoursesToTags.AddRange(tagConnections);
+            _db.CoursesToLanguages.AddRange(languageConnections);
+            _db.CoursesToPlaces.AddRange(cityConnections);
 
             try
             {
@@ -234,7 +260,7 @@ namespace backend.Modules.CoursesBase.Services
             throw new NotImplementedException();
         }
 
-        public CourseBaseModel MapFromDto(CourseBaseModel model, CourseBaseCreationDTO dto)
+        public void MapFromDto(ref CourseBaseModel model, CourseBaseCreationDTO dto)
         {
             model.CourseName = dto.CourseName;
             model.Description = dto.Description;
@@ -254,8 +280,6 @@ namespace backend.Modules.CoursesBase.Services
 
             if (dto.BannerImageId.HasValue)
                 model.BannerImageId = dto.BannerImageId;
-
-            return model;
         }
 
         public static Expression<Func<CourseBaseModel, CourseBaseExplorerDTO>> ToExploreDto =>

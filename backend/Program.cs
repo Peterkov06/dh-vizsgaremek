@@ -48,6 +48,11 @@ namespace backend
 
             var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new Exception("Database password environment variable is missing.");
+            }
+
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")+password));
 
