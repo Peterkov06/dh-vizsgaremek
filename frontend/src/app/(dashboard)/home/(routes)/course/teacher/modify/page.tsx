@@ -143,7 +143,13 @@ const ModifyTeacherCourse = () => {
             description: data.description,
             tags: data.tags.map((t) => t.name),
             languages: data.languages.map((l) => l.name),
-            location: data.locations.map((l) => l.name),
+            location: data.locations
+              .filter((t) => t.name)
+              .filter(
+                (value, index, self) =>
+                  index === self.findIndex((t) => t.name === value.name),
+              )
+              .map((l) => l.name),
             level: data.courseLevel.id,
             classLenght: data.classLenght,
             subject: data.courseDomain.id,

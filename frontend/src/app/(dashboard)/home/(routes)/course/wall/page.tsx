@@ -11,6 +11,7 @@ import ReviewCourseDialog from "./components/ReviewCourseDialog";
 import BuyingTokenDialog from "./components/BuyingTokenDialog";
 import fetchWithAuth from "@/lib/api-client";
 import { useSearchParams } from "next/navigation";
+import { Currency } from "@/lib/models/CourseSearchModel";
 
 export interface CourseBrief {
   courseName: string;
@@ -21,7 +22,10 @@ export interface CourseBrief {
   bannerURL: string;
   wroteReview: boolean;
   iconURL: string;
-  tokenCount: number;
+  tokens: number;
+  tokenPrice: number;
+  currency: Currency;
+  lessonLength: number;
   nextHandins: any[];
   nextLessons: NextLessonType[];
 }
@@ -80,9 +84,11 @@ const CourseWall = () => {
           )}
           {page && (
             <BuyingTokenDialog
+              currency={page.currency}
               course={page.courseName}
-              classLength={60}
-              tokenCount={page.tokenCount}
+              classLength={page.lessonLength}
+              tokenPrice={page.tokenPrice}
+              tokenCount={page.tokens}
             ></BuyingTokenDialog>
           )}
         </div>
@@ -152,7 +158,7 @@ const CourseWall = () => {
           </div>
           {page && (
             <EnrollingClassDialog
-              token={page.tokenCount} //kell
+              token={page.tokens} //kell
               teacherId={page.teacherId}
               course={page?.courseName}
             ></EnrollingClassDialog>

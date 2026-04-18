@@ -127,7 +127,7 @@ const TeacherSidebar = (props: { user: User }) => {
               </TooltipContent>
             </Tooltip>
           </Link>
-          <div onClick={OnLogout}>
+          <div onClick={OnLogout} className="cursor-pointer">
             <Tooltip>
               <TooltipTrigger asChild>
                 <LogOut className="size-10 group-data-[collapsible=icon]:size-6"></LogOut>

@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import fetchWithAuth from "@/lib/api-client";
+import { Currency } from "@/lib/models/CourseSearchModel";
 import { CircleDollarSign, ShoppingCart } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -29,6 +30,8 @@ const BuyingTokenDialog = (props: {
   course?: string;
   classLength: number;
   tokenCount: number;
+  tokenPrice: number;
+  currency: Currency;
 }) => {
   const searchParams = useSearchParams();
 
@@ -39,8 +42,6 @@ const BuyingTokenDialog = (props: {
   const [selectedCourse, setSelectedCourse] = useState<string>("");
   const [tokenCount, setTokenCount] = useState<number>(1);
   const [tokenCountInput, setTokenCountInput] = useState<string>("1");
-
-  const [price, setPrice] = useState<number>(2500);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -151,7 +152,9 @@ const BuyingTokenDialog = (props: {
               <div className="flex gap-5 text-lg">
                 <div>
                   <h2>Egységár:</h2>
-                  <p>{price} Ft</p>
+                  <p>
+                    {props.tokenPrice} {props.currency.currencySymbol}
+                  </p>
                 </div>
                 <div>
                   <h2>Mennyiség:</h2>
@@ -162,7 +165,9 @@ const BuyingTokenDialog = (props: {
             <hr className="border-2 border-primary" />
             <div className="flex  justify-between px-6">
               <h2 className="text-2xl">Fizetendő:</h2>
-              <h2 className="text-2xl">{price * tokenCount} Ft</h2>
+              <h2 className="text-2xl">
+                {props.tokenPrice * tokenCount} {props.currency.currencySymbol}
+              </h2>
             </div>
           </div>
         </div>
