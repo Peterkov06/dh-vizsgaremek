@@ -163,8 +163,8 @@ A tesztek az alábbi előre létrehozott fiókokat használják:
 
 | Típus | Email | Jelszó |
 |-------|-------|--------|
-| Tanár (matek) | matzika@fmail.hu | yuiUIOL25. |
-| Diák | roland.fulop@gmail.com | wert1258RT. |
+| Tanár (matek) | janos.kovacs@szkola.hu | SzkoLa123! |
+| Diák | adam.lazar@szkola.hu | SzkoLaDiak1! |
 
 > Ezek a fiókok már szerepelnek az adatbázisban, külön regisztráció nem szükséges.
 
