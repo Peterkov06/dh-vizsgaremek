@@ -22,7 +22,7 @@ export interface CourseBrief {
   bannerURL: string;
   wroteReview: boolean;
   iconURL: string;
-  tokens: number;
+  tokenCount: number;
   tokenPrice: number;
   currency: Currency;
   lessonLength: number;
@@ -88,7 +88,7 @@ const CourseWall = () => {
               course={page.courseName}
               classLength={page.lessonLength}
               tokenPrice={page.tokenPrice}
-              tokenCount={page.tokens}
+              tokenCount={page.tokenCount}
             ></BuyingTokenDialog>
           )}
         </div>
@@ -158,7 +158,7 @@ const CourseWall = () => {
           </div>
           {page && (
             <EnrollingClassDialog
-              token={page.tokens} //kell
+              token={page.tokenCount} //kell
               teacherId={page.teacherId}
               course={page?.courseName}
             ></EnrollingClassDialog>
