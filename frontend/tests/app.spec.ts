@@ -19,16 +19,28 @@ test("a regisztrációs oldal sikeresen betöltődik", async ({ page }) => {
   await expect(page.locator("body")).toBeVisible();
 });
 
+test("a főoldal átirányítja a nem authentikált felhasználókat", async ({
+  page,
+}) => {
+  await page.goto("http://localhost:3000/home");
+
+  await page.waitForURL(/login|register|\/$/, { timeout: 5000 });
+  await expect(page).not.toHaveURL("/home");
+});
+
 test("a tanár főoldala megfelelően betöltődik", async ({ page }) => {
   await page.goto("http://localhost:3000/login");
   await page
     .locator('input[type="email"], input[name="email"]')
-    .fill("matzika@fmail.hu");
-  await page.locator('input[type="password"]').fill("yuiUIOL25.");
+    .pressSequentially("janos.kovacs@szkola.hu");
+  await page.locator('input[type="password"]').pressSequentially("SzkoLa123!");
+
+  await expect(page.locator('button[type="submit"]')).toBeEnabled({
+    timeout: 5000,
+  });
   await page.locator('button[type="submit"]').click();
 
   await page.waitForURL(/home/, { timeout: 10000 });
-
   await expect(page).toHaveURL(/home/);
   await expect(page.locator("body")).toBeVisible();
 });
@@ -37,12 +49,17 @@ test("a diák főoldala megfelelően betöltődik", async ({ page }) => {
   await page.goto("http://localhost:3000/login");
   await page
     .locator('input[type="email"], input[name="email"]')
-    .fill("roland.fulop@gmail.com");
-  await page.locator('input[type="password"]').fill("wert1258RT.");
+    .pressSequentially("adam.lazar@szkola.hu");
+  await page
+    .locator('input[type="password"]')
+    .pressSequentially("SzkoLaDiak1!");
+
+  await expect(page.locator('button[type="submit"]')).toBeEnabled({
+    timeout: 5000,
+  });
   await page.locator('button[type="submit"]').click();
 
   await page.waitForURL(/home/, { timeout: 10000 });
-
   await expect(page).toHaveURL(/home/);
   await expect(page.locator("body")).toBeVisible();
 });

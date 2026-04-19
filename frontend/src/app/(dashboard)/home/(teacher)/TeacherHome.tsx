@@ -108,11 +108,11 @@ const TeacherHome = (props: { user: User }) => {
             <div className="text-sm">
               {dashboard?.notifications.lastUnread ? (
                 <p>
+                  {dashboard?.notifications.lastUnread?.firstText} -
                   {NotificationType[
                     dashboard?.notifications.lastUnread
-                      ?.firstText as keyof typeof NotificationType
-                  ] ?? dashboard?.notifications.lastUnread?.firstText}
-                  -{dashboard?.notifications.lastUnread?.secondText}
+                      ?.secondText as keyof typeof NotificationType
+                  ] ?? dashboard?.notifications.lastUnread?.secondText}
                 </p>
               ) : (
                 <p>Nincs új értesítésed</p>
