@@ -21,8 +21,9 @@ import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useRegistrationContext } from "./RegistrationContextManager";
-import { sub } from "date-fns";
 import { useRouter } from "next/navigation";
+
+const DEFAULT_AVATAR = "/defaults/default_avatar.jpg";
 
 const IntroductionComponent = () => {
   const formSchema = z.object({
@@ -52,21 +53,22 @@ const IntroductionComponent = () => {
     mode: "onTouched",
   });
 
-  const [profilePicture, setProfilePicture] = useState<string>(
-    "https://i.redd.it/o9srxpsm8rm01.png",
-  );
+  const [profilePicture, setProfilePicture] = useState<string>(DEFAULT_AVATAR);
+  const [hasCustomPicture, setHasCustomPicture] = useState(false);
 
   const { updateData, submitRegistration } = useRegistrationContext();
   const router = useRouter();
 
   useEffect(() => {
     return () => {
-      if (profilePicture) URL.revokeObjectURL(profilePicture);
+      if (profilePicture && profilePicture.startsWith("blob:")) {
+        URL.revokeObjectURL(profilePicture);
+      }
     };
   }, [profilePicture]);
 
   const onSubmit = async (data: IntroductionType) => {
-    updateData(data)
+    updateData(data);
     const res = await submitRegistration(data);
 
     if (res.success) {
@@ -114,13 +116,23 @@ const IntroductionComponent = () => {
                 )}
               />
               <div className="w-full min-h-48 md:h-full flex flex-row md:justify-center items-center">
-                <Avatar className="h-1/2 w-1/2 md:w-1/4 md:h-1/4">
+                {/* <Avatar className="h-1/2 w-1/2 md:w-1/4 md:h-1/4">
                   <AvatarImage
                     className="aspect-square"
                     alt="avatar"
                     src={profilePicture}
+                    key={profilePicture}
                   />
-                </Avatar>
+                </Avatar> */}
+                <img
+                  src={profilePicture}
+                  alt="avatar preview"
+                  key={profilePicture}
+                  className="aspect-square w-1/2 md:w-1/4 rounded-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = "/defaults/default_avatar.jpg";
+                  }}
+                />
               </div>
               <Controller
                 name="profilePicture"
@@ -142,9 +154,14 @@ const IntroductionComponent = () => {
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
+                          if (profilePicture.startsWith("blob:")) {
+                            URL.revokeObjectURL(profilePicture);
+                          }
+                          const newUrl = URL.createObjectURL(file);
                           form.setValue("profilePicture", file);
                           onChange(file);
-                          setProfilePicture(URL.createObjectURL(file));
+                          setProfilePicture(newUrl);
+                          setHasCustomPicture(true);
                         }
                       }}
                     />
@@ -152,7 +169,7 @@ const IntroductionComponent = () => {
                       htmlFor="profile-picture-upload"
                       className="inline-flex items-center justify-center whitespace-nowrap rounded-2xl text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-foreground text-primary-foreground hover:bg-foreground/90 h-10 px-4 py-6 md:text-lg w-full cursor-pointer"
                     >
-                      {profilePicture !== "https://i.redd.it/o9srxpsm8rm01.png"
+                      {hasCustomPicture
                         ? "Kép módosítása"
                         : "Profilkép feltöltése"}
                     </label>
