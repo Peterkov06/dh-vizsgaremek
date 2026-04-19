@@ -43,7 +43,7 @@ export const fullRegistrationData = z.object({
       "Kérjük töltsön fel egy kép formátumú fájlt!",
     ),
   fullname: z.string().nonempty({ error: "Név megadása kötelező" }),
-  nickname: z.string().nonempty({ error: "Becenév megadása kötelező" }),
+  nickname: z.string().optional(),
   dateOfBirth: z
     .date({ error: "Születési dátum megadása kötelező" })
     .min(new Date(1900, 1, 1), {
